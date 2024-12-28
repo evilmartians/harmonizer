@@ -1,0 +1,9 @@
+.container {
+  @apply absolute left-0 top-0 bottom-0 bg-black z-0;
+}
+
+.handle {
+  @apply absolute right-0 top-0 bottom-0 w-2 cursor-col-resize z-10;
+  @apply bg-transparent hover:bg-gray-700/50 active:bg-gray-600/50;
+  @apply transition-colors duration-150;
+}

@@ -1,0 +1,42 @@
+.container {
+  @apply flex flex-col gap-1 justify-center rounded;
+
+  &:focus-within {
+    @apply ring-2 ring-blue-500 !important;
+  }
+
+  /* SIZES */
+  &.size_m {
+    @apply h-6;
+  }
+
+  &.size_l {
+    @apply h-16;
+  }
+
+  /* KINDS */
+  &.kind_bordered {
+    @apply ring-1 ring-blue-100;
+  }
+
+  &.kind_ghost {
+    @apply ring-0;
+  }
+}
+
+.input {
+  @apply w-full h-6 px-1 border-none bg-transparent rounded;
+  @apply focus:outline-none focus:ring-0;
+
+  &.size_m {
+    @apply text-ui-m;
+  }
+
+  &.size_l {
+    @apply text-ui-l;
+  }
+}
+
+.label {
+  @apply text-ui-s text-center;
+}

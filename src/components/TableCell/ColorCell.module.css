@@ -1,0 +1,3 @@
+.container {
+  @apply flex w-full h-full items-center justify-center bg-red-500;
+}

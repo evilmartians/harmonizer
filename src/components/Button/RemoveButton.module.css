@@ -1,0 +1,7 @@
+.button {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-white;
+}
+
+.button:hover {
+  @apply bg-gray-100;
+}

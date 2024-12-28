@@ -1,0 +1,11 @@
+.container {
+  @apply flex w-full h-full items-center justify-center;
+}
+
+.button {
+  @apply opacity-0;
+
+  &.visible {
+    @apply opacity-100;
+  }
+}

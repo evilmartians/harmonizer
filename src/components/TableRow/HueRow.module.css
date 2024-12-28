@@ -1,0 +1,11 @@
+.container {
+  @apply flex h-[88px] relative;
+}
+
+.actionCell {
+  @apply opacity-0 transition-opacity duration-200 h-full;
+}
+
+.container:hover .actionCell {
+  @apply opacity-100;
+}

@@ -1,0 +1,12 @@
+.container {
+  @apply text-primary-inverted;
+  @apply flex flex-col gap-1 pr-2 w-full h-full justify-center;
+}
+
+.label {
+  @apply w-full text-ui-m font-medium;
+}
+
+.input {
+  @apply font-martian-mono;
+}
