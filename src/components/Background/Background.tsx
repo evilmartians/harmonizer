@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import styles from "./Background.module.css";
-import { useTable } from "../../hooks/useTable";
 import { usePreventSelection } from "../../hooks/usePreventSelection";
+import { useTableConfig } from "../../hooks/useTableConfig";
 
 const CELL_WIDTH = 104;
 const MIN_WIDTH = 120;
@@ -12,9 +12,11 @@ interface BarkgroundProps {
 }
 
 export function Background({ level: initialLevel }: BarkgroundProps) {
-  const { cols } = useTable();
+  const { levels } = useTableConfig();
   const [level, setLevel] = useState(initialLevel);
-  const [width, setWidth] = useState(calculateWidth(initialLevel, cols.length));
+  const [width, setWidth] = useState(
+    calculateWidth(initialLevel, levels.length)
+  );
   const [isDragging, setIsDragging] = useState(false);
 
   usePreventSelection(isDragging);
@@ -29,8 +31,8 @@ export function Background({ level: initialLevel }: BarkgroundProps) {
   }
 
   useEffect(() => {
-    setWidth(calculateWidth(level, cols.length));
-  }, [level, cols.length]);
+    setWidth(calculateWidth(level, levels.length));
+  }, [level, levels.length]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {

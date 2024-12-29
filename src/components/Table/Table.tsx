@@ -1,25 +1,31 @@
 import { HueRow } from "../TableRow/HueRow";
 import { HeaderRow } from "../TableRow/HeaderRow";
 import { ActionsRow } from "../TableRow/ActionsRow";
-import { useTable } from "../../hooks/useTable";
 import styles from "./Table.module.css";
 import classNames from "classnames";
+import { useTableConfig } from "../../hooks/useTableConfig";
+import { useState } from "react";
 
 interface TableProps {
   className: string;
 }
 
 export function Table({ className }: TableProps) {
-  const {
-    rows,
-    cols,
-    hoveredColumn,
-    addRow,
-    removeRow,
-    addColumn,
-    removeColumn,
-    setHoveredColumn,
-  } = useTable();
+  const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
+  const { levels, addLevel, removeLevel, hues, addHue, removeHue, settings } =
+    useTableConfig();
+
+  const createLevelConfig = () => {
+    const newLevel = { name: "Level NEW", contrast: 0, chroma: 0 };
+    console.log("createLevelConfig", newLevel);
+    addLevel(newLevel);
+  };
+
+  const createHueConfig = () => {
+    const newHue = { name: "Hue NEW", degree: 0 };
+    console.log("createHueConfig", newHue);
+    addHue(newHue);
+  };
 
   return (
     <div
@@ -27,26 +33,25 @@ export function Table({ className }: TableProps) {
       onMouseLeave={() => setHoveredColumn(null)}
     >
       <HeaderRow
-        cols={cols}
-        onAddColumn={addColumn}
-        onColumnHover={setHoveredColumn}
+        levels={levels}
+        model={settings.model}
+        onAddLevel={createLevelConfig}
+        onLevelHover={setHoveredColumn}
       />
-      {rows.map((rowIndex) => (
-        <>
-          <HueRow
-            key={`row-${rowIndex}`}
-            rowIndex={rowIndex}
-            cols={cols}
-            onColumnHover={setHoveredColumn}
-            onRemoveRow={() => removeRow(rowIndex)}
-          />
-        </>
+      {hues.map((hue, i) => (
+        <HueRow
+          key={`row-${i}`}
+          hue={hue}
+          levels={levels}
+          onLevelHover={setHoveredColumn}
+          onRemoveHue={() => removeHue(hue.degree)}
+        />
       ))}
       <ActionsRow
-        cols={cols}
-        onAddRow={addRow}
+        levels={levels}
+        onAddHue={createHueConfig}
         hoveredColumn={hoveredColumn}
-        onRemoveColumn={removeColumn}
+        onRemoveLevel={(name: string) => removeLevel(name)}
         onColumnHover={setHoveredColumn}
       />
     </div>

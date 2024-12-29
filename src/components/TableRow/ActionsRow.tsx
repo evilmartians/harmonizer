@@ -1,20 +1,21 @@
+import { Level } from "../../types/config";
 import { ActionCell } from "../TableCell/ActionCell";
 import { EmptyCell } from "../TableCell/EmptyCell";
 import styles from "./ActionsRow.module.css";
 
 interface ActionsRowProps {
-  cols: number[];
-  onAddRow: () => void;
+  levels: Level[];
+  onAddHue: () => void;
   hoveredColumn: number | null;
   onColumnHover: (index: number | null) => void;
-  onRemoveColumn: (colIndex: number) => void;
+  onRemoveLevel: (name: string) => void;
 }
 
 export function ActionsRow({
-  cols,
-  onAddRow,
+  levels,
+  onAddHue,
   hoveredColumn,
-  onRemoveColumn,
+  onRemoveLevel,
   onColumnHover,
 }: ActionsRowProps) {
   return (
@@ -24,16 +25,17 @@ export function ActionsRow({
         title="Add row"
         variant="row"
         isVisible={true}
-        onClick={onAddRow}
+        onClick={onAddHue}
         onMouseEnter={() => onColumnHover(null)}
       />
-      {cols.map((colIndex) => (
+      {levels.map((level, i) => (
         <ActionCell
+          key={`action-${i}`}
           title="Remove column"
           variant="remove"
-          isVisible={hoveredColumn === colIndex}
-          onClick={() => onRemoveColumn(colIndex)}
-          onMouseEnter={() => onColumnHover(colIndex)}
+          isVisible={hoveredColumn === i}
+          onClick={() => onRemoveLevel(level.name)}
+          onMouseEnter={() => onColumnHover(i)}
         />
       ))}
       <EmptyCell />

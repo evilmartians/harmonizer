@@ -1,4 +1,27 @@
 {
-  "columns": ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8"],
-  "rows": ["Hue 1", "Hue 2", "Hue 3", "Hue 4", "Hue 5", "Hue 6"]
+  "levels": [
+    { "name": "Level 1", "contrast": 0, "chroma": 0 },
+    { "name": "Level 2", "contrast": 0, "chroma": 0 },
+    { "name": "Level 3", "contrast": 0, "chroma": 0 },
+    { "name": "Level 4", "contrast": 0, "chroma": 0 },
+    { "name": "Level 5", "contrast": 0, "chroma": 0 },
+    { "name": "Level 6", "contrast": 0, "chroma": 0 },
+    { "name": "Level 7", "contrast": 0, "chroma": 0 },
+    { "name": "Level 8", "contrast": 0, "chroma": 0 }
+  ],
+  "hues": [
+    { "name": "Red", "degree": 0 },
+    { "name": "Orange", "degree": 30 },
+    { "name": "Yellow", "degree": 60 },
+    { "name": "Green", "degree": 120 },
+    { "name": "Blue", "degree": 240 },
+    { "name": "Purple", "degree": 270 }
+  ],
+  "settings": {
+    "model": "OKLCH",
+    "direction": "fgToBg",
+    "chroma": "even",
+    "bgColorLight": "#FFFFFF",
+    "bgColorDark": "#000000"
+  }
 }

@@ -7,7 +7,7 @@ const PLACEHOLDER_CONTRAST = "Contrast";
 const PLACEHOLDER_CHROMA = "Chroma";
 
 interface LevelCellProps {
-  level: string;
+  levelName: string;
   model: string;
   contrast: number;
   chroma: number;
@@ -15,7 +15,7 @@ interface LevelCellProps {
 }
 
 export function LevelCell({
-  level,
+  levelName,
   model,
   contrast,
   chroma,
@@ -28,7 +28,7 @@ export function LevelCell({
           inputSize="m"
           kind="ghost"
           placeholder={PLACEHOLDER_LEVEL}
-          value={level}
+          value={levelName}
         />
         <TextControl
           inputSize="l"

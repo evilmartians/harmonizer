@@ -1,36 +1,39 @@
+import { Level } from "../../types/config";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
 import styles from "./HeaderRow.module.css";
 
 interface HeaderRowProps {
-  cols: number[];
-  onColumnHover: (index: number | null) => void;
-  onAddColumn: () => void;
+  levels: Level[];
+  model: string;
+  onLevelHover: (index: number | null) => void;
+  onAddLevel: () => void;
 }
 
 export function HeaderRow({
-  cols,
-  onAddColumn,
-  onColumnHover,
+  levels,
+  model,
+  onAddLevel,
+  onLevelHover,
 }: HeaderRowProps) {
   return (
     <div className={styles.container}>
-      <LabelsCell onMouseEnter={() => onColumnHover(null)} />
-      {cols.map((colIndex) => (
+      <LabelsCell onMouseEnter={() => onLevelHover(null)} />
+      {levels.map((level, i) => (
         <LevelCell
-          key={`header-cell-${colIndex}`}
-          model="APCA"
-          level={`${colIndex}`}
-          contrast={50}
-          chroma={0.1}
-          onMouseEnter={() => onColumnHover(colIndex)}
+          key={`header-cell-${i}`}
+          model={model}
+          levelName={level.name}
+          contrast={level.contrast}
+          chroma={level.chroma}
+          onMouseEnter={() => onLevelHover(i)}
         />
       ))}
       <ActionCell
         title="Add column"
-        onClick={onAddColumn}
-        onMouseEnter={() => onColumnHover(null)}
+        onClick={onAddLevel}
+        onMouseEnter={() => onLevelHover(null)}
       />
     </div>
   );

@@ -1,20 +1,129 @@
-import { useState, useCallback } from 'react';
-import defaultConfig from '../config/tableConfig.json';
-import { TableConfig, TableConfigActions } from '../types/config';
+import { useState, useCallback } from "react";
+import defaultConfig from "../config/tableConfig.json";
+import { Hue, Level, TableConfig, TableConfigActions } from "../types/config";
 
 export function useTableConfig(): TableConfigActions {
   const [config, setConfig] = useState<TableConfig>(defaultConfig);
 
   const updateConfig = useCallback((newConfig: TableConfig) => {
     setConfig(newConfig);
-    // Optional: Save to localStorage or other persistence
-    localStorage.setItem('tableConfig', JSON.stringify(newConfig));
+    localStorage.setItem("tableConfig", JSON.stringify(newConfig));
   }, []);
 
   const getConfig = useCallback(() => config, [config]);
 
+  const {
+    levels: confLeveles,
+    hues: confHues,
+    settings: settings,
+  } = getConfig();
+
+  // Levels
+  const [levels, setLevels] = useState<Level[]>(confLeveles);
+
+  const addLevel = (level: Level) => {
+    setLevels((prev) => [...prev, level]);
+    const newConfig = {
+      ...getConfig(),
+      columns: [
+        ...getConfig().levels,
+        {
+          level: level.name,
+          contrast: level.contrast,
+          chroma: level.chroma,
+        },
+      ],
+    };
+    updateConfig(newConfig);
+  };
+
+  const removeLevel = (name: string) => {
+    console.log("removeLevel", name);
+    setLevels((prev) => prev.filter((level) => level.name !== name));
+    const newConfig = {
+      ...getConfig(),
+      columns: getConfig().levels.filter((level) => level.name !== name),
+    };
+    console.log("newConfig", newConfig);
+    updateConfig(newConfig);
+  };
+
+  // Hues
+  const [hues, setHues] = useState<Hue[]>(confHues);
+
+  const addHue = (hue: Hue) => {
+    setHues((prev) => [...prev, hue]);
+    const newConfig = {
+      ...getConfig(),
+      rows: [...getConfig().hues, { colorName: hue.name, hueDeg: hue.degree }],
+    };
+    updateConfig(newConfig);
+  };
+
+  const removeHue = (degree: number) => {
+    console.log("removeHue", degree);
+    setHues((prev) => prev.filter((hue) => hue.degree !== degree));
+    const newConfig = {
+      ...getConfig(),
+      rows: getConfig().hues.filter((hue) => hue.degree !== degree),
+    };
+    console.log("newConfig", newConfig);
+    updateConfig(newConfig);
+  };
+
+  // Settings
+  const updateModel = (model: string) => {
+    const newConfig = {
+      ...getConfig(),
+      settings: { ...settings, model },
+    };
+    updateConfig(newConfig);
+  };
+
+  const updateDirection = (direction: string) => {
+    const newConfig = {
+      ...getConfig(),
+      settings: { ...settings, direction },
+    };
+    updateConfig(newConfig);
+  };
+
+  const updateChroma = (chroma: string) => {
+    const newConfig = {
+      ...getConfig(),
+      settings: { ...settings, chroma },
+    };
+    updateConfig(newConfig);
+  };
+
+  const updateBgColorLight = (bgColorLight: string) => {
+    const newConfig = {
+      ...getConfig(),
+      settings: { ...settings, bgColorLight },
+    };
+    updateConfig(newConfig);
+  };
+
+  const updateBgColorDark = (bgColorDark: string) => {
+    const newConfig = {
+      ...getConfig(),
+      settings: { ...settings, bgColorDark },
+    };
+    updateConfig(newConfig);
+  };
+
   return {
-    updateConfig,
-    getConfig
+    levels,
+    addLevel,
+    removeLevel,
+    hues,
+    addHue,
+    removeHue,
+    settings,
+    updateModel,
+    updateDirection,
+    updateChroma,
+    updateBgColorLight,
+    updateBgColorDark,
   };
 }

@@ -3,19 +3,20 @@ import { ActionCell } from "../TableCell/ActionCell";
 import { HueCell } from "../TableCell/HueCell";
 import styles from "./HueRow.module.css";
 import { useState } from "react";
+import { Hue, Level } from "../../types/config";
 
 interface HueRowProps {
-  rowIndex: number;
-  cols: number[];
-  onColumnHover: (index: number | null) => void;
-  onRemoveRow: () => void;
+  hue: Hue;
+  levels: Level[];
+  onLevelHover: (index: number | null) => void;
+  onRemoveHue: () => void;
 }
 
 export function HueRow({
-  rowIndex,
-  cols,
-  onColumnHover,
-  onRemoveRow,
+  hue,
+  levels,
+  onLevelHover,
+  onRemoveHue,
 }: HueRowProps) {
   const [actionIsVisible, setActionIsVisible] = useState(false);
   return (
@@ -25,23 +26,23 @@ export function HueRow({
       className={styles.container}
     >
       <HueCell
-        title="red"
-        hue={`${rowIndex}`}
-        onMouseEnter={() => onColumnHover(null)}
+        name={hue.name}
+        degree={hue.degree}
+        onMouseEnter={() => onLevelHover(null)}
       />
-      {cols.map((colIndex) => (
+      {levels.map((level, i) => (
         <ColorCell
-          key={`cell-${rowIndex}-${colIndex}`}
+          key={`color-${i}`}
           color="#???"
-          onMouseEnter={() => onColumnHover(colIndex)}
+          onMouseEnter={() => onLevelHover(i)}
         />
       ))}
       <ActionCell
         title="Remove row"
         variant="remove"
         isVisible={actionIsVisible}
-        onClick={onRemoveRow}
-        onMouseEnter={() => onColumnHover(null)}
+        onClick={onRemoveHue}
+        onMouseEnter={() => onLevelHover(null)}
       />
     </div>
   );

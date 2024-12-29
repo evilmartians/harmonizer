@@ -5,23 +5,23 @@ import { TextControl } from "../TextControl/TextControl";
 const PLACEHOLDER_HUE = "Hue";
 
 interface HueCellProps {
-  title: string;
-  hue: string;
+  name: string;
+  degree: number;
   onMouseEnter: () => void;
 }
 
-export function HueCell({ title, hue, onMouseEnter }: HueCellProps) {
+export function HueCell({ name, degree, onMouseEnter }: HueCellProps) {
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
-        <span className={styles.label}>{title}</span>
+        <span className={styles.label}>{name}</span>
         <TextControl
           inputClassName={styles.input}
           inputSize="m"
           kind="ghost"
           align="left"
           placeholder={PLACEHOLDER_HUE}
-          value="some"
+          value={degree}
         ></TextControl>
       </div>
     </TableCell>
