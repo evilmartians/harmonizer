@@ -24,7 +24,6 @@ export function ActionsRow({
         className={styles.addButton}
         title="Add row"
         variant="row"
-        isVisible={true}
         onClick={onAddHue}
         onMouseEnter={() => onColumnHover(null)}
       />
@@ -33,7 +32,7 @@ export function ActionsRow({
           key={`action-${i}`}
           title="Remove column"
           variant="remove"
-          isVisible={hoveredColumn === i}
+          buttonClassName={hoveredColumn === i ? "opacity-100" : "opacity-0"}
           onClick={() => onRemoveLevel(level.name)}
           onMouseEnter={() => onColumnHover(i)}
         />

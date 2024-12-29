@@ -7,18 +7,20 @@ import styles from "./ActionCell.module.css";
 
 interface ActionCellProps {
   className?: string;
+  buttonClassName?: string;
   title: string;
   variant?: "column" | "row" | "remove";
-  isVisible?: boolean;
+  //isVisible?: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
 }
 
 export function ActionCell({
   className,
+  buttonClassName,
   title,
   variant = "column",
-  isVisible = true,
+  //isVisible = true,
   onClick,
   onMouseEnter,
 }: ActionCellProps) {
@@ -29,7 +31,10 @@ export function ActionCell({
           <AddRowButton title={title} onClick={onClick} />
         ) : variant === "remove" ? (
           <RemoveButton
-            className={classNames(styles.button, isVisible && styles.visible)}
+            className={classNames(
+              styles.button,
+              buttonClassName /*isVisible && styles.visible*/
+            )}
             title={title}
             onClick={onClick}
           />

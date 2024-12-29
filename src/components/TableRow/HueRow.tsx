@@ -2,7 +2,7 @@ import { ColorCell } from "../TableCell/ColorCell";
 import { ActionCell } from "../TableCell/ActionCell";
 import { HueCell } from "../TableCell/HueCell";
 import styles from "./HueRow.module.css";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Hue, Level } from "../../types/config";
 
 interface HueRowProps {
@@ -18,13 +18,8 @@ export function HueRow({
   onLevelHover,
   onRemoveHue,
 }: HueRowProps) {
-  const [actionIsVisible, setActionIsVisible] = useState(false);
   return (
-    <div
-      onMouseEnter={() => setActionIsVisible(true)}
-      onMouseLeave={() => setActionIsVisible(false)}
-      className={styles.container}
-    >
+    <div className={styles.container}>
       <HueCell
         name={hue.name}
         degree={hue.degree}
@@ -40,7 +35,7 @@ export function HueRow({
       <ActionCell
         title="Remove row"
         variant="remove"
-        isVisible={actionIsVisible}
+        buttonClassName={styles.actionCellButton}
         onClick={onRemoveHue}
         onMouseEnter={() => onLevelHover(null)}
       />

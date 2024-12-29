@@ -27,6 +27,7 @@ export function HeaderRow({
           levelName={level.name}
           contrast={level.contrast}
           chroma={level.chroma}
+          mode="light"
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}

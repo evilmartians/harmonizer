@@ -1,5 +1,5 @@
 .container {
-  @apply flex h-[88px];
+  @apply inline-flex h-[88px];
 }
 
 .addButton {
