@@ -2,12 +2,12 @@ import { ColorCell } from "../TableCell/ColorCell";
 import { ActionCell } from "../TableCell/ActionCell";
 import { HueCell } from "../TableCell/HueCell";
 import styles from "./HueRow.module.css";
-import { useCallback, useState } from "react";
-import { Hue, Level } from "../../types/config";
+import { Hue, Level, Settings } from "../../types/config";
 
 interface HueRowProps {
   hue: Hue;
   levels: Level[];
+  settings: Settings;
   onLevelHover: (index: number | null) => void;
   onRemoveHue: () => void;
 }
@@ -15,6 +15,7 @@ interface HueRowProps {
 export function HueRow({
   hue,
   levels,
+  settings,
   onLevelHover,
   onRemoveHue,
 }: HueRowProps) {
@@ -28,7 +29,9 @@ export function HueRow({
       {levels.map((level, i) => (
         <ColorCell
           key={`color-${i}`}
-          color="#???"
+          hue={hue}
+          settings={settings}
+          level={level}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}

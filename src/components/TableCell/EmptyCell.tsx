@@ -1,6 +1,9 @@
-import React from 'react';
-import { TableCell } from './TableCell';
+import { TableCell } from "./TableCell";
 
-export function EmptyCell() {
-  return <TableCell />;
+interface EmptyCellProps {
+  onMouseEnter: VoidFunction;
+}
+
+export function EmptyCell({ onMouseEnter }: EmptyCellProps) {
+  return <TableCell onMouseEnter={onMouseEnter} />;
 }

@@ -1,4 +1,3 @@
-import { useBackground } from "../../hooks/useBackground";
 import { Level } from "../../types/config";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
@@ -8,6 +7,7 @@ import styles from "./HeaderRow.module.css";
 interface HeaderRowProps {
   levels: Level[];
   model: string;
+  lightLevel: number;
   onLevelHover: (index: number | null) => void;
   onAddLevel: () => void;
 }
@@ -15,10 +15,10 @@ interface HeaderRowProps {
 export function HeaderRow({
   levels,
   model,
+  lightLevel,
   onAddLevel,
   onLevelHover,
 }: HeaderRowProps) {
-  const { lightLevel } = useBackground();
   return (
     <div className={styles.container}>
       <LabelsCell onMouseEnter={() => onLevelHover(null)} />

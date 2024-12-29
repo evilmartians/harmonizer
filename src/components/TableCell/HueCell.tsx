@@ -11,13 +11,12 @@ interface HueCellProps {
 }
 
 export function HueCell({ name, degree, onMouseEnter }: HueCellProps) {
-  console.log(name, degree);
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
         <span className={styles.label}>{name}</span>
         <TextControl
-          inputClassName={styles.input}
+          className={styles.input}
           inputSize="m"
           kind="ghost"
           align="left"

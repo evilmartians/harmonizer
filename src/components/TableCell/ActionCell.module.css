@@ -4,8 +4,4 @@
 
 .button {
   @apply opacity-100 transition-opacity duration-200;
-  /* 
-  &.visible {
-    @apply opacity-100;
-  } */
 }

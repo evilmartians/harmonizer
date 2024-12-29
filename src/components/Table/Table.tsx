@@ -8,29 +8,27 @@ import { useCallback, useState } from "react";
 
 interface TableProps {
   className: string;
+  lightLevel: number;
 }
 
-export function Table({ className }: TableProps) {
+export function Table({ className, lightLevel }: TableProps) {
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const { levels, addLevel, removeLevel, hues, addHue, removeHue, settings } =
     useTableConfig();
 
   const createLevelConfig = () => {
     const newLevel = { name: "Level NEW", contrast: 0, chroma: 0 };
-    console.log("createLevelConfig", newLevel);
     addLevel(newLevel);
   };
 
   const createHueConfig = () => {
     const newHue = { name: "Hue NEW", degree: 0 };
-    console.log("createHueConfig", newHue);
     addHue(newHue);
   };
 
   const onColumnHover = useCallback(
     (i: number | null) => {
       if (i !== hoveredColumn) {
-        console.log("old: ", hoveredColumn, "new: ", i);
         setHoveredColumn(i);
       }
     },
@@ -45,6 +43,7 @@ export function Table({ className }: TableProps) {
       <HeaderRow
         levels={levels}
         model={settings.model}
+        lightLevel={lightLevel}
         onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
       />
@@ -52,6 +51,7 @@ export function Table({ className }: TableProps) {
         <HueRow
           key={`row-${i}`}
           hue={hue}
+          settings={settings}
           levels={levels}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(hue.degree)}

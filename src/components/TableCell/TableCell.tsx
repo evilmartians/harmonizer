@@ -3,7 +3,7 @@ import styles from "./TableCell.module.css";
 
 export interface TableCellProps {
   className?: string;
-  children: ReactNode;
+  children?: ReactNode;
   onMouseEnter: () => void;
 }
 

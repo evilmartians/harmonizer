@@ -37,7 +37,7 @@ export function ActionsRow({
           onMouseEnter={() => onColumnHover(i)}
         />
       ))}
-      <EmptyCell />
+      <EmptyCell onMouseEnter={() => onColumnHover(null)} />
     </div>
   );
 }

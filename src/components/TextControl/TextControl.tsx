@@ -3,7 +3,7 @@ import styles from "./TextControl.module.css";
 
 export interface TextControlProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  inputClassName?: string;
+  className?: string;
   label?: string;
   inputSize?: "m" | "l";
   kind?: "bordered" | "ghost";
@@ -11,7 +11,7 @@ export interface TextControlProps
 }
 
 export function TextControl({
-  inputClassName,
+  className,
   label,
   inputSize = "m",
   kind = "bordered",
@@ -22,6 +22,7 @@ export function TextControl({
   return (
     <div
       className={classNames(
+        className,
         styles.container,
         styles[`size_${inputSize}`],
         styles[`kind_${kind}`]
@@ -40,7 +41,6 @@ export function TextControl({
       <input
         type="text"
         className={classNames(
-          inputClassName,
           styles.input,
           align === "center" && "text-center",
           styles[`size_${inputSize}`]

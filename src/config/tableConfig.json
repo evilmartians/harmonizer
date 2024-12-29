@@ -1,24 +1,25 @@
 {
   "levels": [
-    { "name": "Level 1", "contrast": 0, "chroma": 0 },
-    { "name": "Level 2", "contrast": 0, "chroma": 0 },
-    { "name": "Level 3", "contrast": 0, "chroma": 0 },
-    { "name": "Level 4", "contrast": 0, "chroma": 0 },
-    { "name": "Level 5", "contrast": 0, "chroma": 0 },
-    { "name": "Level 6", "contrast": 0, "chroma": 0 },
-    { "name": "Level 7", "contrast": 0, "chroma": 0 },
-    { "name": "Level 8", "contrast": 0, "chroma": 0 }
+    { "name": "100", "contrast": 100, "chroma": 0 },
+    { "name": "200", "contrast": 90, "chroma": 0 },
+    { "name": "300", "contrast": 77, "chroma": 0 },
+    { "name": "400", "contrast": 65, "chroma": 0 },
+    { "name": "500", "contrast": 54, "chroma": 0 },
+    { "name": "600", "contrast": 65, "chroma": 0 },
+    { "name": "700", "contrast": 77, "chroma": 0 },
+    { "name": "800", "contrast": 90, "chroma": 0 },
+    { "name": "900", "contrast": 100, "chroma": 0 }
   ],
   "hues": [
-    { "name": "Red", "degree": 0 },
-    { "name": "Orange", "degree": 30 },
-    { "name": "Yellow", "degree": 60 },
-    { "name": "Green", "degree": 120 },
-    { "name": "Blue", "degree": 240 },
-    { "name": "Purple", "degree": 270 }
+    { "name": "Red", "degree": 20 },
+    { "name": "Yellow", "degree": 90 },
+    { "name": "Green", "degree": 123 },
+    { "name": "Blue", "degree": 210 },
+    { "name": "Violet", "degree": 280 },
+    { "name": "Pink", "degree": 340 }
   ],
   "settings": {
-    "model": "OKLCH",
+    "model": "APCA",
     "direction": "fgToBg",
     "chroma": "even",
     "bgColorLight": "#FFFFFF",

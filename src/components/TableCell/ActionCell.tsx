@@ -10,7 +10,6 @@ interface ActionCellProps {
   buttonClassName?: string;
   title: string;
   variant?: "column" | "row" | "remove";
-  //isVisible?: boolean;
   onClick: () => void;
   onMouseEnter: () => void;
 }
@@ -20,7 +19,6 @@ export function ActionCell({
   buttonClassName,
   title,
   variant = "column",
-  //isVisible = true,
   onClick,
   onMouseEnter,
 }: ActionCellProps) {
@@ -31,10 +29,7 @@ export function ActionCell({
           <AddRowButton title={title} onClick={onClick} />
         ) : variant === "remove" ? (
           <RemoveButton
-            className={classNames(
-              styles.button,
-              buttonClassName /*isVisible && styles.visible*/
-            )}
+            className={classNames(styles.button, buttonClassName)}
             title={title}
             onClick={onClick}
           />
