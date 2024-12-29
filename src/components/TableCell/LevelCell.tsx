@@ -28,14 +28,20 @@ export function LevelCell({
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
         <TextControl
-          className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
+          inputClassName={classNames(
+            styles.inputSecondary,
+            styles[`mode_${mode}`]
+          )}
           inputSize="m"
           kind="ghost"
           placeholder={PLACEHOLDER_LEVEL}
           value={levelName}
         />
         <TextControl
-          className={classNames(styles.inputPrimary, styles[`mode_${mode}`])}
+          inputClassName={classNames(
+            styles.inputPrimary,
+            styles[`mode_${mode}`]
+          )}
           inputSize="l"
           kind="bordered"
           placeholder={PLACEHOLDER_CONTRAST}
@@ -43,7 +49,10 @@ export function LevelCell({
           label={model}
         />
         <TextControl
-          className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
+          inputClassName={classNames(
+            styles.inputSecondary,
+            styles[`mode_${mode}`]
+          )}
           inputSize="m"
           kind="ghost"
           placeholder={PLACEHOLDER_CHROMA}

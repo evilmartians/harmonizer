@@ -1,3 +1,4 @@
+import { useBackground } from "../../hooks/useBackground";
 import { Level } from "../../types/config";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
@@ -17,6 +18,7 @@ export function HeaderRow({
   onAddLevel,
   onLevelHover,
 }: HeaderRowProps) {
+  const { lightLevel } = useBackground();
   return (
     <div className={styles.container}>
       <LabelsCell onMouseEnter={() => onLevelHover(null)} />
@@ -27,7 +29,7 @@ export function HeaderRow({
           levelName={level.name}
           contrast={level.contrast}
           chroma={level.chroma}
-          mode="light"
+          mode={i < lightLevel ? "dark" : "light"}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}
