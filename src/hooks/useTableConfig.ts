@@ -25,14 +25,7 @@ export function useTableConfig(): TableConfigActions {
     setLevels((prev) => [...prev, level]);
     const newConfig = {
       ...getConfig(),
-      columns: [
-        ...getConfig().levels,
-        {
-          level: level.name,
-          contrast: level.contrast,
-          chroma: level.chroma,
-        },
-      ],
+      leves: [...getConfig().levels, level],
     };
     updateConfig(newConfig);
   };
@@ -42,7 +35,7 @@ export function useTableConfig(): TableConfigActions {
     setLevels((prev) => prev.filter((level) => level.name !== name));
     const newConfig = {
       ...getConfig(),
-      columns: getConfig().levels.filter((level) => level.name !== name),
+      levels: getConfig().levels.filter((level) => level.name !== name),
     };
     console.log("newConfig", newConfig);
     updateConfig(newConfig);
@@ -55,7 +48,7 @@ export function useTableConfig(): TableConfigActions {
     setHues((prev) => [...prev, hue]);
     const newConfig = {
       ...getConfig(),
-      rows: [...getConfig().hues, { colorName: hue.name, hueDeg: hue.degree }],
+      hues: [...getConfig().hues, hue],
     };
     updateConfig(newConfig);
   };
@@ -65,7 +58,7 @@ export function useTableConfig(): TableConfigActions {
     setHues((prev) => prev.filter((hue) => hue.degree !== degree));
     const newConfig = {
       ...getConfig(),
-      rows: getConfig().hues.filter((hue) => hue.degree !== degree),
+      hues: getConfig().hues.filter((hue) => hue.degree !== degree),
     };
     console.log("newConfig", newConfig);
     updateConfig(newConfig);

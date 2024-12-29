@@ -4,7 +4,7 @@ import { ActionsRow } from "../TableRow/ActionsRow";
 import styles from "./Table.module.css";
 import classNames from "classnames";
 import { useTableConfig } from "../../hooks/useTableConfig";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 interface TableProps {
   className: string;
@@ -27,23 +27,33 @@ export function Table({ className }: TableProps) {
     addHue(newHue);
   };
 
+  const onColumnHover = useCallback(
+    (i: number | null) => {
+      if (i !== hoveredColumn) {
+        console.log("old: ", hoveredColumn, "new: ", i);
+        setHoveredColumn(i);
+      }
+    },
+    [hoveredColumn]
+  );
+
   return (
     <div
       className={classNames(className, styles.container)}
-      onMouseLeave={() => setHoveredColumn(null)}
+      onMouseLeave={() => onColumnHover(null)}
     >
       <HeaderRow
         levels={levels}
         model={settings.model}
         onAddLevel={createLevelConfig}
-        onLevelHover={setHoveredColumn}
+        onLevelHover={onColumnHover}
       />
       {hues.map((hue, i) => (
         <HueRow
           key={`row-${i}`}
           hue={hue}
           levels={levels}
-          onLevelHover={setHoveredColumn}
+          onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(hue.degree)}
         />
       ))}
@@ -52,7 +62,7 @@ export function Table({ className }: TableProps) {
         onAddHue={createHueConfig}
         hoveredColumn={hoveredColumn}
         onRemoveLevel={(name: string) => removeLevel(name)}
-        onColumnHover={setHoveredColumn}
+        onColumnHover={onColumnHover}
       />
     </div>
   );

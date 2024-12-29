@@ -11,6 +11,7 @@ interface HueCellProps {
 }
 
 export function HueCell({ name, degree, onMouseEnter }: HueCellProps) {
+  console.log(name, degree);
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
