@@ -13,6 +13,7 @@ export interface Settings {
   model: string;
   direction: string;
   chroma: string;
+  lightLevel: number;
   bgColorLight: string;
   bgColorDark: string;
 }
@@ -36,4 +37,5 @@ export interface TableConfigActions {
   updateChroma: (chroma: string) => void;
   updateBgColorLight: (color: string) => void;
   updateBgColorDark: (color: string) => void;
+  updateLightLevel: (lightLevel: number) => void;
 }

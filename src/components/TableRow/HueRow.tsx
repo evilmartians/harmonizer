@@ -2,20 +2,19 @@ import { ColorCell } from "../TableCell/ColorCell";
 import { ActionCell } from "../TableCell/ActionCell";
 import { HueCell } from "../TableCell/HueCell";
 import styles from "./HueRow.module.css";
-import { Hue, Level, Settings } from "../../types/config";
+import { Hue } from "../../types/config";
+import { ColorRow } from "../../utils/colorUtils";
 
 interface HueRowProps {
   hue: Hue;
-  levels: Level[];
-  settings: Settings;
+  colorRow: ColorRow;
   onLevelHover: (index: number | null) => void;
   onRemoveHue: () => void;
 }
 
 export function HueRow({
   hue,
-  levels,
-  settings,
+  colorRow,
   onLevelHover,
   onRemoveHue,
 }: HueRowProps) {
@@ -26,12 +25,10 @@ export function HueRow({
         degree={hue.degree}
         onMouseEnter={() => onLevelHover(null)}
       />
-      {levels.map((level, i) => (
+      {colorRow.levels.map((color, i) => (
         <ColorCell
           key={`color-${i}`}
-          hue={hue}
-          settings={settings}
-          level={level}
+          color={color}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}

@@ -29,7 +29,7 @@ export function HeaderRow({
           levelName={level.name}
           contrast={level.contrast}
           chroma={level.chroma}
-          mode={i < lightLevel ? "dark" : "light"}
+          mode={i >= lightLevel ? "light" : "dark"}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}

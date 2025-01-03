@@ -3,18 +3,19 @@ import { HeaderRow } from "../TableRow/HeaderRow";
 import { ActionsRow } from "../TableRow/ActionsRow";
 import styles from "./Table.module.css";
 import classNames from "classnames";
-import { useTableConfig } from "../../hooks/useTableConfig";
-import { useCallback, useState } from "react";
+
+import { useCallback, useMemo, useState } from "react";
+import { calculateMatrix } from "../../utils/colorUtils";
+import { useTableConfigContext } from "../../contexts/TableConfigContext";
 
 interface TableProps {
   className: string;
-  lightLevel: number;
 }
 
-export function Table({ className, lightLevel }: TableProps) {
+export function Table({ className }: TableProps) {
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const { levels, addLevel, removeLevel, hues, addHue, removeHue, settings } =
-    useTableConfig();
+    useTableConfigContext();
 
   const createLevelConfig = () => {
     const newLevel = { name: "Level NEW", contrast: 0, chroma: 0 };
@@ -35,6 +36,11 @@ export function Table({ className, lightLevel }: TableProps) {
     [hoveredColumn]
   );
 
+  const colorMatrix = useMemo(
+    () => calculateMatrix(levels, hues, settings),
+    [hues, levels, settings]
+  );
+
   return (
     <div
       className={classNames(className, styles.container)}
@@ -43,7 +49,7 @@ export function Table({ className, lightLevel }: TableProps) {
       <HeaderRow
         levels={levels}
         model={settings.model}
-        lightLevel={lightLevel}
+        lightLevel={settings.lightLevel}
         onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
       />
@@ -51,8 +57,7 @@ export function Table({ className, lightLevel }: TableProps) {
         <HueRow
           key={`row-${i}`}
           hue={hue}
-          settings={settings}
-          levels={levels}
+          colorRow={colorMatrix.hues[i]}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(hue.degree)}
         />

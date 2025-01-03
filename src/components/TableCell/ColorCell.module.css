@@ -1,3 +1,29 @@
 .container {
-  @apply flex w-full h-full items-center justify-center bg-red-500;
+  @apply flex flex-col w-full h-full justify-between text-ui-s p-2 text-secondary;
+
+  &:hover .lightnessLabel,
+  &:hover .middleLine,
+  &:hover .bottomLine {
+    @apply opacity-100;
+  }
+}
+
+.topLine {
+  @apply flex w-full justify-between items-center;
+}
+
+.lightnessLabel {
+  @apply opacity-0;
+}
+
+.p3Badge {
+  @apply block border border-border text-xs rounded-sm px-0.5 text-primary;
+}
+
+.middleLine {
+  @apply text-l text-center text-primary opacity-0;
+}
+
+.bottomLine {
+  @apply flex w-full justify-between opacity-0;
 }

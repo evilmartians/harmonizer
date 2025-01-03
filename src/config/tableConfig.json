@@ -23,6 +23,7 @@
     "direction": "fgToBg",
     "chroma": "even",
     "bgColorLight": "#FFFFFF",
-    "bgColorDark": "#000000"
+    "bgColorDark": "#000000",
+    "lightLevel": 5
   }
 }

@@ -105,6 +105,14 @@ export function useTableConfig(): TableConfigActions {
     updateConfig(newConfig);
   };
 
+  const updateLightLevel = (lightLevel: number) => {
+    const newConfig = {
+      ...getConfig(),
+      settings: { ...settings, lightLevel },
+    };
+    updateConfig(newConfig);
+  };
+
   return {
     levels,
     addLevel,
@@ -118,5 +126,6 @@ export function useTableConfig(): TableConfigActions {
     updateChroma,
     updateBgColorLight,
     updateBgColorDark,
+    updateLightLevel,
   };
 }

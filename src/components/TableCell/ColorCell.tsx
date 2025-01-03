@@ -1,30 +1,31 @@
 import { TableCell } from "./TableCell";
 import styles from "./ColorCell.module.css";
-import { Hue, Level, Settings } from "../../types/config";
-import { useMemo } from "react";
-import { calculateColor } from "../../utils/colorUtils";
+import { Color } from "../../utils/colorUtils";
 
 interface ColorCellProps {
-  hue: Hue;
-  level: Level;
-  settings: Settings;
+  color: Color;
   onMouseEnter: () => void;
 }
 
-export function ColorCell({
-  hue,
-  level,
-  settings,
-  onMouseEnter,
-}: ColorCellProps) {
-  const backgroundColor = useMemo(
-    () => calculateColor(hue, level, settings),
-    [hue, level, settings]
-  );
+export function ColorCell({ color, onMouseEnter }: ColorCellProps) {
+  const backgroundColor = color.css;
   return (
-    <TableCell onMouseEnter={onMouseEnter}>
-      <div className={styles.container} style={{ backgroundColor }}>
-        {hue.name}-{level.name}
+    <TableCell style={{ backgroundColor }} onMouseEnter={onMouseEnter}>
+      <div className={styles.container}>
+        <div className={styles.topLine}>
+          <span className={styles.lightnessLabel}>L{color.l}%</span>
+          <span
+            className={styles.p3Badge}
+            style={{ opacity: color.p3 ? 100 : 0 }}
+          >
+            P3
+          </span>
+        </div>
+        <div className={styles.middleLine}>{color.cr}</div>
+        <div className={styles.bottomLine}>
+          <span>C{color.c}</span>
+          <span>H{color.h}</span>
+        </div>
       </div>
     </TableCell>
   );

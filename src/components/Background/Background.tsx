@@ -1,14 +1,11 @@
+import { useBackground } from "../../hooks/useBackground";
 import styles from "./Background.module.css";
 
-interface BackgroundProps {
-  width: number;
-  onResize: VoidFunction;
-}
-
-export function Background({ width, onResize }: BackgroundProps) {
+export function Background() {
+  const { width, startDrag } = useBackground();
   return (
     <div className={styles.container} style={{ width }}>
-      <div className={styles.handle} onMouseDown={onResize} />
+      <div className={styles.handle} onMouseDown={startDrag} />
     </div>
   );
 }

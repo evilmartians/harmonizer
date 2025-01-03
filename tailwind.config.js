@@ -10,14 +10,23 @@ export default {
       colors: {
         primary: "#000000",
         "primary-inverted": "#ffffff",
-        secondary: "#00000080",
-        "secondary-inverted": "#ffffff80",
+        secondary: "#00000096",
+        "secondary-inverted": "#ffffff96",
         button: "#00000020",
         "button-inverted": "#ffffff20",
         "button-hover": "#00000040",
         "button-hover-inverted": "#ffffff40",
+        border: "#00000040",
+        "border-inverted": "#ffffff40",
       },
       fontSize: {
+        xs: [
+          "7.5px",
+          {
+            lineHeight: "10px",
+            fontStretch: "100%",
+          },
+        ],
         s: [
           "10px",
           {
