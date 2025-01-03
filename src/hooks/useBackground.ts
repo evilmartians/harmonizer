@@ -4,7 +4,7 @@ import { useTableConfigContext } from "../contexts/TableConfigContext";
 
 const CELL_WIDTH = 104;
 const MIN_WIDTH = 120;
-const PADDING = 16 + CELL_WIDTH; // left page padding + first column with labels
+const PADDING = 24 + CELL_WIDTH; // left page padding + first column with labels
 
 export function useBackground() {
   const { levels, settings, updateLightLevel } = useTableConfigContext();

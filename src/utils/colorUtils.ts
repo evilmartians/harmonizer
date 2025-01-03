@@ -80,7 +80,6 @@ function calculateLevel(level: Level, hues: Hue[], bgColor: string): Color[] {
       p3: !inColorSpace(apcachColor, "srgb"),
       css: apcachToCss(apcachColor),
     };
-    console.log("color > ", apcachColor);
     colors.push(color);
   });
   return colors;

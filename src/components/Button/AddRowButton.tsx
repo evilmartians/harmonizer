@@ -9,10 +9,10 @@ interface AddRowButtonProps {
 }
 
 export function AddRowButton({
-  onClick,
+  className,
   mode,
   title,
-  className = "",
+  onClick,
 }: AddRowButtonProps) {
   return (
     <button
@@ -20,7 +20,7 @@ export function AddRowButton({
       className={classNames(className, styles.button, styles[`mode_${mode}`])}
       title={title}
     >
-      {/* TODO: replace with Icon componen. But how? */}
+      {/* TODO: replace with Icon component. But how? */}
       <svg
         width="24"
         height="24"
@@ -33,8 +33,8 @@ export function AddRowButton({
           fill="currentColor"
         />
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12ZM20.8 12C20.8 16.8601 16.8601 20.8 12 20.8C7.13989 20.8 3.2 16.8601 3.2 12C3.2 7.13989 7.13989 3.2 12 3.2C16.8601 3.2 20.8 7.13989 20.8 12Z"
           fill="currentColor"
         />

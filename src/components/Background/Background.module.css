@@ -1,5 +1,34 @@
 .container {
   @apply absolute left-0 top-0 bottom-0 bg-black z-0;
+  background-color: var(--dark-bg);
+}
+
+.inputContainer {
+  @apply absolute flex gap-2 items-center pl-6 bottom-4 text-ui-s font-medium;
+
+  .light {
+    @apply text-secondary;
+  }
+
+  .dark {
+    @apply text-secondary-inverted;
+  }
+}
+
+.inputLabel {
+  @apply flex-shrink-0;
+}
+
+.input {
+  @apply flex-shrink font-martian-mono;
+
+  &.light {
+    @apply text-primary;
+  }
+
+  &.dark {
+    @apply text-primary-inverted;
+  }
 }
 
 .handle {

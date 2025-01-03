@@ -49,6 +49,7 @@ export function HeaderRow({
       ))}
       <ActionCell
         title={HINT_ADD_LEVEL}
+        variant="level"
         mode="light"
         onClick={onAddLevel}
         onMouseEnter={() => onLevelHover(null)}

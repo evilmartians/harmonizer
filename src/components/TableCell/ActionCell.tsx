@@ -9,7 +9,7 @@ interface ActionCellProps {
   className?: string;
   buttonClassName?: string;
   title: string;
-  variant?: "column" | "row" | "remove";
+  variant: "level" | "hue" | "remove";
   mode: "light" | "dark";
   onClick: () => void;
   onMouseEnter: () => void;
@@ -19,7 +19,7 @@ export function ActionCell({
   className,
   buttonClassName,
   title,
-  variant = "column",
+  variant,
   mode,
   onClick,
   onMouseEnter,
@@ -27,7 +27,7 @@ export function ActionCell({
   return (
     <TableCell className={className} onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
-        {variant === "row" ? (
+        {variant === "hue" ? (
           <AddRowButton mode={mode} title={title} onClick={onClick} />
         ) : variant === "remove" ? (
           <RemoveButton
@@ -37,7 +37,7 @@ export function ActionCell({
             onClick={onClick}
           />
         ) : (
-          <AddColumnButton onClick={onClick} title={title} />
+          <AddColumnButton mode={mode} onClick={onClick} title={title} />
         )}
       </div>
     </TableCell>

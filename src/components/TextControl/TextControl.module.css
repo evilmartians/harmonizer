@@ -38,5 +38,5 @@
 }
 
 .label {
-  @apply text-ui-s text-center;
+  @apply w-full text-ui-s text-center;
 }

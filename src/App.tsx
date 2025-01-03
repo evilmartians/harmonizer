@@ -5,10 +5,10 @@ import { TableConfigProvider } from "./contexts/TableConfigContext";
 
 function App() {
   return (
-    <div className="relative min-h-screen bg-white p-4 overflow-x-auto z-1">
+    <div className="relative min-h-screen px-6 py-4 overflow-x-auto z-1">
       <TableConfigProvider>
         <Background />
-        <Table className="relative z-1" />
+        <Table className="relative z-1 mb-10" />
         <FloatingActions />
       </TableConfigProvider>
     </div>

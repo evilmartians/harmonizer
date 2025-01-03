@@ -21,4 +21,10 @@
 body,
 html {
   @apply p-0 m-0 font-martian-grotesk;
+  background-color: var(--light-bg);
+}
+
+:root {
+  --dark-bg: #000000;
+  --light-bg: #ffffff;
 }

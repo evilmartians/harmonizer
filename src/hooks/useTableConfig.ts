@@ -147,5 +147,6 @@ export function useTableConfig(): TableConfigActions {
     updateBgColorLight,
     updateBgColorDark,
     updateLightLevel,
+    getConfig,
   };
 }

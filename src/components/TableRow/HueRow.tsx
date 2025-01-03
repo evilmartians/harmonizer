@@ -5,6 +5,8 @@ import styles from "./HueRow.module.css";
 import { Hue } from "../../types/config";
 import { ColorRow } from "../../utils/colorUtils";
 
+const HINT_REMOVE_HUE = "Remove color";
+
 interface HueRowProps {
   hue: Hue;
   colorRow: ColorRow;
@@ -41,7 +43,7 @@ export function HueRow({
         />
       ))}
       <ActionCell
-        title="Remove row"
+        title={`${HINT_REMOVE_HUE} “${hue.name}”`}
         variant="remove"
         mode="light"
         buttonClassName={styles.actionCellButton}

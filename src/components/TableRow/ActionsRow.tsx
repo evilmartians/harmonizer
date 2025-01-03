@@ -3,6 +3,9 @@ import { ActionCell } from "../TableCell/ActionCell";
 import { EmptyCell } from "../TableCell/EmptyCell";
 import styles from "./ActionsRow.module.css";
 
+const HINT_ADD_HUE = "Add new color";
+const HINT_REMOVE_LEVEL = "Remove color level";
+
 interface ActionsRowProps {
   levels: Level[];
   lightLevel: number;
@@ -24,8 +27,8 @@ export function ActionsRow({
     <div className={styles.container}>
       <ActionCell
         className={styles.addButton}
-        title="Add row"
-        variant="row"
+        title={HINT_ADD_HUE}
+        variant="hue"
         mode="dark"
         onClick={onAddHue}
         onMouseEnter={() => onColumnHover(null)}
@@ -33,7 +36,7 @@ export function ActionsRow({
       {levels.map((level, i) => (
         <ActionCell
           key={`action-${i}`}
-          title="Remove column"
+          title={`${HINT_REMOVE_LEVEL} “${level.name}”`}
           variant="remove"
           mode={i >= lightLevel ? "light" : "dark"}
           buttonClassName={hoveredColumn === i ? "opacity-100" : "opacity-0"}

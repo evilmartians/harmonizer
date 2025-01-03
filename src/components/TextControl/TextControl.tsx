@@ -1,7 +1,9 @@
 import classNames from "classnames";
 import styles from "./TextControl.module.css";
 import { Color } from "../../utils/colorUtils";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
+const INPUT_MIN_SIZE = 40;
 
 export interface TextControlProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -10,6 +12,7 @@ export interface TextControlProps
   inputSize?: "m" | "l";
   kind?: "bordered" | "ghost";
   align?: "left" | "center";
+  fitContent?: boolean;
   tint?: Color;
 }
 
@@ -19,6 +22,7 @@ export function TextControl({
   inputSize = "m",
   kind = "bordered",
   align = "center",
+  fitContent = false,
   tint,
   value,
   ...props
@@ -27,6 +31,19 @@ export function TextControl({
   const borderColor = tint
     ? `oklch(${tint.l}% ${tint.c} ${tint.h} / 20%)`
     : undefined;
+
+  const [width, setWidth] = useState(INPUT_MIN_SIZE);
+  useEffect(() => {
+    if (inputRef.current) {
+      const span = document.createElement("span");
+      span.classList.add(styles.input);
+      span.textContent = inputRef.current.value || " ";
+      document.body.appendChild(span);
+      setWidth(Math.max(span.offsetWidth, INPUT_MIN_SIZE));
+      document.body.removeChild(span);
+    }
+  }, [value]);
+
   return (
     <div
       className={classNames(
@@ -61,7 +78,10 @@ export function TextControl({
           align === "center" && "text-center",
           styles[`size_${inputSize}`]
         )}
-        style={tint ? { color: tint?.css } : {}}
+        style={{
+          ...(tint ? { color: tint.css } : {}),
+          ...(fitContent ? { width: `${width}px` } : {}),
+        }}
         defaultValue={value}
         {...props}
       />

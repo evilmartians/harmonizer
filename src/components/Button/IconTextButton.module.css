@@ -1,7 +1,7 @@
 .button {
-  @apply flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-md hover:bg-gray-50 transition-colors;
+  @apply flex items-center gap-1 pl-1 pr-2 py-1 bg-button rounded hover:bg-button-hover transition-colors;
 }
 
 .text {
-  @apply font-medium;
+  @apply text-ui-m font-medium;
 }
