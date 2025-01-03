@@ -4,7 +4,7 @@
 }
 
 .label {
-  @apply flex flex-col flex-shrink-0 items-start gap-0.5;
+  @apply flex flex-col flex-shrink-0 items-start gap-0.5 py-1;
 }
 
 .button {

@@ -21,6 +21,15 @@ export function useTableConfig(): TableConfigActions {
   // Levels
   const [levels, setLevels] = useState<Level[]>(confLeveles);
 
+  const editLevel = (index: number, level: Level) => {
+    setLevels((prev) => prev.map((item, i) => (i === index ? level : item)));
+    const newConfig = {
+      ...getConfig(),
+      levels: getConfig().levels.map((item, i) => (i === index ? level : item)),
+    };
+    updateConfig(newConfig);
+  };
+
   const addLevel = (level: Level) => {
     setLevels((prev) => [...prev, level]);
     const newConfig = {
@@ -43,6 +52,15 @@ export function useTableConfig(): TableConfigActions {
 
   // Hues
   const [hues, setHues] = useState<Hue[]>(confHues);
+
+  const editHue = (index: number, hue: Hue) => {
+    setHues((prev) => prev.map((item, i) => (i === index ? hue : item)));
+    const newConfig = {
+      ...getConfig(),
+      hues: getConfig().hues.map((item, i) => (i === index ? hue : item)),
+    };
+    updateConfig(newConfig);
+  };
 
   const addHue = (hue: Hue) => {
     setHues((prev) => [...prev, hue]);
@@ -115,9 +133,11 @@ export function useTableConfig(): TableConfigActions {
 
   return {
     levels,
+    editLevel,
     addLevel,
     removeLevel,
     hues,
+    editHue,
     addHue,
     removeHue,
     settings,

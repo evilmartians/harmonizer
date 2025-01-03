@@ -1,3 +1,19 @@
 .button {
-  @apply text-ui-s font-medium bg-gray-100 rounded p-0.5 hover:bg-gray-200 transition-colors;
+  @apply text-ui-s font-medium rounded-sm p-0.5 transition-colors;
+
+  &.mode_light {
+    @apply text-primary bg-button;
+
+    &:hover {
+      @apply bg-button-hover;
+    }
+  }
+
+  &.mode_dark {
+    @apply text-primary-inverted bg-button-inverted;
+
+    &:hover {
+      @apply bg-button-hover-inverted;
+    }
+  }
 }

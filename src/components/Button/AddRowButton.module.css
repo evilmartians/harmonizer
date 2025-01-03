@@ -1,7 +1,19 @@
 .button {
-  @apply w-10 h-10 rounded-full flex items-center justify-center text-white;
-}
+  @apply w-10 h-10 rounded-full flex items-center justify-center;
 
-.button:hover {
-  @apply bg-gray-100;
+  &.mode_light {
+    @apply text-primary;
+
+    &:hover {
+      @apply bg-button-hover;
+    }
+  }
+
+  &.mode_dark {
+    @apply text-primary-inverted;
+
+    &:hover {
+      @apply bg-button-hover-inverted;
+    }
+  }
 }

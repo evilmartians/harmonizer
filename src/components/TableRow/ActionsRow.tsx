@@ -5,16 +5,18 @@ import styles from "./ActionsRow.module.css";
 
 interface ActionsRowProps {
   levels: Level[];
-  onAddHue: () => void;
+  lightLevel: number;
   hoveredColumn: number | null;
+  onAddHue: () => void;
   onColumnHover: (index: number | null) => void;
   onRemoveLevel: (name: string) => void;
 }
 
 export function ActionsRow({
   levels,
-  onAddHue,
+  lightLevel,
   hoveredColumn,
+  onAddHue,
   onRemoveLevel,
   onColumnHover,
 }: ActionsRowProps) {
@@ -24,6 +26,7 @@ export function ActionsRow({
         className={styles.addButton}
         title="Add row"
         variant="row"
+        mode="dark"
         onClick={onAddHue}
         onMouseEnter={() => onColumnHover(null)}
       />
@@ -32,6 +35,7 @@ export function ActionsRow({
           key={`action-${i}`}
           title="Remove column"
           variant="remove"
+          mode={i >= lightLevel ? "light" : "dark"}
           buttonClassName={hoveredColumn === i ? "opacity-100" : "opacity-0"}
           onClick={() => onRemoveLevel(level.name)}
           onMouseEnter={() => onColumnHover(i)}

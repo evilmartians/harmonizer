@@ -14,16 +14,25 @@ interface TableProps {
 
 export function Table({ className }: TableProps) {
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
-  const { levels, addLevel, removeLevel, hues, addHue, removeHue, settings } =
-    useTableConfigContext();
+  const {
+    levels,
+    editLevel,
+    addLevel,
+    removeLevel,
+    hues,
+    editHue,
+    addHue,
+    removeHue,
+    settings,
+  } = useTableConfigContext();
 
   const createLevelConfig = () => {
-    const newLevel = { name: "Level NEW", contrast: 0, chroma: 0 };
+    const newLevel = levels[levels.length - 1];
     addLevel(newLevel);
   };
 
   const createHueConfig = () => {
-    const newHue = { name: "Hue NEW", degree: 0 };
+    const newHue = hues[hues.length - 1];
     addHue(newHue);
   };
 
@@ -41,6 +50,8 @@ export function Table({ className }: TableProps) {
     [hues, levels, settings]
   );
 
+  const editableChroma = settings.chroma === "custom";
+
   return (
     <div
       className={classNames(className, styles.container)}
@@ -48,24 +59,30 @@ export function Table({ className }: TableProps) {
     >
       <HeaderRow
         levels={levels}
+        tints={colorMatrix.hues[0]}
         model={settings.model}
         lightLevel={settings.lightLevel}
+        editableChroma={editableChroma}
         onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
+        onLevelHue={editLevel}
       />
       {hues.map((hue, i) => (
         <HueRow
           key={`row-${i}`}
           hue={hue}
           colorRow={colorMatrix.hues[i]}
+          lightLevel={settings.lightLevel}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(hue.degree)}
+          onEditHue={(hue) => editHue(i, hue)}
         />
       ))}
       <ActionsRow
         levels={levels}
-        onAddHue={createHueConfig}
+        lightLevel={settings.lightLevel}
         hoveredColumn={hoveredColumn}
+        onAddHue={createHueConfig}
         onRemoveLevel={(name: string) => removeLevel(name)}
         onColumnHover={onColumnHover}
       />

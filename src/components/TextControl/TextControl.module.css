@@ -1,5 +1,5 @@
 .container {
-  @apply flex flex-col gap-1 justify-center rounded w-full;
+  @apply flex flex-col gap-1 justify-center rounded w-full cursor-text;
 
   &:focus-within {
     @apply ring-2 ring-blue-500 !important;

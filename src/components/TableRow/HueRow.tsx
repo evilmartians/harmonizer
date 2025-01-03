@@ -8,33 +8,42 @@ import { ColorRow } from "../../utils/colorUtils";
 interface HueRowProps {
   hue: Hue;
   colorRow: ColorRow;
+  lightLevel: number;
   onLevelHover: (index: number | null) => void;
   onRemoveHue: () => void;
+  onEditHue: (hue: Hue) => void;
 }
 
 export function HueRow({
   hue,
   colorRow,
+  lightLevel,
   onLevelHover,
   onRemoveHue,
+  onEditHue,
 }: HueRowProps) {
+  const tint = colorRow.levels[Math.floor(colorRow.levels.length / 4)];
   return (
     <div className={styles.container}>
       <HueCell
         name={hue.name}
         degree={hue.degree}
+        tint={tint}
         onMouseEnter={() => onLevelHover(null)}
+        onEdit={(name, degree) => onEditHue({ name, degree } as Hue)}
       />
       {colorRow.levels.map((color, i) => (
         <ColorCell
           key={`color-${i}`}
           color={color}
+          mode={i < lightLevel ? "light" : "dark"}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}
       <ActionCell
         title="Remove row"
         variant="remove"
+        mode="light"
         buttonClassName={styles.actionCellButton}
         onClick={onRemoveHue}
         onMouseEnter={() => onLevelHover(null)}

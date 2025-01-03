@@ -2,6 +2,9 @@ import { TableCell } from "./TableCell";
 import { TextButton } from "../Button/TextButton";
 import styles from "./LabelsCell.module.css";
 
+const LABEL_LEVEL = "Color level";
+const LABEL_CONTRACT = "contrast to";
+
 interface LabelsCellProps {
   onMouseEnter: () => void;
 }
@@ -10,20 +13,19 @@ export function LabelsCell({ onMouseEnter }: LabelsCellProps) {
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
-        <div className={styles.label}>Level</div>
+        <div className={styles.label}>{LABEL_LEVEL}</div>
 
         <div className={styles.label}>
-          contrast
-          <div className="flex items-center gap-1">
-            <TextButton
-              className={styles.button}
-              text="APCA"
-              onClick={() => {}}
-            />
-            to
-          </div>
           <TextButton
             className={styles.button}
+            mode="dark"
+            text="APCA"
+            onClick={() => {}}
+          />
+          <div className="flex items-center gap-1">{LABEL_CONTRACT}</div>
+          <TextButton
+            className={styles.button}
+            mode="dark"
             text="Background"
             onClick={() => {}}
           />
@@ -32,6 +34,7 @@ export function LabelsCell({ onMouseEnter }: LabelsCellProps) {
         <div className={styles.label}>
           <TextButton
             className={styles.button}
+            mode="dark"
             text="Even chroma"
             onClick={() => {}}
           />

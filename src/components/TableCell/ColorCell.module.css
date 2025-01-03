@@ -1,10 +1,34 @@
 .container {
-  @apply flex flex-col w-full h-full justify-between text-ui-s p-2 text-secondary;
+  @apply flex flex-col w-full h-full justify-between text-ui-s p-2;
 
   &:hover .lightnessLabel,
   &:hover .middleLine,
   &:hover .bottomLine {
     @apply opacity-100;
+  }
+
+  &.mode_light {
+    @apply text-secondary;
+
+    .middleLine {
+      @apply text-primary;
+    }
+
+    .p3Badge {
+      @apply border-border;
+    }
+  }
+
+  &.mode_dark {
+    @apply text-secondary-inverted;
+
+    .middleLine {
+      @apply text-primary-inverted;
+    }
+
+    .p3Badge {
+      @apply border-border-inverted;
+    }
   }
 }
 
@@ -17,7 +41,7 @@
 }
 
 .p3Badge {
-  @apply block border border-border text-xs rounded-sm px-0.5 text-primary;
+  @apply block border text-xs rounded-sm px-0.5;
 }
 
 .middleLine {
