@@ -14,6 +14,8 @@ export interface TextControlProps
   align?: "left" | "center";
   fitContent?: boolean;
   tint?: Color;
+  validator?: (val: string) => string | null;
+  onValidEdit: (val: string) => void;
 }
 
 export function TextControl({
@@ -24,14 +26,19 @@ export function TextControl({
   align = "center",
   fitContent = false,
   tint,
+  validator,
+  onValidEdit,
   value,
+  title,
   ...props
 }: TextControlProps) {
+  const containerRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const borderColor = tint
     ? `oklch(${tint.l}% ${tint.c} ${tint.h} / 20%)`
     : undefined;
 
+  // Autoshrink
   const [width, setWidth] = useState(INPUT_MIN_SIZE);
   useEffect(() => {
     if (inputRef.current) {
@@ -44,8 +51,26 @@ export function TextControl({
     }
   }, [value]);
 
+  // Validate input
+  const handleChange = (val: string) => {
+    const error = validator?.(val);
+    if (!error) {
+      if (inputRef.current) {
+        inputRef.current.classList.remove("error");
+        inputRef.current.title = title ?? "";
+      }
+      onValidEdit(val);
+    } else {
+      if (inputRef.current) {
+        inputRef.current.classList.add("error");
+        inputRef.current.title = error;
+      }
+    }
+  };
+
   return (
     <div
+      ref={containerRef}
       className={classNames(
         className,
         styles.container,
@@ -83,6 +108,8 @@ export function TextControl({
           ...(fitContent ? { width: `${width}px` } : {}),
         }}
         defaultValue={value}
+        onChange={(e) => handleChange(e.target.value)}
+        title={title}
         {...props}
       />
     </div>

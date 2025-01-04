@@ -1,6 +1,26 @@
 .container {
-  @apply absolute left-0 top-0 bottom-0 bg-black z-0;
+  @apply absolute right-0 left-0 top-0 bottom-0 z-0;
+}
+
+.darkLayer {
+  @apply fixed left-0 top-0 bottom-0 z-0;
   background-color: var(--dark-bg);
+}
+
+.handle {
+  @apply absolute top-0 bottom-0 w-0.5 cursor-col-resize z-10;
+  @apply bg-transparent hover:bg-green-500;
+  @apply transition-colors duration-150;
+}
+
+.handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -4px;
+  right: -4px;
+  bottom: 0;
+  background: transparent;
 }
 
 .inputContainer {
@@ -29,10 +49,4 @@
   &.dark {
     @apply text-primary-inverted;
   }
-}
-
-.handle {
-  @apply absolute right-0 top-0 bottom-0 w-2 cursor-col-resize z-10;
-  @apply bg-transparent hover:bg-gray-700/50 active:bg-gray-600/50;
-  @apply transition-colors duration-150;
 }

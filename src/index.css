@@ -28,3 +28,7 @@ html {
   --dark-bg: #000000;
   --light-bg: #ffffff;
 }
+
+.error {
+  @apply text-red-500 !important;
+}

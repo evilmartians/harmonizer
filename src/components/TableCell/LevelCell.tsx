@@ -12,6 +12,9 @@ const HINT_LEVEL = "Color level name";
 const HINT_CONTRAST = "Contrast between color and background";
 const HINT_CHROMA = "Chroma of all colors in this column";
 
+const ERROR_INVALID_CONTRAST = "Contrast must be a number 0…108";
+const ERROR_INVALID_CHROMA = "Chroma must be a number 0…0.37";
+
 interface LevelCellProps {
   levelName: string;
   model: string;
@@ -35,6 +38,24 @@ export function LevelCell({
   onMouseEnter,
   onEdit,
 }: LevelCellProps) {
+  function validateContrast(val: string): string | null {
+    const regExp = /^[0-9]+$/;
+    const number = parseFloat(val);
+    if (!regExp.test(val) || isNaN(number) || number < 0 || number > 108) {
+      return ERROR_INVALID_CONTRAST;
+    }
+    return null;
+  }
+
+  function validateChroma(val: string): string | null {
+    const regExp = /^[0-9]+$/;
+    const number = parseFloat(val);
+    if (!regExp.test(val) || isNaN(number) || number < 0 || number > 0.37) {
+      return ERROR_INVALID_CHROMA;
+    }
+    return null;
+  }
+
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
@@ -45,7 +66,7 @@ export function LevelCell({
           placeholder={PLACEHOLDER_LEVEL}
           value={levelName}
           title={HINT_LEVEL}
-          onChange={(e) => onEdit(e.target.value, contrast, chroma)}
+          onValidEdit={(e) => onEdit(e, contrast, chroma)}
         />
         <TextControl
           className={classNames(styles.inputPrimary, styles[`mode_${mode}`])}
@@ -56,9 +77,8 @@ export function LevelCell({
           value={contrast}
           label={model}
           title={HINT_CONTRAST}
-          onChange={(e) =>
-            onEdit(levelName, parseFloat(e.target.value), chroma)
-          }
+          validator={validateContrast}
+          onValidEdit={(e) => onEdit(levelName, parseFloat(e), chroma)}
         />
         <TextControl
           className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
@@ -68,9 +88,8 @@ export function LevelCell({
           value={chroma}
           title={HINT_CHROMA}
           disabled={!editableChroma}
-          onChange={(e) =>
-            onEdit(levelName, contrast, parseFloat(e.target.value))
-          }
+          validator={validateChroma}
+          onValidEdit={(e) => onEdit(levelName, contrast, parseFloat(e))}
         />
       </div>
     </TableCell>

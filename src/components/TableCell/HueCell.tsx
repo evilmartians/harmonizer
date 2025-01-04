@@ -9,12 +9,23 @@ const PLACEHOLDER_HUE = "Hue";
 const HINT_NAME = "Color name";
 const HINT_DERGEE = "Hue 0…360";
 
+const ERROR_INVALID_HUE = "Hue must be a number 0…360";
+
 interface HueCellProps {
   name: string;
   degree: number;
   tint: Color;
   onMouseEnter: () => void;
   onEdit: (name: string, degree: number) => void;
+}
+
+function validateHue(val: string): string | null {
+  const regExp = /^[0-9]+$/;
+  const number = parseFloat(val);
+  if (!regExp.test(val) || isNaN(number) || number < 0 || number > 360) {
+    return ERROR_INVALID_HUE;
+  }
+  return null;
 }
 
 export function HueCell({
@@ -37,7 +48,7 @@ export function HueCell({
           placeholder={PLACEHOLDER_NAME}
           value={name}
           title={HINT_NAME}
-          onChange={(e) => onEdit(e.target.value, degree)}
+          onValidEdit={(e) => onEdit(e, degree)}
         ></TextControl>
         <TextControl
           className={styles.degreeInput}
@@ -47,7 +58,8 @@ export function HueCell({
           placeholder={PLACEHOLDER_HUE}
           value={degree}
           title={HINT_DERGEE}
-          onChange={(e) => onEdit(name, parseFloat(e.target.value))}
+          validator={validateHue}
+          onValidEdit={(e) => onEdit(name, parseFloat(e))}
         ></TextControl>
       </div>
     </TableCell>
