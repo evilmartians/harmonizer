@@ -3,24 +3,25 @@
 }
 
 .darkLayer {
-  @apply fixed left-0 top-0 bottom-0 z-0;
+  @apply absolute left-0 top-0 bottom-0 z-0;
   background-color: var(--dark-bg);
 }
 
-.handle {
-  @apply absolute top-0 bottom-0 w-0.5 cursor-col-resize z-10;
-  @apply bg-transparent hover:bg-green-500;
-  @apply transition-colors duration-150;
+.controlContainer {
+  @apply absolute left-0 bottom-0 right-0 h-14;
+  z-index: 1;
+
+  &:hover .dragKnob {
+    @apply opacity-100;
+  }
 }
 
-.handle::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -4px;
-  right: -4px;
-  bottom: 0;
-  background: transparent;
+.dragKnob {
+  @apply absolute bottom-3 flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 opacity-0 cursor-col-resize z-10;
+
+  &:hover {
+    @apply bg-gray-300;
+  }
 }
 
 .inputContainer {

@@ -26,11 +26,11 @@ export interface TableConfig {
 
 export interface TableConfigActions {
   levels: Level[];
-  editLevel: (index: number, level: Level) => void;
+  updateLevel: (index: number, level: Level) => void;
   addLevel: (level: Level) => void;
-  removeLevel: (levelName: string) => void;
+  removeLevel: (pos: number) => void;
   hues: Hue[];
-  editHue: (index: number, hue: Hue) => void;
+  updateHue: (index: number, hue: Hue) => void;
   addHue: (hue: Hue) => void;
   removeHue: (hueDeg: number) => void;
   settings: Settings;
@@ -41,4 +41,5 @@ export interface TableConfigActions {
   updateBgColorDark: (color: string) => void;
   updateLightLevel: (lightLevel: number) => void;
   getConfig: () => TableConfig;
+  updateConfig: (config: TableConfig) => void;
 }

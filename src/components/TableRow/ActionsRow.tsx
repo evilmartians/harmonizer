@@ -12,7 +12,7 @@ interface ActionsRowProps {
   hoveredColumn: number | null;
   onAddHue: () => void;
   onColumnHover: (index: number | null) => void;
-  onRemoveLevel: (name: string) => void;
+  onRemoveLevel: (pos: number) => void;
 }
 
 export function ActionsRow({
@@ -40,7 +40,7 @@ export function ActionsRow({
           variant="remove"
           mode={i >= lightLevel ? "light" : "dark"}
           buttonClassName={hoveredColumn === i ? "opacity-100" : "opacity-0"}
-          onClick={() => onRemoveLevel(level.name)}
+          onClick={() => onRemoveLevel(i)}
           onMouseEnter={() => onColumnHover(i)}
         />
       ))}

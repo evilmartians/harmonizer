@@ -36,7 +36,7 @@ export function HueRow({
       />
       {colorRow.levels.map((color, i) => (
         <ColorCell
-          key={`color-${i}`}
+          key={`color-${color.css}-${i}`}
           color={color}
           mode={i < lightLevel ? "light" : "dark"}
           onMouseEnter={() => onLevelHover(i)}

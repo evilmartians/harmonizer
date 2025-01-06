@@ -2,12 +2,38 @@ import { IconTextButton } from "../Button/IconTextButton";
 import arrowUpIcon from "../../assets/icons/ArrowUp.svg";
 import arrowDownIcon from "../../assets/icons/ArrowDown.svg";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
+import { useRef } from "react";
+import { validateConfig } from "../../utils/configValidation";
 
 export function FloatingActions() {
-  const { getConfig } = useTableConfigContext();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { getConfig, updateConfig } = useTableConfigContext();
 
   const handleUpload = () => {
-    console.log("Upload clicked");
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const config = validateConfig(text);
+
+      if (!config) {
+        alert("Invalid config file format");
+        return;
+      }
+      updateConfig(config);
+    } catch (error) {
+      alert(`Error reading config file: ${error}`);
+    } finally {
+      // Reset input so the same file can be selected again
+      event.target.value = "";
+    }
   };
 
   const handleDownload = () => {
@@ -27,6 +53,13 @@ export function FloatingActions() {
 
   return (
     <div className="fixed bottom-4 right-4 flex gap-2">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept=".json"
+        className="hidden"
+        onChange={handleFileChange}
+      />
       <IconTextButton
         icon={<img src={arrowUpIcon} alt="Upload" />}
         text="Upload"

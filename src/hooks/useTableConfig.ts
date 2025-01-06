@@ -12,135 +12,115 @@ export function useTableConfig(): TableConfigActions {
 
   const getConfig = useCallback(() => config, [config]);
 
-  const {
-    levels: confLeveles,
-    hues: confHues,
-    settings: settings,
-  } = getConfig();
-
   // Levels
-  const [levels, setLevels] = useState<Level[]>(confLeveles);
-
-  const editLevel = (index: number, level: Level) => {
-    setLevels((prev) => prev.map((item, i) => (i === index ? level : item)));
+  const updateLevel = (index: number, level: Level) => {
     const newConfig = {
-      ...getConfig(),
-      levels: getConfig().levels.map((item, i) => (i === index ? level : item)),
+      ...config,
+      levels: config.levels.map((item, i) => (i === index ? level : item)),
     };
     updateConfig(newConfig);
   };
 
   const addLevel = (level: Level) => {
-    setLevels((prev) => [...prev, level]);
     const newConfig = {
-      ...getConfig(),
-      leves: [...getConfig().levels, level],
+      ...config,
+      levels: [...config.levels, level], // Fixed typo from "leves"
     };
     updateConfig(newConfig);
   };
 
-  const removeLevel = (name: string) => {
-    console.log("removeLevel", name);
-    setLevels((prev) => prev.filter((level) => level.name !== name));
+  const removeLevel = (pos: number) => {
     const newConfig = {
-      ...getConfig(),
-      levels: getConfig().levels.filter((level) => level.name !== name),
+      ...config,
+      levels: config.levels.filter((_, index) => index !== pos),
     };
-    console.log("newConfig", newConfig);
     updateConfig(newConfig);
   };
 
   // Hues
-  const [hues, setHues] = useState<Hue[]>(confHues);
-
-  const editHue = (index: number, hue: Hue) => {
-    setHues((prev) => prev.map((item, i) => (i === index ? hue : item)));
+  const updateHue = (index: number, hue: Hue) => {
     const newConfig = {
-      ...getConfig(),
-      hues: getConfig().hues.map((item, i) => (i === index ? hue : item)),
+      ...config,
+      hues: config.hues.map((item, i) => (i === index ? hue : item)),
     };
     updateConfig(newConfig);
   };
 
   const addHue = (hue: Hue) => {
-    setHues((prev) => [...prev, hue]);
     const newConfig = {
-      ...getConfig(),
-      hues: [...getConfig().hues, hue],
+      ...config,
+      hues: [...config.hues, hue],
     };
     updateConfig(newConfig);
   };
 
-  const removeHue = (degree: number) => {
-    console.log("removeHue", degree);
-    setHues((prev) => prev.filter((hue) => hue.degree !== degree));
+  const removeHue = (pos: number) => {
     const newConfig = {
-      ...getConfig(),
-      hues: getConfig().hues.filter((hue) => hue.degree !== degree),
+      ...config,
+      hues: config.hues.filter((_, index) => index !== pos),
     };
-    console.log("newConfig", newConfig);
     updateConfig(newConfig);
   };
 
   // Settings
   const updateModel = (model: string) => {
     const newConfig = {
-      ...getConfig(),
-      settings: { ...settings, model },
+      ...config,
+      settings: { ...config.settings, model },
     };
     updateConfig(newConfig);
   };
 
   const updateDirection = (direction: string) => {
     const newConfig = {
-      ...getConfig(),
-      settings: { ...settings, direction },
+      ...config,
+      settings: { ...config.settings, direction },
     };
     updateConfig(newConfig);
   };
 
   const updateChroma = (chroma: string) => {
     const newConfig = {
-      ...getConfig(),
-      settings: { ...settings, chroma },
+      ...config,
+      settings: { ...config.settings, chroma },
     };
     updateConfig(newConfig);
   };
 
   const updateBgColorLight = (bgColorLight: string) => {
     const newConfig = {
-      ...getConfig(),
-      settings: { ...settings, bgColorLight },
+      ...config,
+      settings: { ...config.settings, bgColorLight },
     };
     updateConfig(newConfig);
   };
 
   const updateBgColorDark = (bgColorDark: string) => {
     const newConfig = {
-      ...getConfig(),
-      settings: { ...settings, bgColorDark },
+      ...config,
+      settings: { ...config.settings, bgColorDark },
     };
     updateConfig(newConfig);
   };
 
   const updateLightLevel = (lightLevel: number) => {
     const newConfig = {
-      ...getConfig(),
-      settings: { ...settings, lightLevel },
+      ...config,
+      settings: { ...config.settings, lightLevel },
     };
     updateConfig(newConfig);
   };
 
   return {
-    levels,
-    editLevel,
+    levels: config.levels,
+    updateLevel,
     addLevel,
     removeLevel,
-    hues,
-    editHue,
+    hues: config.hues,
+    updateHue,
     addHue,
     removeHue,
-    settings,
+    settings: config.settings,
     updateModel,
     updateDirection,
     updateChroma,
@@ -148,5 +128,6 @@ export function useTableConfig(): TableConfigActions {
     updateBgColorDark,
     updateLightLevel,
     getConfig,
+    updateConfig,
   };
 }

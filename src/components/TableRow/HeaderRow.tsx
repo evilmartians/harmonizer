@@ -33,7 +33,7 @@ export function HeaderRow({
       <LabelsCell onMouseEnter={() => onLevelHover(null)} />
       {levels.map((level, i) => (
         <LevelCell
-          key={`header-cell-${i}`}
+          key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
           model={model}
           levelName={level.name}
           contrast={level.contrast}

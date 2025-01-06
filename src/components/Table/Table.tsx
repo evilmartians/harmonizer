@@ -16,11 +16,11 @@ export function Table({ className }: TableProps) {
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
   const {
     levels,
-    editLevel,
+    updateLevel,
     addLevel,
     removeLevel,
     hues,
-    editHue,
+    updateHue,
     addHue,
     removeHue,
     settings,
@@ -65,17 +65,17 @@ export function Table({ className }: TableProps) {
         editableChroma={editableChroma}
         onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
-        onLevelHue={editLevel}
+        onLevelHue={updateLevel}
       />
       {hues.map((hue, i) => (
         <HueRow
-          key={`row-${i}`}
+          key={`hue-row-${hue.name}-${hue.degree}-${i}`}
           hue={hue}
           colorRow={colorMatrix.hues[i]}
           lightLevel={settings.lightLevel}
           onLevelHover={onColumnHover}
-          onRemoveHue={() => removeHue(hue.degree)}
-          onEditHue={(hue) => editHue(i, hue)}
+          onRemoveHue={() => removeHue(i)}
+          onEditHue={(hue) => updateHue(i, hue)}
         />
       ))}
       <ActionsRow
@@ -83,7 +83,7 @@ export function Table({ className }: TableProps) {
         lightLevel={settings.lightLevel}
         hoveredColumn={hoveredColumn}
         onAddHue={createHueConfig}
-        onRemoveLevel={(name: string) => removeLevel(name)}
+        onRemoveLevel={removeLevel}
         onColumnHover={onColumnHover}
       />
     </div>

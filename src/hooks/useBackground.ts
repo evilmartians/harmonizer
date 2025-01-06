@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { usePreventSelection } from "./usePreventSelection";
 import { useTableConfigContext } from "../contexts/TableConfigContext";
 
@@ -25,6 +25,10 @@ export function useBackground() {
   const [isDragging, setIsDragging] = useState(false);
 
   usePreventSelection(isDragging);
+
+  useEffect(() => {
+    setWidth(calculateWidth(settings.lightLevel));
+  }, [settings.lightLevel, calculateWidth]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
