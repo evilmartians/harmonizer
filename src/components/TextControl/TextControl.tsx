@@ -2,6 +2,7 @@ import classNames from "classnames";
 import styles from "./TextControl.module.css";
 import { Color } from "../../utils/colorUtils";
 import { useEffect, useRef, useState } from "react";
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 const INPUT_MIN_SIZE = 40;
 
@@ -43,7 +44,7 @@ export function TextControl({
   useEffect(() => {
     if (inputRef.current) {
       const span = document.createElement("span");
-      span.classList.add(styles.input);
+      span.classList.add(ensureNonNullable(styles.input, "Input class not found"));
       span.textContent = inputRef.current.value || " ";
       document.body.appendChild(span);
       setWidth(Math.max(span.offsetWidth, INPUT_MIN_SIZE));

@@ -4,6 +4,8 @@ import { HueCell } from "../TableCell/HueCell";
 import styles from "./HueRow.module.css";
 import { Hue } from "../../types/config";
 import { ColorRow } from "../../utils/colorUtils";
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
+
 
 const HINT_REMOVE_HUE = "Remove color";
 
@@ -24,7 +26,8 @@ export function HueRow({
   onRemoveHue,
   onEditHue,
 }: HueRowProps) {
-  const tint = colorRow.levels[Math.floor(colorRow.levels.length / 4)];
+  const tint = ensureNonNullable(colorRow.levels[Math.floor(colorRow.levels.length / 4)], "Tint level not found");
+
   return (
     <div className={styles.container}>
       <HueCell
