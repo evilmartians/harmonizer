@@ -11,6 +11,7 @@ export function validateConfig(text: string): TableConfig | null {
 
     // Validate levels
     const validLevel = config.levels.every(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (level: any) =>
         typeof level.name === "string" &&
         typeof level.contrast === "number" &&
@@ -20,8 +21,9 @@ export function validateConfig(text: string): TableConfig | null {
 
     // Validate hues
     const validHue = config.hues.every(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (hue: any) =>
-        typeof hue.name === "string" && typeof hue.degree === "number"
+        typeof hue.name === "string" && typeof hue.angle === "number"
     );
     if (!validHue) return null;
 
@@ -31,7 +33,7 @@ export function validateConfig(text: string): TableConfig | null {
       typeof settings.model !== "string" ||
       typeof settings.direction !== "string" ||
       typeof settings.chroma !== "string" ||
-      typeof settings.lightLevel !== "number" ||
+      typeof settings.bgLightLevel !== "number" ||
       typeof settings.bgColorLight !== "string" ||
       typeof settings.bgColorDark !== "string"
     ) {

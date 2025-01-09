@@ -1,6 +1,6 @@
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
 import { Level } from "../../types/config";
-import { ColorRow } from "../../utils/colorUtils";
+import { ColorRow } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
@@ -12,7 +12,7 @@ interface HeaderRowProps {
   levels: Level[];
   model: string;
   tints: ColorRow;
-  lightLevel: number;
+  bgLightLevel: number;
   editableChroma: boolean;
   onLevelHover: (index: number | null) => void;
   onAddLevel: () => void;
@@ -23,7 +23,7 @@ export function HeaderRow({
   levels,
   model,
   tints,
-  lightLevel,
+  bgLightLevel,
   editableChroma,
   onAddLevel,
   onLevelHover,
@@ -42,7 +42,7 @@ export function HeaderRow({
           levelName={level.name}
           contrast={level.contrast}
           chroma={tintLevel.c}
-          mode={i >= lightLevel ? "light" : "dark"}
+          mode={i >= bgLightLevel ? "light" : "dark"}
           tint={tintLevel}
           editableChroma={editableChroma}
           onMouseEnter={() => onLevelHover(i)}

@@ -6,14 +6,14 @@ export interface Level {
 
 export interface Hue {
   name: string;
-  degree: number;
+  angle: number;
 }
 
 export interface Settings {
   model: string;
   direction: string;
   chroma: string;
-  lightLevel: number;
+  bgLightLevel: number;
   bgColorLight: string;
   bgColorDark: string;
 }
@@ -39,7 +39,7 @@ export interface TableConfigActions {
   updateChroma: (chroma: string) => void;
   updateBgColorLight: (color: string) => void;
   updateBgColorDark: (color: string) => void;
-  updateLightLevel: (lightLevel: number) => void;
+  updateBgLightLevel: (bgLightLevel: number) => void;
   getConfig: () => TableConfig;
   updateConfig: (config: TableConfig) => void;
 }

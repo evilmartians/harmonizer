@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import styles from "./TextControl.module.css";
-import { Color } from "../../utils/colorUtils";
+import { Color } from "../../utils/color";
 import { useEffect, useRef, useState } from "react";
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
