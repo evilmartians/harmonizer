@@ -7,6 +7,6 @@
   @apply -ml-1 font-martian-grotesk font-medium;
 }
 
-.degreeInput {
+.angleInput {
   @apply -ml-1 font-martian-mono font-normal;
 }

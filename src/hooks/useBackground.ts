@@ -1,24 +1,24 @@
-import { useState, useCallback, useEffect } from "react";
-import { usePreventSelection } from "./usePreventSelection";
+import { useCallback, useEffect, useState } from "react";
 import { useTableConfigContext } from "../contexts/TableConfigContext";
+import { usePreventSelection } from "./usePreventSelection";
 
 const CELL_WIDTH = 104;
 const MIN_WIDTH = 120;
 const PADDING = 24 + CELL_WIDTH; // left page padding + first column with labels
 
 export function useBackground() {
-  const { levels, settings, updateLightLevel } = useTableConfigContext();
-  const initialLevel = settings.lightLevel;
+  const { levels, settings, updateBgLightLevel } = useTableConfigContext();
+  const initialLevel = settings.bgLightLevel;
 
   const calculateWidth = useCallback(
     (level: number) => {
       const maxWidth = PADDING + levels.length * CELL_WIDTH;
       return Math.max(
         MIN_WIDTH,
-        Math.min(maxWidth, level * CELL_WIDTH + PADDING)
+        Math.min(maxWidth, level * CELL_WIDTH + PADDING),
       );
     },
-    [levels.length]
+    [levels.length],
   );
   const [width, setWidth] = useState(() => calculateWidth(initialLevel));
 
@@ -27,16 +27,16 @@ export function useBackground() {
   usePreventSelection(isDragging);
 
   useEffect(() => {
-    setWidth(calculateWidth(settings.lightLevel));
-  }, [settings.lightLevel, calculateWidth]);
+    setWidth(calculateWidth(settings.bgLightLevel));
+  }, [settings.bgLightLevel, calculateWidth]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       const newLevel = Math.round((e.clientX - PADDING) / CELL_WIDTH);
-      updateLightLevel(newLevel);
+      updateBgLightLevel(newLevel);
       setWidth(calculateWidth(newLevel));
     },
-    [calculateWidth, updateLightLevel]
+    [calculateWidth, updateBgLightLevel],
   );
 
   const handleDragStart = useCallback(() => {

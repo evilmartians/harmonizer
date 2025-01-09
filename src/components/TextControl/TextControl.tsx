@@ -1,7 +1,8 @@
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 import classNames from "classnames";
-import styles from "./TextControl.module.css";
-import { Color } from "../../utils/colorUtils";
 import { useEffect, useRef, useState } from "react";
+import type { Color } from "../../utils/color";
+import styles from "./TextControl.module.css";
 
 const INPUT_MIN_SIZE = 40;
 
@@ -43,13 +44,15 @@ export function TextControl({
   useEffect(() => {
     if (inputRef.current) {
       const span = document.createElement("span");
-      span.classList.add(styles.input);
+      span.classList.add(
+        ensureNonNullable(styles.input, "Input class not found"),
+      );
       span.textContent = inputRef.current.value || " ";
       document.body.appendChild(span);
       setWidth(Math.max(span.offsetWidth, INPUT_MIN_SIZE));
       document.body.removeChild(span);
     }
-  }, [value]);
+  }, []);
 
   // Validate input
   const handleChange = (val: string) => {
@@ -75,7 +78,7 @@ export function TextControl({
         className,
         styles.container,
         styles[`size_${inputSize}`],
-        styles[`kind_${kind}`]
+        styles[`kind_${kind}`],
       )}
       style={
         kind === "bordered" && borderColor
@@ -83,12 +86,13 @@ export function TextControl({
           : {}
       }
       onClick={() => inputRef.current?.focus()}
+      onKeyDown={() => inputRef.current?.focus()}
     >
       {label && (
         <span
           className={classNames(
             styles.label,
-            align === "center" && "text-center"
+            align === "center" && "text-center",
           )}
           style={tint ? { color: tint?.css } : {}}
         >
@@ -101,7 +105,7 @@ export function TextControl({
         className={classNames(
           styles.input,
           align === "center" && "text-center",
-          styles[`size_${inputSize}`]
+          styles[`size_${inputSize}`],
         )}
         style={{
           ...(tint ? { color: tint.css } : {}),

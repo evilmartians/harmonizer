@@ -11,12 +11,12 @@
     { "name": "900", "contrast": 100, "chroma": 0 }
   ],
   "hues": [
-    { "name": "Red", "degree": 20 },
-    { "name": "Yellow", "degree": 90 },
-    { "name": "Green", "degree": 123 },
-    { "name": "Blue", "degree": 210 },
-    { "name": "Violet", "degree": 280 },
-    { "name": "Pink", "degree": 340 }
+    { "name": "Red", "angle": 20 },
+    { "name": "Yellow", "angle": 90 },
+    { "name": "Green", "angle": 123 },
+    { "name": "Blue", "angle": 210 },
+    { "name": "Violet", "angle": 280 },
+    { "name": "Pink", "angle": 340 }
   ],
   "settings": {
     "model": "APCA",
@@ -24,6 +24,6 @@
     "chroma": "even",
     "bgColorLight": "#FFFFFF",
     "bgColorDark": "#000000",
-    "lightLevel": 5
+    "bgLightLevel": 5
   }
 }

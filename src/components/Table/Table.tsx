@@ -1,12 +1,13 @@
-import { HueRow } from "../TableRow/HueRow";
-import { HeaderRow } from "../TableRow/HeaderRow";
-import { ActionsRow } from "../TableRow/ActionsRow";
-import styles from "./Table.module.css";
 import classNames from "classnames";
+import { ActionsRow } from "../TableRow/ActionsRow";
+import { HeaderRow } from "../TableRow/HeaderRow";
+import { HueRow } from "../TableRow/HueRow";
+import styles from "./Table.module.css";
 
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 import { useCallback, useMemo, useState } from "react";
-import { calculateMatrix } from "../../utils/colorUtils";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
+import { calculateMatrix } from "../../utils/color";
 
 interface TableProps {
   className: string;
@@ -27,12 +28,15 @@ export function Table({ className }: TableProps) {
   } = useTableConfigContext();
 
   const createLevelConfig = () => {
-    const newLevel = levels[levels.length - 1];
+    const newLevel = ensureNonNullable(
+      levels[levels.length - 1],
+      "Level not found",
+    );
     addLevel(newLevel);
   };
 
   const createHueConfig = () => {
-    const newHue = hues[hues.length - 1];
+    const newHue = ensureNonNullable(hues[hues.length - 1], "Hue not found");
     addHue(newHue);
   };
 
@@ -42,12 +46,12 @@ export function Table({ className }: TableProps) {
         setHoveredColumn(i);
       }
     },
-    [hoveredColumn]
+    [hoveredColumn],
   );
 
   const colorMatrix = useMemo(
     () => calculateMatrix(levels, hues, settings),
-    [hues, levels, settings]
+    [hues, levels, settings],
   );
 
   const editableChroma = settings.chroma === "custom";
@@ -59,9 +63,9 @@ export function Table({ className }: TableProps) {
     >
       <HeaderRow
         levels={levels}
-        tints={colorMatrix.hues[0]}
+        tints={ensureNonNullable(colorMatrix.hues[0], "Hue header not found")}
         model={settings.model}
-        lightLevel={settings.lightLevel}
+        bgLightLevel={settings.bgLightLevel}
         editableChroma={editableChroma}
         onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
@@ -69,10 +73,10 @@ export function Table({ className }: TableProps) {
       />
       {hues.map((hue, i) => (
         <HueRow
-          key={`hue-row-${hue.name}-${hue.degree}-${i}`}
+          key={`hue-row-${hue.name}-${hue.angle}-${i}`}
           hue={hue}
-          colorRow={colorMatrix.hues[i]}
-          lightLevel={settings.lightLevel}
+          colorRow={ensureNonNullable(colorMatrix.hues[i], "Hue row not found")}
+          bgLightLevel={settings.bgLightLevel}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(i)}
           onEditHue={(hue) => updateHue(i, hue)}
@@ -80,7 +84,7 @@ export function Table({ className }: TableProps) {
       ))}
       <ActionsRow
         levels={levels}
-        lightLevel={settings.lightLevel}
+        bgLightLevel={settings.bgLightLevel}
         hoveredColumn={hoveredColumn}
         onAddHue={createHueConfig}
         onRemoveLevel={removeLevel}

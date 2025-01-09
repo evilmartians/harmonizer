@@ -1,5 +1,8 @@
-import { apcach, crToBg, maxChroma, apcachToCss, inColorSpace } from "apcach";
-import { Hue, Level, Settings } from "../types/config";
+import { apcach, apcachToCss, crToBg, inColorSpace, maxChroma } from "apcach";
+import type { Hue, Level, Settings } from "../types/config";
+import { ensureNonNullable } from "./ensureNonNullable";
+
+export { inColorSpace, apcachToCss } from "apcach";
 
 export class ColorMatrix {
   public hues: ColorRow[];
@@ -11,7 +14,7 @@ export class ColorMatrix {
       if (index >= colors.length) {
         return;
       }
-      hue.updateColor(i, colors[index]);
+      hue.updateColor(i, ensureNonNullable(colors[index], "Color not found"));
     });
   }
 }
@@ -19,7 +22,7 @@ export class ColorMatrix {
 export class ColorRow {
   public levels: Color[];
   constructor(c: number) {
-    this.levels = Array.from({ length: c }, () => ({} as Color));
+    this.levels = Array.from({ length: c }, () => ({}) as Color);
   }
   updateColor(i: number, color: Color) {
     if (i >= this.levels.length) {
@@ -44,12 +47,12 @@ export interface Color {
 export function calculateMatrix(
   levels: Level[],
   hues: Hue[],
-  settings: Settings
+  settings: Settings,
 ): ColorMatrix {
   const colorMatrix = new ColorMatrix(levels.length, hues.length);
   levels.forEach((level, index) => {
     const bgColor =
-      index < settings.lightLevel
+      index < settings.bgLightLevel
         ? settings.bgColorDark
         : settings.bgColorLight;
     const levelColors = calculateLevel(level, hues, bgColor);
@@ -70,13 +73,13 @@ function calculateLevel(level: Level, hues: Hue[], bgColor: string): Color[] {
       bgColor,
       level.contrast,
       maxCommonChroma,
-      hue.degree
+      hue.angle,
     );
     const color = {
-      cr: parseFloat(level.contrast.toFixed(2)),
-      l: parseFloat((apcachColor.lightness * 100).toFixed(2)),
-      c: parseFloat(maxCommonChroma.toFixed(2)),
-      h: hue.degree,
+      cr: Number.parseFloat(level.contrast.toFixed(2)),
+      l: Number.parseFloat((apcachColor.lightness * 100).toFixed(2)),
+      c: Number.parseFloat(maxCommonChroma.toFixed(2)),
+      h: hue.angle,
       p3: !inColorSpace(apcachColor, "srgb"),
       css: apcachToCss(apcachColor),
     };
@@ -88,10 +91,10 @@ function calculateLevel(level: Level, hues: Hue[], bgColor: string): Color[] {
 /**
  * Calculates colors with maximum chroma and finds chroma of the less saturated color
  */
-function findMaxCommonChroma(
+export function findMaxCommonChroma(
   level: Level,
   hues: Hue[],
-  bgColor: string
+  bgColor: string,
 ): number {
   let maxCommonChroma = 100;
   hues.forEach((hue) => {
@@ -99,7 +102,7 @@ function findMaxCommonChroma(
       bgColor,
       level.contrast,
       maxChroma(),
-      hue.degree
+      hue.angle,
     );
     if (apcachColor.chroma < maxCommonChroma) {
       maxCommonChroma = apcachColor.chroma;
@@ -108,12 +111,11 @@ function findMaxCommonChroma(
   return maxCommonChroma;
 }
 
-function calculateApcach(
+export function calculateApcach(
   bgColor: string,
   cr: number,
   c: number,
-  h: number
-): any {
+  h: number,
+) {
   return apcach(crToBg(bgColor, cr), c, h);
-  //return apcachToCss(color, "oklch");
 }

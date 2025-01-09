@@ -1,8 +1,8 @@
-import { TableCell } from "./TableCell";
-import styles from "./LevelCell.module.css";
-import { TextControl } from "../TextControl/TextControl";
 import classNames from "classnames";
-import { Color } from "../../utils/colorUtils";
+import type { Color } from "../../utils/color";
+import { TextControl } from "../TextControl/TextControl";
+import styles from "./LevelCell.module.css";
+import { TableCell } from "./TableCell";
 
 const PLACEHOLDER_LEVEL = "Level";
 const PLACEHOLDER_CONTRAST = "CR";
@@ -40,8 +40,13 @@ export function LevelCell({
 }: LevelCellProps) {
   function validateContrast(val: string): string | null {
     const regExp = /^[0-9]+$/;
-    const number = parseFloat(val);
-    if (!regExp.test(val) || isNaN(number) || number < 0 || number > 108) {
+    const number = Number.parseFloat(val);
+    if (
+      !regExp.test(val) ||
+      Number.isNaN(number) ||
+      number < 0 ||
+      number > 108
+    ) {
       return ERROR_INVALID_CONTRAST;
     }
     return null;
@@ -49,8 +54,13 @@ export function LevelCell({
 
   function validateChroma(val: string): string | null {
     const regExp = /^[0-9]+$/;
-    const number = parseFloat(val);
-    if (!regExp.test(val) || isNaN(number) || number < 0 || number > 0.37) {
+    const number = Number.parseFloat(val);
+    if (
+      !regExp.test(val) ||
+      Number.isNaN(number) ||
+      number < 0 ||
+      number > 0.37
+    ) {
       return ERROR_INVALID_CHROMA;
     }
     return null;
@@ -78,7 +88,7 @@ export function LevelCell({
           label={model}
           title={HINT_CONTRAST}
           validator={validateContrast}
-          onValidEdit={(e) => onEdit(levelName, parseFloat(e), chroma)}
+          onValidEdit={(e) => onEdit(levelName, Number.parseFloat(e), chroma)}
         />
         <TextControl
           className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
@@ -89,7 +99,7 @@ export function LevelCell({
           title={HINT_CHROMA}
           disabled={!editableChroma}
           validator={validateChroma}
-          onValidEdit={(e) => onEdit(levelName, contrast, parseFloat(e))}
+          onValidEdit={(e) => onEdit(levelName, contrast, Number.parseFloat(e))}
         />
       </div>
     </TableCell>

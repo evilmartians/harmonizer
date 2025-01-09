@@ -1,6 +1,11 @@
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 import defaultConfig from "../config/tableConfig.json";
-import { Hue, Level, TableConfig, TableConfigActions } from "../types/config";
+import type {
+  Hue,
+  Level,
+  TableConfig,
+  TableConfigActions,
+} from "../types/config";
 
 export function useTableConfig(): TableConfigActions {
   const [config, setConfig] = useState<TableConfig>(defaultConfig);
@@ -103,10 +108,10 @@ export function useTableConfig(): TableConfigActions {
     updateConfig(newConfig);
   };
 
-  const updateLightLevel = (lightLevel: number) => {
+  const updateBgLightLevel = (bgLightLevel: number) => {
     const newConfig = {
       ...config,
-      settings: { ...config.settings, lightLevel },
+      settings: { ...config.settings, bgLightLevel },
     };
     updateConfig(newConfig);
   };
@@ -126,7 +131,7 @@ export function useTableConfig(): TableConfigActions {
     updateChroma,
     updateBgColorLight,
     updateBgColorDark,
-    updateLightLevel,
+    updateBgLightLevel,
     getConfig,
     updateConfig,
   };

@@ -1,5 +1,6 @@
-import { Level } from "../../types/config";
-import { ColorRow } from "../../utils/colorUtils";
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
+import type { Level } from "../../types/config";
+import type { ColorRow } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
@@ -11,7 +12,7 @@ interface HeaderRowProps {
   levels: Level[];
   model: string;
   tints: ColorRow;
-  lightLevel: number;
+  bgLightLevel: number;
   editableChroma: boolean;
   onLevelHover: (index: number | null) => void;
   onAddLevel: () => void;
@@ -22,7 +23,7 @@ export function HeaderRow({
   levels,
   model,
   tints,
-  lightLevel,
+  bgLightLevel,
   editableChroma,
   onAddLevel,
   onLevelHover,
@@ -31,22 +32,29 @@ export function HeaderRow({
   return (
     <div className={styles.container}>
       <LabelsCell onMouseEnter={() => onLevelHover(null)} />
-      {levels.map((level, i) => (
-        <LevelCell
-          key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
-          model={model}
-          levelName={level.name}
-          contrast={level.contrast}
-          chroma={tints.levels[i].c}
-          mode={i >= lightLevel ? "light" : "dark"}
-          tint={tints.levels[i]}
-          editableChroma={editableChroma}
-          onMouseEnter={() => onLevelHover(i)}
-          onEdit={(name, contrast, chroma) =>
-            onLevelHue(i, { name, contrast, chroma } as Level)
-          }
-        />
-      ))}
+      {levels.map((level, i) => {
+        const tintLevel = ensureNonNullable(
+          tints.levels[i],
+          "Tint level not found",
+        );
+
+        return (
+          <LevelCell
+            key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
+            model={model}
+            levelName={level.name}
+            contrast={level.contrast}
+            chroma={tintLevel.c}
+            mode={i >= bgLightLevel ? "light" : "dark"}
+            tint={tintLevel}
+            editableChroma={editableChroma}
+            onMouseEnter={() => onLevelHover(i)}
+            onEdit={(name, contrast, chroma) =>
+              onLevelHue(i, { name, contrast, chroma } as Level)
+            }
+          />
+        );
+      })}
       <ActionCell
         title={HINT_ADD_LEVEL}
         variant="level"
