@@ -1,3 +1,4 @@
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 import { Level } from "../../types/config";
 import { ColorRow } from "../../utils/colorUtils";
 import { ActionCell } from "../TableCell/ActionCell";
@@ -31,22 +32,26 @@ export function HeaderRow({
   return (
     <div className={styles.container}>
       <LabelsCell onMouseEnter={() => onLevelHover(null)} />
-      {levels.map((level, i) => (
+      {levels.map((level, i) => {
+        const tintLevel = ensureNonNullable(tints.levels[i], "Tint level not found");
+
+        return (
         <LevelCell
           key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
           model={model}
           levelName={level.name}
           contrast={level.contrast}
-          chroma={tints.levels[i].c}
+          chroma={tintLevel.c}
           mode={i >= lightLevel ? "light" : "dark"}
-          tint={tints.levels[i]}
+          tint={tintLevel}
           editableChroma={editableChroma}
           onMouseEnter={() => onLevelHover(i)}
           onEdit={(name, contrast, chroma) =>
             onLevelHue(i, { name, contrast, chroma } as Level)
           }
         />
-      ))}
+      )
+      })}
       <ActionCell
         title={HINT_ADD_LEVEL}
         variant="level"

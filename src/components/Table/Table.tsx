@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useCallback, useMemo, useState } from "react";
 import { calculateMatrix } from "../../utils/colorUtils";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 interface TableProps {
   className: string;
@@ -27,12 +28,12 @@ export function Table({ className }: TableProps) {
   } = useTableConfigContext();
 
   const createLevelConfig = () => {
-    const newLevel = levels[levels.length - 1];
+    const newLevel = ensureNonNullable(levels[levels.length - 1], "Level not found");
     addLevel(newLevel);
   };
 
   const createHueConfig = () => {
-    const newHue = hues[hues.length - 1];
+    const newHue = ensureNonNullable(hues[hues.length - 1], "Hue not found");
     addHue(newHue);
   };
 
@@ -59,7 +60,7 @@ export function Table({ className }: TableProps) {
     >
       <HeaderRow
         levels={levels}
-        tints={colorMatrix.hues[0]}
+        tints={ensureNonNullable(colorMatrix.hues[0], "Hue header not found")}
         model={settings.model}
         lightLevel={settings.lightLevel}
         editableChroma={editableChroma}
@@ -71,7 +72,7 @@ export function Table({ className }: TableProps) {
         <HueRow
           key={`hue-row-${hue.name}-${hue.degree}-${i}`}
           hue={hue}
-          colorRow={colorMatrix.hues[i]}
+          colorRow={ensureNonNullable(colorMatrix.hues[i], "Hue row not found")}
           lightLevel={settings.lightLevel}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(i)}
