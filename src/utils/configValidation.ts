@@ -1,4 +1,4 @@
-import { TableConfig } from "../types/config";
+import type { TableConfig } from "../types/config";
 
 export function validateConfig(text: string): TableConfig | null {
   const config = JSON.parse(text);
@@ -11,19 +11,19 @@ export function validateConfig(text: string): TableConfig | null {
 
     // Validate levels
     const validLevel = config.levels.every(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
       (level: any) =>
         typeof level.name === "string" &&
         typeof level.contrast === "number" &&
-        typeof level.chroma === "number"
+        typeof level.chroma === "number",
     );
     if (!validLevel) return null;
 
     // Validate hues
     const validHue = config.hues.every(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
       (hue: any) =>
-        typeof hue.name === "string" && typeof hue.angle === "number"
+        typeof hue.name === "string" && typeof hue.angle === "number",
     );
     if (!validHue) return null;
 

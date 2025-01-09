@@ -16,6 +16,7 @@ export function AddColumnButton({
 }: AddColumnButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={classNames(className, styles.button, styles[`mode_${mode}`])}
       title={title}
@@ -28,6 +29,7 @@ export function AddColumnButton({
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
+        <title>{title}</title>
         <path
           d="M11.4 6H12.6V11.4H18V12.6H12.6V18H11.4V12.6H6V11.4H11.4V6Z"
           fill="currentColor"

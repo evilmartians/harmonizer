@@ -4,20 +4,26 @@ declare module "apcach" {
     chroma: ColorGenerator | number,
     contrast: number,
     hue: number,
-  ): ApcachResult
+  ): ApcachResult;
 
+  // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
   export function apcachToCss(color: any): string;
 
+  // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
   export function inColorSpace(color: any, space: string): boolean;
 
   export type ApcachResult = {
-    alpha: number,
-    chroma: any,
-    colorSpace: string
-    contrastConfig: any
-    hue: any
-    lightness: any
-  }
+    alpha: number;
+    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
+    chroma: any;
+    colorSpace: string;
+    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
+    contrastConfig: any;
+    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
+    hue: any;
+    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
+    lightness: any;
+  };
 
   export type ColorGeneratorOptions = {
     hue?: number;
@@ -27,7 +33,7 @@ declare module "apcach" {
 
   export type ColorGenerator = (
     chroma: number,
-    options?: ColorGeneratorOptions
+    options?: ColorGeneratorOptions,
   ) => string;
 
   /**
@@ -39,7 +45,7 @@ declare module "apcach" {
   export function crToBg(
     background: string,
     contrast: number,
-    model?: "APCA" | "WCAG2"
+    model?: "APCA" | "WCAG2",
   ): ColorGenerator;
 
   /**

@@ -1,10 +1,10 @@
 import classNames from "classnames";
+import { parse } from "culori";
+import { useEffect, useState } from "react";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { useBackground } from "../../hooks/useBackground";
 import { TextControl } from "../TextControl/TextControl";
 import styles from "./Background.module.css";
-import { useEffect, useState } from "react";
-import { parse } from "culori";
 
 const HINT_COLOR = "OKLCH, Hex, RGB, HSL…";
 const ERROR_INVALID_COLOR =
@@ -43,6 +43,7 @@ export function Background() {
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
           >
+            <title>Drag to resize</title>
             <path d="M7 3H5V5H7V3Z" fill="currentColor" />
             <path d="M11 3H9V5H11V3Z" fill="currentColor" />
             <path d="M5 7H7V9H5V7Z" fill="currentColor" />
@@ -86,7 +87,7 @@ export function Background() {
         className={classNames(
           styles.darkLayer,
           knobIsHovered &&
-            "shadow-[-1px_0_0_0_rgb(34,197,94)_inset,1px_0_0_0_rgb(34,197,94)]"
+            "shadow-[-1px_0_0_0_rgb(34,197,94)_inset,1px_0_0_0_rgb(34,197,94)]",
         )}
         style={{ width }}
       />

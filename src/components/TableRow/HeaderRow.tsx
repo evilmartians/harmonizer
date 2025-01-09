@@ -1,6 +1,6 @@
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
-import { Level } from "../../types/config";
-import { ColorRow } from "../../utils/color";
+import type { Level } from "../../types/config";
+import type { ColorRow } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
@@ -33,24 +33,27 @@ export function HeaderRow({
     <div className={styles.container}>
       <LabelsCell onMouseEnter={() => onLevelHover(null)} />
       {levels.map((level, i) => {
-        const tintLevel = ensureNonNullable(tints.levels[i], "Tint level not found");
+        const tintLevel = ensureNonNullable(
+          tints.levels[i],
+          "Tint level not found",
+        );
 
         return (
-        <LevelCell
-          key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
-          model={model}
-          levelName={level.name}
-          contrast={level.contrast}
-          chroma={tintLevel.c}
-          mode={i >= bgLightLevel ? "light" : "dark"}
-          tint={tintLevel}
-          editableChroma={editableChroma}
-          onMouseEnter={() => onLevelHover(i)}
-          onEdit={(name, contrast, chroma) =>
-            onLevelHue(i, { name, contrast, chroma } as Level)
-          }
-        />
-      )
+          <LevelCell
+            key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
+            model={model}
+            levelName={level.name}
+            contrast={level.contrast}
+            chroma={tintLevel.c}
+            mode={i >= bgLightLevel ? "light" : "dark"}
+            tint={tintLevel}
+            editableChroma={editableChroma}
+            onMouseEnter={() => onLevelHover(i)}
+            onEdit={(name, contrast, chroma) =>
+              onLevelHue(i, { name, contrast, chroma } as Level)
+            }
+          />
+        );
       })}
       <ActionCell
         title={HINT_ADD_LEVEL}

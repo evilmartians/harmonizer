@@ -16,6 +16,7 @@ export function RemoveButton({
 }: RemoveButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={classNames(className, styles.button, styles[`mode_${mode}`])}
       title={title}
@@ -28,6 +29,7 @@ export function RemoveButton({
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
       >
+        <title>{title}</title>
         <path
           fillRule="evenodd"
           clipRule="evenodd"
