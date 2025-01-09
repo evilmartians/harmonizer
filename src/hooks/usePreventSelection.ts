@@ -7,7 +7,7 @@ export function usePreventSelection(isActive: boolean) {
     }
 
     document.body.style.userSelect = "none";
-    
+
     return () => {
       document.body.style.userSelect = "";
     };

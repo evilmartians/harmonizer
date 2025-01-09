@@ -1,13 +1,13 @@
-import { HueRow } from "../TableRow/HueRow";
-import { HeaderRow } from "../TableRow/HeaderRow";
-import { ActionsRow } from "../TableRow/ActionsRow";
-import styles from "./Table.module.css";
 import classNames from "classnames";
+import { ActionsRow } from "../TableRow/ActionsRow";
+import { HeaderRow } from "../TableRow/HeaderRow";
+import { HueRow } from "../TableRow/HueRow";
+import styles from "./Table.module.css";
 
-import { useCallback, useMemo, useState } from "react";
-import { calculateMatrix } from "../../utils/color";
-import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
+import { useCallback, useMemo, useState } from "react";
+import { useTableConfigContext } from "../../contexts/TableConfigContext";
+import { calculateMatrix } from "../../utils/color";
 
 interface TableProps {
   className: string;
@@ -28,7 +28,10 @@ export function Table({ className }: TableProps) {
   } = useTableConfigContext();
 
   const createLevelConfig = () => {
-    const newLevel = ensureNonNullable(levels[levels.length - 1], "Level not found");
+    const newLevel = ensureNonNullable(
+      levels[levels.length - 1],
+      "Level not found",
+    );
     addLevel(newLevel);
   };
 
@@ -43,12 +46,12 @@ export function Table({ className }: TableProps) {
         setHoveredColumn(i);
       }
     },
-    [hoveredColumn]
+    [hoveredColumn],
   );
 
   const colorMatrix = useMemo(
     () => calculateMatrix(levels, hues, settings),
-    [hues, levels, settings]
+    [hues, levels, settings],
   );
 
   const editableChroma = settings.chroma === "custom";

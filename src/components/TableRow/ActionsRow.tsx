@@ -1,4 +1,4 @@
-import { Level } from "../../types/config";
+import type { Level } from "../../types/config";
 import { ActionCell } from "../TableCell/ActionCell";
 import { EmptyCell } from "../TableCell/EmptyCell";
 import styles from "./ActionsRow.module.css";
@@ -35,7 +35,7 @@ export function ActionsRow({
       />
       {levels.map((level, i) => (
         <ActionCell
-          key={`action-${i}`}
+          key={`action-${level.name}`}
           title={`${HINT_REMOVE_LEVEL} “${level.name}”`}
           variant="remove"
           mode={i >= bgLightLevel ? "light" : "dark"}

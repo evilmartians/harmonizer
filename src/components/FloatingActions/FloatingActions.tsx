@@ -1,9 +1,9 @@
-import { IconTextButton } from "../Button/IconTextButton";
-import arrowUpIcon from "../../assets/icons/ArrowUp.svg";
-import arrowDownIcon from "../../assets/icons/ArrowDown.svg";
-import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { useRef } from "react";
+import arrowDownIcon from "../../assets/icons/ArrowDown.svg";
+import arrowUpIcon from "../../assets/icons/ArrowUp.svg";
+import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { validateConfig } from "../../utils/configValidation";
+import { IconTextButton } from "../Button/IconTextButton";
 
 export function FloatingActions() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -14,7 +14,7 @@ export function FloatingActions() {
   };
 
   const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     const file = event.target.files?.[0];
     if (!file) return;

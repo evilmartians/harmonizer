@@ -1,6 +1,6 @@
-import { Table } from "./components/Table/Table";
-import { FloatingActions } from "./components/FloatingActions/FloatingActions";
 import { Background } from "./components/Background/Background";
+import { FloatingActions } from "./components/FloatingActions/FloatingActions";
+import { Table } from "./components/Table/Table";
 import { TableConfigProvider } from "./contexts/TableConfigContext";
 
 function App() {

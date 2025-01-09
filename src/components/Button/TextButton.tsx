@@ -16,6 +16,7 @@ export function TextButton({
 }: TextButtonProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={classNames(className, styles.button, styles[`mode_${mode}`])}
     >

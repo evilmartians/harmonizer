@@ -1,7 +1,7 @@
-import { TableCell } from "./TableCell";
-import styles from "./HueCell.module.css";
+import type { Color } from "../../utils/color";
 import { TextControl } from "../TextControl/TextControl";
-import { Color } from "../../utils/color";
+import styles from "./HueCell.module.css";
+import { TableCell } from "./TableCell";
 
 const PLACEHOLDER_NAME = "Name";
 const PLACEHOLDER_HUE = "Hue";
@@ -21,8 +21,8 @@ interface HueCellProps {
 
 function validateHue(val: string): string | null {
   const regExp = /^[0-9]+$/;
-  const number = parseFloat(val);
-  if (!regExp.test(val) || isNaN(number) || number < 0 || number > 360) {
+  const number = Number.parseFloat(val);
+  if (!regExp.test(val) || Number.isNaN(number) || number < 0 || number > 360) {
     return ERROR_INVALID_HUE;
   }
   return null;
@@ -49,7 +49,7 @@ export function HueCell({
           value={name}
           title={HINT_NAME}
           onValidEdit={(e) => onEdit(e, angle)}
-        ></TextControl>
+        />
         <TextControl
           className={styles.angleInput}
           inputSize="m"
@@ -59,8 +59,8 @@ export function HueCell({
           value={angle}
           title={HINT_DERGEE}
           validator={validateHue}
-          onValidEdit={(e) => onEdit(name, parseFloat(e))}
-        ></TextControl>
+          onValidEdit={(e) => onEdit(name, Number.parseFloat(e))}
+        />
       </div>
     </TableCell>
   );

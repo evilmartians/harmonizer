@@ -1,6 +1,6 @@
-import { TableCell } from "./TableCell";
 import { TextButton } from "../Button/TextButton";
 import styles from "./LabelsCell.module.css";
+import { TableCell } from "./TableCell";
 
 const LABEL_LEVEL = "Color level";
 const LABEL_CONTRACT = "contrast to";

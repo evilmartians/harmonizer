@@ -1,9 +1,9 @@
 import classNames from "classnames";
-import { TableCell } from "./TableCell";
+import { AddColumnButton } from "../Button/AddColumnButton";
 import { AddRowButton } from "../Button/AddRowButton";
 import { RemoveButton } from "../Button/RemoveButton";
 import styles from "./ActionCell.module.css";
-import { AddColumnButton } from "../Button/AddColumnButton";
+import { TableCell } from "./TableCell";
 
 interface ActionCellProps {
   className?: string;

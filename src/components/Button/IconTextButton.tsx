@@ -1,5 +1,5 @@
-import React from 'react';
-import styles from './IconTextButton.module.css';
+import type React from "react";
+import styles from "./IconTextButton.module.css";
 
 interface IconTextButtonProps {
   icon: React.ReactNode;
@@ -9,10 +9,7 @@ interface IconTextButtonProps {
 
 export function IconTextButton({ icon, text, onClick }: IconTextButtonProps) {
   return (
-    <button
-      onClick={onClick}
-      className={styles.button}
-    >
+    <button type="button" onClick={onClick} className={styles.button}>
       {icon}
       <span className={styles.text}>{text}</span>
     </button>

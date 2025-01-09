@@ -1,6 +1,6 @@
-import { useState, useCallback, useEffect } from "react";
-import { usePreventSelection } from "./usePreventSelection";
+import { useCallback, useEffect, useState } from "react";
 import { useTableConfigContext } from "../contexts/TableConfigContext";
+import { usePreventSelection } from "./usePreventSelection";
 
 const CELL_WIDTH = 104;
 const MIN_WIDTH = 120;
@@ -15,10 +15,10 @@ export function useBackground() {
       const maxWidth = PADDING + levels.length * CELL_WIDTH;
       return Math.max(
         MIN_WIDTH,
-        Math.min(maxWidth, level * CELL_WIDTH + PADDING)
+        Math.min(maxWidth, level * CELL_WIDTH + PADDING),
       );
     },
-    [levels.length]
+    [levels.length],
   );
   const [width, setWidth] = useState(() => calculateWidth(initialLevel));
 
@@ -36,7 +36,7 @@ export function useBackground() {
       updateBgLightLevel(newLevel);
       setWidth(calculateWidth(newLevel));
     },
-    [calculateWidth, updateBgLightLevel]
+    [calculateWidth, updateBgLightLevel],
   );
 
   const handleDragStart = useCallback(() => {
