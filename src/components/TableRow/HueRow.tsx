@@ -3,7 +3,7 @@ import { ActionCell } from "../TableCell/ActionCell";
 import { HueCell } from "../TableCell/HueCell";
 import styles from "./HueRow.module.css";
 import { Hue } from "../../types/config";
-import { ColorRow } from "../../utils/colorUtils";
+import { ColorRow } from "../../utils/color";
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 
@@ -12,7 +12,7 @@ const HINT_REMOVE_HUE = "Remove color";
 interface HueRowProps {
   hue: Hue;
   colorRow: ColorRow;
-  lightLevel: number;
+  bgLightLevel: number;
   onLevelHover: (index: number | null) => void;
   onRemoveHue: () => void;
   onEditHue: (hue: Hue) => void;
@@ -21,7 +21,7 @@ interface HueRowProps {
 export function HueRow({
   hue,
   colorRow,
-  lightLevel,
+  bgLightLevel,
   onLevelHover,
   onRemoveHue,
   onEditHue,
@@ -32,16 +32,16 @@ export function HueRow({
     <div className={styles.container}>
       <HueCell
         name={hue.name}
-        degree={hue.degree}
+        angle={hue.angle}
         tint={tint}
         onMouseEnter={() => onLevelHover(null)}
-        onEdit={(name, degree) => onEditHue({ name, degree } as Hue)}
+        onEdit={(name, angle) => onEditHue({ name, angle } as Hue)}
       />
       {colorRow.levels.map((color, i) => (
         <ColorCell
           key={`color-${color.css}-${i}`}
           color={color}
-          mode={i < lightLevel ? "light" : "dark"}
+          mode={i < bgLightLevel ? "light" : "dark"}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}

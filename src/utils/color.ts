@@ -1,6 +1,8 @@
 import { apcach, crToBg, maxChroma, apcachToCss, inColorSpace } from "apcach";
 import { Hue, Level, Settings } from "../types/config";
 
+export { inColorSpace, apcachToCss } from 'apcach';
+
 export class ColorMatrix {
   public hues: ColorRow[];
   constructor(c: number, r: number) {
@@ -11,7 +13,7 @@ export class ColorMatrix {
       if (index >= colors.length) {
         return;
       }
-      hue.updateColor(i, colors[index]);
+      hue.updateColor(i, colors[index]!);
     });
   }
 }
@@ -49,7 +51,7 @@ export function calculateMatrix(
   const colorMatrix = new ColorMatrix(levels.length, hues.length);
   levels.forEach((level, index) => {
     const bgColor =
-      index < settings.lightLevel
+      index < settings.bgLightLevel
         ? settings.bgColorDark
         : settings.bgColorLight;
     const levelColors = calculateLevel(level, hues, bgColor);
@@ -70,13 +72,13 @@ function calculateLevel(level: Level, hues: Hue[], bgColor: string): Color[] {
       bgColor,
       level.contrast,
       maxCommonChroma,
-      hue.degree
+      hue.angle
     );
     const color = {
       cr: parseFloat(level.contrast.toFixed(2)),
       l: parseFloat((apcachColor.lightness * 100).toFixed(2)),
       c: parseFloat(maxCommonChroma.toFixed(2)),
-      h: hue.degree,
+      h: hue.angle,
       p3: !inColorSpace(apcachColor, "srgb"),
       css: apcachToCss(apcachColor),
     };
@@ -88,7 +90,7 @@ function calculateLevel(level: Level, hues: Hue[], bgColor: string): Color[] {
 /**
  * Calculates colors with maximum chroma and finds chroma of the less saturated color
  */
-function findMaxCommonChroma(
+export function findMaxCommonChroma(
   level: Level,
   hues: Hue[],
   bgColor: string
@@ -99,7 +101,7 @@ function findMaxCommonChroma(
       bgColor,
       level.contrast,
       maxChroma(),
-      hue.degree
+      hue.angle
     );
     if (apcachColor.chroma < maxCommonChroma) {
       maxCommonChroma = apcachColor.chroma;
@@ -108,12 +110,11 @@ function findMaxCommonChroma(
   return maxCommonChroma;
 }
 
-function calculateApcach(
+export function calculateApcach(
   bgColor: string,
   cr: number,
   c: number,
   h: number
-): any {
+) {
   return apcach(crToBg(bgColor, cr), c, h);
-  //return apcachToCss(color, "oklch");
 }

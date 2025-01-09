@@ -5,7 +5,7 @@ import styles from "./Table.module.css";
 import classNames from "classnames";
 
 import { useCallback, useMemo, useState } from "react";
-import { calculateMatrix } from "../../utils/colorUtils";
+import { calculateMatrix } from "../../utils/color";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
@@ -62,7 +62,7 @@ export function Table({ className }: TableProps) {
         levels={levels}
         tints={ensureNonNullable(colorMatrix.hues[0], "Hue header not found")}
         model={settings.model}
-        lightLevel={settings.lightLevel}
+        bgLightLevel={settings.bgLightLevel}
         editableChroma={editableChroma}
         onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
@@ -70,10 +70,10 @@ export function Table({ className }: TableProps) {
       />
       {hues.map((hue, i) => (
         <HueRow
-          key={`hue-row-${hue.name}-${hue.degree}-${i}`}
+          key={`hue-row-${hue.name}-${hue.angle}-${i}`}
           hue={hue}
           colorRow={ensureNonNullable(colorMatrix.hues[i], "Hue row not found")}
-          lightLevel={settings.lightLevel}
+          bgLightLevel={settings.bgLightLevel}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(i)}
           onEditHue={(hue) => updateHue(i, hue)}
@@ -81,7 +81,7 @@ export function Table({ className }: TableProps) {
       ))}
       <ActionsRow
         levels={levels}
-        lightLevel={settings.lightLevel}
+        bgLightLevel={settings.bgLightLevel}
         hoveredColumn={hoveredColumn}
         onAddHue={createHueConfig}
         onRemoveLevel={removeLevel}

@@ -1,8 +1,23 @@
-declare module "apcach-2" {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+declare module "apcach" {
   export function apcach(
-    op: ColorGeneratorOptions,
-    gen: ColorGenerator
-  ): unknown;
+    chroma: ColorGenerator | number,
+    contrast: number,
+    hue: number,
+  ): ApcachResult
+
+  export function apcachToCss(color: any): string;
+
+  export function inColorSpace(color: any, space: string): boolean;
+
+  export type ApcachResult = {
+    alpha: number,
+    chroma: any,
+    colorSpace: string
+    contrastConfig: any
+    hue: any
+    lightness: any
+  }
 
   export type ColorGeneratorOptions = {
     hue?: number;

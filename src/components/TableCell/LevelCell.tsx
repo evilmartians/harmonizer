@@ -2,7 +2,7 @@ import { TableCell } from "./TableCell";
 import styles from "./LevelCell.module.css";
 import { TextControl } from "../TextControl/TextControl";
 import classNames from "classnames";
-import { Color } from "../../utils/colorUtils";
+import { Color } from "../../utils/color";
 
 const PLACEHOLDER_LEVEL = "Level";
 const PLACEHOLDER_CONTRAST = "CR";

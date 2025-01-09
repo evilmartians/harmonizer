@@ -103,10 +103,10 @@ export function useTableConfig(): TableConfigActions {
     updateConfig(newConfig);
   };
 
-  const updateLightLevel = (lightLevel: number) => {
+  const updateBgLightLevel = (bgLightLevel: number) => {
     const newConfig = {
       ...config,
-      settings: { ...config.settings, lightLevel },
+      settings: { ...config.settings, bgLightLevel },
     };
     updateConfig(newConfig);
   };
@@ -126,7 +126,7 @@ export function useTableConfig(): TableConfigActions {
     updateChroma,
     updateBgColorLight,
     updateBgColorDark,
-    updateLightLevel,
+    updateBgLightLevel,
     getConfig,
     updateConfig,
   };

@@ -1,6 +1,6 @@
 import { TableCell } from "./TableCell";
 import styles from "./ColorCell.module.css";
-import { Color } from "../../utils/colorUtils";
+import { Color } from "../../utils/color";
 import classNames from "classnames";
 
 interface ColorCellProps {

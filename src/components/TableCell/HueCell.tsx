@@ -1,7 +1,7 @@
 import { TableCell } from "./TableCell";
 import styles from "./HueCell.module.css";
 import { TextControl } from "../TextControl/TextControl";
-import { Color } from "../../utils/colorUtils";
+import { Color } from "../../utils/color";
 
 const PLACEHOLDER_NAME = "Name";
 const PLACEHOLDER_HUE = "Hue";
@@ -13,10 +13,10 @@ const ERROR_INVALID_HUE = "Hue must be a number 0…360";
 
 interface HueCellProps {
   name: string;
-  degree: number;
+  angle: number;
   tint: Color;
   onMouseEnter: () => void;
-  onEdit: (name: string, degree: number) => void;
+  onEdit: (name: string, angle: number) => void;
 }
 
 function validateHue(val: string): string | null {
@@ -30,7 +30,7 @@ function validateHue(val: string): string | null {
 
 export function HueCell({
   name,
-  degree,
+  angle,
   tint,
   onMouseEnter,
   onEdit,
@@ -48,15 +48,15 @@ export function HueCell({
           placeholder={PLACEHOLDER_NAME}
           value={name}
           title={HINT_NAME}
-          onValidEdit={(e) => onEdit(e, degree)}
+          onValidEdit={(e) => onEdit(e, angle)}
         ></TextControl>
         <TextControl
-          className={styles.degreeInput}
+          className={styles.angleInput}
           inputSize="m"
           kind="ghost"
           align="left"
           placeholder={PLACEHOLDER_HUE}
-          value={degree}
+          value={angle}
           title={HINT_DERGEE}
           validator={validateHue}
           onValidEdit={(e) => onEdit(name, parseFloat(e))}
