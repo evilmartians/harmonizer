@@ -1,5 +1,6 @@
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
-import type { Level } from "../../types/config";
+import { useMemo } from "react";
+import type { Level, Settings } from "../../types/config";
 import type { ColorRow } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
@@ -9,42 +10,64 @@ import styles from "./HeaderRow.module.css";
 const HINT_ADD_LEVEL = "Add new color level";
 
 interface HeaderRowProps {
+  settings: Settings;
   levels: Level[];
   model: string;
   tints: ColorRow;
   bgLightLevel: number;
   editableChroma: boolean;
   onLevelHover: (index: number | null) => void;
+  onEditModel: (value: string) => void;
+  onEditDirection: (value: string) => void;
+  onEditChroma: (value: string) => void;
   onAddLevel: () => void;
   onLevelHue: (index: number, level: Level) => void;
 }
 
 export function HeaderRow({
+  settings,
   levels,
   model,
   tints,
   bgLightLevel,
   editableChroma,
   onAddLevel,
+  onEditModel,
+  onEditDirection,
+  onEditChroma,
   onLevelHover,
   onLevelHue,
 }: HeaderRowProps) {
   return (
     <div className={styles.container}>
-      <LabelsCell onMouseEnter={() => onLevelHover(null)} />
+      <LabelsCell
+        model={settings.model}
+        direction={settings.direction}
+        chroma={settings.chroma}
+        onMouseEnter={() => onLevelHover(null)}
+        onEditModel={onEditModel}
+        onEditDirection={onEditDirection}
+        onEditChroma={onEditChroma}
+      />
       {levels.map((level, i) => {
         const tintLevel = ensureNonNullable(
           tints.levels[i],
           "Tint level not found",
         );
 
+        const chroma = useMemo(() => {
+          return settings.chroma === "even"
+            ? `${tintLevel.c.toFixed(2)}`
+            : "max";
+        }, [settings.chroma, tintLevel.c]);
+
         return (
           <LevelCell
-            key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}`}
+            key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}-${settings.chroma}`}
             model={model}
             levelName={level.name}
             contrast={level.contrast}
-            chroma={tintLevel.c}
+            chroma={chroma}
             mode={i >= bgLightLevel ? "light" : "dark"}
             tint={tintLevel}
             editableChroma={editableChroma}

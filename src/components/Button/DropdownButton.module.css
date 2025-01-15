@@ -1,0 +1,28 @@
+.button {
+  @apply text-ui-s font-medium rounded-sm p-0.5 transition-colors;
+
+  &.mode_light {
+    @apply text-primary bg-button;
+
+    &:hover {
+      @apply bg-button-hover;
+    }
+  }
+
+  &.mode_dark {
+    @apply text-primary-inverted bg-button-inverted;
+
+    &:hover {
+      @apply bg-button-hover-inverted;
+    }
+  }
+}
+
+.select {
+  @apply appearance-none bg-transparent border-none text-inherit cursor-pointer;
+  @apply focus:outline-none focus:ring-0;
+}
+
+.select option {
+  @apply bg-black text-white;
+}

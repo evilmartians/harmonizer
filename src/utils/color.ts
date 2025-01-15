@@ -55,7 +55,7 @@ export function calculateMatrix(
       index < settings.bgLightLevel
         ? settings.bgColorDark
         : settings.bgColorLight;
-    const levelColors = calculateLevel(level, hues, bgColor);
+    const levelColors = calculateLevel(level, hues, bgColor, settings.chroma);
     colorMatrix.updateLevel(index, levelColors);
   });
   return colorMatrix;
@@ -64,21 +64,29 @@ export function calculateMatrix(
 /*
  * Calculates colors of given level
  */
-function calculateLevel(level: Level, hues: Hue[], bgColor: string): Color[] {
-  const maxCommonChroma = findMaxCommonChroma(level, hues, bgColor);
+function calculateLevel(
+  level: Level,
+  hues: Hue[],
+  bgColor: string,
+  chromaSetting: string,
+): Color[] {
+  let chroma = maxChroma();
+  if (chromaSetting === "even") {
+    chroma = findMaxCommonChroma(level, hues, bgColor);
+  }
   // Calculate real colors with this chroma
   const colors: Color[] = [];
   hues.forEach((hue) => {
     const apcachColor = calculateApcach(
       bgColor,
       level.contrast,
-      maxCommonChroma,
+      chroma,
       hue.angle,
     );
     const color = {
-      cr: Number.parseFloat(level.contrast.toFixed(2)),
-      l: Number.parseFloat((apcachColor.lightness * 100).toFixed(2)),
-      c: Number.parseFloat(maxCommonChroma.toFixed(2)),
+      cr: level.contrast,
+      l: apcachColor.lightness,
+      c: apcachColor.chroma,
       h: hue.angle,
       p3: !inColorSpace(apcachColor, "srgb"),
       css: apcachToCss(apcachColor),

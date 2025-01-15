@@ -25,6 +25,9 @@ export function Table({ className }: TableProps) {
     addHue,
     removeHue,
     settings,
+    updateModel,
+    updateDirection,
+    updateChroma,
   } = useTableConfigContext();
 
   const createLevelConfig = () => {
@@ -62,13 +65,17 @@ export function Table({ className }: TableProps) {
       onMouseLeave={() => onColumnHover(null)}
     >
       <HeaderRow
+        settings={settings}
         levels={levels}
         tints={ensureNonNullable(colorMatrix.hues[0], "Hue header not found")}
         model={settings.model}
         bgLightLevel={settings.bgLightLevel}
         editableChroma={editableChroma}
-        onAddLevel={createLevelConfig}
         onLevelHover={onColumnHover}
+        onEditModel={updateModel}
+        onEditDirection={updateDirection}
+        onEditChroma={updateChroma}
+        onAddLevel={createLevelConfig}
         onLevelHue={updateLevel}
       />
       {hues.map((hue, i) => (

@@ -12,7 +12,7 @@
     "preview": "vite preview",
     "postinstall": "pnpm exec simple-git-hooks"
   },
-    "engines": {
+  "engines": {
     "node": "20.x",
     "pnpm": "^9.15.0"
   },

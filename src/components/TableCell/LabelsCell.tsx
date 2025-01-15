@@ -1,3 +1,4 @@
+import { DropdownButton } from "../Button/DropdownButton";
 import { TextButton } from "../Button/TextButton";
 import styles from "./LabelsCell.module.css";
 import { TableCell } from "./TableCell";
@@ -5,11 +6,28 @@ import { TableCell } from "./TableCell";
 const LABEL_LEVEL = "Color level";
 const LABEL_CONTRACT = "contrast to";
 
+const chromaOptions = [
+  { value: "even", label: "Even chroma" },
+  { value: "max", label: "Max chroma" },
+];
+
 interface LabelsCellProps {
+  model: string;
+  direction: string;
+  chroma: string;
   onMouseEnter: () => void;
+  onEditModel: (value: string) => void;
+  onEditDirection: (value: string) => void;
+  onEditChroma: (value: string) => void;
 }
 
-export function LabelsCell({ onMouseEnter }: LabelsCellProps) {
+export function LabelsCell({
+  model,
+  direction,
+  chroma,
+  onMouseEnter,
+  onEditChroma,
+}: LabelsCellProps) {
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
@@ -19,24 +37,24 @@ export function LabelsCell({ onMouseEnter }: LabelsCellProps) {
           <TextButton
             className={styles.button}
             mode="dark"
-            text="APCA"
+            text={model}
             onClick={() => {}}
           />
           <div className="flex items-center gap-1">{LABEL_CONTRACT}</div>
           <TextButton
             className={styles.button}
             mode="dark"
-            text="Background"
+            text={direction}
             onClick={() => {}}
           />
         </div>
 
         <div className={styles.label}>
-          <TextButton
+          <DropdownButton
             className={styles.button}
-            mode="dark"
-            text="Even chroma"
-            onClick={() => {}}
+            options={chromaOptions}
+            value={chroma}
+            onChange={onEditChroma}
           />
         </div>
       </div>

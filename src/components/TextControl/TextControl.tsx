@@ -39,7 +39,7 @@ export function TextControl({
     ? `oklch(${tint.l}% ${tint.c} ${tint.h} / 20%)`
     : undefined;
 
-  // Autoshrink
+  // Auto shrink
   const [width, setWidth] = useState(INPUT_MIN_SIZE);
   useEffect(() => {
     if (inputRef.current) {

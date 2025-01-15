@@ -19,7 +19,7 @@ interface LevelCellProps {
   levelName: string;
   model: string;
   contrast: number;
-  chroma: number;
+  chroma: string;
   mode: "light" | "dark";
   tint: Color;
   editableChroma: boolean;
@@ -55,6 +55,7 @@ export function LevelCell({
   function validateChroma(val: string): string | null {
     const regExp = /^[0-9]+$/;
     const number = Number.parseFloat(val);
+    console.log("validate chroma", number);
     if (
       !regExp.test(val) ||
       Number.isNaN(number) ||
@@ -76,7 +77,7 @@ export function LevelCell({
           placeholder={PLACEHOLDER_LEVEL}
           value={levelName}
           title={HINT_LEVEL}
-          onValidEdit={(e) => onEdit(e, contrast, chroma)}
+          onValidEdit={(e) => onEdit(e, contrast, Number.parseFloat(chroma))}
         />
         <TextControl
           className={classNames(styles.inputPrimary, styles[`mode_${mode}`])}
@@ -88,7 +89,9 @@ export function LevelCell({
           label={model}
           title={HINT_CONTRAST}
           validator={validateContrast}
-          onValidEdit={(e) => onEdit(levelName, Number.parseFloat(e), chroma)}
+          onValidEdit={(e) =>
+            onEdit(levelName, Number.parseFloat(e), Number.parseFloat(chroma))
+          }
         />
         <TextControl
           className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}

@@ -5,7 +5,8 @@ export interface TableCellProps {
   className?: string;
   style?: React.CSSProperties;
   children?: ReactNode;
-  onMouseEnter: () => void;
+  onMouseEnter: VoidFunction;
+  onClick?: VoidFunction;
 }
 
 export function TableCell({
@@ -13,12 +14,19 @@ export function TableCell({
   style,
   children,
   onMouseEnter,
+  onClick,
 }: TableCellProps) {
   return (
     <div
       className={`${styles.container} ${className}`}
       style={style}
       onMouseEnter={onMouseEnter}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.code === "enter") {
+          onClick?.();
+        }
+      }}
     >
       {children}
     </div>
