@@ -13,8 +13,8 @@
     "postinstall": "pnpm exec simple-git-hooks"
   },
   "engines": {
-    "node": "20.x",
-    "pnpm": "^9.15.0"
+    "node": ">=20.x",
+    "pnpm": ">=9.15.0"
   },
   "dependencies": {
     "apcach": "^0.6.4",
