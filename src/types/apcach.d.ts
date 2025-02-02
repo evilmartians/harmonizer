@@ -1,28 +1,48 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module "apcach" {
+  /* Functions */
+
   export function apcach(
-    chroma: ColorGenerator | number,
-    contrast: number,
+    chroma: maxChroma | number,
+    contrast: ContrastFunction,
     hue: number,
-  ): ApcachResult;
+    colorSpace: ColorSpace,
+  ): Apcach;
 
-  // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-  export function apcachToCss(color: any): string;
+  export function apcachToCss(
+    color: Apcach,
+    format: "oklch" | "rgb" | "hex" | "p3" | "figma-p3" = "oklch",
+  ): string;
 
-  // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-  export function inColorSpace(color: any, space: string): boolean;
+  export function inColorSpace(color: Apcach, colorSpace: ColorSpace): boolean;
 
-  export type ApcachResult = {
+  export function crToBg(
+    background: string,
+    contrast: number,
+    model?: "apca" | "wcag",
+    searchDirection?: "lighter" | "darker",
+  ): ColorGenerator;
+
+  export function crToFg(
+    background: string,
+    contrast: number,
+    model?: "apca" | "wcag",
+    searchDirection?: "lighter" | "darker",
+  ): ColorGenerator;
+
+  export function maxChroma(): number;
+
+  /* Types */
+
+  export type ContrastFunction = crToBg | crToFg;
+
+  export type ColorSpace = "srgb" | "p3";
+
+  export type Apcach = {
     alpha: number;
-    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-    chroma: any;
+    chroma: number;
     colorSpace: string;
-    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-    contrastConfig: any;
-    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-    hue: any;
-    // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-    lightness: any;
+    hue: number;
+    lightness: number;
   };
 
   export type ColorGeneratorOptions = {
@@ -31,25 +51,8 @@ declare module "apcach" {
     lightness?: number;
   };
 
-  export type ColorGenerator = (
+  export type ChromaFunction = (
     chroma: number,
     options?: ColorGeneratorOptions,
   ) => string;
-
-  /**
-   * Creates a color generator function that produces colors with specified contrast ratio
-   * @param background - Background color in hex format
-   * @param contrast - Target contrast ratio
-   * @param model - Contrast model ('APCA' | 'WCAG2')
-   */
-  export function crToBg(
-    background: string,
-    contrast: number,
-    model?: "APCA" | "WCAG2",
-  ): ColorGenerator;
-
-  /**
-   * Returns maximum possible chroma value
-   */
-  export function maxChroma(): number;
 }

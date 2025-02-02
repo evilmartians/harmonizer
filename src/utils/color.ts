@@ -1,4 +1,12 @@
-import { apcach, apcachToCss, crToBg, inColorSpace, maxChroma } from "apcach";
+import {
+  type Apcach,
+  type ColorSpace,
+  apcach,
+  apcachToCss,
+  crToBg,
+  inColorSpace,
+  maxChroma,
+} from "apcach";
 import type { Hue, Level, Settings } from "../types/config";
 import { ensureNonNullable } from "./ensureNonNullable";
 
@@ -55,7 +63,14 @@ export function calculateMatrix(
       index < settings.bgLightLevel
         ? settings.bgColorDark
         : settings.bgColorLight;
-    const levelColors = calculateLevel(level, hues, bgColor, settings.chroma);
+    const colorSpace = settings.colorSpace as ColorSpace;
+    const levelColors = calculateLevel(
+      level,
+      hues,
+      bgColor,
+      settings.chroma,
+      colorSpace,
+    );
     colorMatrix.updateLevel(index, levelColors);
   });
   return colorMatrix;
@@ -69,10 +84,11 @@ function calculateLevel(
   hues: Hue[],
   bgColor: string,
   chromaSetting: string,
+  colorSpace: ColorSpace,
 ): Color[] {
   let chroma = maxChroma();
   if (chromaSetting === "even") {
-    chroma = findMaxCommonChroma(level, hues, bgColor);
+    chroma = findMaxCommonChroma(level, hues, bgColor, colorSpace);
   }
   // Calculate real colors with this chroma
   const colors: Color[] = [];
@@ -82,6 +98,7 @@ function calculateLevel(
       level.contrast,
       chroma,
       hue.angle,
+      colorSpace,
     );
     const color = {
       cr: level.contrast,
@@ -103,6 +120,7 @@ export function findMaxCommonChroma(
   level: Level,
   hues: Hue[],
   bgColor: string,
+  colorSpace: ColorSpace,
 ): number {
   let maxCommonChroma = 100;
   hues.forEach((hue) => {
@@ -111,6 +129,7 @@ export function findMaxCommonChroma(
       level.contrast,
       maxChroma(),
       hue.angle,
+      colorSpace,
     );
     if (apcachColor.chroma < maxCommonChroma) {
       maxCommonChroma = apcachColor.chroma;
@@ -124,6 +143,7 @@ export function calculateApcach(
   cr: number,
   c: number,
   h: number,
-) {
-  return apcach(crToBg(bgColor, cr), c, h);
+  colorSpace: ColorSpace,
+): Apcach {
+  return apcach(crToBg(bgColor, cr), c, h, colorSpace);
 }

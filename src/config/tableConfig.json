@@ -24,6 +24,7 @@
     "chroma": "even",
     "bgColorLight": "#FFFFFF",
     "bgColorDark": "#000000",
-    "bgLightLevel": 5
+    "bgLightLevel": 5,
+    "colorSpace": "p3"
   }
 }

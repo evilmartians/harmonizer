@@ -16,6 +16,7 @@ export interface Settings {
   bgLightLevel: number;
   bgColorLight: string;
   bgColorDark: string;
+  colorSpace: string;
 }
 
 export interface TableConfig {
