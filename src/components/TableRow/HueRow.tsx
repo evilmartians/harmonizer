@@ -1,21 +1,23 @@
-import { ensureNonNullable } from "@/utils/ensureNonNullable";
 import type { Hue } from "../../types/config";
 import type { ColorRow } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { ColorCell } from "../TableCell/ColorCell";
 import { HueCell } from "../TableCell/HueCell";
+
 import styles from "./HueRow.module.css";
+
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 const HINT_REMOVE_HUE = "Remove color";
 
-interface HueRowProps {
+type HueRowProps = {
   hue: Hue;
   colorRow: ColorRow;
   bgLightLevel: number;
   onLevelHover: (index: number | null) => void;
   onRemoveHue: () => void;
   onEditHue: (hue: Hue) => void;
-}
+};
 
 export function HueRow({
   hue,

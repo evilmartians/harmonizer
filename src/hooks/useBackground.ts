@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
+
 import { useTableConfigContext } from "../contexts/TableConfigContext";
+
 import { usePreventSelection } from "./usePreventSelection";
 
 const CELL_WIDTH = 104;
@@ -13,10 +15,7 @@ export function useBackground() {
   const calculateWidth = useCallback(
     (level: number) => {
       const maxWidth = PADDING + levels.length * CELL_WIDTH;
-      return Math.max(
-        MIN_WIDTH,
-        Math.min(maxWidth, level * CELL_WIDTH + PADDING),
-      );
+      return Math.max(MIN_WIDTH, Math.min(maxWidth, level * CELL_WIDTH + PADDING));
     },
     [levels.length],
   );
@@ -42,13 +41,13 @@ export function useBackground() {
   const handleDragStart = useCallback(() => {
     const handleMouseUp = () => {
       setIsDragging(false);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
+      globalThis.removeEventListener("mousemove", handleMouseMove);
+      globalThis.removeEventListener("mouseup", handleMouseUp);
     };
 
     setIsDragging(true);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
+    globalThis.addEventListener("mousemove", handleMouseMove);
+    globalThis.addEventListener("mouseup", handleMouseUp);
   }, [handleMouseMove]);
 
   return {

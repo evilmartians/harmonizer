@@ -1,13 +1,15 @@
 import classNames from "classnames";
+
 import type { Color } from "../../utils/color";
+
 import styles from "./ColorCell.module.css";
 import { TableCell } from "./TableCell";
 
-interface ColorCellProps {
+type ColorCellProps = {
   color: Color;
   mode: "light" | "dark";
   onMouseEnter: VoidFunction;
-}
+};
 
 export function ColorCell({ color, mode, onMouseEnter }: ColorCellProps) {
   const backgroundColor = color.css;
@@ -28,10 +30,7 @@ export function ColorCell({ color, mode, onMouseEnter }: ColorCellProps) {
       <div className={classNames(styles.container, styles[`mode_${mode}`])}>
         <div className={styles.topLine}>
           <span className={styles.lightnessLabel}>L{lightness}%</span>
-          <span
-            className={styles.p3Badge}
-            style={{ opacity: color.p3 ? 100 : 0 }}
-          >
+          <span className={styles.p3Badge} style={{ opacity: color.p3 ? 100 : 0 }}>
             P3
           </span>
         </div>

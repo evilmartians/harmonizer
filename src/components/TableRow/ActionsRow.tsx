@@ -1,19 +1,20 @@
 import type { Level } from "../../types/config";
 import { ActionCell } from "../TableCell/ActionCell";
 import { EmptyCell } from "../TableCell/EmptyCell";
+
 import styles from "./ActionsRow.module.css";
 
 const HINT_ADD_HUE = "Add new color";
 const HINT_REMOVE_LEVEL = "Remove color level";
 
-interface ActionsRowProps {
+type ActionsRowProps = {
   levels: Level[];
   bgLightLevel: number;
   hoveredColumn: number | null;
   onAddHue: () => void;
   onColumnHover: (index: number | null) => void;
   onRemoveLevel: (pos: number) => void;
-}
+};
 
 export function ActionsRow({
   levels,

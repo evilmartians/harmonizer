@@ -1,19 +1,15 @@
 import classNames from "classnames";
+
 import styles from "./AddRowButton.module.css";
 
-interface AddRowButtonProps {
+type AddRowButtonProps = {
   className?: string;
   mode: "light" | "dark";
   title: string;
   onClick: () => void;
-}
+};
 
-export function AddRowButton({
-  className,
-  mode,
-  title,
-  onClick,
-}: AddRowButtonProps) {
+export function AddRowButton({ className, mode, title, onClick }: AddRowButtonProps) {
   return (
     <button
       type="button"
@@ -30,10 +26,7 @@ export function AddRowButton({
         xmlns="http://www.w3.org/2000/svg"
       >
         <title>{title}</title>
-        <path
-          d="M11.4 6H12.6V11.4H18V12.6H12.6V18H11.4V12.6H6V11.4H11.4V6Z"
-          fill="currentColor"
-        />
+        <path d="M11.4 6H12.6V11.4H18V12.6H12.6V18H11.4V12.6H6V11.4H11.4V6Z" fill="currentColor" />
         <path
           fillRule="evenodd"
           clipRule="evenodd"

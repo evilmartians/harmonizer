@@ -1,5 +1,6 @@
 import { DropdownButton } from "../Button/DropdownButton";
 import { TextButton } from "../Button/TextButton";
+
 import styles from "./LabelsCell.module.css";
 import { TableCell } from "./TableCell";
 
@@ -11,7 +12,7 @@ const chromaOptions = [
   { value: "max", label: "Max chroma" },
 ];
 
-interface LabelsCellProps {
+type LabelsCellProps = {
   model: string;
   direction: string;
   chroma: string;
@@ -19,7 +20,7 @@ interface LabelsCellProps {
   onEditModel: (value: string) => void;
   onEditDirection: (value: string) => void;
   onEditChroma: (value: string) => void;
-}
+};
 
 export function LabelsCell({
   model,
@@ -34,19 +35,9 @@ export function LabelsCell({
         <div className={styles.label}>{LABEL_LEVEL}</div>
 
         <div className={styles.label}>
-          <TextButton
-            className={styles.button}
-            mode="dark"
-            text={model}
-            onClick={() => {}}
-          />
+          <TextButton className={styles.button} mode="dark" text={model} />
           <div className="flex items-center gap-1">{LABEL_CONTRACT}</div>
-          <TextButton
-            className={styles.button}
-            mode="dark"
-            text={direction}
-            onClick={() => {}}
-          />
+          <TextButton className={styles.button} mode="dark" text={direction} />
         </div>
 
         <div className={styles.label}>

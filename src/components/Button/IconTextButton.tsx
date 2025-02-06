@@ -1,11 +1,12 @@
 import type React from "react";
+
 import styles from "./IconTextButton.module.css";
 
-interface IconTextButtonProps {
+type IconTextButtonProps = {
   icon: React.ReactNode;
   text: string;
   onClick: () => void;
-}
+};
 
 export function IconTextButton({ icon, text, onClick }: IconTextButtonProps) {
   return (

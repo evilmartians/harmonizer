@@ -1,11 +1,7 @@
 import { useCallback, useState } from "react";
+
 import defaultConfig from "../config/tableConfig.json";
-import type {
-  Hue,
-  Level,
-  TableConfig,
-  TableConfigActions,
-} from "../types/config";
+import type { Hue, Level, TableConfig, TableConfigActions } from "../types/config";
 
 export function useTableConfig(): TableConfigActions {
   const [config, setConfig] = useState<TableConfig>(defaultConfig);

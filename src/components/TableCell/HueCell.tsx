@@ -1,5 +1,6 @@
 import type { Color } from "../../utils/color";
 import { TextControl } from "../TextControl/TextControl";
+
 import styles from "./HueCell.module.css";
 import { TableCell } from "./TableCell";
 
@@ -11,13 +12,13 @@ const HINT_DERGEE = "Hue 0…360";
 
 const ERROR_INVALID_HUE = "Hue must be a number 0…360";
 
-interface HueCellProps {
+type HueCellProps = {
   name: string;
   angle: number;
   tint: Color;
   onMouseEnter: () => void;
   onEdit: (name: string, angle: number) => void;
-}
+};
 
 function validateHue(val: string): string | null {
   const regExp = /^[0-9]+$/;
@@ -28,13 +29,7 @@ function validateHue(val: string): string | null {
   return null;
 }
 
-export function HueCell({
-  name,
-  angle,
-  tint,
-  onMouseEnter,
-  onEdit,
-}: HueCellProps) {
+export function HueCell({ name, angle, tint, onMouseEnter, onEdit }: HueCellProps) {
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>

@@ -1,4 +1,5 @@
 import { useRef } from "react";
+
 import arrowDownIcon from "../../assets/icons/ArrowDown.svg";
 import arrowUpIcon from "../../assets/icons/ArrowUp.svg";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
@@ -13,9 +14,7 @@ export function FloatingActions() {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -24,12 +23,14 @@ export function FloatingActions() {
       const config = validateConfig(text);
 
       if (!config) {
+        // eslint-disable-next-line no-alert
         alert("Invalid config file format");
         return;
       }
       updateConfig(config);
     } catch (error) {
-      alert(`Error reading config file: ${error}`);
+      // eslint-disable-next-line no-alert
+      alert(`Error reading config file: ${String(error)}`);
     } finally {
       // Reset input so the same file can be selected again
       event.target.value = "";
@@ -44,9 +45,9 @@ export function FloatingActions() {
     const a = document.createElement("a");
     a.href = url;
     a.download = "My Harmony config.json";
-    document.body.appendChild(a);
+    document.body.append(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
 
     URL.revokeObjectURL(url);
   };
