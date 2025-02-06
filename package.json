@@ -24,7 +24,8 @@
     "apcach": "^0.6.4",
     "culori": "^3.2.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "valibot": "1.0.0-rc.0"
   },
   "devDependencies": {
     "@hideoo/eslint-config": "^4.0.0",
