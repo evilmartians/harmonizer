@@ -59,10 +59,7 @@ export function calculateMatrix(
 ): ColorMatrix {
   const colorMatrix = new ColorMatrix(levels.length, hues.length);
   levels.forEach((level, index) => {
-    const bgColor =
-      index < settings.bgLightLevel
-        ? settings.bgColorDark
-        : settings.bgColorLight;
+    const bgColor = getBgColor(settings, index);
     const colorSpace = settings.colorSpace as ColorSpace;
     const levelColors = calculateLevel(
       level,
@@ -138,6 +135,29 @@ export function findMaxCommonChroma(
   return maxCommonChroma;
 }
 
+export function adjustCr(
+  color: Color,
+  bgColor: string,
+  cr: number,
+  colorSpace: string,
+): Color {
+  const apcachColor = calculateApcach(
+    bgColor,
+    cr,
+    color.c,
+    color.h,
+    colorSpace as ColorSpace,
+  );
+  return {
+    cr: cr,
+    l: apcachColor.lightness,
+    c: apcachColor.chroma,
+    h: color.h,
+    p3: !inColorSpace(apcachColor, "srgb"),
+    css: apcachToCss(apcachColor),
+  };
+}
+
 export function calculateApcach(
   bgColor: string,
   cr: number,
@@ -146,4 +166,10 @@ export function calculateApcach(
   colorSpace: ColorSpace,
 ): Apcach {
   return apcach(crToBg(bgColor, cr), c, h, colorSpace);
+}
+
+export function getBgColor(settings: Settings, i: number): string {
+  return i < settings.bgLightLevel
+    ? settings.bgColorDark
+    : settings.bgColorLight;
 }

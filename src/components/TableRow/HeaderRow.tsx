@@ -1,13 +1,20 @@
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
+import { Color } from "culori";
 import { useMemo } from "react";
 import type { Level, Settings } from "../../types/config";
-import type { ColorRow } from "../../utils/color";
+import {
+  type ColorRow,
+  adjustCr,
+  calculateApcach,
+  getBgColor,
+} from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
 import styles from "./HeaderRow.module.css";
 
 const HINT_ADD_LEVEL = "Add new color level";
+const MIN_CR = 50;
 
 interface HeaderRowProps {
   settings: Settings;
@@ -50,10 +57,22 @@ export function HeaderRow({
         onEditChroma={onEditChroma}
       />
       {levels.map((level, i) => {
+        const invertedColor = i < bgLightLevel;
         const tintLevel = ensureNonNullable(
           tints.levels[i],
           "Tint level not found",
         );
+
+        function tintColor() {
+          return tintLevel.cr >= MIN_CR
+            ? tintLevel
+            : adjustCr(
+                tintLevel,
+                getBgColor(settings, i),
+                MIN_CR,
+                settings.colorSpace,
+              );
+        }
 
         const chroma = useMemo(() => {
           return settings.chroma === "even"
@@ -68,8 +87,8 @@ export function HeaderRow({
             levelName={level.name}
             contrast={level.contrast}
             chroma={chroma}
-            mode={i >= bgLightLevel ? "light" : "dark"}
-            tint={tintLevel}
+            mode={invertedColor ? "dark" : "light"}
+            tint={tintColor()}
             editableChroma={editableChroma}
             onMouseEnter={() => onLevelHover(i)}
             onEdit={(name, contrast, chroma) =>
