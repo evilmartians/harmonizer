@@ -65,7 +65,7 @@ export function HeaderRow({
 
         return (
           <LevelCell
-            key={`header-cell-${level.name}-${level.contrast}-${level.chroma}-${i}-${settings.chroma}`}
+            key={`header-cell-${i}`}
             model={model}
             levelName={level.name}
             contrast={level.contrast}

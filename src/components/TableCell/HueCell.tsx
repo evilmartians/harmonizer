@@ -8,7 +8,7 @@ const PLACEHOLDER_NAME = "Name";
 const PLACEHOLDER_HUE = "Hue";
 
 const HINT_NAME = "Color name";
-const HINT_DERGEE = "Hue 0…360";
+const HINT_DEGREE = "Hue 0…360";
 
 const ERROR_INVALID_HUE = "Hue must be a number 0…360";
 
@@ -52,7 +52,7 @@ export function HueCell({ name, angle, tint, onMouseEnter, onEdit }: HueCellProp
           align="left"
           placeholder={PLACEHOLDER_HUE}
           value={angle}
-          title={HINT_DERGEE}
+          title={HINT_DEGREE}
           validator={validateHue}
           onValidEdit={(e) => onEdit(name, Number.parseFloat(e))}
         />

@@ -79,7 +79,7 @@ export function Table({ className }: TableProps) {
       />
       {hues.map((hue, i) => (
         <HueRow
-          key={`hue-row-${hue.name}-${hue.angle}-${i}`}
+          key={`hue-row-${i}`}
           hue={hue}
           colorRow={ensureNonNullable(colorMatrix.hues[i], "Hue row not found")}
           bgLightLevel={settings.bgLightLevel}
