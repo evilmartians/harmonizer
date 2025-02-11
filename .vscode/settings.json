@@ -1,9 +1,7 @@
 {
-  "[javascript]": { "editor.defaultFormatter": "biomejs.biome" },
-  "[typescript]": { "editor.defaultFormatter": "biomejs.biome" },
-  "[json]": { "editor.defaultFormatter": "biomejs.biome" },
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "typescript", "html", "markdown", "astro"],
   "editor.codeActionsOnSave": {
-    "source.organizeImports.biome": "explicit",
-    "quickfix.biome": "explicit"
+    "source.fixAll": "explicit"
   }
 }
