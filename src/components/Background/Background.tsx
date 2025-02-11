@@ -1,19 +1,23 @@
 import classNames from "classnames";
 import { parse } from "culori";
 import { useEffect, useState } from "react";
+
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { useBackground } from "../../hooks/useBackground";
 import { TextControl } from "../TextControl/TextControl";
+
 import styles from "./Background.module.css";
 
 const HINT_COLOR = "OKLCH, Hex, RGB, HSL…";
-const ERROR_INVALID_COLOR =
-  "This is not a valid color. Try OKLCH, Hex, RGB, or HSL";
+const ERROR_INVALID_COLOR = "This is not a valid color. Try OKLCH, Hex, RGB, or HSL";
+
+function validateColor(val: string): string | null {
+  return parse(val) === undefined ? ERROR_INVALID_COLOR : null;
+}
 
 export function Background() {
   const { width, startDrag } = useBackground();
-  const { settings, updateBgColorDark, updateBgColorLight } =
-    useTableConfigContext();
+  const { settings, updateBgColorDark, updateBgColorLight } = useTableConfigContext();
   const [knobIsHovered, setKnobIsHovered] = useState(false);
 
   useEffect(() => {
@@ -22,14 +26,12 @@ export function Background() {
     root.style.setProperty("--light-bg", settings.bgColorLight);
   }, [settings.bgColorDark, settings.bgColorLight]);
 
-  function validateColor(val: string): string | null {
-    return parse(val) === undefined ? ERROR_INVALID_COLOR : null;
-  }
-  console.log("knobIsHovered", knobIsHovered);
   return (
     <div className={styles.container}>
       <div className={styles.controlContainer}>
         <div
+          role="button"
+          tabIndex={0}
           className={styles.dragKnob}
           style={{ left: `${width - 16}px` }}
           onMouseEnter={() => setKnobIsHovered(true)}
@@ -53,9 +55,7 @@ export function Background() {
           </svg>
         </div>
         <div className={styles.inputContainer}>
-          <span className={classNames(styles.inputLabel, styles.dark)}>
-            Dark mode background
-          </span>
+          <span className={classNames(styles.inputLabel, styles.dark)}>Dark mode background</span>
           <TextControl
             className={classNames(styles.input, styles.dark)}
             align="left"
@@ -68,9 +68,7 @@ export function Background() {
           />
         </div>
         <div className={styles.inputContainer} style={{ left: width }}>
-          <span className={classNames(styles.inputLabel, styles.light)}>
-            Light mode background
-          </span>
+          <span className={classNames(styles.inputLabel, styles.light)}>Light mode background</span>
           <TextControl
             className={classNames(styles.input, styles.light)}
             align="left"
@@ -86,8 +84,7 @@ export function Background() {
       <div
         className={classNames(
           styles.darkLayer,
-          knobIsHovered &&
-            "shadow-[-1px_0_0_0_rgb(34,197,94)_inset,1px_0_0_0_rgb(34,197,94)]",
+          knobIsHovered && "shadow-[-1px_0_0_0_rgb(34,197,94)_inset,1px_0_0_0_rgb(34,197,94)]",
         )}
         style={{ width }}
       />

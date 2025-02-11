@@ -1,16 +1,17 @@
-import { ensureNonNullable } from "@/utils/ensureNonNullable";
-import { useMemo } from "react";
 import type { Level, Settings } from "../../types/config";
 import { type ColorRow, adjustCr, getBgColor } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
+
 import styles from "./HeaderRow.module.css";
+
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 const HINT_ADD_LEVEL = "Add new color level";
 const MIN_CR = 50;
 
-interface HeaderRowProps {
+type HeaderRowProps = {
   settings: Settings;
   levels: Level[];
   model: string;
@@ -23,7 +24,7 @@ interface HeaderRowProps {
   onEditChroma: (value: string) => void;
   onAddLevel: () => void;
   onLevelHue: (index: number, level: Level) => void;
-}
+};
 
 export function HeaderRow({
   settings,
@@ -52,27 +53,15 @@ export function HeaderRow({
       />
       {levels.map((level, i) => {
         const invertedColor = i < bgLightLevel;
-        const tintLevel = ensureNonNullable(
-          tints.levels[i],
-          "Tint level not found",
-        );
+        const tintLevel = ensureNonNullable(tints.levels[i], "Tint level not found");
 
         function tintColor() {
           return tintLevel.cr >= MIN_CR
             ? tintLevel
-            : adjustCr(
-                tintLevel,
-                getBgColor(settings, i),
-                MIN_CR,
-                settings.colorSpace,
-              );
+            : adjustCr(tintLevel, getBgColor(settings, i), MIN_CR, settings.colorSpace);
         }
 
-        const chroma = useMemo(() => {
-          return settings.chroma === "even"
-            ? `${tintLevel.c.toFixed(2)}`
-            : "max";
-        }, [settings.chroma, tintLevel.c]);
+        const chroma = settings.chroma === "even" ? tintLevel.c.toFixed(2) : "max";
 
         return (
           <LevelCell
@@ -85,9 +74,7 @@ export function HeaderRow({
             tint={tintColor()}
             editableChroma={editableChroma}
             onMouseEnter={() => onLevelHover(i)}
-            onEdit={(name, contrast, chroma) =>
-              onLevelHue(i, { name, contrast, chroma } as Level)
-            }
+            onEdit={(name, contrast, chroma) => onLevelHue(i, { name, contrast, chroma } as Level)}
           />
         );
       })}

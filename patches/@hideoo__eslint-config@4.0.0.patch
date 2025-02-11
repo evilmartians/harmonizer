@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index e312aa68db1e982c845ea03821e93eec13b8da84..e6e97eb9879a137fd47ea3142873c3899293bf5e 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -318,7 +318,7 @@ function typescript() {
+       {
+         languageOptions: {
+           parserOptions: {
+-            project: ["tsconfig.json"],
++            project: ["tsconfig.app.json"],
+             tsconfigRootDir: process.cwd(),
+             warnOnUnsupportedTypeScriptVersion: false
+           }

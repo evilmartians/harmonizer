@@ -1,46 +1,24 @@
+import { object, array, string, number, parse } from "valibot";
+
 import type { TableConfig } from "../types/config";
 
+const configSchema = object({
+  levels: array(object({ name: string(), contrast: number(), chroma: number() })),
+  hues: array(object({ name: string(), angle: number() })),
+  settings: object({
+    model: string(),
+    direction: string(),
+    chroma: string(),
+    bgLightLevel: number(),
+    bgColorLight: string(),
+    bgColorDark: string(),
+    colorSpace: string(),
+  }),
+});
+
 export function validateConfig(text: string): TableConfig | null {
-  const config = JSON.parse(text);
   try {
-    // Check basic structure
-    if (!config || typeof config !== "object") return null;
-    if (!Array.isArray(config.levels) || !Array.isArray(config.hues))
-      return null;
-    if (!config.settings || typeof config.settings !== "object") return null;
-
-    // Validate levels
-    const validLevel = config.levels.every(
-      // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-      (level: any) =>
-        typeof level.name === "string" &&
-        typeof level.contrast === "number" &&
-        typeof level.chroma === "number",
-    );
-    if (!validLevel) return null;
-
-    // Validate hues
-    const validHue = config.hues.every(
-      // biome-ignore lint/suspicious/noExplicitAny: Temporarily ignore this rule
-      (hue: any) =>
-        typeof hue.name === "string" && typeof hue.angle === "number",
-    );
-    if (!validHue) return null;
-
-    // Validate settings
-    const settings = config.settings;
-    if (
-      typeof settings.model !== "string" ||
-      typeof settings.direction !== "string" ||
-      typeof settings.chroma !== "string" ||
-      typeof settings.bgLightLevel !== "number" ||
-      typeof settings.bgColorLight !== "string" ||
-      typeof settings.bgColorDark !== "string"
-    ) {
-      return null;
-    }
-
-    return config;
+    return parse(configSchema, JSON.parse(text));
   } catch {
     return null;
   }

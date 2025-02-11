@@ -7,46 +7,60 @@
     "dev": "vite",
     "build": "vite build",
     "typecheck": "tsc --build",
-    "lint": "biome check --write ./",
-    "format": "biome format --write ./",
+    "lint": "pnpm run --parallel --filter='.' /^lint:*/",
+    "lint:eslint": "eslint . --cache --cache-location=./node_modules/.tmp/eslint/.cache",
+    "lint:prettier": "prettier --check .",
+    "format": "pnpm run --parallel --filter='.' /^format:*/",
+    "format:eslint": "pnpm run lint --fix",
+    "format:prettier": "prettier . --write",
     "preview": "vite preview",
     "postinstall": "pnpm exec simple-git-hooks"
   },
   "engines": {
-    "node": ">=20.x",
+    "node": ">=22.x",
     "pnpm": ">=9.15.0"
   },
   "dependencies": {
     "apcach": "^0.6.4",
-    "culori": "^3.2.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "culori": "^4.0.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "valibot": "1.0.0-rc.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
+    "@hideoo/eslint-config": "^4.0.0",
     "@svgr/webpack": "^8.1.0",
     "@types/culori": "^2.1.1",
-    "@types/react": "^18.3.5",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.18",
     "classnames": "^2.3.1",
+    "eslint": "^9.20.1",
     "globals": "^15.9.0",
     "nano-staged": "^0.8.0",
-    "postcss": "^8.4.35",
+    "postcss": "^8.5.2",
+    "prettier": "^3.5.0",
     "simple-git-hooks": "^2.11.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.5.3",
-    "typescript-eslint": "^8.3.0",
-    "vite": "^5.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.24.0",
+    "vite": "^6.1.0",
     "vite-tsconfig-paths": "^5.1.4"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged",
-    "pre-push": "pnpm lint"
+    "pre-push": "pnpm typecheck"
   },
   "nano-staged": {
-    "*.{js,cjs,mjs,jsx,ts,mts,tsx,json,css}": ["biome check --write"]
+    "*.{js,cjs,mjs,jsx,ts,mts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
-  "packageManager": "pnpm@9.15.4+sha512.b2dc20e2fc72b3e18848459b37359a32064663e5627a51e4c74b2c29dd8e8e0491483c3abb40789cfd578bf362fb6ba8261b05f0387d76792ed6e23ea3b1b6a0"
+  "pnpm": {
+    "patchedDependencies": {
+      "@hideoo/eslint-config@4.0.0": "patches/@hideoo__eslint-config@4.0.0.patch"
+    }
+  }
 }

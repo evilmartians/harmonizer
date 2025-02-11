@@ -2,8 +2,8 @@ declare module "apcach" {
   /* Functions */
 
   export function apcach(
-    chroma: maxChroma | number,
-    contrast: ContrastFunction,
+    chroma: typeof maxChroma | number,
+    contrast: ContrastFunction | number,
     hue: number,
     colorSpace: ColorSpace,
   ): Apcach;
@@ -33,7 +33,7 @@ declare module "apcach" {
 
   /* Types */
 
-  export type ContrastFunction = crToBg | crToFg;
+  export type ContrastFunction = typeof crToBg | typeof crToFg;
 
   export type ColorSpace = "srgb" | "p3";
 
@@ -51,8 +51,7 @@ declare module "apcach" {
     lightness?: number;
   };
 
-  export type ChromaFunction = (
-    chroma: number,
-    options?: ColorGeneratorOptions,
-  ) => string;
+  export type ColorGenerator = () => number;
+
+  export type ChromaFunction = (chroma: number, options?: ColorGeneratorOptions) => string;
 }

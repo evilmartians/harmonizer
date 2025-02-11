@@ -1,0 +1,7 @@
+{
+  "eslint.useFlatConfig": true,
+  "eslint.validate": ["javascript", "typescript", "html", "markdown", "astro"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  }
+}

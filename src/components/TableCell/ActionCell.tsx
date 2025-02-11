@@ -1,11 +1,13 @@
 import classNames from "classnames";
+
 import { AddColumnButton } from "../Button/AddColumnButton";
 import { AddRowButton } from "../Button/AddRowButton";
 import { RemoveButton } from "../Button/RemoveButton";
+
 import styles from "./ActionCell.module.css";
 import { TableCell } from "./TableCell";
 
-interface ActionCellProps {
+type ActionCellProps = {
   className?: string;
   buttonClassName?: string;
   title: string;
@@ -13,7 +15,7 @@ interface ActionCellProps {
   mode: "light" | "dark";
   onClick: () => void;
   onMouseEnter: () => void;
-}
+};
 
 export function ActionCell({
   className,

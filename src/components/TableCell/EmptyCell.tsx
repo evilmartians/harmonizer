@@ -1,8 +1,8 @@
 import { TableCell } from "./TableCell";
 
-interface EmptyCellProps {
+type EmptyCellProps = {
   onMouseEnter: VoidFunction;
-}
+};
 
 export function EmptyCell({ onMouseEnter }: EmptyCellProps) {
   return <TableCell onMouseEnter={onMouseEnter} />;

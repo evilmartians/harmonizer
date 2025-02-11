@@ -1,15 +1,15 @@
-export interface Level {
+export type Level = {
   name: string;
   contrast: number;
   chroma: number;
-}
+};
 
-export interface Hue {
+export type Hue = {
   name: string;
   angle: number;
-}
+};
 
-export interface Settings {
+export type Settings = {
   model: string;
   direction: string;
   chroma: string;
@@ -17,15 +17,15 @@ export interface Settings {
   bgColorLight: string;
   bgColorDark: string;
   colorSpace: string;
-}
+};
 
-export interface TableConfig {
+export type TableConfig = {
   levels: Level[];
   hues: Hue[];
   settings: Settings;
-}
+};
 
-export interface TableConfigActions {
+export type TableConfigActions = {
   levels: Level[];
   updateLevel: (index: number, level: Level) => void;
   addLevel: (level: Level) => void;
@@ -43,4 +43,4 @@ export interface TableConfigActions {
   updateBgLightLevel: (bgLightLevel: number) => void;
   getConfig: () => TableConfig;
   updateConfig: (config: TableConfig) => void;
-}
+};

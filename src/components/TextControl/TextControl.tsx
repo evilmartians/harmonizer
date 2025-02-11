@@ -1,13 +1,15 @@
-import { ensureNonNullable } from "@/utils/ensureNonNullable";
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
+
 import type { Color } from "../../utils/color";
+
 import styles from "./TextControl.module.css";
+
+import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 const INPUT_MIN_SIZE = 40;
 
-export interface TextControlProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+export type TextControlProps = React.InputHTMLAttributes<HTMLInputElement> & {
   className?: string;
   label?: string;
   inputSize?: "m" | "l";
@@ -17,7 +19,7 @@ export interface TextControlProps
   tint?: Color;
   validator?: (val: string) => string | null;
   onValidEdit: (val: string) => void;
-}
+};
 
 export function TextControl({
   className,
@@ -35,44 +37,42 @@ export function TextControl({
 }: TextControlProps) {
   const containerRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const borderColor = tint
-    ? `oklch(${tint.l}% ${tint.c} ${tint.h} / 20%)`
-    : undefined;
+  const borderColor = tint ? `oklch(${tint.l}% ${tint.c} ${tint.h} / 20%)` : undefined;
 
   // Auto shrink
   const [width, setWidth] = useState(INPUT_MIN_SIZE);
   useEffect(() => {
     if (inputRef.current) {
       const span = document.createElement("span");
-      span.classList.add(
-        ensureNonNullable(styles.input, "Input class not found"),
-      );
+      span.classList.add(ensureNonNullable(styles.input, "Input class not found"));
       span.textContent = inputRef.current.value || " ";
-      document.body.appendChild(span);
+      document.body.append(span);
       setWidth(Math.max(span.offsetWidth, INPUT_MIN_SIZE));
-      document.body.removeChild(span);
+      span.remove();
     }
   }, []);
 
   // Validate input
   const handleChange = (val: string) => {
     const error = validator?.(val);
-    if (!error) {
+    if (error) {
+      if (inputRef.current) {
+        inputRef.current.classList.add("error");
+        inputRef.current.title = error;
+      }
+    } else {
       if (inputRef.current) {
         inputRef.current.classList.remove("error");
         inputRef.current.title = title ?? "";
       }
       onValidEdit(val);
-    } else {
-      if (inputRef.current) {
-        inputRef.current.classList.add("error");
-        inputRef.current.title = error;
-      }
     }
   };
 
   return (
     <div
+      role="button"
+      tabIndex={0}
       ref={containerRef}
       className={classNames(
         className,
@@ -80,21 +80,14 @@ export function TextControl({
         styles[`size_${inputSize}`],
         styles[`kind_${kind}`],
       )}
-      style={
-        kind === "bordered" && borderColor
-          ? { boxShadow: `0 0 0 1px ${borderColor}` }
-          : {}
-      }
+      style={kind === "bordered" && borderColor ? { boxShadow: `0 0 0 1px ${borderColor}` } : {}}
       onClick={() => inputRef.current?.focus()}
       onKeyDown={() => inputRef.current?.focus()}
     >
       {label && (
         <span
-          className={classNames(
-            styles.label,
-            align === "center" && "text-center",
-          )}
-          style={tint ? { color: tint?.css } : {}}
+          className={classNames(styles.label, align === "center" && "text-center")}
+          style={tint ? { color: tint.css } : {}}
         >
           {label}
         </span>

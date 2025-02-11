@@ -7,7 +7,9 @@ import {
   inColorSpace,
   maxChroma,
 } from "apcach";
+
 import type { Hue, Level, Settings } from "../types/config";
+
 import { ensureNonNullable } from "./ensureNonNullable";
 
 export { inColorSpace, apcachToCss } from "apcach";
@@ -18,12 +20,12 @@ export class ColorMatrix {
     this.hues = Array.from({ length: r }, () => new ColorRow(c));
   }
   updateLevel(i: number, colors: Color[]) {
-    this.hues.forEach((hue, index) => {
+    for (const [index, hue] of this.hues.entries()) {
       if (index >= colors.length) {
-        return;
+        continue;
       }
       hue.updateColor(i, ensureNonNullable(colors[index], "Color not found"));
-    });
+    }
   }
 }
 
@@ -40,36 +42,26 @@ export class ColorRow {
   }
 }
 
-export interface Color {
+export type Color = {
   cr: number;
   l: number;
   c: number;
   h: number;
   p3: boolean;
   css: string;
-}
+};
 
 /*
  * Calculates whole color matrix
  */
-export function calculateMatrix(
-  levels: Level[],
-  hues: Hue[],
-  settings: Settings,
-): ColorMatrix {
+export function calculateMatrix(levels: Level[], hues: Hue[], settings: Settings): ColorMatrix {
   const colorMatrix = new ColorMatrix(levels.length, hues.length);
-  levels.forEach((level, index) => {
+  for (const [index, level] of levels.entries()) {
     const bgColor = getBgColor(settings, index);
     const colorSpace = settings.colorSpace as ColorSpace;
-    const levelColors = calculateLevel(
-      level,
-      hues,
-      bgColor,
-      settings.chroma,
-      colorSpace,
-    );
+    const levelColors = calculateLevel(level, hues, bgColor, settings.chroma, colorSpace);
     colorMatrix.updateLevel(index, levelColors);
-  });
+  }
   return colorMatrix;
 }
 
@@ -89,14 +81,8 @@ function calculateLevel(
   }
   // Calculate real colors with this chroma
   const colors: Color[] = [];
-  hues.forEach((hue) => {
-    const apcachColor = calculateApcach(
-      bgColor,
-      level.contrast,
-      chroma,
-      hue.angle,
-      colorSpace,
-    );
+  for (const hue of hues) {
+    const apcachColor = calculateApcach(bgColor, level.contrast, chroma, hue.angle, colorSpace);
     const color = {
       cr: level.contrast,
       l: apcachColor.lightness,
@@ -106,7 +92,7 @@ function calculateLevel(
       css: apcachToCss(apcachColor),
     };
     colors.push(color);
-  });
+  }
   return colors;
 }
 
@@ -120,7 +106,7 @@ export function findMaxCommonChroma(
   colorSpace: ColorSpace,
 ): number {
   let maxCommonChroma = 100;
-  hues.forEach((hue) => {
+  for (const hue of hues) {
     const apcachColor = calculateApcach(
       bgColor,
       level.contrast,
@@ -131,23 +117,12 @@ export function findMaxCommonChroma(
     if (apcachColor.chroma < maxCommonChroma) {
       maxCommonChroma = apcachColor.chroma;
     }
-  });
+  }
   return maxCommonChroma;
 }
 
-export function adjustCr(
-  color: Color,
-  bgColor: string,
-  cr: number,
-  colorSpace: string,
-): Color {
-  const apcachColor = calculateApcach(
-    bgColor,
-    cr,
-    color.c,
-    color.h,
-    colorSpace as ColorSpace,
-  );
+export function adjustCr(color: Color, bgColor: string, cr: number, colorSpace: string): Color {
+  const apcachColor = calculateApcach(bgColor, cr, color.c, color.h, colorSpace as ColorSpace);
   return {
     cr: cr,
     l: apcachColor.lightness,
@@ -169,7 +144,5 @@ export function calculateApcach(
 }
 
 export function getBgColor(settings: Settings, i: number): string {
-  return i < settings.bgLightLevel
-    ? settings.bgColorDark
-    : settings.bgColorLight;
+  return i < settings.bgLightLevel ? settings.bgColorDark : settings.bgColorLight;
 }

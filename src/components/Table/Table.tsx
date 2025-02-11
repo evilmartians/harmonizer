@@ -1,17 +1,19 @@
 import classNames from "classnames";
+import { useCallback, useMemo, useState } from "react";
+
+import { useTableConfigContext } from "../../contexts/TableConfigContext";
+import { calculateMatrix } from "../../utils/color";
 import { ActionsRow } from "../TableRow/ActionsRow";
 import { HeaderRow } from "../TableRow/HeaderRow";
 import { HueRow } from "../TableRow/HueRow";
+
 import styles from "./Table.module.css";
 
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
-import { useCallback, useMemo, useState } from "react";
-import { useTableConfigContext } from "../../contexts/TableConfigContext";
-import { calculateMatrix } from "../../utils/color";
 
-interface TableProps {
+type TableProps = {
   className: string;
-}
+};
 
 export function Table({ className }: TableProps) {
   const [hoveredColumn, setHoveredColumn] = useState<number | null>(null);
@@ -31,15 +33,12 @@ export function Table({ className }: TableProps) {
   } = useTableConfigContext();
 
   const createLevelConfig = () => {
-    const newLevel = ensureNonNullable(
-      levels[levels.length - 1],
-      "Level not found",
-    );
+    const newLevel = ensureNonNullable(levels.at(-1), "Level not found");
     addLevel(newLevel);
   };
 
   const createHueConfig = () => {
-    const newHue = ensureNonNullable(hues[hues.length - 1], "Hue not found");
+    const newHue = ensureNonNullable(hues.at(-1), "Hue not found");
     addHue(newHue);
   };
 

@@ -1,19 +1,15 @@
 import classNames from "classnames";
+
 import styles from "./RemoveButton.module.css";
 
-interface RemoveButtonProps {
+type RemoveButtonProps = {
   className?: string;
   title: string;
   mode: "light" | "dark";
   onClick: () => void;
-}
+};
 
-export function RemoveButton({
-  className,
-  title,
-  mode,
-  onClick,
-}: RemoveButtonProps) {
+export function RemoveButton({ className, title, mode, onClick }: RemoveButtonProps) {
   return (
     <button
       type="button"
