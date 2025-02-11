@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "apcach": "^0.6.4",
-    "culori": "^3.2.0",
+    "culori": "^4.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "valibot": "1.0.0-rc.0"
