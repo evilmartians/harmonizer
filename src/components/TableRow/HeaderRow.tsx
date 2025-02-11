@@ -1,13 +1,7 @@
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
-import { Color } from "culori";
 import { useMemo } from "react";
 import type { Level, Settings } from "../../types/config";
-import {
-  type ColorRow,
-  adjustCr,
-  calculateApcach,
-  getBgColor,
-} from "../../utils/color";
+import { type ColorRow, adjustCr, getBgColor } from "../../utils/color";
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
