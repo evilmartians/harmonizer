@@ -21,6 +21,8 @@
     "pnpm": ">=9.15.0"
   },
   "dependencies": {
+    "@spred/core": "^0.40.2",
+    "@spred/react": "^0.4.2",
     "apcach": "^0.6.4",
     "culori": "^4.0.1",
     "react": "^19.0.0",

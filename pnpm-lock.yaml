@@ -13,6 +13,12 @@ importers:
 
   .:
     dependencies:
+      '@spred/core':
+        specifier: ^0.40.2
+        version: 0.40.2
+      '@spred/react':
+        specifier: ^0.4.2
+        version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       apcach:
         specifier: ^0.6.4
         version: 0.6.4
@@ -1023,6 +1029,15 @@ packages:
     resolution: {integrity: sha512-0PVwmgzZ8+TZ9oGBmdZoQVXflbvuwzN/HRclujpl4N/q3i+y0lqLw8n1bXA8ru3sApDjlmONaNAuYr38y1Kr9w==}
     cpu: [x64]
     os: [win32]
+
+  '@spred/core@0.40.2':
+    resolution: {integrity: sha512-N8H/kOXogfZJX7PaK3urxDpglaYUjaBlJegVcH7tvGkuhJjCWaDpN4JRo4jNe4GsHR2qFHmKDIPMPuTyU4iB7w==}
+
+  '@spred/react@0.4.2':
+    resolution: {integrity: sha512-9rRE4p/5pVBTtbVpCwFLeiDMjnZoOAPp/IXlzJK7tGRo2BMMGKBDDMlTUppu+4hEXaloJmVm4GfCoDLPm0cLZw==}
+    peerDependencies:
+      '@spred/core': '>=0.36.2'
+      react: '>=18.0.0'
 
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0':
     resolution: {integrity: sha512-b9MIk7yhdS1pMCZM8VeNfUlSKVRhsHZNMl5O9SfaX0l0t5wjdgu4IDzGB8bpnGBBOjGST3rRFVsaaEtI4W6f7g==}
@@ -4042,6 +4057,13 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.34.6':
     optional: true
+
+  '@spred/core@0.40.2': {}
+
+  '@spred/react@0.4.2(@spred/core@0.40.2)(react@19.0.0)':
+    dependencies:
+      '@spred/core': 0.40.2
+      react: 19.0.0
 
   '@svgr/babel-plugin-add-jsx-attribute@8.0.0(@babel/core@7.26.0)':
     dependencies:
