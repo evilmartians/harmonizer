@@ -1,6 +1,7 @@
 import {
   type Apcach,
   type ColorSpace,
+  type ChromaFunction,
   apcach,
   apcachToCss,
   crToBg,
@@ -75,7 +76,7 @@ function calculateLevel(
   chromaSetting: string,
   colorSpace: ColorSpace,
 ): Color[] {
-  let chroma = maxChroma();
+  let chroma: ChromaFunction | number = maxChroma();
   if (chromaSetting === "even") {
     chroma = findMaxCommonChroma(level, hues, bgColor, colorSpace);
   }
@@ -136,7 +137,7 @@ export function adjustCr(color: Color, bgColor: string, cr: number, colorSpace: 
 export function calculateApcach(
   bgColor: string,
   cr: number,
-  c: number,
+  c: number | ChromaFunction,
   h: number,
   colorSpace: ColorSpace,
 ): Apcach {

@@ -2,8 +2,8 @@ declare module "apcach" {
   /* Functions */
 
   export function apcach(
-    chroma: typeof maxChroma | number,
-    contrast: ContrastFunction | number,
+    background: ColorGenerator | string,
+    chroma: ChromaFunction | number,
     hue: number,
     colorSpace: ColorSpace,
   ): Apcach;
@@ -17,19 +17,19 @@ declare module "apcach" {
 
   export function crToBg(
     background: string,
-    contrast: number,
+    contrast: number | ContrastFunction,
     model?: "apca" | "wcag",
     searchDirection?: "lighter" | "darker",
   ): ColorGenerator;
 
   export function crToFg(
     background: string,
-    contrast: number,
+    contrast: number | ContrastFunction,
     model?: "apca" | "wcag",
     searchDirection?: "lighter" | "darker",
   ): ColorGenerator;
 
-  export function maxChroma(): number;
+  export function maxChroma(chromaCap?: number): ChromaFunction;
 
   /* Types */
 
@@ -53,5 +53,14 @@ declare module "apcach" {
 
   export type ColorGenerator = () => number;
 
-  export type ChromaFunction = (chroma: number, options?: ColorGeneratorOptions) => string;
+  export type ContrastConfig =
+    | number
+    | { bgColor: string; fgColor: string; cr: number; contrastModel: "apca" | "wcag" };
+
+  export type ChromaFunction = (
+    contrastConfig: ContrastConfig,
+    hue: number,
+    alpha: number,
+    colorSpace: ColorSpace,
+  ) => number;
 }
