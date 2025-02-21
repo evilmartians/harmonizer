@@ -12,6 +12,9 @@ import {
 import type { Hue, Level, Settings } from "../types/config";
 
 import { ensureNonNullable } from "./ensureNonNullable";
+import { getMiddleValue } from "./misc";
+
+import type { ContrastLevel, HueAngle } from "@/stores/types";
 
 export { inColorSpace, apcachToCss } from "apcach";
 
@@ -147,3 +150,21 @@ export function calculateApcach(
 export function getBgColor(settings: Settings, i: number): string {
   return i < settings.bgLightStart ? settings.bgColorDark : settings.bgColorLight;
 }
+
+/**
+ * Calculates the middle hue angle between two given hue angles. The order of the hue angles does not matter.
+ *
+ * @param hueAngle1 - The first hue angle.
+ * @param hueAngle2 - The second hue angle.
+ * @returns The middle hue angle.
+ */
+export const getMiddleHueAngle = getMiddleValue<HueAngle>;
+
+/**
+ * Calculates the middle contrast level between two given contrast levels. The order of the contrast levels does not matter.
+ *
+ * @param contrast1 - The first contrast level.
+ * @param contrast2 - The second contrast level.
+ * @returns The middle contrast level.
+ */
+export const getMiddleContrastLevel = getMiddleValue<ContrastLevel>;

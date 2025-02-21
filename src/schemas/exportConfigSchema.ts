@@ -2,6 +2,7 @@ import * as v from "valibot";
 
 import { chromaLevelSchema, colorStringSchema, contrastLevelSchema, hueAngleSchema } from "./color";
 import {
+  bgLightStartSchema,
   chromaModeSchema,
   colorSpaceSchema,
   contrastModelSchema,
@@ -17,7 +18,7 @@ export const exportConfigSchema = v.object({
     contrastModel: contrastModelSchema,
     directionMode: directionSchema,
     chromaMode: chromaModeSchema,
-    bgLightStart: v.number(),
+    bgLightStart: bgLightStartSchema,
     bgColorLight: colorStringSchema,
     bgColorDark: colorStringSchema,
     colorSpace: colorSpaceSchema,
