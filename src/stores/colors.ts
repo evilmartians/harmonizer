@@ -34,6 +34,7 @@ import {
 } from "@/utils/color";
 import { initialConfig } from "@/utils/config";
 import { invariant } from "@/utils/invariant";
+import { generationWorker } from "@/worker/client";
 
 const levelsStore = createIndexedArrayStore(initialConfig.levels.map(getLevelStore));
 export const {
@@ -56,7 +57,8 @@ export const {
 
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 // Synchronously precalculate colors
-recalculateColors();
+precalculateColors();
+generationWorker.on("generated:color", handleGeneratedColor);
 
 // Color methods
 function handleGeneratedColor(payload: GeneratedColorPayload) {
@@ -105,8 +107,12 @@ function collectColorCalculationData(onlyLevelId?: LevelId): GenerateColorsPaylo
   };
 }
 
+function precalculateColors() {
+  calculateColors(collectColorCalculationData(), handleGeneratedColor);
+}
+
 export function recalculateColors(onlyLevelId?: LevelId) {
-  calculateColors(collectColorCalculationData(onlyLevelId), handleGeneratedColor);
+  generationWorker.emit("generate:colors", collectColorCalculationData(onlyLevelId));
 }
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
