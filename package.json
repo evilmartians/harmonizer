@@ -27,7 +27,7 @@
     "culori": "^4.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "valibot": "1.0.0-rc.0"
+    "valibot": "^1.0.0-rc.2"
   },
   "devDependencies": {
     "@hideoo/eslint-config": "^4.0.0",

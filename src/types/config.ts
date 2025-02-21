@@ -10,10 +10,10 @@ export type Hue = {
 };
 
 export type Settings = {
-  model: string;
-  direction: string;
-  chroma: string;
-  bgLightLevel: number;
+  contrastModel: string;
+  directionMode: string;
+  chromaMode: string;
+  bgLightStart: number;
   bgColorLight: string;
   bgColorDark: string;
   colorSpace: string;
@@ -40,7 +40,7 @@ export type TableConfigActions = {
   updateChroma: (chroma: string) => void;
   updateBgColorLight: (color: string) => void;
   updateBgColorDark: (color: string) => void;
-  updateBgLightLevel: (bgLightLevel: number) => void;
+  updateBgLightStart: (bgLightLevel: number) => void;
   getConfig: () => TableConfig;
   updateConfig: (config: TableConfig) => void;
 };

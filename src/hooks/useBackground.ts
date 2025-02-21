@@ -9,8 +9,8 @@ const MIN_WIDTH = 120;
 const PADDING = 24 + CELL_WIDTH; // left page padding + first column with labels
 
 export function useBackground() {
-  const { levels, settings, updateBgLightLevel } = useTableConfigContext();
-  const initialLevel = settings.bgLightLevel;
+  const { levels, settings, updateBgLightStart } = useTableConfigContext();
+  const initialLevel = settings.bgLightStart;
 
   const calculateWidth = useCallback(
     (level: number) => {
@@ -26,16 +26,16 @@ export function useBackground() {
   usePreventSelection(isDragging);
 
   useEffect(() => {
-    setWidth(calculateWidth(settings.bgLightLevel));
-  }, [settings.bgLightLevel, calculateWidth]);
+    setWidth(calculateWidth(settings.bgLightStart));
+  }, [settings.bgLightStart, calculateWidth]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
       const newLevel = Math.round((e.clientX - PADDING) / CELL_WIDTH);
-      updateBgLightLevel(newLevel);
+      updateBgLightStart(newLevel);
       setWidth(calculateWidth(newLevel));
     },
-    [calculateWidth, updateBgLightLevel],
+    [calculateWidth, updateBgLightStart],
   );
 
   const handleDragStart = useCallback(() => {

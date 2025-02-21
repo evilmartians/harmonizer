@@ -56,7 +56,7 @@ export function Table({ className }: TableProps) {
     [hues, levels, settings],
   );
 
-  const editableChroma = settings.chroma === "custom";
+  const editableChroma = settings.chromaMode === "custom";
 
   return (
     <div
@@ -67,8 +67,8 @@ export function Table({ className }: TableProps) {
         settings={settings}
         levels={levels}
         tints={ensureNonNullable(colorMatrix.hues[0], "Hue header not found")}
-        model={settings.model}
-        bgLightLevel={settings.bgLightLevel}
+        model={settings.contrastModel}
+        bgLightStart={settings.bgLightStart}
         editableChroma={editableChroma}
         onLevelHover={onColumnHover}
         onEditModel={updateModel}
@@ -82,7 +82,7 @@ export function Table({ className }: TableProps) {
           key={`hue-row-${i}`}
           hue={hue}
           colorRow={ensureNonNullable(colorMatrix.hues[i], "Hue row not found")}
-          bgLightLevel={settings.bgLightLevel}
+          bgLightStart={settings.bgLightStart}
           onLevelHover={onColumnHover}
           onRemoveHue={() => removeHue(i)}
           onEditHue={(hue) => updateHue(i, hue)}
@@ -90,7 +90,7 @@ export function Table({ className }: TableProps) {
       ))}
       <ActionsRow
         levels={levels}
-        bgLightLevel={settings.bgLightLevel}
+        bgLightStart={settings.bgLightStart}
         hoveredColumn={hoveredColumn}
         onAddHue={createHueConfig}
         onRemoveLevel={removeLevel}

@@ -9,7 +9,7 @@ const HINT_REMOVE_LEVEL = "Remove color level";
 
 type ActionsRowProps = {
   levels: Level[];
-  bgLightLevel: number;
+  bgLightStart: number;
   hoveredColumn: number | null;
   onAddHue: () => void;
   onColumnHover: (index: number | null) => void;
@@ -18,7 +18,7 @@ type ActionsRowProps = {
 
 export function ActionsRow({
   levels,
-  bgLightLevel,
+  bgLightStart,
   hoveredColumn,
   onAddHue,
   onRemoveLevel,
@@ -39,7 +39,7 @@ export function ActionsRow({
           key={`action-${level.name}`}
           title={`${HINT_REMOVE_LEVEL} “${level.name}”`}
           variant="remove"
-          mode={i >= bgLightLevel ? "light" : "dark"}
+          mode={i >= bgLightStart ? "light" : "dark"}
           buttonClassName={hoveredColumn === i ? "opacity-100" : "opacity-0"}
           onClick={() => onRemoveLevel(i)}
           onMouseEnter={() => onColumnHover(i)}

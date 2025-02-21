@@ -60,7 +60,7 @@ export function calculateMatrix(levels: Level[], hues: Hue[], settings: Settings
   for (const [index, level] of levels.entries()) {
     const bgColor = getBgColor(settings, index);
     const colorSpace = settings.colorSpace as ColorSpace;
-    const levelColors = calculateLevel(level, hues, bgColor, settings.chroma, colorSpace);
+    const levelColors = calculateLevel(level, hues, bgColor, settings.chromaMode, colorSpace);
     colorMatrix.updateLevel(index, levelColors);
   }
   return colorMatrix;
@@ -145,5 +145,5 @@ export function calculateApcach(
 }
 
 export function getBgColor(settings: Settings, i: number): string {
-  return i < settings.bgLightLevel ? settings.bgColorDark : settings.bgColorLight;
+  return i < settings.bgLightStart ? settings.bgColorDark : settings.bgColorLight;
 }

@@ -16,7 +16,7 @@ type HeaderRowProps = {
   levels: Level[];
   model: string;
   tints: ColorRow;
-  bgLightLevel: number;
+  bgLightStart: number;
   editableChroma: boolean;
   onLevelHover: (index: number | null) => void;
   onEditModel: (value: string) => void;
@@ -31,7 +31,7 @@ export function HeaderRow({
   levels,
   model,
   tints,
-  bgLightLevel,
+  bgLightStart,
   editableChroma,
   onAddLevel,
   onEditModel,
@@ -43,16 +43,16 @@ export function HeaderRow({
   return (
     <div className={styles.container}>
       <LabelsCell
-        model={settings.model}
-        direction={settings.direction}
-        chroma={settings.chroma}
+        model={settings.contrastModel}
+        direction={settings.directionMode}
+        chroma={settings.chromaMode}
         onMouseEnter={() => onLevelHover(null)}
         onEditModel={onEditModel}
         onEditDirection={onEditDirection}
         onEditChroma={onEditChroma}
       />
       {levels.map((level, i) => {
-        const invertedColor = i < bgLightLevel;
+        const invertedColor = i < bgLightStart;
         const tintLevel = ensureNonNullable(tints.levels[i], "Tint level not found");
 
         function tintColor() {
@@ -61,7 +61,7 @@ export function HeaderRow({
             : adjustCr(tintLevel, getBgColor(settings, i), MIN_CR, settings.colorSpace);
         }
 
-        const chroma = settings.chroma === "even" ? tintLevel.c.toFixed(2) : "max";
+        const chroma = settings.chromaMode === "even" ? tintLevel.c.toFixed(2) : "max";
 
         return (
           <LevelCell

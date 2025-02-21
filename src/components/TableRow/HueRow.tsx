@@ -13,7 +13,7 @@ const HINT_REMOVE_HUE = "Remove color";
 type HueRowProps = {
   hue: Hue;
   colorRow: ColorRow;
-  bgLightLevel: number;
+  bgLightStart: number;
   onLevelHover: (index: number | null) => void;
   onRemoveHue: () => void;
   onEditHue: (hue: Hue) => void;
@@ -22,7 +22,7 @@ type HueRowProps = {
 export function HueRow({
   hue,
   colorRow,
-  bgLightLevel,
+  bgLightStart,
   onLevelHover,
   onRemoveHue,
   onEditHue,
@@ -45,7 +45,7 @@ export function HueRow({
         <ColorCell
           key={`color-${color.css}-${i}`}
           color={color}
-          mode={i < bgLightLevel ? "light" : "dark"}
+          mode={i < bgLightStart ? "light" : "dark"}
           onMouseEnter={() => onLevelHover(i)}
         />
       ))}

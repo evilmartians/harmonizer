@@ -3,8 +3,10 @@ import { useRef } from "react";
 import arrowDownIcon from "../../assets/icons/ArrowDown.svg";
 import arrowUpIcon from "../../assets/icons/ArrowUp.svg";
 import { useTableConfigContext } from "../../contexts/TableConfigContext";
-import { validateConfig } from "../../utils/configValidation";
+import { exportConfigSchema } from "../../schemas/exportConfigSchema";
 import { IconTextButton } from "../Button/IconTextButton";
+
+import { safeParse, formatValidationError } from "@/schemas";
 
 export function FloatingActions() {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -20,14 +22,15 @@ export function FloatingActions() {
 
     try {
       const text = await file.text();
-      const config = validateConfig(text);
+      const result = safeParse(exportConfigSchema, JSON.parse(text));
 
-      if (!config) {
+      if (!result.success) {
         // eslint-disable-next-line no-alert
-        alert("Invalid config file format");
+        alert(formatValidationError(result.issues));
         return;
       }
-      updateConfig(config);
+
+      updateConfig(result.output);
     } catch (error) {
       // eslint-disable-next-line no-alert
       alert(`Error reading config file: ${String(error)}`);
