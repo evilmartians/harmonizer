@@ -1,12 +1,20 @@
+import { useSubscribe } from "@spred/react";
 import classNames from "classnames";
 import { parse } from "culori";
 import { useEffect, useState } from "react";
 
-import { useTableConfigContext } from "../../contexts/TableConfigContext";
 import { useBackground } from "../../hooks/useBackground";
 import { TextControl } from "../TextControl/TextControl";
 
 import styles from "./Background.module.css";
+
+import {
+  $bgColorDark,
+  $bgColorLight,
+  updateBgColorDark,
+  updateBgColorLight,
+} from "@/stores/settings";
+import type { ColorString } from "@/types";
 
 const HINT_COLOR = "OKLCH, Hex, RGB, HSL…";
 const ERROR_INVALID_COLOR = "This is not a valid color. Try OKLCH, Hex, RGB, or HSL";
@@ -17,14 +25,15 @@ function validateColor(val: string): string | null {
 
 export function Background() {
   const { width, startDrag } = useBackground();
-  const { settings, updateBgColorDark, updateBgColorLight } = useTableConfigContext();
+  const bgColorDark = useSubscribe($bgColorDark);
+  const bgColorLight = useSubscribe($bgColorLight);
   const [knobIsHovered, setKnobIsHovered] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty("--dark-bg", settings.bgColorDark);
-    root.style.setProperty("--light-bg", settings.bgColorLight);
-  }, [settings.bgColorDark, settings.bgColorLight]);
+    root.style.setProperty("--dark-bg", bgColorDark);
+    root.style.setProperty("--light-bg", bgColorLight);
+  }, [bgColorDark, bgColorLight]);
 
   return (
     <div className={styles.container}>
@@ -61,10 +70,10 @@ export function Background() {
             align="left"
             kind="ghost"
             fitContent
-            value={settings.bgColorDark}
+            value={bgColorDark}
             title={HINT_COLOR}
             validator={validateColor}
-            onValidEdit={updateBgColorDark}
+            onValidEdit={(value) => updateBgColorDark(value as ColorString)}
           />
         </div>
         <div className={styles.inputContainer} style={{ left: width }}>
@@ -74,10 +83,10 @@ export function Background() {
             align="left"
             kind="ghost"
             fitContent
-            value={settings.bgColorLight}
+            value={bgColorLight}
             title={HINT_COLOR}
             validator={validateColor}
-            onValidEdit={updateBgColorLight}
+            onValidEdit={(value) => updateBgColorLight(value as ColorString)}
           />
         </div>
       </div>

@@ -1,8 +1,8 @@
 import { signal } from "@spred/core";
 
 import { recalculateColors } from "./colors";
-import type { BgLightStart, ChromaMode, ColorString, ContrastModel, DirectionMode } from "./types";
 
+import type { BgLightStart, ChromaMode, ColorString, ContrastModel, DirectionMode } from "@/types";
 import { initialConfig } from "@/utils/config";
 
 export const $contrastModel = signal(initialConfig.settings.contrastModel);

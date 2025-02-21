@@ -1,6 +1,6 @@
-import { invariant } from "../utils/invariant";
+import { invariant } from "./invariant";
 
-import type { HueAngle } from "./types";
+import type { HueAngle } from "@/types";
 
 const colorNames: Record<number, string> = {
   0: "Red",

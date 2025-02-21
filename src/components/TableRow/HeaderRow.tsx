@@ -1,80 +1,33 @@
-import type { Level, Settings } from "../../types/config";
-import { type ColorRow, adjustCr, getBgColor } from "../../utils/color";
+import { useSubscribe } from "@spred/react";
+
 import { ActionCell } from "../TableCell/ActionCell";
 import { LabelsCell } from "../TableCell/LabelsCell";
 import { LevelCell } from "../TableCell/LevelCell";
 
 import styles from "./HeaderRow.module.css";
 
-import { ensureNonNullable } from "@/utils/ensureNonNullable";
+import { $levelIds, insertLevel } from "@/stores/colors";
+import { $bgLightStart } from "@/stores/settings";
+import { resetHoveredColumn, setHoveredColumn } from "@/stores/ui";
 
 const HINT_ADD_LEVEL = "Add new color level";
-const MIN_CR = 50;
 
-type HeaderRowProps = {
-  settings: Settings;
-  levels: Level[];
-  model: string;
-  tints: ColorRow;
-  bgLightStart: number;
-  editableChroma: boolean;
-  onLevelHover: (index: number | null) => void;
-  onEditModel: (value: string) => void;
-  onEditDirection: (value: string) => void;
-  onEditChroma: (value: string) => void;
-  onAddLevel: () => void;
-  onLevelHue: (index: number, level: Level) => void;
-};
+export function HeaderRow() {
+  const levelsIds = useSubscribe($levelIds);
+  const bgLightStart = useSubscribe($bgLightStart);
 
-export function HeaderRow({
-  settings,
-  levels,
-  model,
-  tints,
-  bgLightStart,
-  editableChroma,
-  onAddLevel,
-  onEditModel,
-  onEditDirection,
-  onEditChroma,
-  onLevelHover,
-  onLevelHue,
-}: HeaderRowProps) {
   return (
     <div className={styles.container}>
-      <LabelsCell
-        model={settings.contrastModel}
-        direction={settings.directionMode}
-        chroma={settings.chromaMode}
-        onMouseEnter={() => onLevelHover(null)}
-        onEditModel={onEditModel}
-        onEditDirection={onEditDirection}
-        onEditChroma={onEditChroma}
-      />
-      {levels.map((level, i) => {
+      <LabelsCell onMouseEnter={resetHoveredColumn} />
+      {levelsIds.map((levelId, i) => {
         const invertedColor = i < bgLightStart;
-        const tintLevel = ensureNonNullable(tints.levels[i], "Tint level not found");
-
-        function tintColor() {
-          return tintLevel.cr >= MIN_CR
-            ? tintLevel
-            : adjustCr(tintLevel, getBgColor(settings, i), MIN_CR, settings.colorSpace);
-        }
-
-        const chroma = settings.chromaMode === "even" ? tintLevel.c.toFixed(2) : "max";
 
         return (
           <LevelCell
-            key={`header-cell-${i}`}
-            model={model}
-            levelName={level.name}
-            contrast={level.contrast}
-            chroma={chroma}
+            key={levelId}
+            levelId={levelId}
             mode={invertedColor ? "dark" : "light"}
-            tint={tintColor()}
-            editableChroma={editableChroma}
-            onMouseEnter={() => onLevelHover(i)}
-            onEdit={(name, contrast, chroma) => onLevelHue(i, { name, contrast, chroma } as Level)}
+            onMouseEnter={() => setHoveredColumn(i)}
           />
         );
       })}
@@ -82,8 +35,8 @@ export function HeaderRow({
         title={HINT_ADD_LEVEL}
         variant="level"
         mode="light"
-        onClick={onAddLevel}
-        onMouseEnter={() => onLevelHover(null)}
+        onClick={() => insertLevel()}
+        onMouseEnter={resetHoveredColumn}
       />
     </div>
   );

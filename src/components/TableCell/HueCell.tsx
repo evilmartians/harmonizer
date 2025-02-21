@@ -1,8 +1,12 @@
-import type { Color } from "../../utils/color";
+import { useSubscribe } from "@spred/react";
+
 import { TextControl } from "../TextControl/TextControl";
 
 import styles from "./HueCell.module.css";
 import { TableCell } from "./TableCell";
+
+import { getHue, updateHueAngle, updateHueName } from "@/stores/colors";
+import type { HueAngle, HueId } from "@/types";
 
 const PLACEHOLDER_NAME = "Name";
 const PLACEHOLDER_HUE = "Hue";
@@ -13,11 +17,8 @@ const HINT_DEGREE = "Hue 0…360";
 const ERROR_INVALID_HUE = "Hue must be a number 0…360";
 
 type HueCellProps = {
-  name: string;
-  angle: number;
-  tint: Color;
+  hueId: HueId;
   onMouseEnter: () => void;
-  onEdit: (name: string, angle: number) => void;
 };
 
 function validateHue(val: string): string | null {
@@ -29,7 +30,12 @@ function validateHue(val: string): string | null {
   return null;
 }
 
-export function HueCell({ name, angle, tint, onMouseEnter, onEdit }: HueCellProps) {
+export function HueCell({ hueId, onMouseEnter }: HueCellProps) {
+  const hue = getHue(hueId);
+  const name = useSubscribe(hue.$name);
+  const angle = useSubscribe(hue.$angle);
+  const tintColor = useSubscribe(hue.$tintColor);
+
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
@@ -39,11 +45,11 @@ export function HueCell({ name, angle, tint, onMouseEnter, onEdit }: HueCellProp
           inputSize="m"
           kind="ghost"
           align="left"
-          tint={tint}
+          tintColor={tintColor}
           placeholder={PLACEHOLDER_NAME}
           value={name}
           title={HINT_NAME}
-          onValidEdit={(e) => onEdit(e, angle)}
+          onValidEdit={(value) => updateHueName(hueId, value)}
         />
         <TextControl
           className={styles.angleInput}
@@ -54,7 +60,7 @@ export function HueCell({ name, angle, tint, onMouseEnter, onEdit }: HueCellProp
           value={angle}
           title={HINT_DEGREE}
           validator={validateHue}
-          onValidEdit={(e) => onEdit(name, Number.parseFloat(e))}
+          onValidEdit={(value) => updateHueAngle(hueId, Number.parseFloat(value) as HueAngle)}
         />
       </div>
     </TableCell>

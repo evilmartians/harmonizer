@@ -1,51 +1,74 @@
-import type { Level } from "../../types/config";
+import { useSubscribe } from "@spred/react";
+import { memo } from "react";
+
 import { ActionCell } from "../TableCell/ActionCell";
 import { EmptyCell } from "../TableCell/EmptyCell";
 
 import styles from "./ActionsRow.module.css";
 
+import { $levelIds, insertHue, getLevel, removeLevel } from "@/stores/colors";
+import { $bgLightStart } from "@/stores/settings";
+import { $hoveredColumn, resetHoveredColumn, setHoveredColumn } from "@/stores/ui";
+import type { LevelId } from "@/types";
+
 const HINT_ADD_HUE = "Add new color";
 const HINT_REMOVE_LEVEL = "Remove color level";
 
-type ActionsRowProps = {
-  levels: Level[];
-  bgLightStart: number;
-  hoveredColumn: number | null;
-  onAddHue: () => void;
-  onColumnHover: (index: number | null) => void;
-  onRemoveLevel: (pos: number) => void;
+const ActionCellAddHue = memo(function ActionCellAddHue() {
+  return (
+    <ActionCell
+      title={HINT_ADD_HUE}
+      variant="hue"
+      mode="dark"
+      onClick={() => insertHue()}
+      onMouseEnter={resetHoveredColumn}
+    />
+  );
+});
+
+type ActionCellRemoveLevelProps = {
+  levelIndex: number;
+  levelId: LevelId;
+  isHovered: boolean;
 };
 
-export function ActionsRow({
-  levels,
-  bgLightStart,
-  hoveredColumn,
-  onAddHue,
-  onRemoveLevel,
-  onColumnHover,
-}: ActionsRowProps) {
+const ActionCellRemoveLevel = memo(function ActionCellRemoveLevel({
+  levelIndex,
+  levelId,
+  isHovered,
+}: ActionCellRemoveLevelProps) {
+  const bgLightStart = useSubscribe($bgLightStart);
+  const levelName = useSubscribe(getLevel(levelId).$name);
+
+  return (
+    <ActionCell
+      key={levelId}
+      title={`${HINT_REMOVE_LEVEL} “${levelName}”`}
+      variant="remove"
+      mode={levelIndex >= bgLightStart ? "light" : "dark"}
+      buttonClassName={isHovered ? "opacity-100" : "opacity-0"}
+      onClick={() => removeLevel(levelId)}
+      onMouseEnter={() => setHoveredColumn(levelIndex)}
+    />
+  );
+});
+
+export function ActionsRow() {
+  const levelIds = useSubscribe($levelIds);
+  const hoveredColumn = useSubscribe($hoveredColumn);
+
   return (
     <div className={styles.container}>
-      <ActionCell
-        className={styles.addButton}
-        title={HINT_ADD_HUE}
-        variant="hue"
-        mode="dark"
-        onClick={onAddHue}
-        onMouseEnter={() => onColumnHover(null)}
-      />
-      {levels.map((level, i) => (
-        <ActionCell
-          key={`action-${level.name}`}
-          title={`${HINT_REMOVE_LEVEL} “${level.name}”`}
-          variant="remove"
-          mode={i >= bgLightStart ? "light" : "dark"}
-          buttonClassName={hoveredColumn === i ? "opacity-100" : "opacity-0"}
-          onClick={() => onRemoveLevel(i)}
-          onMouseEnter={() => onColumnHover(i)}
+      <ActionCellAddHue />
+      {levelIds.map((levelId, i) => (
+        <ActionCellRemoveLevel
+          key={levelId}
+          levelIndex={i}
+          levelId={levelId}
+          isHovered={hoveredColumn === i}
         />
       ))}
-      <EmptyCell onMouseEnter={() => onColumnHover(null)} />
+      <EmptyCell onMouseEnter={resetHoveredColumn} />
     </div>
   );
 }

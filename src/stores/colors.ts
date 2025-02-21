@@ -2,20 +2,7 @@ import { batch, type WritableSignal } from "@spred/core";
 
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import { $bgColorDark, $bgColorLight, $bgLightStart, $chromaMode, $colorSpace } from "./settings";
-import type {
-  BgLightStart,
-  ChromaLevel,
-  ColorCellData,
-  ColorIdentifier,
-  ContrastLevel,
-  HueAngle,
-  HueId,
-  LevelId,
-} from "./types";
 import {
-  calculateColors,
-  type GenerateColorsPayload,
-  type GeneratedColorPayload,
   createIndexedArrayStore,
   cleanupColors,
   getInsertItem,
@@ -29,7 +16,22 @@ import {
   matchesLevelColorKey,
 } from "./utils";
 
+import type {
+  BgLightStart,
+  ChromaLevel,
+  ColorCellData,
+  ColorIdentifier,
+  ContrastLevel,
+  HueAngle,
+  HueId,
+  LevelId,
+} from "@/types";
 import { assertUnreachable } from "@/utils/assertUnreachable";
+import {
+  calculateColors,
+  type GeneratedColorPayload,
+  type GenerateColorsPayload,
+} from "@/utils/color";
 import { initialConfig } from "@/utils/config";
 import { invariant } from "@/utils/invariant";
 

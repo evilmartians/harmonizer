@@ -1,35 +1,20 @@
-import { signal, type SignalOptions, type WritableSignal, Signal } from "@spred/core";
-import { maxChroma, type ChromaFunction, type ColorSpace } from "apcach";
+import { Signal, signal, type SignalOptions, type WritableSignal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
 
-import { getClosestColorName } from "./colorNames";
 import { FALLBACK_HUE_TINT_COLOR, FALLBACK_LEVEL_TINT_COLOR } from "./constants";
+
 import type {
-  ChromaLevel,
-  ChromaMode,
   ColorCellData,
-  ColorHueTintData,
   ColorIdentifier,
-  ColorLevelTintData,
-  ColorString,
-  ContrastLevel,
   Hue,
-  HueAngle,
   HueData,
   HueId,
   Level,
   LevelData,
   LevelId,
-  LightnessLevel,
-} from "./types";
-
-import {
-  apcachToCss,
-  calculateApcach,
-  getMiddleContrastLevel,
-  getMiddleHueAngle,
-  inColorSpace,
-} from "@/utils/color";
+} from "@/types";
+import { getMiddleContrastLevel, getMiddleHueAngle } from "@/utils/color";
+import { getClosestColorName } from "@/utils/colorNames";
 import { getRandomId } from "@/utils/id";
 import { invariant } from "@/utils/invariant";
 import { getMiddleValue } from "@/utils/misc";
@@ -196,6 +181,7 @@ export function getInsertItem<
     for (const oppositeId of cross.$ids.value) {
       onAddColor(newItem.id, oppositeId, previousId);
     }
+
     main.addItem(newItem, previousIndex + 1);
     onFinish(previousId);
   };
@@ -231,187 +217,4 @@ export function getHueStore(data: PartialOptional<HueData, "tintColor">): HueSto
     $angle: signal(data.angle),
     $tintColor: getColorSignal(data.tintColor ?? FALLBACK_HUE_TINT_COLOR),
   });
-}
-
-// TODO: move to color utils after refactoring
-type MaxCommonChromaOptions = {
-  colorSpace: ColorSpace;
-  bgColor: ColorString;
-  contrastLevel: ContrastLevel;
-  hueAngles: HueAngle[];
-};
-
-export function maxCommonChroma({
-  colorSpace,
-  bgColor,
-  contrastLevel,
-  hueAngles,
-}: MaxCommonChromaOptions): number {
-  let maxCommonChroma = 100;
-
-  for (const hueAngle of hueAngles) {
-    const apcachColor = calculateApcach(bgColor, contrastLevel, maxChroma(), hueAngle, colorSpace);
-    if (apcachColor.chroma < maxCommonChroma) {
-      maxCommonChroma = apcachColor.chroma;
-    }
-  }
-  return maxCommonChroma;
-}
-
-type ColorCellOptions = {
-  colorSpace: ColorSpace;
-  bgColor: ColorString;
-  contrastLevel: ContrastLevel;
-  chroma: ChromaFunction | number;
-  hueAngle: HueAngle;
-};
-
-export function calculateColorCell({
-  colorSpace,
-  bgColor,
-  contrastLevel,
-  hueAngle,
-  chroma,
-}: ColorCellOptions): ColorCellData {
-  const apcachColor = calculateApcach(bgColor, contrastLevel, chroma, hueAngle, colorSpace);
-
-  return {
-    cr: contrastLevel,
-    l: <LightnessLevel>apcachColor.lightness,
-    c: <ChromaLevel>apcachColor.chroma,
-    h: hueAngle,
-    p3: !inColorSpace(apcachColor, "srgb"),
-    css: <ColorString>apcachToCss(apcachColor),
-  };
-}
-
-export type GenerateColorsPayload = {
-  levels: { id: LevelId; contrast: ContrastLevel }[];
-  onlyLevelId: LevelId | undefined;
-  hues: { id: HueId; angle: HueAngle }[];
-  bgColorLight: ColorString;
-  bgColorDark: ColorString;
-  bgLightLevel: number;
-  chromaMode: ChromaMode;
-  colorSpace: ColorSpace;
-};
-
-const HUE_TINT_CR = <ContrastLevel>80;
-const HUE_TINT_CHROMA = <ChromaLevel>0.05;
-const MIN_LEVEL_TINT_CR = <ContrastLevel>50;
-
-export type GeneratedCellPayload = {
-  type: "cell";
-  levelId: LevelId;
-  hueId: HueId;
-  color: ColorCellData;
-};
-export type GeneratedLevelTintPayload = {
-  type: "level-tint";
-  levelId: LevelId;
-  color: ColorLevelTintData;
-};
-export type GeneratedHueTintPayload = {
-  type: "hue-tint";
-  hueId: HueId;
-  color: ColorHueTintData;
-};
-
-export type GeneratedColorPayload =
-  | GeneratedCellPayload
-  | GeneratedLevelTintPayload
-  | GeneratedHueTintPayload;
-
-export function calculateColors(
-  {
-    levels,
-    onlyLevelId,
-    hues,
-    bgColorLight,
-    bgColorDark,
-    bgLightStart,
-    chromaMode,
-    colorSpace,
-  }: GenerateColorsPayload,
-  onGeneratedColor: (payload: GeneratedColorPayload) => void,
-) {
-  for (const [levelIndex, level] of levels.entries()) {
-    const bgColor = bgLightLevel <= levelIndex ? bgColorLight : bgColorDark;
-    const chroma =
-      chromaMode === "even"
-        ? maxCommonChroma({
-            contrastLevel: level.contrast,
-            hueAngles: hues.map((hue) => hue.angle),
-            colorSpace,
-            bgColor,
-          })
-        : maxChroma();
-
-    // Calculate hue tint based only on the 0 index level
-    if (levelIndex === 0) {
-      for (const hue of hues.values()) {
-        const hueTintColor = calculateColorCell({
-          hueAngle: hue.angle,
-          colorSpace,
-          bgColor: bgColorDark,
-          contrastLevel: HUE_TINT_CR,
-          chroma: HUE_TINT_CHROMA,
-        });
-        onGeneratedColor({ type: "hue-tint", hueId: hue.id, color: hueTintColor });
-      }
-    }
-
-    if (onlyLevelId && level.id !== onlyLevelId) {
-      continue;
-    }
-
-    // Reset level tint color when there are no hue rows
-    if (hues.length === 0) {
-      onGeneratedColor({
-        type: "level-tint",
-        levelId: level.id,
-        color: {
-          ...calculateColorCell({
-            hueAngle: <HueAngle>0,
-            colorSpace,
-            bgColor,
-            contrastLevel: MIN_LEVEL_TINT_CR,
-            chroma: <ChromaLevel>0,
-          }),
-          referencedC: <ChromaLevel>0,
-        },
-      });
-    }
-
-    for (const [hueIndex, hue] of hues.entries()) {
-      const cellColor = calculateColorCell({
-        hueAngle: hue.angle,
-        colorSpace,
-        bgColor,
-        contrastLevel: level.contrast,
-        chroma,
-      });
-      onGeneratedColor({ type: "cell", levelId: level.id, hueId: hue.id, color: cellColor });
-
-      // Calculate level tint based only on the first hue row
-      if (hueIndex === 0) {
-        let levelTintColor: ColorLevelTintData = { ...cellColor, referencedC: cellColor.c };
-
-        if (levelTintColor.cr < MIN_LEVEL_TINT_CR) {
-          levelTintColor = {
-            ...calculateColorCell({
-              hueAngle: hue.angle,
-              colorSpace,
-              bgColor,
-              contrastLevel: MIN_LEVEL_TINT_CR,
-              chroma,
-            }),
-            referencedC: cellColor.c,
-          };
-        }
-
-        onGeneratedColor({ type: "level-tint", levelId: level.id, color: levelTintColor });
-      }
-    }
-  }
 }

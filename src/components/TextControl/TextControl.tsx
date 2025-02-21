@@ -1,10 +1,9 @@
 import classNames from "classnames";
 import { useEffect, useRef, useState } from "react";
 
-import type { Color } from "../../utils/color";
-
 import styles from "./TextControl.module.css";
 
+import type { ColorData } from "@/types";
 import { ensureNonNullable } from "@/utils/ensureNonNullable";
 
 const INPUT_MIN_SIZE = 40;
@@ -16,7 +15,7 @@ export type TextControlProps = React.InputHTMLAttributes<HTMLInputElement> & {
   kind?: "bordered" | "ghost";
   align?: "left" | "center";
   fitContent?: boolean;
-  tint?: Color;
+  tintColor?: ColorData | null;
   validator?: (val: string) => string | null;
   onValidEdit: (val: string) => void;
 };
@@ -28,7 +27,7 @@ export function TextControl({
   kind = "bordered",
   align = "center",
   fitContent = false,
-  tint,
+  tintColor,
   validator,
   onValidEdit,
   value,
@@ -37,7 +36,9 @@ export function TextControl({
 }: TextControlProps) {
   const containerRef = useRef<HTMLInputElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const borderColor = tint ? `oklch(${tint.l}% ${tint.c} ${tint.h} / 20%)` : undefined;
+  const borderColor = tintColor
+    ? `oklch(${tintColor.l}% ${tintColor.c} ${tintColor.h} / 20%)`
+    : undefined;
 
   // Auto shrink
   const [width, setWidth] = useState(INPUT_MIN_SIZE);
@@ -52,6 +53,12 @@ export function TextControl({
     }
   }, []);
 
+  useEffect(() => {
+    if (inputRef.current) {
+      inputRef.current.value = String(value);
+    }
+  }, [value]);
+
   // Validate input
   const handleChange = (val: string) => {
     const error = validator?.(val);
@@ -64,6 +71,7 @@ export function TextControl({
       if (inputRef.current) {
         inputRef.current.classList.remove("error");
         inputRef.current.title = title ?? "";
+        inputRef.current.value = val;
       }
       onValidEdit(val);
     }
@@ -87,7 +95,7 @@ export function TextControl({
       {label && (
         <span
           className={classNames(styles.label, align === "center" && "text-center")}
-          style={tint ? { color: tint.css } : {}}
+          style={tintColor ? { color: tintColor.css } : {}}
         >
           {label}
         </span>
@@ -101,7 +109,7 @@ export function TextControl({
           styles[`size_${inputSize}`],
         )}
         style={{
-          ...(tint ? { color: tint.css } : {}),
+          ...(tintColor ? { color: tintColor.css } : {}),
           ...(fitContent ? { width: `${width}px` } : {}),
         }}
         defaultValue={value}

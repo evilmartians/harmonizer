@@ -1,4 +1,4 @@
-import type { ColorData, ColorCellData, ColorLevelTintData, LevelData, HueData } from "./types";
+import type { ColorData, ColorCellData, ColorLevelTintData, LevelData, HueData } from "@/types";
 
 export const FALLBACK_COLOR_DATA = <ColorData>{
   l: 38.67,
