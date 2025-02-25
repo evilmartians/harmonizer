@@ -1,0 +1,76 @@
+@import "tailwindcss";
+@source "./**/*.module.css";
+
+@font-face {
+  font-family: Martian Grotesk;
+  font-display: swap;
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianGrotesk.woff2") format("woff2");
+  font-weight: 300 500;
+  font-stretch: 75% 200%; /* Cn: 75%,  Nr: 87.5%,  Std: 100%,  sWd: 112.5%,  Wd: 125%,  xWd: 150%,  uWd: 200% */
+}
+
+@font-face {
+  font-family: Martian Mono;
+  font-display: swap;
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianMono.woff2") format("woff2");
+  font-weight: 100 800; /* Th: 100, xLt: 200, Lt: 300, Rg: 400, Md: 500, (no 600), Bd: 700, xBd: 800 */
+  font-stretch: 100% 112.5%;
+}
+
+@theme {
+  --font-sans:
+    "Martian Grotesk", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono:
+    "Martian Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
+
+  --color-primary: oklch(0% 0 0);
+  --color-primary-inverted: oklch(100% 0 0);
+  --color-secondary: oklch(0% 0 0 / 58.82%);
+  --color-secondary-inverted: oklch(100% 0 0 / 58.82%);
+  --color-button: oklch(0% 0 0 / 12.55%);
+  --color-button-inverted: oklch(100% 0 0 / 12.55%);
+  --color-button-hover: oklch(0% 0 0 / 25.1%);
+  --color-button-hover-inverted: oklch(100% 0 0 / 25.1%);
+  --color-border: oklch(0% 0 0 / 25.1%);
+  --color-border-inverted: oklch(100% 0 0 / 25.1%);
+
+  --text-xs: 7.5px;
+  --text-xs--line-height: 10px;
+  --text-xs--font-stretch: 100%;
+  --text-s: 10px;
+  --text-s--line-height: 16px;
+  --text-s--font-stretch: 100%;
+  --text-ui-s: 10px;
+  --text-ui-s--line-height: 12px;
+  --text-ui-s--font-stretch: 100%;
+  --text-m: 12.5px;
+  --text-m--line-height: 16px;
+  --text-m--font-stretch: 100%;
+  --text-ui-m: 12.5px;
+  --text-ui-m--line-height: 16px;
+  --text-ui-m--font-stretch: 100%;
+  --text-l: 25px;
+  --text-l--line-height: 32px;
+  --text-l--font-stretch: 100%;
+  --text-ui-l: 25px;
+  --text-ui-l--line-height: 24px;
+  --text-ui-l--font-stretch: 100%;
+}
+
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+body,
+html {
+  @apply bg-primary-inverted m-0 p-0 font-sans;
+}
+
+.error {
+  @apply text-red-500!;
+}

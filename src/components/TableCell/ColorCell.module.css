@@ -1,5 +1,7 @@
+@reference "../../app.css";
+
 .container {
-  @apply flex flex-col w-full h-full justify-between text-ui-s p-2;
+  @apply text-ui-s flex h-full w-full flex-col justify-between p-2;
 
   &:hover .lightnessLabel,
   &:hover .middleLine,
@@ -33,7 +35,7 @@
 }
 
 .topLine {
-  @apply flex w-full justify-between items-center;
+  @apply flex w-full items-center justify-between;
 }
 
 .lightnessLabel {
@@ -41,11 +43,11 @@
 }
 
 .p3Badge {
-  @apply block border text-xs rounded-sm px-0.5;
+  @apply block rounded-xs border px-0.5 text-xs;
 }
 
 .middleLine {
-  @apply text-l text-center text-primary opacity-0;
+  @apply text-l text-primary text-center opacity-0;
 }
 
 .bottomLine {

@@ -1,5 +1,7 @@
+@reference "../../app.css";
+
 .container {
-  @apply flex flex-col justify-between w-full h-full items-center px-3;
+  @apply flex h-full w-full flex-col items-center justify-between px-3;
 }
 
 .inputSecondary {

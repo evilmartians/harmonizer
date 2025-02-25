@@ -1,5 +1,7 @@
+@reference "../../app.css";
+
 .button {
-  @apply flex items-center gap-1 pl-1 pr-2 py-1 bg-button rounded hover:bg-button-hover transition-colors;
+  @apply bg-button hover:bg-button-hover flex items-center gap-1 rounded-sm py-1 pr-2 pl-1 transition-colors;
 }
 
 .text {

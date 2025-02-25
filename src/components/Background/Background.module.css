@@ -1,14 +1,16 @@
+@reference "../../app.css";
+
 .container {
-  @apply absolute right-0 left-0 top-0 bottom-0 z-0;
+  @apply absolute top-0 right-0 bottom-0 left-0 z-0;
 }
 
 .darkLayer {
-  @apply absolute left-0 top-0 bottom-0 z-0;
+  @apply absolute top-0 bottom-0 left-0 z-0;
   background-color: var(--dark-bg);
 }
 
 .controlContainer {
-  @apply absolute left-0 bottom-0 right-0 h-14;
+  @apply absolute right-0 bottom-0 left-0 h-14;
   z-index: 1;
 
   &:hover .dragKnob {
@@ -17,7 +19,7 @@
 }
 
 .dragKnob {
-  @apply absolute bottom-3 flex items-center justify-center w-8 h-8 rounded-full bg-gray-200 opacity-0 cursor-col-resize z-10;
+  @apply absolute bottom-3 z-10 flex h-8 w-8 cursor-col-resize items-center justify-center rounded-full bg-gray-200 opacity-0;
 
   &:hover {
     @apply bg-gray-300;
@@ -25,7 +27,7 @@
 }
 
 .inputContainer {
-  @apply absolute flex gap-2 items-center pl-6 bottom-4 text-ui-s font-medium;
+  @apply text-ui-s absolute bottom-4 flex items-center gap-2 pl-6 font-medium;
 
   .light {
     @apply text-secondary;
@@ -37,11 +39,11 @@
 }
 
 .inputLabel {
-  @apply flex-shrink-0;
+  @apply shrink-0;
 }
 
 .input {
-  @apply flex-shrink font-martian-mono;
+  @apply shrink font-mono;
 
   &.light {
     @apply text-primary;

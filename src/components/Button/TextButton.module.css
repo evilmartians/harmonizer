@@ -1,5 +1,7 @@
+@reference "../../app.css";
+
 .button {
-  @apply text-ui-s font-medium rounded-sm p-0.5 transition-colors;
+  @apply text-ui-s rounded-xs p-0.5 font-medium transition-colors;
 
   &.mode_light {
     @apply text-primary bg-button;

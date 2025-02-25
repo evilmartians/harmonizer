@@ -46,7 +46,7 @@ const ActionCellRemoveLevel = memo(function ActionCellRemoveLevel({
       title={`${HINT_REMOVE_LEVEL} “${levelName}”`}
       variant="remove"
       mode={levelIndex >= bgLightStart ? "light" : "dark"}
-      buttonClassName={isHovered ? "opacity-100" : "opacity-0"}
+      buttonClassName={isHovered ? "opacity-100!" : "opacity-0!"}
       onClick={() => removeLevel(levelId)}
       onMouseEnter={() => setHoveredColumn(levelIndex)}
     />

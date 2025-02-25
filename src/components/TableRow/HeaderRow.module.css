@@ -1,3 +1,5 @@
+@reference "../../app.css";
+
 .container {
-  @apply inline-flex h-[136px] mb-10;
+  @apply mb-10 inline-flex h-[136px];
 }

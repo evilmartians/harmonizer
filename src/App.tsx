@@ -4,7 +4,7 @@ import { Table } from "./components/Table/Table";
 
 function App() {
   return (
-    <div className="relative min-h-screen px-6 py-4 overflow-x-auto z-1">
+    <div className="relative z-1 min-h-screen overflow-x-auto px-6 py-4">
       <Background />
       <Table className="relative z-1 mb-10" />
       <FloatingActions />

@@ -1,10 +1,11 @@
+@reference "../../app.css";
+
 .container {
-  @apply flex flex-col gap-1 justify-center rounded w-full cursor-text;
+  @apply flex w-full cursor-text flex-col justify-center gap-1 rounded-sm;
 
-  &:focus-within {
-    @apply ring-2 ring-blue-500 !important;
+  &:focus-within:focus-within {
+    @apply ring-2 ring-blue-500;
   }
-
   /* SIZES */
   &.size_m {
     @apply h-6;
@@ -25,8 +26,8 @@
 }
 
 .input {
-  @apply w-full h-6 px-1 border-none bg-transparent rounded;
-  @apply focus:outline-none focus:ring-0;
+  @apply h-6 w-full rounded border-none bg-transparent px-1;
+  @apply focus:ring-0 focus:outline-hidden;
 
   &.size_m {
     @apply text-ui-m;
@@ -38,5 +39,5 @@
 }
 
 .label {
-  @apply w-full text-ui-s text-center;
+  @apply text-ui-s w-full text-center;
 }

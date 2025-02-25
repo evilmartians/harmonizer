@@ -1,3 +1,5 @@
+@reference "../../app.css";
+
 .container {
-  @apply w-[104px] h-full;
+  @apply h-full w-[104px];
 }
