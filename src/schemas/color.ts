@@ -1,5 +1,8 @@
 import * as v from "valibot";
 
+export const levelIdSchema = v.pipe(v.string(), v.brand("LevelId"));
+export const hueIdSchema = v.pipe(v.string(), v.brand("HueId"));
+
 export const lightnessLevelSchema = v.pipe(
   v.number(),
   v.minValue(0),

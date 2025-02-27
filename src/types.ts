@@ -7,6 +7,8 @@ import {
   colorStringSchema,
   contrastLevelSchema,
   hueAngleSchema,
+  type hueIdSchema,
+  type levelIdSchema,
   lightnessLevelSchema,
 } from "@/schemas/color";
 import {
@@ -36,7 +38,7 @@ export const colorString = getBranded(colorStringSchema);
 export const contrastLevel = getBranded(contrastLevelSchema);
 export const bgLightStart = getBranded(bgLightStartSchema);
 
-export type LevelId = string & { readonly __levelId: unique symbol };
+export type LevelId = InferOutput<typeof levelIdSchema>;
 export type LevelData = {
   name: string;
   contrast: ContrastLevel;
@@ -45,7 +47,7 @@ export type LevelData = {
 };
 export type Level = { id: LevelId } & LevelData;
 
-export type HueId = string & { readonly __hueId: unique symbol };
+export type HueId = InferOutput<typeof hueIdSchema>;
 export type HueData = {
   name: string;
   angle: HueAngle;
