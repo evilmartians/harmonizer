@@ -3,12 +3,12 @@ import { batch, type WritableSignal } from "@spred/core";
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import { $bgColorDark, $bgColorLight, $bgLightStart, $chromaMode, $colorSpace } from "./settings";
 import {
-  createIndexedArrayStore,
   cleanupColors,
-  getInsertItem,
+  createIndexedArrayStore,
   getColorIdentifier,
   getColorSignal,
   getHueStore,
+  getInsertItem,
   getLevelStore,
   getMiddleHue,
   getMiddleLevel,
@@ -16,21 +16,21 @@ import {
   matchesLevelColorKey,
 } from "./utils";
 
-import type {
-  BgLightStart,
-  ChromaLevel,
-  ColorCellData,
-  ColorIdentifier,
-  ContrastLevel,
-  HueAngle,
-  HueId,
-  LevelId,
+import {
+  bgLightStart,
+  type ChromaLevel,
+  type ColorCellData,
+  type ColorIdentifier,
+  type ContrastLevel,
+  type HueAngle,
+  type HueId,
+  type LevelId,
 } from "@/types";
 import { assertUnreachable } from "@/utils/assertUnreachable";
 import {
   calculateColors,
-  type GeneratedColorPayload,
   type GenerateColorsPayload,
+  type GeneratedColorPayload,
 } from "@/utils/color";
 import { initialConfig } from "@/utils/config";
 import { invariant } from "@/utils/invariant";
@@ -146,7 +146,7 @@ export function removeLevel(levelId: LevelId) {
     cleanupColors(colorsMap, matchesLevelColorKey, levelId);
 
     if (levelIndex < $bgLightStart.value) {
-      $bgLightStart.set(<BgLightStart>($bgLightStart.value - 1));
+      $bgLightStart.set(bgLightStart($bgLightStart.value - 1));
     }
   });
 }

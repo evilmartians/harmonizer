@@ -5,7 +5,7 @@ import { usePreventSelection } from "./usePreventSelection";
 
 import { $levelIds } from "@/stores/colors";
 import { $bgLightStart, updateBgLightStart } from "@/stores/settings";
-import type { BgLightStart } from "@/types";
+import { bgLightStart } from "@/types";
 
 const CELL_WIDTH = 104;
 const MIN_WIDTH = 120;
@@ -13,7 +13,7 @@ const PADDING = 24 + CELL_WIDTH; // left page padding + first column with labels
 
 export function useBackground() {
   const levelIds = useSubscribe($levelIds);
-  const bgLightStart = useSubscribe($bgLightStart);
+  const bgLightsStartsAt = useSubscribe($bgLightStart);
 
   const calculateWidth = useCallback(
     (level: number) => {
@@ -22,19 +22,19 @@ export function useBackground() {
     },
     [levelIds],
   );
-  const [width, setWidth] = useState(() => calculateWidth(bgLightStart));
+  const [width, setWidth] = useState(() => calculateWidth(bgLightsStartsAt));
 
   const [isDragging, setIsDragging] = useState(false);
 
   usePreventSelection(isDragging);
 
   useEffect(() => {
-    setWidth(calculateWidth(bgLightStart));
-  }, [bgLightStart, calculateWidth]);
+    setWidth(calculateWidth(bgLightsStartsAt));
+  }, [bgLightsStartsAt, calculateWidth]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      const newLevel = <BgLightStart>Math.round((e.clientX - PADDING) / CELL_WIDTH);
+      const newLevel = bgLightStart(Math.round((e.clientX - PADDING) / CELL_WIDTH));
 
       setWidth(calculateWidth(newLevel));
       if ($bgLightStart.value !== newLevel) {

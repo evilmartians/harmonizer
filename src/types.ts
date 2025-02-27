@@ -1,18 +1,20 @@
 import type { InferOutput } from "valibot";
 
-import type {
+import { getBranded } from "./utils/branded";
+
+import {
   chromaLevelSchema,
   colorStringSchema,
   contrastLevelSchema,
   hueAngleSchema,
   lightnessLevelSchema,
 } from "@/schemas/color";
-import type {
+import {
   bgLightStartSchema,
-  chromaModeSchema,
-  colorSpaceSchema,
-  contrastModelSchema,
-  directionSchema,
+  type chromaModeSchema,
+  type colorSpaceSchema,
+  type contrastModelSchema,
+  type directionSchema,
 } from "@/schemas/settings";
 
 export type LightnessLevel = InferOutput<typeof lightnessLevelSchema>;
@@ -26,6 +28,13 @@ export type ColorSpace = InferOutput<typeof colorSpaceSchema>;
 export type BgLightStart = InferOutput<typeof bgLightStartSchema>;
 export type ContrastModel = InferOutput<typeof contrastModelSchema>;
 export type DirectionMode = InferOutput<typeof directionSchema>;
+
+export const lightnessLevel = getBranded(lightnessLevelSchema);
+export const chromaLevel = getBranded(chromaLevelSchema);
+export const hueAngle = getBranded(hueAngleSchema);
+export const colorString = getBranded(colorStringSchema);
+export const contrastLevel = getBranded(contrastLevelSchema);
+export const bgLightStart = getBranded(bgLightStartSchema);
 
 export type LevelId = string & { readonly __levelId: unique symbol };
 export type LevelData = {

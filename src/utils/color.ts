@@ -11,18 +11,22 @@ import {
 
 import { getMiddleValue } from "./misc";
 
-import type {
-  ChromaLevel,
-  ChromaMode,
-  ColorCellData,
-  ColorHueTintData,
-  ColorLevelTintData,
-  ColorString,
-  ContrastLevel,
-  HueAngle,
-  HueId,
-  LevelId,
-  LightnessLevel,
+import {
+  chromaLevel,
+  colorString,
+  contrastLevel,
+  hueAngle,
+  lightnessLevel,
+  type ChromaLevel,
+  type ChromaMode,
+  type ColorCellData,
+  type ColorHueTintData,
+  type ColorLevelTintData,
+  type ColorString,
+  type ContrastLevel,
+  type HueAngle,
+  type HueId,
+  type LevelId,
 } from "@/types";
 
 export function apcachToBg(
@@ -56,7 +60,7 @@ export function maxCommonChroma({
       maxCommonChroma = apcachColor.chroma;
     }
   }
-  return <ChromaLevel>maxCommonChroma;
+  return chromaLevel(maxCommonChroma);
 }
 
 type ColorCellOptions = {
@@ -78,11 +82,11 @@ export function calculateColorCell({
 
   return {
     cr: contrastLevel,
-    l: <LightnessLevel>apcachColor.lightness,
-    c: <ChromaLevel>apcachColor.chroma,
+    l: lightnessLevel(apcachColor.lightness),
+    c: chromaLevel(apcachColor.chroma),
     h: hueAngle,
     p3: !inColorSpace(apcachColor, "srgb"),
-    css: <ColorString>apcachToCss(apcachColor),
+    css: colorString(apcachToCss(apcachColor)),
   };
 }
 
@@ -97,9 +101,9 @@ export type GenerateColorsPayload = {
   colorSpace: ColorSpace;
 };
 
-const HUE_TINT_CR = <ContrastLevel>80;
-const HUE_TINT_CHROMA = <ChromaLevel>0.05;
-const MIN_LEVEL_TINT_CR = <ContrastLevel>50;
+const HUE_TINT_CR = contrastLevel(80);
+const HUE_TINT_CHROMA = chromaLevel(0.05);
+const MIN_LEVEL_TINT_CR = contrastLevel(50);
 
 export type GeneratedCellPayload = {
   type: "cell";
@@ -173,13 +177,13 @@ export function calculateColors(
         levelId: level.id,
         color: {
           ...calculateColorCell({
-            hueAngle: <HueAngle>0,
+            hueAngle: hueAngle(0),
             colorSpace,
             bgColor,
             contrastLevel: MIN_LEVEL_TINT_CR,
-            chroma: <ChromaLevel>0,
+            chroma: chromaLevel(0),
           }),
-          referencedC: <ChromaLevel>0,
+          referencedC: chromaLevel(0),
         },
       });
     }

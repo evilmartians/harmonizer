@@ -5,7 +5,7 @@ export class WorkerClient<
   IncomingMessages extends Record<string, unknown>,
 > {
   private worker: Worker;
-  private handlers = <Record<keyof IncomingMessages, AnyEventHandler[]>>{};
+  private handlers = {} as Record<keyof IncomingMessages, AnyEventHandler[]>;
 
   constructor(scriptURL: string | URL, options?: WorkerOptions) {
     this.worker = new Worker(scriptURL, options);
