@@ -152,7 +152,7 @@ type GetCloneItemOptions<
   getNewItem: () => MainItem;
   getMiddleItem: (previous: MainItem, next: MainItem) => MainItem;
   onAddColor: (id: MainItem["id"], crossId: CrossItem["id"], previousId?: MainItem["id"]) => void;
-  onFinish: (id?: MainItem["id"]) => void;
+  onFinish: (id: MainItem["id"]) => void;
 };
 export function getInsertItem<
   MainItem extends ItemWithId<AnyId>,
@@ -183,7 +183,7 @@ export function getInsertItem<
     }
 
     main.addItem(newItem, previousIndex + 1);
-    onFinish(previousId);
+    onFinish(newItem.id);
   };
 }
 

@@ -94,10 +94,10 @@ function upsertColor(levelId: LevelId, hueId: HueId, color: ColorCellData) {
   }
 }
 
-function collectColorCalculationData(onlyLevelId?: LevelId): GenerateColorsPayload {
+function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColorsPayload {
   return {
     levels: $levelIds.value.map((id) => ({ id, contrast: getLevel(id).$contrast.value })),
-    onlyLevelId,
+    recalcOnlyLevels,
     hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).$angle.value })),
     bgColorLight: $bgColorLight.value,
     bgColorDark: $bgColorDark.value,
@@ -111,8 +111,8 @@ function precalculateColors() {
   calculateColors(collectColorCalculationData(), handleGeneratedColor);
 }
 
-export function recalculateColors(onlyLevelId?: LevelId) {
-  generationWorker.emit("generate:colors", collectColorCalculationData(onlyLevelId));
+export function recalculateColors(recalcOnlyLevels?: LevelId[]) {
+  generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
 }
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
@@ -135,7 +135,7 @@ export const insertLevel = getInsertItem({
       hueId,
       previousLevelId ? getColor$(previousLevelId, hueId).value : FALLBACK_CELL_COLOR,
     ),
-  onFinish: recalculateColors,
+  onFinish: (levelId) => recalculateColors([levelId]),
 });
 
 export function removeLevel(levelId: LevelId) {
@@ -157,12 +157,12 @@ export function updateLevelName(id: LevelId, name: string) {
 
 export function updateLevelContrast(id: LevelId, contrast: ContrastLevel) {
   getLevel(id).$contrast.set(contrast);
-  recalculateColors(id);
+  recalculateColors([id]);
 }
 
 export function updateLevelChroma(id: LevelId, chroma: ChromaLevel) {
   getLevel(id).$chroma.set(chroma);
-  recalculateColors(id);
+  recalculateColors([id]);
 }
 
 // Hue methods

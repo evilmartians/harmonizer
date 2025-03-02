@@ -1,9 +1,10 @@
 import { signal } from "@spred/core";
 
-import { recalculateColors } from "./colors";
+import { $levelIds, recalculateColors } from "./colors";
 
 import type { BgLightStart, ChromaMode, ColorString, ContrastModel, DirectionMode } from "@/types";
 import { initialConfig } from "@/utils/config";
+import { invariant } from "@/utils/invariant";
 
 export const $contrastModel = signal(initialConfig.settings.contrastModel);
 export const $directionMode = signal(initialConfig.settings.directionMode);
@@ -30,15 +31,17 @@ export function updateChromaMode(mode: ChromaMode) {
 
 export function updateBgColorLight(color: ColorString) {
   $bgColorLight.set(color);
-  recalculateColors();
+  recalculateColors($levelIds.value.slice($bgLightStart.value));
 }
 
 export function updateBgColorDark(color: ColorString) {
   $bgColorDark.set(color);
-  recalculateColors();
+  recalculateColors($levelIds.value.slice(0, $bgLightStart.value));
 }
 
 export function updateBgLightStart(start: BgLightStart) {
+  const idToUpdate = $levelIds.value[start > $bgLightStart.value ? start - 1 : start];
+  invariant(idToUpdate, "Invalid bg light start index");
   $bgLightStart.set(start);
-  recalculateColors();
+  recalculateColors([idToUpdate]);
 }

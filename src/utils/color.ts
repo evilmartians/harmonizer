@@ -92,7 +92,7 @@ export function calculateColorCell({
 
 export type GenerateColorsPayload = {
   levels: { id: LevelId; contrast: ContrastLevel }[];
-  onlyLevelId: LevelId | undefined;
+  recalcOnlyLevels: LevelId[] | undefined;
   hues: { id: HueId; angle: HueAngle }[];
   bgColorLight: ColorString;
   bgColorDark: ColorString;
@@ -130,7 +130,7 @@ export type GeneratedColorPayload =
 export function calculateColors(
   {
     levels,
-    onlyLevelId,
+    recalcOnlyLevels,
     hues,
     bgColorLight,
     bgColorDark,
@@ -166,7 +166,7 @@ export function calculateColors(
       }
     }
 
-    if (onlyLevelId && level.id !== onlyLevelId) {
+    if (recalcOnlyLevels && !recalcOnlyLevels.includes(level.id)) {
       continue;
     }
 
