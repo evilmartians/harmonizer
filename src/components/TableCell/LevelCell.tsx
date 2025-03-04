@@ -1,10 +1,14 @@
+import { useSubscribe } from "@spred/react";
 import classNames from "classnames";
 
-import type { Color } from "../../utils/color";
 import { TextControl } from "../TextControl/TextControl";
 
 import styles from "./LevelCell.module.css";
 import { TableCell } from "./TableCell";
+
+import { getLevel, updateLevelChroma, updateLevelContrast, updateLevelName } from "@/stores/colors";
+import { $chromaMode, $contrastModel } from "@/stores/settings";
+import type { ChromaLevel, ContrastLevel, LevelId } from "@/types";
 
 const PLACEHOLDER_LEVEL = "Level";
 const PLACEHOLDER_CONTRAST = "CR";
@@ -18,15 +22,9 @@ const ERROR_INVALID_CONTRAST = "Contrast must be a number 0…108";
 const ERROR_INVALID_CHROMA = "Chroma must be a number 0…0.37";
 
 type LevelCellProps = {
-  levelName: string;
-  model: string;
-  contrast: number;
-  chroma: string;
+  levelId: LevelId;
   mode: "light" | "dark";
-  tint: Color;
-  editableChroma: boolean;
   onMouseEnter: () => void;
-  onEdit: (name: string, contrast: number, chroma: number) => void;
 };
 
 function validateContrast(val: string): string | null {
@@ -48,17 +46,16 @@ function validateChroma(val: string): string | null {
   return null;
 }
 
-export function LevelCell({
-  levelName,
-  model,
-  contrast,
-  chroma,
-  mode,
-  tint,
-  editableChroma,
-  onMouseEnter,
-  onEdit,
-}: LevelCellProps) {
+export function LevelCell({ levelId, mode, onMouseEnter }: LevelCellProps) {
+  const level = getLevel(levelId);
+  const name = useSubscribe(level.$name);
+  const contrast = useSubscribe(level.$contrast);
+  const contrastModel = useSubscribe($contrastModel);
+  const tintColor = useSubscribe(level.$tintColor);
+  const chromaMode = useSubscribe($chromaMode);
+  const editableChroma = !chromaMode; // TODO: chromaMode === "custom";
+  const chroma = chromaMode === "even" ? tintColor.referencedC.toFixed(2) : "max";
+
   return (
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
@@ -67,21 +64,23 @@ export function LevelCell({
           inputSize="m"
           kind="ghost"
           placeholder={PLACEHOLDER_LEVEL}
-          value={levelName}
+          value={name}
           title={HINT_LEVEL}
-          onValidEdit={(e) => onEdit(e, contrast, Number.parseFloat(chroma))}
+          onValidEdit={(value) => updateLevelName(levelId, value)}
         />
         <TextControl
           className={classNames(styles.inputPrimary, styles[`mode_${mode}`])}
           inputSize="l"
           kind="bordered"
-          tint={tint}
+          tintColor={tintColor}
           placeholder={PLACEHOLDER_CONTRAST}
           value={contrast}
-          label={model}
+          label={contrastModel}
           title={HINT_CONTRAST}
           validator={validateContrast}
-          onValidEdit={(e) => onEdit(levelName, Number.parseFloat(e), Number.parseFloat(chroma))}
+          onValidEdit={
+            (value) => updateLevelContrast(levelId, Number.parseFloat(value) as ContrastLevel) // TODO: check type
+          }
         />
         <TextControl
           className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
@@ -92,7 +91,9 @@ export function LevelCell({
           title={HINT_CHROMA}
           disabled={!editableChroma}
           validator={validateChroma}
-          onValidEdit={(e) => onEdit(levelName, contrast, Number.parseFloat(e))}
+          onValidEdit={
+            (value) => updateLevelChroma(levelId, Number.parseFloat(value) as ChromaLevel) // TODO: check type
+          }
         />
       </div>
     </TableCell>

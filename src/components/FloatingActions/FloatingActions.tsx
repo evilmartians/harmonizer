@@ -2,13 +2,29 @@ import { useRef } from "react";
 
 import arrowDownIcon from "../../assets/icons/ArrowDown.svg";
 import arrowUpIcon from "../../assets/icons/ArrowUp.svg";
-import { useTableConfigContext } from "../../contexts/TableConfigContext";
-import { validateConfig } from "../../utils/configValidation";
 import { IconTextButton } from "../Button/IconTextButton";
+
+import { safeParse, formatValidationError } from "@/schemas";
+import { exportConfigSchema } from "@/schemas/exportConfigSchema";
+import { getConfig, updateConfig } from "@/stores/config";
+
+const handleDownload = () => {
+  const config = JSON.stringify(getConfig(), null, 2);
+  const blob = new Blob([config], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "My Harmony config.json";
+  document.body.append(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+};
 
 export function FloatingActions() {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { getConfig, updateConfig } = useTableConfigContext();
 
   const handleUpload = () => {
     fileInputRef.current?.click();
@@ -20,14 +36,15 @@ export function FloatingActions() {
 
     try {
       const text = await file.text();
-      const config = validateConfig(text);
+      const result = safeParse(exportConfigSchema, JSON.parse(text));
 
-      if (!config) {
+      if (!result.success) {
         // eslint-disable-next-line no-alert
-        alert("Invalid config file format");
+        alert(formatValidationError(result.issues));
         return;
       }
-      updateConfig(config);
+
+      updateConfig(result.output);
     } catch (error) {
       // eslint-disable-next-line no-alert
       alert(`Error reading config file: ${String(error)}`);
@@ -35,21 +52,6 @@ export function FloatingActions() {
       // Reset input so the same file can be selected again
       event.target.value = "";
     }
-  };
-
-  const handleDownload = () => {
-    const config = JSON.stringify(getConfig(), null, 2);
-    const blob = new Blob([config], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "My Harmony config.json";
-    document.body.append(a);
-    a.click();
-    a.remove();
-
-    URL.revokeObjectURL(url);
   };
 
   return (

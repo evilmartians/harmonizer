@@ -1,148 +1,240 @@
 import {
-  type Apcach,
-  type ColorSpace,
   apcach,
   apcachToCss,
   crToBg,
   inColorSpace,
   maxChroma,
+  type Apcach,
+  type ChromaFunction,
+  type ColorSpace,
 } from "apcach";
 
-import type { Hue, Level, Settings } from "../types/config";
+import { getMiddleValue } from "./misc";
 
-import { ensureNonNullable } from "./ensureNonNullable";
+import {
+  chromaLevel,
+  colorString,
+  contrastLevel,
+  hueAngle,
+  lightnessLevel,
+  type ChromaLevel,
+  type ChromaMode,
+  type ColorCellData,
+  type ColorHueTintData,
+  type ColorLevelTintData,
+  type ColorString,
+  type ContrastLevel,
+  type HueAngle,
+  type HueId,
+  type LevelId,
+} from "@/types";
 
-export { inColorSpace, apcachToCss } from "apcach";
-
-export class ColorMatrix {
-  public hues: ColorRow[];
-  constructor(c: number, r: number) {
-    this.hues = Array.from({ length: r }, () => new ColorRow(c));
-  }
-  updateLevel(i: number, colors: Color[]) {
-    for (const [index, hue] of this.hues.entries()) {
-      if (index >= colors.length) {
-        continue;
-      }
-      hue.updateColor(i, ensureNonNullable(colors[index], "Color not found"));
-    }
-  }
-}
-
-export class ColorRow {
-  public levels: Color[];
-  constructor(c: number) {
-    this.levels = Array.from({ length: c }, () => ({}) as Color);
-  }
-  updateColor(i: number, color: Color) {
-    if (i >= this.levels.length) {
-      return;
-    }
-    this.levels[i] = color;
-  }
-}
-
-export type Color = {
-  cr: number;
-  l: number;
-  c: number;
-  h: number;
-  p3: boolean;
-  css: string;
-};
-
-/*
- * Calculates whole color matrix
- */
-export function calculateMatrix(levels: Level[], hues: Hue[], settings: Settings): ColorMatrix {
-  const colorMatrix = new ColorMatrix(levels.length, hues.length);
-  for (const [index, level] of levels.entries()) {
-    const bgColor = getBgColor(settings, index);
-    const colorSpace = settings.colorSpace as ColorSpace;
-    const levelColors = calculateLevel(level, hues, bgColor, settings.chroma, colorSpace);
-    colorMatrix.updateLevel(index, levelColors);
-  }
-  return colorMatrix;
-}
-
-/*
- * Calculates colors of given level
- */
-function calculateLevel(
-  level: Level,
-  hues: Hue[],
-  bgColor: string,
-  chromaSetting: string,
-  colorSpace: ColorSpace,
-): Color[] {
-  let chroma = maxChroma();
-  if (chromaSetting === "even") {
-    chroma = findMaxCommonChroma(level, hues, bgColor, colorSpace);
-  }
-  // Calculate real colors with this chroma
-  const colors: Color[] = [];
-  for (const hue of hues) {
-    const apcachColor = calculateApcach(bgColor, level.contrast, chroma, hue.angle, colorSpace);
-    const color = {
-      cr: level.contrast,
-      l: apcachColor.lightness,
-      c: apcachColor.chroma,
-      h: hue.angle,
-      p3: !inColorSpace(apcachColor, "srgb"),
-      css: apcachToCss(apcachColor),
-    };
-    colors.push(color);
-  }
-  return colors;
-}
-
-/**
- * Calculates colors with maximum chroma and finds chroma of the less saturated color
- */
-export function findMaxCommonChroma(
-  level: Level,
-  hues: Hue[],
-  bgColor: string,
-  colorSpace: ColorSpace,
-): number {
-  let maxCommonChroma = 100;
-  for (const hue of hues) {
-    const apcachColor = calculateApcach(
-      bgColor,
-      level.contrast,
-      maxChroma(),
-      hue.angle,
-      colorSpace,
-    );
-    if (apcachColor.chroma < maxCommonChroma) {
-      maxCommonChroma = apcachColor.chroma;
-    }
-  }
-  return maxCommonChroma;
-}
-
-export function adjustCr(color: Color, bgColor: string, cr: number, colorSpace: string): Color {
-  const apcachColor = calculateApcach(bgColor, cr, color.c, color.h, colorSpace as ColorSpace);
-  return {
-    cr: cr,
-    l: apcachColor.lightness,
-    c: apcachColor.chroma,
-    h: color.h,
-    p3: !inColorSpace(apcachColor, "srgb"),
-    css: apcachToCss(apcachColor),
-  };
-}
-
-export function calculateApcach(
-  bgColor: string,
-  cr: number,
-  c: number,
-  h: number,
+export function apcachToBg(
+  bgColor: ColorString,
+  cr: ContrastLevel,
+  c: ChromaLevel | ChromaFunction,
+  h: HueAngle,
   colorSpace: ColorSpace,
 ): Apcach {
   return apcach(crToBg(bgColor, cr), c, h, colorSpace);
 }
 
-export function getBgColor(settings: Settings, i: number): string {
-  return i < settings.bgLightLevel ? settings.bgColorDark : settings.bgColorLight;
+type MaxCommonChromaOptions = {
+  colorSpace: ColorSpace;
+  bgColor: ColorString;
+  contrastLevel: ContrastLevel;
+  hueAngles: HueAngle[];
+};
+
+export function maxCommonChroma({
+  colorSpace,
+  bgColor,
+  contrastLevel,
+  hueAngles,
+}: MaxCommonChromaOptions): ChromaLevel {
+  let maxCommonChroma = 100;
+
+  for (const hueAngle of hueAngles) {
+    const apcachColor = apcachToBg(bgColor, contrastLevel, maxChroma(), hueAngle, colorSpace);
+    if (apcachColor.chroma < maxCommonChroma) {
+      maxCommonChroma = apcachColor.chroma;
+    }
+  }
+  return chromaLevel(maxCommonChroma);
 }
+
+type ColorCellOptions = {
+  colorSpace: ColorSpace;
+  bgColor: ColorString;
+  contrastLevel: ContrastLevel;
+  chroma: ChromaFunction | ChromaLevel;
+  hueAngle: HueAngle;
+};
+
+export function calculateColorCell({
+  colorSpace,
+  bgColor,
+  contrastLevel,
+  hueAngle,
+  chroma,
+}: ColorCellOptions): ColorCellData {
+  const apcachColor = apcachToBg(bgColor, contrastLevel, chroma, hueAngle, colorSpace);
+
+  return {
+    cr: contrastLevel,
+    l: lightnessLevel(apcachColor.lightness),
+    c: chromaLevel(apcachColor.chroma),
+    h: hueAngle,
+    p3: !inColorSpace(apcachColor, "srgb"),
+    css: colorString(apcachToCss(apcachColor)),
+  };
+}
+
+export type GenerateColorsPayload = {
+  levels: { id: LevelId; contrast: ContrastLevel }[];
+  recalcOnlyLevels: LevelId[] | undefined;
+  hues: { id: HueId; angle: HueAngle }[];
+  bgColorLight: ColorString;
+  bgColorDark: ColorString;
+  bgLightStart: number;
+  chromaMode: ChromaMode;
+  colorSpace: ColorSpace;
+};
+
+const HUE_TINT_CR = contrastLevel(80);
+const HUE_TINT_CHROMA = chromaLevel(0.05);
+const MIN_LEVEL_TINT_CR = contrastLevel(50);
+
+export type GeneratedCellPayload = {
+  type: "cell";
+  levelId: LevelId;
+  hueId: HueId;
+  color: ColorCellData;
+};
+export type GeneratedLevelTintPayload = {
+  type: "level-tint";
+  levelId: LevelId;
+  color: ColorLevelTintData;
+};
+export type GeneratedHueTintPayload = {
+  type: "hue-tint";
+  hueId: HueId;
+  color: ColorHueTintData;
+};
+
+export type GeneratedColorPayload =
+  | GeneratedCellPayload
+  | GeneratedLevelTintPayload
+  | GeneratedHueTintPayload;
+
+export function calculateColors(
+  {
+    levels,
+    recalcOnlyLevels,
+    hues,
+    bgColorLight,
+    bgColorDark,
+    bgLightStart,
+    chromaMode,
+    colorSpace,
+  }: GenerateColorsPayload,
+  onGeneratedColor: (payload: GeneratedColorPayload) => void,
+) {
+  for (const [levelIndex, level] of levels.entries()) {
+    const bgColor = bgLightStart <= levelIndex ? bgColorLight : bgColorDark;
+    const chroma =
+      chromaMode === "even"
+        ? maxCommonChroma({
+            contrastLevel: level.contrast,
+            hueAngles: hues.map((hue) => hue.angle),
+            colorSpace,
+            bgColor,
+          })
+        : maxChroma();
+
+    // Calculate hue tint based only on the 0 index level
+    if (levelIndex === 0) {
+      for (const hue of hues.values()) {
+        const hueTintColor = calculateColorCell({
+          hueAngle: hue.angle,
+          colorSpace,
+          bgColor: bgColorDark,
+          contrastLevel: HUE_TINT_CR,
+          chroma: HUE_TINT_CHROMA,
+        });
+        onGeneratedColor({ type: "hue-tint", hueId: hue.id, color: hueTintColor });
+      }
+    }
+
+    if (recalcOnlyLevels && !recalcOnlyLevels.includes(level.id)) {
+      continue;
+    }
+
+    // Reset level tint color when there are no hue rows
+    if (hues.length === 0) {
+      onGeneratedColor({
+        type: "level-tint",
+        levelId: level.id,
+        color: {
+          ...calculateColorCell({
+            hueAngle: hueAngle(0),
+            colorSpace,
+            bgColor,
+            contrastLevel: MIN_LEVEL_TINT_CR,
+            chroma: chromaLevel(0),
+          }),
+          referencedC: chromaLevel(0),
+        },
+      });
+    }
+
+    for (const [hueIndex, hue] of hues.entries()) {
+      const cellColor = calculateColorCell({
+        hueAngle: hue.angle,
+        colorSpace,
+        bgColor,
+        contrastLevel: level.contrast,
+        chroma,
+      });
+      onGeneratedColor({ type: "cell", levelId: level.id, hueId: hue.id, color: cellColor });
+
+      // Calculate level tint based only on the first hue row
+      if (hueIndex === 0) {
+        let levelTintColor: ColorLevelTintData = { ...cellColor, referencedC: cellColor.c };
+
+        if (levelTintColor.cr < MIN_LEVEL_TINT_CR) {
+          levelTintColor = {
+            ...calculateColorCell({
+              hueAngle: hue.angle,
+              colorSpace,
+              bgColor,
+              contrastLevel: MIN_LEVEL_TINT_CR,
+              chroma,
+            }),
+            referencedC: cellColor.c,
+          };
+        }
+
+        onGeneratedColor({ type: "level-tint", levelId: level.id, color: levelTintColor });
+      }
+    }
+  }
+}
+
+/**
+ * Calculates the middle hue angle between two given hue angles. The order of the hue angles does not matter.
+ *
+ * @param hueAngle1 - The first hue angle.
+ * @param hueAngle2 - The second hue angle.
+ * @returns The middle hue angle.
+ */
+export const getMiddleHueAngle = getMiddleValue<HueAngle>;
+
+/**
+ * Calculates the middle contrast level between two given contrast levels. The order of the contrast levels does not matter.
+ *
+ * @param contrast1 - The first contrast level.
+ * @param contrast2 - The second contrast level.
+ * @returns The middle contrast level.
+ */
+export const getMiddleContrastLevel = getMiddleValue<ContrastLevel>;

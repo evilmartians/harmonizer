@@ -21,16 +21,20 @@
     "pnpm": ">=9.15.0"
   },
   "dependencies": {
+    "@spred/core": "^0.40.2",
+    "@spred/react": "^0.4.2",
     "apcach": "^0.6.4",
     "culori": "^4.0.1",
+    "fast-equals": "^5.2.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "valibot": "1.0.0-rc.0"
+    "valibot": "^1.0.0-rc.2"
   },
   "devDependencies": {
     "@hideoo/eslint-config": "^4.0.0",
     "@svgr/webpack": "^8.1.0",
     "@types/culori": "^2.1.1",
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "@vitejs/plugin-react": "^4.3.1",

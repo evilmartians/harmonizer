@@ -1,41 +1,47 @@
+import { useSubscribe } from "@spred/react";
 import { useCallback, useEffect, useState } from "react";
 
-import { useTableConfigContext } from "../contexts/TableConfigContext";
-
 import { usePreventSelection } from "./usePreventSelection";
+
+import { $levelIds } from "@/stores/colors";
+import { $bgLightStart, updateBgLightStart } from "@/stores/settings";
+import { bgLightStart } from "@/types";
 
 const CELL_WIDTH = 104;
 const MIN_WIDTH = 120;
 const PADDING = 24 + CELL_WIDTH; // left page padding + first column with labels
 
 export function useBackground() {
-  const { levels, settings, updateBgLightLevel } = useTableConfigContext();
-  const initialLevel = settings.bgLightLevel;
+  const levelIds = useSubscribe($levelIds);
+  const bgLightsStartsAt = useSubscribe($bgLightStart);
 
   const calculateWidth = useCallback(
     (level: number) => {
-      const maxWidth = PADDING + levels.length * CELL_WIDTH;
+      const maxWidth = PADDING + levelIds.length * CELL_WIDTH;
       return Math.max(MIN_WIDTH, Math.min(maxWidth, level * CELL_WIDTH + PADDING));
     },
-    [levels.length],
+    [levelIds],
   );
-  const [width, setWidth] = useState(() => calculateWidth(initialLevel));
+  const [width, setWidth] = useState(() => calculateWidth(bgLightsStartsAt));
 
   const [isDragging, setIsDragging] = useState(false);
 
   usePreventSelection(isDragging);
 
   useEffect(() => {
-    setWidth(calculateWidth(settings.bgLightLevel));
-  }, [settings.bgLightLevel, calculateWidth]);
+    setWidth(calculateWidth(bgLightsStartsAt));
+  }, [bgLightsStartsAt, calculateWidth]);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      const newLevel = Math.round((e.clientX - PADDING) / CELL_WIDTH);
-      updateBgLightLevel(newLevel);
+      const newLevel = bgLightStart(Math.round((e.clientX - PADDING) / CELL_WIDTH));
+
       setWidth(calculateWidth(newLevel));
+      if ($bgLightStart.value !== newLevel) {
+        updateBgLightStart(newLevel);
+      }
     },
-    [calculateWidth, updateBgLightLevel],
+    [calculateWidth],
   );
 
   const handleDragStart = useCallback(() => {

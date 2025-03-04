@@ -1,17 +1,27 @@
+import { useSubscribe } from "@spred/react";
 import classNames from "classnames";
-
-import type { Color } from "../../utils/color";
+import { memo } from "react";
 
 import styles from "./ColorCell.module.css";
 import { TableCell } from "./TableCell";
 
+import { getColor$ } from "@/stores/colors";
+import type { HueId, LevelId } from "@/types";
+
 type ColorCellProps = {
-  color: Color;
   mode: "light" | "dark";
+  levelId: LevelId;
+  hueId: HueId;
   onMouseEnter: VoidFunction;
 };
 
-export function ColorCell({ color, mode, onMouseEnter }: ColorCellProps) {
+export const ColorCell = memo(function ColorCell({
+  mode,
+  levelId,
+  hueId,
+  onMouseEnter,
+}: ColorCellProps) {
+  const color = useSubscribe(getColor$(levelId, hueId));
   const backgroundColor = color.css;
   const onClick = () => {
     const url = `https://oklch.com/#${color.l * 100},${color.c},${color.h},100`;
@@ -42,4 +52,4 @@ export function ColorCell({ color, mode, onMouseEnter }: ColorCellProps) {
       </div>
     </TableCell>
   );
-}
+});
