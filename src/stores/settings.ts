@@ -1,8 +1,16 @@
-import { signal } from "@spred/core";
+import { batch, signal } from "@spred/core";
 
-import { $levelIds, recalculateColors } from "./colors";
+import { $levelIds, levels, recalculateColors } from "./colors";
 
-import type { BgLightStart, ChromaMode, ColorString, ContrastModel, DirectionMode } from "@/types";
+import {
+  contrastLevel,
+  type BgLightStart,
+  type ChromaMode,
+  type ColorString,
+  type ContrastModel,
+  type DirectionMode,
+} from "@/types";
+import { apcaToWcag, wcagToApca } from "@/utils/color";
 import { initialConfig } from "@/utils/config";
 import { invariant } from "@/utils/invariant";
 
@@ -15,7 +23,16 @@ export const $bgLightStart = signal(initialConfig.settings.bgLightStart);
 export const $colorSpace = signal(initialConfig.settings.colorSpace);
 
 export function updateContrastModel(model: ContrastModel) {
-  $contrastModel.set(model);
+  batch(() => {
+    $contrastModel.set(model);
+    for (const level of levels.values()) {
+      level.$contrast.set(
+        contrastLevel(
+          model === "wcag" ? apcaToWcag(level.$contrast.value) : wcagToApca(level.$contrast.value),
+        ),
+      );
+    }
+  });
   recalculateColors();
 }
 

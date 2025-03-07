@@ -17,6 +17,7 @@ import {
   contrastLevel,
   hueAngle,
   lightnessLevel,
+  type DirectionMode,
   type ChromaLevel,
   type ChromaMode,
   type ColorCellData,
@@ -27,35 +28,55 @@ import {
   type HueAngle,
   type HueId,
   type LevelId,
+  type ContrastModel,
 } from "@/types";
 
-export function apcachToBg(
-  bgColor: ColorString,
-  cr: ContrastLevel,
-  c: ChromaLevel | ChromaFunction,
-  h: HueAngle,
-  colorSpace: ColorSpace,
-): Apcach {
-  return apcach(crToBg(bgColor, cr), c, h, colorSpace);
+export type SearchDirection = "lighter" | "darker";
+
+type ApcachOptions = {
+  directionMode: DirectionMode;
+  contrastModel: ContrastModel;
+  searchDirection: SearchDirection;
+  colorSpace: ColorSpace;
+  toColor: ColorString;
+  contrastLevel: ContrastLevel;
+  chroma: ChromaLevel | ChromaFunction;
+  hueAngle: HueAngle;
+};
+
+export function calculateApcach({
+  directionMode,
+  contrastModel,
+  searchDirection,
+  colorSpace,
+  toColor,
+  contrastLevel,
+  chroma,
+  hueAngle,
+}: ApcachOptions): Apcach {
+  const method = directionMode === "fgToBg" ? crToBg : crToFg;
+  const bg = method(toColor, contrastLevel, contrastModel, searchDirection);
+
+  return apcach(bg, chroma, hueAngle, colorSpace);
 }
 
-type MaxCommonChromaOptions = {
-  colorSpace: ColorSpace;
-  bgColor: ColorString;
-  contrastLevel: ContrastLevel;
+type MaxCommonChromaOptions = Omit<ApcachOptions, "hueAngle" | "chroma"> & {
   hueAngles: HueAngle[];
 };
 
 export function maxCommonChroma({
-  colorSpace,
-  bgColor,
-  contrastLevel,
   hueAngles,
+  ...restOptions
 }: MaxCommonChromaOptions): ChromaLevel {
   let maxCommonChroma = 100;
 
   for (const hueAngle of hueAngles) {
-    const apcachColor = apcachToBg(bgColor, contrastLevel, maxChroma(), hueAngle, colorSpace);
+    const apcachColor = calculateApcach({
+      ...restOptions,
+      chroma: maxChroma(),
+      hueAngle: hueAngle,
+    });
+
     if (apcachColor.chroma < maxCommonChroma) {
       maxCommonChroma = apcachColor.chroma;
     }
@@ -63,28 +84,16 @@ export function maxCommonChroma({
   return chromaLevel(maxCommonChroma);
 }
 
-type ColorCellOptions = {
-  colorSpace: ColorSpace;
-  bgColor: ColorString;
-  contrastLevel: ContrastLevel;
-  chroma: ChromaFunction | ChromaLevel;
-  hueAngle: HueAngle;
-};
+type ColorCellOptions = ApcachOptions;
 
-export function calculateColorCell({
-  colorSpace,
-  bgColor,
-  contrastLevel,
-  hueAngle,
-  chroma,
-}: ColorCellOptions): ColorCellData {
-  const apcachColor = apcachToBg(bgColor, contrastLevel, chroma, hueAngle, colorSpace);
+export function calculateColorCell(options: ColorCellOptions): ColorCellData {
+  const apcachColor = calculateApcach(options);
 
   return {
-    cr: contrastLevel,
+    cr: options.contrastLevel,
     l: lightnessLevel(apcachColor.lightness),
     c: chromaLevel(apcachColor.chroma),
-    h: hueAngle,
+    h: options.hueAngle,
     p3: !inColorSpace(apcachColor, "srgb"),
     css: colorString(apcachToCss(apcachColor)),
   };
@@ -99,6 +108,8 @@ export type GenerateColorsPayload = {
   bgLightStart: number;
   chromaMode: ChromaMode;
   colorSpace: ColorSpace;
+  directionMode: DirectionMode;
+  contrastModel: ContrastModel;
 };
 
 const HUE_TINT_CR = contrastLevel(80);
@@ -137,18 +148,30 @@ export function calculateColors(
     bgLightStart,
     chromaMode,
     colorSpace,
+    directionMode,
+    contrastModel,
   }: GenerateColorsPayload,
   onGeneratedColor: (payload: GeneratedColorPayload) => void,
 ) {
   for (const [levelIndex, level] of levels.entries()) {
-    const bgColor = bgLightStart <= levelIndex ? bgColorLight : bgColorDark;
+    const isBgDark = bgLightStart > levelIndex;
+    const toColor = isBgDark ? bgColorDark : bgColorLight;
+    const searchDirection = isBgDark ? "lighter" : "darker";
+
+    const commonApcacheOptions = {
+      colorSpace,
+      toColor,
+      searchDirection,
+      directionMode,
+      contrastModel,
+    } as const;
+
     const chroma =
       chromaMode === "even"
         ? maxCommonChroma({
+            ...commonApcacheOptions,
             contrastLevel: level.contrast,
             hueAngles: hues.map((hue) => hue.angle),
-            colorSpace,
-            bgColor,
           })
         : maxChroma();
 
@@ -156,9 +179,10 @@ export function calculateColors(
     if (levelIndex === 0) {
       for (const hue of hues.values()) {
         const hueTintColor = calculateColorCell({
+          ...commonApcacheOptions,
+          toColor: bgColorDark,
+          searchDirection: "lighter",
           hueAngle: hue.angle,
-          colorSpace,
-          bgColor: bgColorDark,
           contrastLevel: HUE_TINT_CR,
           chroma: HUE_TINT_CHROMA,
         });
@@ -177,9 +201,8 @@ export function calculateColors(
         levelId: level.id,
         color: {
           ...calculateColorCell({
+            ...commonApcacheOptions,
             hueAngle: hueAngle(0),
-            colorSpace,
-            bgColor,
             contrastLevel: MIN_LEVEL_TINT_CR,
             chroma: chromaLevel(0),
           }),
@@ -190,9 +213,8 @@ export function calculateColors(
 
     for (const [hueIndex, hue] of hues.entries()) {
       const cellColor = calculateColorCell({
+        ...commonApcacheOptions,
         hueAngle: hue.angle,
-        colorSpace,
-        bgColor,
         contrastLevel: level.contrast,
         chroma,
       });
@@ -205,9 +227,8 @@ export function calculateColors(
         if (levelTintColor.cr < MIN_LEVEL_TINT_CR) {
           levelTintColor = {
             ...calculateColorCell({
+              ...commonApcacheOptions,
               hueAngle: hue.angle,
-              colorSpace,
-              bgColor,
               contrastLevel: MIN_LEVEL_TINT_CR,
               chroma,
             }),
@@ -219,6 +240,25 @@ export function calculateColors(
       }
     }
   }
+}
+
+// These functions are approximation, since the APCA and WCAG algorithms are not directly comparable.
+export function apcaToWcag(apcaLc: number) {
+  if (apcaLc === 0) {
+    return 1;
+  }
+
+  const wcagRatio = (Math.abs(apcaLc) / 110) ** 2.4 * 21;
+  return Number.parseFloat(wcagRatio.toFixed(1));
+}
+
+export function wcagToApca(wcagRatio: number) {
+  if (wcagRatio <= 1) {
+    return 0;
+  }
+
+  const apcaLc = 110 * (wcagRatio / 21) ** (1 / 2.4);
+  return Number.parseFloat(apcaLc.toFixed(0));
 }
 
 /**

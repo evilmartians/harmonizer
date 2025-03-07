@@ -1,7 +1,15 @@
 import { batch, type WritableSignal } from "@spred/core";
 
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
-import { $bgColorDark, $bgColorLight, $bgLightStart, $chromaMode, $colorSpace } from "./settings";
+import {
+  $bgColorDark,
+  $bgColorLight,
+  $bgLightStart,
+  $chromaMode,
+  $colorSpace,
+  $contrastModel,
+  $directionMode,
+} from "./settings";
 import {
   cleanupColors,
   createIndexedArrayStore,
@@ -96,6 +104,8 @@ function upsertColor(levelId: LevelId, hueId: HueId, color: ColorCellData) {
 
 function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColorsPayload {
   return {
+    directionMode: $directionMode.value,
+    contrastModel: $contrastModel.value,
     levels: $levelIds.value.map((id) => ({ id, contrast: getLevel(id).$contrast.value })),
     recalcOnlyLevels,
     hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).$angle.value })),
