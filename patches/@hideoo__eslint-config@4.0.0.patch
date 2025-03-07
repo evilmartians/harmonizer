@@ -7,7 +7,7 @@ index e312aa68db1e982c845ea03821e93eec13b8da84..e6e97eb9879a137fd47ea3142873c389
          languageOptions: {
            parserOptions: {
 -            project: ["tsconfig.json"],
-+            project: ["tsconfig.app.json"],
++            project: ["tsconfig.app.json", "tsconfig.worker.json"],
              tsconfigRootDir: process.cwd(),
              warnOnUnsupportedTypeScriptVersion: false
            }
