@@ -165,10 +165,10 @@ export function getInsertItem<
   getMiddleItem,
   onFinish,
 }: GetCloneItemOptions<MainItem, CrossItem>) {
-  return (afterId?: MainItem["id"]) => {
-    const previousIndex = afterId ? main.$ids.value.indexOf(afterId) : main.$ids.value.length - 1;
-    const previousId = main.$ids.value[previousIndex];
-    const nextId = main.$ids.value[previousIndex + 1];
+  return (beforeId?: MainItem["id"]) => {
+    const nextIndex = beforeId ? main.$ids.value.indexOf(beforeId) : main.$ids.value.length;
+    const previousId = main.$ids.value[nextIndex - 1];
+    const nextId = main.$ids.value[nextIndex];
 
     let newItem = getNewItem();
 
@@ -182,7 +182,7 @@ export function getInsertItem<
       onAddColor(newItem.id, oppositeId, previousId);
     }
 
-    main.addItem(newItem, previousIndex + 1);
+    main.addItem(newItem, nextIndex);
     onFinish(newItem.id);
   };
 }
