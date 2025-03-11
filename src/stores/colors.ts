@@ -68,6 +68,15 @@ const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 precalculateColors();
 generationWorker.on("generated:color", handleGeneratedColor);
 
+export function pregenerateFallbackColorsMap(levelIds: LevelId[], hueIds: HueId[]) {
+  colorsMap.clear();
+  for (const levelId of levelIds) {
+    for (const hueId of hueIds) {
+      colorsMap.set(getColorIdentifier(levelId, hueId), getColorSignal(FALLBACK_CELL_COLOR));
+    }
+  }
+}
+
 // Color methods
 function handleGeneratedColor(payload: GeneratedColorPayload) {
   const type = payload.type;
