@@ -1,5 +1,0 @@
-@reference "../../app.css";
-
-.container {
-  @apply inline-flex flex-col;
-}

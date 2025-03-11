@@ -1,7 +1,0 @@
-.checked {
-  background-color: var(--color-button-hover);
-
-  [data-bg-mode="dark"] & {
-    background-color: var(--color-button-hover-inverted);
-  }
-}

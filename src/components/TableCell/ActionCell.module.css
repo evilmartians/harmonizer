@@ -1,9 +1,0 @@
-@reference "../../app.css";
-
-.container {
-  @apply flex h-full w-full items-center justify-center;
-}
-
-.button {
-  @apply opacity-100 transition-opacity duration-200;
-}

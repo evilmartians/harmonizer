@@ -1,9 +1,0 @@
-@reference "../../app.css";
-
-.button {
-  @apply bg-button hover:bg-button-hover flex items-center gap-1 rounded-sm py-1 pr-2 pl-1 transition-colors;
-}
-
-.text {
-  @apply text-ui-m font-medium;
-}

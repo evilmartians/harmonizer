@@ -3,8 +3,6 @@ import clsx from "clsx";
 import { shallowEqual } from "fast-equals";
 import { memo } from "react";
 
-import { BgMode } from "../BgMode/BgMode";
-
 import { DATA_ATTR_CELL_HUE_ID, DATA_ATTR_CELL_LEVEL_ID } from "./constants";
 import { GridCell } from "./GridCell";
 import styles from "./GridCellColor.module.css";
