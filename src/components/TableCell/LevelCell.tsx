@@ -1,5 +1,5 @@
 import { useSubscribe } from "@spred/react";
-import classNames from "classnames";
+import clsx from "clsx";
 
 import { TextControl } from "../TextControl/TextControl";
 
@@ -60,7 +60,7 @@ export function LevelCell({ levelId, mode, onMouseEnter }: LevelCellProps) {
     <TableCell onMouseEnter={onMouseEnter}>
       <div className={styles.container}>
         <TextControl
-          className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
+          className={clsx(styles.inputSecondary, styles[`mode_${mode}`])}
           inputSize="m"
           kind="ghost"
           placeholder={PLACEHOLDER_LEVEL}
@@ -69,7 +69,7 @@ export function LevelCell({ levelId, mode, onMouseEnter }: LevelCellProps) {
           onValidEdit={(value) => updateLevelName(levelId, value)}
         />
         <TextControl
-          className={classNames(styles.inputPrimary, styles[`mode_${mode}`])}
+          className={clsx(styles.inputPrimary, styles[`mode_${mode}`])}
           inputSize="l"
           kind="bordered"
           tintColor={tintColor}
@@ -83,7 +83,7 @@ export function LevelCell({ levelId, mode, onMouseEnter }: LevelCellProps) {
           }
         />
         <TextControl
-          className={classNames(styles.inputSecondary, styles[`mode_${mode}`])}
+          className={clsx(styles.inputSecondary, styles[`mode_${mode}`])}
           inputSize="m"
           kind="ghost"
           placeholder={PLACEHOLDER_CHROMA}

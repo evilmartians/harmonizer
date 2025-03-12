@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 
 import styles from "./DropdownButton.module.css";
 
@@ -16,7 +16,7 @@ type DropdownButtonProps = {
 
 export function DropdownButton({ className, options, value, onChange }: DropdownButtonProps) {
   return (
-    <div className={classNames(styles.button, className)}>
+    <div className={clsx(styles.button, className)}>
       <select className={styles.select} value={value} onChange={(e) => onChange(e.target.value)}>
         {options.map((option) => (
           <option key={option.value} value={option.value}>

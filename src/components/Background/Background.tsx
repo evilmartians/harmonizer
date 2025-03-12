@@ -1,5 +1,5 @@
 import { useSubscribe } from "@spred/react";
-import classNames from "classnames";
+import clsx from "clsx";
 import { parse } from "culori";
 import { useEffect, useState } from "react";
 
@@ -64,9 +64,9 @@ export function Background() {
           </svg>
         </div>
         <div className={styles.inputContainer}>
-          <span className={classNames(styles.inputLabel, styles.dark)}>Dark mode background</span>
+          <span className={clsx(styles.inputLabel, styles.dark)}>Dark mode background</span>
           <TextControl
-            className={classNames(styles.input, styles.dark)}
+            className={clsx(styles.input, styles.dark)}
             align="left"
             kind="ghost"
             fitContent
@@ -77,9 +77,9 @@ export function Background() {
           />
         </div>
         <div className={styles.inputContainer} style={{ left: width }}>
-          <span className={classNames(styles.inputLabel, styles.light)}>Light mode background</span>
+          <span className={clsx(styles.inputLabel, styles.light)}>Light mode background</span>
           <TextControl
-            className={classNames(styles.input, styles.light)}
+            className={clsx(styles.input, styles.light)}
             align="left"
             kind="ghost"
             fitContent
@@ -91,7 +91,7 @@ export function Background() {
         </div>
       </div>
       <div
-        className={classNames(
+        className={clsx(
           styles.darkLayer,
           knobIsHovered && "shadow-[-1px_0_0_0_rgb(34,197,94)_inset,1px_0_0_0_rgb(34,197,94)]",
         )}

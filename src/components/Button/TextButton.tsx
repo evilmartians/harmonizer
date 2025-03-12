@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 
 import styles from "./TextButton.module.css";
 
@@ -14,7 +14,7 @@ export function TextButton({ className, mode, text, onClick }: TextButtonProps) 
     <button
       type="button"
       onClick={onClick}
-      className={classNames(className, styles.button, styles[`mode_${mode}`])}
+      className={clsx(className, styles.button, styles[`mode_${mode}`])}
     >
       {text}
     </button>

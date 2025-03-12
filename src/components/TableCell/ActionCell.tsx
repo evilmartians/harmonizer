@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 
 import { AddColumnButton } from "../Button/AddColumnButton";
 import { AddRowButton } from "../Button/AddRowButton";
@@ -33,7 +33,7 @@ export function ActionCell({
           <AddRowButton mode={mode} title={title} onClick={onClick} />
         ) : variant === "remove" ? (
           <RemoveButton
-            className={classNames(styles.button, buttonClassName)}
+            className={clsx(styles.button, buttonClassName)}
             mode={mode}
             title={title}
             onClick={onClick}

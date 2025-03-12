@@ -1,5 +1,5 @@
 import { useSubscribe } from "@spred/react";
-import classNames from "classnames";
+import clsx from "clsx";
 import { memo } from "react";
 
 import styles from "./ColorCell.module.css";
@@ -37,7 +37,7 @@ export const ColorCell = memo(function ColorCell({
       onMouseEnter={onMouseEnter}
       onClick={onClick}
     >
-      <div className={classNames(styles.container, styles[`mode_${mode}`])}>
+      <div className={clsx(styles.container, styles[`mode_${mode}`])}>
         <div className={styles.topLine}>
           <span className={styles.lightnessLabel}>L{lightness}%</span>
           <span className={styles.p3Badge} style={{ opacity: color.p3 ? 100 : 0 }}>

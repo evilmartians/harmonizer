@@ -1,5 +1,5 @@
 import { useSubscribe } from "@spred/react";
-import classNames from "classnames";
+import clsx from "clsx";
 
 import { ActionsRow } from "../TableRow/ActionsRow";
 import { HeaderRow } from "../TableRow/HeaderRow";
@@ -18,7 +18,7 @@ export function Table({ className }: TableProps) {
   const hueIds = useSubscribe($hueIds);
 
   return (
-    <div className={classNames(className, styles.container)} onMouseLeave={resetHoveredColumn}>
+    <div className={clsx(className, styles.container)} onMouseLeave={resetHoveredColumn}>
       <HeaderRow />
       {hueIds.map((hueId) => (
         <HueRow key={hueId} hueId={hueId} />

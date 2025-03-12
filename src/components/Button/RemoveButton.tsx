@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 
 import styles from "./RemoveButton.module.css";
 
@@ -14,7 +14,7 @@ export function RemoveButton({ className, title, mode, onClick }: RemoveButtonPr
     <button
       type="button"
       onClick={onClick}
-      className={classNames(className, styles.button, styles[`mode_${mode}`])}
+      className={clsx(className, styles.button, styles[`mode_${mode}`])}
       title={title}
     >
       {/* TODO: replace with Icon component. But how? */}

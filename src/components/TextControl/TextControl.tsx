@@ -1,4 +1,4 @@
-import classNames from "classnames";
+import clsx from "clsx";
 import { useEffect, useRef, useState } from "react";
 
 import styles from "./TextControl.module.css";
@@ -82,7 +82,7 @@ export function TextControl({
       role="button"
       tabIndex={0}
       ref={containerRef}
-      className={classNames(
+      className={clsx(
         className,
         styles.container,
         styles[`size_${inputSize}`],
@@ -94,7 +94,7 @@ export function TextControl({
     >
       {label && (
         <span
-          className={classNames(styles.label, align === "center" && "text-center")}
+          className={clsx(styles.label, align === "center" && "text-center")}
           style={tintColor ? { color: tintColor.css } : {}}
         >
           {label}
@@ -103,7 +103,7 @@ export function TextControl({
       <input
         ref={inputRef}
         type="text"
-        className={classNames(
+        className={clsx(
           styles.input,
           align === "center" && "text-center",
           styles[`size_${inputSize}`],
