@@ -3,6 +3,7 @@ import { batch, signal } from "@spred/core";
 import { $levelIds, levels, recalculateColors } from "./colors";
 
 import {
+  bgLightStart,
   contrastLevel,
   type BgLightStart,
   type ChromaMode,
@@ -12,7 +13,6 @@ import {
 } from "@/types";
 import { apcaToWcag, wcagToApca } from "@/utils/color";
 import { initialConfig } from "@/utils/config";
-import { invariant } from "@/utils/invariant";
 
 export const $contrastModel = signal(initialConfig.settings.contrastModel);
 export const $directionMode = signal(initialConfig.settings.directionMode);
@@ -36,9 +36,23 @@ export function updateContrastModel(model: ContrastModel) {
   recalculateColors();
 }
 
+export function toggleContrastModel() {
+  const toWcag = $contrastModel.value === "apca";
+
+  if (toWcag) {
+    $directionMode.set("fgToBg");
+  }
+
+  updateContrastModel(toWcag ? "wcag" : "apca");
+}
+
 export function updateDirectionMode(mode: DirectionMode) {
   $directionMode.set(mode);
   recalculateColors();
+}
+
+export function toggleDirectionMode() {
+  updateDirectionMode($directionMode.value === "bgToFg" ? "fgToBg" : "bgToFg");
 }
 
 export function updateChromaMode(mode: ChromaMode) {
@@ -56,9 +70,31 @@ export function updateBgColorDark(color: ColorString) {
   recalculateColors($levelIds.value.slice(0, $bgLightStart.value));
 }
 
-export function updateBgLightStart(start: BgLightStart) {
-  const idToUpdate = $levelIds.value[start > $bgLightStart.value ? start - 1 : start];
-  invariant(idToUpdate, "Invalid bg light start index");
-  $bgLightStart.set(start);
-  recalculateColors([idToUpdate]);
+/**
+ * Update the bg light start
+ * @returns whether the value was updated
+ */
+export function updateBgLightStart(start: BgLightStart): boolean {
+  const oldStart = $bgLightStart.value;
+  const newStart = Math.max(0, Math.min($levelIds.value.length, start));
+
+  if (newStart === oldStart) {
+    return false;
+  }
+
+  const idsToUpdate = $levelIds.value.slice(
+    Math.min(oldStart, newStart),
+    Math.max(oldStart, newStart),
+  );
+  $bgLightStart.set(bgLightStart(newStart));
+  recalculateColors(idsToUpdate);
+  return true;
+}
+
+/**
+ * Shift the bg light start by the given offset
+ * @returns whether the value was updated
+ */
+export function updateBgLightStartByOffset(offset: number): boolean {
+  return updateBgLightStart(bgLightStart($bgLightStart.value + offset));
 }
