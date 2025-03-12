@@ -1,0 +1,136 @@
+.spacerCell {
+  composes: gridRowHeader from "./Grid.module.css";
+  justify-content: flex-end;
+  padding-block-start: calc(var(--spacing) * 4);
+  padding-block-end: calc(var(--spacing) * 4);
+}
+
+.bgSpan {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(var(--spacing) * 4);
+}
+
+.dark {
+  position: relative;
+  justify-content: flex-end;
+
+  grid-column-end: span max(1, var(--bg-light-started-at));
+  background-color: var(--bg-dark);
+  color: var(--bg-light);
+
+  &.asRowHeader {
+    position: sticky;
+  }
+
+  &.asSpacer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.asRowHeader {
+  composes: gridRowHeader from "./Grid.module.css";
+}
+
+.light {
+  grid-column-start: calc(var(--bg-light-started-at) + 2);
+  grid-column-end: span calc(var(--grid-levels) - var(--bg-light-started-at) + 2);
+  background-color: var(--bg-light);
+  color: var(--bg-dark);
+  z-index: 1;
+
+  [data-horizontally-scrolled] & {
+    z-index: 0;
+  }
+}
+
+.bgControlContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: calc(var(--spacing) * 1.5);
+
+  .dark.asSpacer & {
+    margin-block-start: calc(var(--spacing) * 4);
+    justify-content: flex-start;
+  }
+
+  .light & {
+    flex-direction: row-reverse;
+  }
+}
+
+.importExportControls {
+  inline-size: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  gap: var(--spacing);
+}
+
+.iconUpload {
+  scale: 1 -1;
+}
+
+.dragContainer {
+  position: absolute;
+  inset-block-start: 0;
+  inset-block-end: 0;
+  inset-inline-start: 0;
+  translate: -50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  &:dir(rtl) {
+    translate: 50%;
+  }
+}
+
+.dragButton {
+  position: relative;
+  z-index: 1;
+  margin-block-end: calc(var(--spacing) * 4 + 1px);
+  background-color: oklch(0.928 0.006 264.531);
+  cursor: col-resize;
+
+  touch-action: none;
+
+  @media (hover: hover) {
+    opacity: 0;
+  }
+
+  :is(.spacerCell, .dark):hover ~ .light &,
+  .light:hover &,
+  &:focus-visible {
+    opacity: 1;
+  }
+
+  &:hover {
+    background-color: oklch(0.872 0.01 258.338);
+  }
+}
+
+.highlitingLine {
+  --hightlighting-bg: ;
+
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 50%;
+  translate: -50%;
+  inline-size: 2px;
+  block-size: 1000vh;
+  background-color: oklch(72.27% 0.192 149.58);
+  opacity: 0;
+
+  &:dir(rtl) {
+    translate: 50%;
+  }
+
+  .dragButton:hover ~ & {
+    opacity: 1;
+  }
+}

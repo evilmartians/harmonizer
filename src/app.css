@@ -73,8 +73,8 @@ html,
 #root {
   margin: 0;
   padding: 0;
-  height: 100%;
-  width: 100%;
+  block-size: 100%;
+  inline-size: 100%;
 
   background-color: var(--color-primary-inverted);
   font-family: var(--font-sans);

@@ -55,6 +55,11 @@ export function toggleDirectionMode() {
   updateDirectionMode($directionMode.value === "bgToFg" ? "fgToBg" : "bgToFg");
 }
 
+export function toggleColorSpace() {
+  $colorSpace.set($colorSpace.value === "p3" ? "srgb" : "p3");
+  requestColorsRecalculation();
+}
+
 export function updateChromaMode(mode: ChromaMode) {
   $chromaMode.set(mode);
   recalculateColors();

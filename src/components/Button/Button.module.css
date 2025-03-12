@@ -52,8 +52,8 @@
   border-radius: var(--radius-xs);
 
   :where(.icon) {
-    width: var(--text-ui-s--line-height);
-    height: var(--text-ui-s--line-height);
+    inline-size: var(--text-ui-s--line-height);
+    block-size: var(--text-ui-s--line-height);
   }
 }
 
@@ -65,8 +65,8 @@
   border-radius: var(--radius-xs);
 
   :where(.icon) {
-    width: var(--text-ui-s--line-height);
-    height: var(--text-ui-s--line-height);
+    inline-size: var(--text-ui-s--line-height);
+    block-size: var(--text-ui-s--line-height);
   }
 }
 
@@ -78,8 +78,8 @@
   border-radius: var(--radius-sm);
 
   :where(.icon) {
-    width: var(--text-ui-m--line-height);
-    height: var(--text-ui-m--line-height);
+    inline-size: var(--text-ui-m--line-height);
+    block-size: var(--text-ui-m--line-height);
   }
 }
 
@@ -91,8 +91,8 @@
   border-radius: var(--radius-sm);
 
   :where(.icon) {
-    width: var(--text-ui-l--line-height);
-    height: var(--text-ui-l--line-height);
+    inline-size: var(--text-ui-l--line-height);
+    block-size: var(--text-ui-l--line-height);
   }
 }
 

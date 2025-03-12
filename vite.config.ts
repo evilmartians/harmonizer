@@ -1,5 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
+import { Features } from "lightningcss";
 import { defineConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -9,6 +10,7 @@ export default defineConfig({
   css: {
     transformer: "lightningcss",
     lightningcss: {
+      exclude: Features.DirSelector,
       cssModules: {
         pattern:
           process.env.NODE_ENV === "production"

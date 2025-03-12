@@ -1,7 +1,7 @@
 .container {
   display: inline-flex;
-  width: 100%;
-  max-width: 100%;
+  inline-size: 100%;
+  max-inline-size: 100%;
   flex-direction: column;
   gap: calc(var(--spacing) / 2);
   border: 1px solid transparent;
@@ -19,7 +19,7 @@
   }
 
   &:has(:where(:focus, :invalid)) {
-    outline-width: 1px;
+    outline-inline-size: 1px;
     outline-style: solid;
   }
 
@@ -73,7 +73,7 @@
   gap: calc(var(--spacing) * 1.5);
 
   :where(.size_xl) & {
-    width: 100%;
+    inline-size: 100%;
   }
 }
 
@@ -97,15 +97,15 @@
 }
 
 .input {
-  max-width: 100%;
-  width: 100%;
+  max-inline-size: 100%;
+  inline-size: 100%;
 
   &:focus {
     outline: none;
   }
 
   :where(.size_xl) & {
-    width: 100%;
+    inline-size: 100%;
     text-align: center;
   }
 }

@@ -5,6 +5,7 @@ declare module "apcach" {
     background: ColorGenerator | string,
     chroma: ChromaFunction | number,
     hue: number,
+    alpha: number,
     colorSpace: ColorSpace,
   ): Apcach;
 

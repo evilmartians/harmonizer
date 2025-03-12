@@ -1,5 +1,7 @@
 import throttle from "lodash-es/throttle";
 
+import { isRtl } from "@/utils/dom/isRtlDirection";
+
 type SnappedHorizontalDragOptions = {
   element: HTMLElement;
   snapWidth: number;
@@ -27,13 +29,14 @@ export function handleSnappedHorizontalDrag({
   }
 
   const handlePointerMove = throttle((e: PointerEvent) => {
+    const rtlFactor = isRtl() ? -1 : 1;
     const deltaX = e.clientX - startX;
     const rawOffset = deltaX / snapWidth;
-    const offestCells = Math.abs(rawOffset) >= threshold ? Math.round(rawOffset) : 0;
+    const offsetCells = Math.abs(rawOffset) >= threshold ? Math.round(rawOffset) * rtlFactor : 0;
 
-    if (offestCells === 0) return;
-    if (onChange(offestCells)) {
-      startX += offestCells * snapWidth;
+    if (offsetCells === 0) return;
+    if (onChange(offsetCells)) {
+      startX += offsetCells * snapWidth * rtlFactor;
     }
   }, 50);
 

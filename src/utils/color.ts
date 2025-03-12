@@ -63,7 +63,7 @@ export function calculateApcach({
   const method = directionMode === "fgToBg" ? crToBg : crToFg;
   const bg = method(toColor, contrastLevel, contrastModel, searchDirection);
 
-  return apcach(bg, chroma, hueAngle, colorSpace);
+  return apcach(bg, chroma, hueAngle, 100, colorSpace);
 }
 
 type MaxCommonChromaOptions = Omit<ApcachOptions, "hueAngle" | "chroma"> & {

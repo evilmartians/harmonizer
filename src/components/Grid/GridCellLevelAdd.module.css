@@ -1,0 +1,11 @@
+.cell {
+  composes: gridColumnHeader from "./Grid.module.css";
+  align-items: flex-start;
+}
+
+.button {
+  inline-size: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: calc(var(--spacing) * 4.5) calc(var(--spacing) * 2);
+}
