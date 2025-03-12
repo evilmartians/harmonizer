@@ -35,28 +35,30 @@
   --color-button-hover-inverted: oklch(100% 0 0 / 25.1%);
   --color-border: oklch(0% 0 0 / 25.1%);
   --color-border-inverted: oklch(100% 0 0 / 25.1%);
+  --color-universal-focus: oklch(70% 0.1661 242.68 / 90%);
+  --color-universal-error: oklch(79.41% 0.0931 20.98 / 50%);
 
   --text-xs: 7.5px;
   --text-xs--line-height: 10px;
-  --text-xs--font-stretch: 100%;
+  --text-xs--font-stretch: 1;
   --text-s: 10px;
   --text-s--line-height: 16px;
-  --text-s--font-stretch: 100%;
+  --text-s--font-stretch: 1;
   --text-ui-s: 10px;
   --text-ui-s--line-height: 12px;
-  --text-ui-s--font-stretch: 100%;
+  --text-ui-s--font-stretch: 1;
   --text-m: 12.5px;
   --text-m--line-height: 16px;
-  --text-m--font-stretch: 100%;
+  --text-m--font-stretch: 1;
   --text-ui-m: 12.5px;
   --text-ui-m--line-height: 16px;
-  --text-ui-m--font-stretch: 100%;
+  --text-ui-m--font-stretch: 1;
   --text-l: 25px;
   --text-l--line-height: 32px;
-  --text-l--font-stretch: 100%;
+  --text-l--font-stretch: 1;
   --text-ui-l: 25px;
   --text-ui-l--line-height: 24px;
-  --text-ui-l--font-stretch: 100%;
+  --text-ui-l--font-stretch: 1;
 }
 
 @layer base {
@@ -67,10 +69,13 @@
 }
 
 body,
-html {
-  @apply bg-primary-inverted m-0 p-0 font-sans;
-}
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 
-.error {
-  @apply text-red-500!;
+  background-color: var(--color-primary-inverted);
+  font-family: var(--font-sans);
 }
