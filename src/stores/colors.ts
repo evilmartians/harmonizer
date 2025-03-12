@@ -50,7 +50,6 @@ export const {
   items: levels,
   getItem: getLevel,
   addItem: addLevel,
-  removeItem: _removeLevel,
   overwrite: overwriteLevels,
 } = levelsStore;
 export const huesStore = createIndexedArrayStore(initialConfig.hues.map(getHueStore));
@@ -59,7 +58,6 @@ export const {
   items: hues,
   getItem: getHue,
   addItem: addHue,
-  removeItem: _removeHue,
   overwrite: overwriteHues,
 } = huesStore;
 
@@ -161,7 +159,7 @@ export function removeLevel(levelId: LevelId) {
   batch(() => {
     const levelIndex = $levelIds.value.indexOf(levelId);
 
-    _removeLevel(levelId);
+    levelsStore.removeItem(levelId);
     cleanupColors(colorsMap, matchesLevelColorKey, levelId);
 
     if (levelIndex < $bgLightStart.value) {
@@ -201,7 +199,7 @@ export const insertHue = getInsertItem({
 
 export function removeHue(hueId: HueId) {
   batch(() => {
-    _removeHue(hueId);
+    huesStore.removeItem(hueId);
     cleanupColors(colorsMap, matchesHueColorKey, hueId);
   });
   // Removing hue might affect the chroma of levels, so we need to recalculate colors
