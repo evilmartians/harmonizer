@@ -1,0 +1,40 @@
+.container {
+  position: relative;
+  display: inline-flex;
+}
+
+.nativeSelect {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+  cursor: pointer;
+}
+
+:is(.nativeSelect:focus-visible + .button) {
+  outline: 2px solid var(--color-universal-focus);
+}
+
+.icon {
+  width: var(--text-ui-m--line-height);
+  height: var(--text-ui-m--line-height);
+
+  &:where(.size_xs) {
+    margin: calc(var(--spacing) / -2);
+  }
+
+  &:where(.size_s) {
+    margin: calc(var(--spacing) / -1);
+  }
+
+  &:where(.size_m) {
+    margin: calc(var(--spacing) * -1.5);
+    width: var(--text-ui-l--line-height);
+    height: var(--text-ui-l--line-height);
+  }
+
+  &:where(.size_l) {
+    margin: calc(var(--spacing) * -2);
+    width: var(--text-ui-l--line-height);
+    height: var(--text-ui-l--line-height);
+  }
+}
