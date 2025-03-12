@@ -1,8 +1,6 @@
 import * as v from "valibot";
 import type { InferOutput } from "valibot";
 
-import { getBranded } from "./utils/branded";
-
 import {
   chromaLevelSchema,
   colorStringSchema,
@@ -19,6 +17,7 @@ import {
   type contrastModelSchema,
   type directionSchema,
 } from "@/schemas/settings";
+import { getBranded } from "@/utils/branded";
 
 export type LightnessLevel = InferOutput<typeof lightnessLevelSchema>;
 export type ChromaLevel = InferOutput<typeof chromaLevelSchema>;

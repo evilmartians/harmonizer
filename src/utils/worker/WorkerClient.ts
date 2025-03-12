@@ -4,12 +4,9 @@ export class WorkerClient<
   OutgoingMessages extends Record<string, unknown>,
   IncomingMessages extends Record<string, unknown>,
 > {
-  private worker: Worker;
   private handlers = {} as Record<keyof IncomingMessages, AnyEventHandler[]>;
 
-  constructor(scriptURL: string | URL, options?: WorkerOptions) {
-    this.worker = new Worker(scriptURL, options);
-  }
+  constructor(public worker: Worker) {}
 
   emit<Type extends keyof OutgoingMessages>(type: Type, payload: OutgoingMessages[Type]): void {
     this.worker.postMessage({ type, payload });

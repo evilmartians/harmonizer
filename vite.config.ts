@@ -19,6 +19,9 @@ export default defineConfig({
       },
     },
   },
+  worker: {
+    plugins: () => [tsconfigPaths()],
+  },
   build: {
     target: "es2022",
   },
