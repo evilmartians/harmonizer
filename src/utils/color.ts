@@ -1,13 +1,14 @@
 import {
   apcach,
-  apcachToCss,
   crToBg,
+  crToFg,
   inColorSpace,
   maxChroma,
   type Apcach,
   type ChromaFunction,
   type ColorSpace,
 } from "apcach";
+import { formatCss } from "culori";
 
 import { getMiddleValue } from "./misc";
 
@@ -17,7 +18,6 @@ import {
   contrastLevel,
   hueAngle,
   lightnessLevel,
-  type DirectionMode,
   type ChromaLevel,
   type ChromaMode,
   type ColorCellData,
@@ -25,10 +25,12 @@ import {
   type ColorLevelTintData,
   type ColorString,
   type ContrastLevel,
+  type ContrastModel,
+  type DirectionMode,
   type HueAngle,
   type HueId,
+  type LchColor,
   type LevelId,
-  type ContrastModel,
 } from "@/types";
 
 export type SearchDirection = "lighter" | "darker";
@@ -43,6 +45,10 @@ type ApcachOptions = {
   chroma: ChromaLevel | ChromaFunction;
   hueAngle: HueAngle;
 };
+
+export function formatOklch(color: LchColor, alpha = 1) {
+  return colorString(formatCss({ mode: "oklch", ...color, alpha }));
+}
 
 export function calculateApcach({
   directionMode,
@@ -88,14 +94,16 @@ type ColorCellOptions = ApcachOptions;
 
 export function calculateColorCell(options: ColorCellOptions): ColorCellData {
   const apcachColor = calculateApcach(options);
+  const l = lightnessLevel(apcachColor.lightness);
+  const c = chromaLevel(apcachColor.chroma);
 
   return {
     cr: options.contrastLevel,
-    l: lightnessLevel(apcachColor.lightness),
-    c: chromaLevel(apcachColor.chroma),
+    l,
+    c,
     h: options.hueAngle,
     p3: !inColorSpace(apcachColor, "srgb"),
-    css: colorString(apcachToCss(apcachColor)),
+    css: formatOklch({ l, c, h: options.hueAngle }),
   };
 }
 

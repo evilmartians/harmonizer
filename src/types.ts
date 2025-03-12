@@ -1,3 +1,4 @@
+import * as v from "valibot";
 import type { InferOutput } from "valibot";
 
 import { getBranded } from "./utils/branded";
@@ -13,7 +14,7 @@ import {
 } from "@/schemas/color";
 import {
   bgLightStartSchema,
-  type chromaModeSchema,
+  chromaModeSchema,
   type colorSpaceSchema,
   type contrastModelSchema,
   type directionSchema,
@@ -32,6 +33,7 @@ export type ContrastModel = InferOutput<typeof contrastModelSchema>;
 export type DirectionMode = InferOutput<typeof directionSchema>;
 
 export const lightnessLevel = getBranded(lightnessLevelSchema);
+export const chromaMode = getBranded(v.pipe(v.string(), chromaModeSchema));
 export const chromaLevel = getBranded(chromaLevelSchema);
 export const hueAngle = getBranded(hueAngleSchema);
 export const colorString = getBranded(colorStringSchema);
@@ -56,11 +58,13 @@ export type HueData = {
 export type Hue = { id: HueId } & HueData;
 
 export type ColorIdentifier = `${LevelId}-${HueId}`;
-export type ColorData = {
-  cr: ContrastLevel;
+export type LchColor = {
   l: LightnessLevel;
   c: ChromaLevel;
   h: HueAngle;
+};
+export type ColorData = LchColor & {
+  cr: ContrastLevel;
   css: ColorString;
 };
 export type ColorHueTintData = ColorData;
