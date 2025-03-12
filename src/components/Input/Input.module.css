@@ -1,0 +1,111 @@
+.container {
+  display: inline-flex;
+  width: 100%;
+  max-width: 100%;
+  flex-direction: column;
+  gap: calc(var(--spacing) / 2);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--input-color, var(--color-primary));
+  background: var(--input-bg-color, transparent);
+
+  transition:
+    color 0.3s,
+    background 0.3s,
+    border-color 0.3s;
+
+  :where([data-bg-mode="dark"]) & {
+    color: var(--input-color, var(--color-primary-inverted));
+  }
+
+  &:has(:where(:focus, :invalid)) {
+    outline-width: 1px;
+    outline-style: solid;
+  }
+
+  &:where(:hover:not(:has(:disabled))) {
+    border-color: var(--input-border-color, var(--color-border));
+
+    :where([data-bg-mode="dark"]) & {
+      border-color: var(--input-border-color, var(--color-border-inverted));
+    }
+  }
+
+  &:has(:focus) {
+    border-color: var(--color-universal-focus);
+    outline-color: var(--color-universal-focus);
+  }
+
+  &:has(:invalid) {
+    border-color: var(--color-universal-error);
+    outline-color: var(--color-universal-error);
+  }
+}
+
+.kind_bordered {
+  border-color: var(--input-border-color, var(--color-border));
+
+  :where([data-bg-mode="dark"]) & {
+    border-color: var(--input-border-color, var(--color-border-inverted));
+  }
+}
+
+.size_m {
+  padding: var(--spacing) calc(var(--spacing) * 1.5);
+}
+
+.size_xl {
+  padding: calc(var(--spacing) * 2) var(--spacing);
+}
+
+.label {
+  text-align: center;
+  font-weight: 500;
+  cursor: text;
+  font-size: var(--text-ui-s);
+  line-height: var(--text-ui-s--line-height);
+  letter-spacing: var(--text-ui-s--font-stretch);
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--spacing) * 1.5);
+
+  :where(.size_xl) & {
+    width: 100%;
+  }
+}
+
+.input {
+  font-size: var(--text-m);
+  line-height: 1.25rem;
+
+  :where(.size_xl) & {
+    font-size: var(--text-ui-l);
+    line-height: var(--text-ui-l--line-height);
+    letter-spacing: var(--text-ui-l--font-stretch);
+  }
+
+  &:invalid {
+    color: var(--color-red-500);
+  }
+
+  &:invalid::placeholder {
+    color: var(--color-universal-error);
+  }
+}
+
+.input {
+  max-width: 100%;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+
+  :where(.size_xl) & {
+    width: 100%;
+    text-align: center;
+  }
+}

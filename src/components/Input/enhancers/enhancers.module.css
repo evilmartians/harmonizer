@@ -1,0 +1,6 @@
+.autosize {
+  width: fit-content;
+  max-width: 100%;
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
