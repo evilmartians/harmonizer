@@ -1,14 +1,11 @@
-import { Background } from "./components/Background/Background";
-import { FloatingActions } from "./components/FloatingActions/FloatingActions";
-import { Table } from "./components/Table/Table";
+import { Grid } from "./components/Grid/Grid";
+import { MainContainer } from "./components/MainContainer/MainContainer";
 
 function App() {
   return (
-    <div className="relative z-1 min-h-screen overflow-x-auto px-6 py-4">
-      <Background />
-      <Table className="relative z-1 mb-10" />
-      <FloatingActions />
-    </div>
+    <MainContainer>
+      <Grid />
+    </MainContainer>
   );
 }
 
