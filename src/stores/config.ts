@@ -7,7 +7,7 @@ import {
   getLevel,
   overwriteHues,
   overwriteLevels,
-  recalculateColors,
+  requestColorsRecalculation,
   pregenerateFallbackColorsMap,
 } from "./colors";
 import {
@@ -65,5 +65,5 @@ export function updateConfig(config: ExportConfig) {
       hues.map((hue) => hue.id),
     );
   });
-  recalculateColors();
+  requestColorsRecalculation();
 }

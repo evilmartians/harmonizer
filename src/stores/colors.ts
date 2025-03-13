@@ -129,13 +129,39 @@ function precalculateColors() {
   calculateColors(collectColorCalculationData(), handleGeneratedColor);
 }
 
-export const recalculateColors = debounce(
+export const requestColorsRecalculation = debounce(
   (recalcOnlyLevels?: LevelId[]) => {
     generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
   },
   100,
   { maxWait: 333 },
 );
+
+const levelsAccumulation = { levels: new Set<LevelId>(), all: false };
+const requestColorsRecalculationAndResetLevelsAccumulation = debounce(
+  (recalcOnlyLevels?: LevelId[]) => {
+    generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+    levelsAccumulation.all = false;
+    levelsAccumulation.levels.clear();
+  },
+  300,
+);
+export const requestColorsRecalculationWithLevelsAccumulation = (recalcOnlyLevels?: LevelId[]) => {
+  if (!levelsAccumulation.all && recalcOnlyLevels) {
+    for (const level of recalcOnlyLevels) {
+      levelsAccumulation.levels.add(level);
+    }
+  } else {
+    levelsAccumulation.all = true;
+  }
+  requestColorsRecalculationAndResetLevelsAccumulation(
+    levelsAccumulation.all ? undefined : [...levelsAccumulation.levels],
+  );
+};
+
+export const recalculateColorsWithBigDebounce = debounce((recalcOnlyLevels?: LevelId[]) => {
+  generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+}, 300);
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
   const color$ = colorsMap.get(getColorIdentifier(levelId, hueId));
@@ -164,7 +190,7 @@ export const insertLevel = getInsertItem({
       $bgLightStart.set(bgLightStart($bgLightStart.value + 1));
     }
 
-    recalculateColors([levelId]);
+    requestColorsRecalculation([levelId]);
   },
 });
 
@@ -187,12 +213,12 @@ export function updateLevelName(id: LevelId, name: string) {
 
 export function updateLevelContrast(id: LevelId, contrast: ContrastLevel) {
   getLevel(id).$contrast.set(contrast);
-  recalculateColors([id]);
+  requestColorsRecalculation([id]);
 }
 
 export function updateLevelChroma(id: LevelId, chroma: ChromaLevel) {
   getLevel(id).$chroma.set(chroma);
-  recalculateColors([id]);
+  requestColorsRecalculation([id]);
 }
 
 // Hue methods
@@ -207,7 +233,7 @@ export const insertHue = getInsertItem({
       hueId,
       previousHueId ? getColor$(levelId, previousHueId).value : FALLBACK_CELL_COLOR,
     ),
-  onFinish: () => recalculateColors(),
+  onFinish: () => requestColorsRecalculation(),
 });
 
 export function removeHue(hueId: HueId) {
@@ -216,7 +242,7 @@ export function removeHue(hueId: HueId) {
     cleanupColors(colorsMap, matchesHueColorKey, hueId);
   });
   // Removing hue might affect the chroma of levels, so we need to recalculate colors
-  recalculateColors();
+  requestColorsRecalculation();
 }
 
 export function updateHueName(id: HueId, name: string) {
@@ -225,5 +251,5 @@ export function updateHueName(id: HueId, name: string) {
 
 export function updateHueAngle(id: HueId, angle: HueAngle) {
   getHue(id).$angle.set(angle);
-  recalculateColors();
+  requestColorsRecalculation();
 }

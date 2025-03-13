@@ -1,6 +1,11 @@
 import { batch, signal } from "@spred/core";
 
-import { $levelIds, levels, recalculateColors } from "./colors";
+import {
+  $levelIds,
+  levels,
+  requestColorsRecalculation,
+  requestColorsRecalculationWithLevelsAccumulation,
+} from "./colors";
 
 import {
   bgLightStart,
@@ -33,7 +38,7 @@ export function updateContrastModel(model: ContrastModel) {
       );
     }
   });
-  recalculateColors();
+  requestColorsRecalculation();
 }
 
 export function toggleContrastModel() {
@@ -48,7 +53,7 @@ export function toggleContrastModel() {
 
 export function updateDirectionMode(mode: DirectionMode) {
   $directionMode.set(mode);
-  recalculateColors();
+  requestColorsRecalculation();
 }
 
 export function toggleDirectionMode() {
@@ -62,17 +67,17 @@ export function toggleColorSpace() {
 
 export function updateChromaMode(mode: ChromaMode) {
   $chromaMode.set(mode);
-  recalculateColors();
+  requestColorsRecalculation();
 }
 
 export function updateBgColorLight(color: ColorString) {
   $bgColorLight.set(color);
-  recalculateColors($levelIds.value.slice($bgLightStart.value));
+  requestColorsRecalculation($levelIds.value.slice($bgLightStart.value));
 }
 
 export function updateBgColorDark(color: ColorString) {
   $bgColorDark.set(color);
-  recalculateColors($levelIds.value.slice(0, $bgLightStart.value));
+  requestColorsRecalculation($levelIds.value.slice(0, $bgLightStart.value));
 }
 
 /**
@@ -86,9 +91,12 @@ export function updateBgLightStart(start: BgLightStart): boolean {
   if (newStart === oldStart) {
     return false;
   }
-
+  const idsToUpdate = $levelIds.value.slice(
+    Math.min(oldStart, newStart),
+    Math.max(oldStart, newStart),
+  );
   $bgLightStart.set(bgLightStart(newStart));
-  recalculateColors();
+  requestColorsRecalculationWithLevelsAccumulation(idsToUpdate);
   return true;
 }
 
