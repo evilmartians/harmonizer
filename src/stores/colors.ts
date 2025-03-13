@@ -151,13 +151,21 @@ export const insertLevel = getInsertItem({
   cross: huesStore,
   getNewItem: () => getLevelStore(FALLBACK_LEVEL_DATA),
   getMiddleItem: getMiddleLevel,
-  onAddColor: (levelId, hueId, previousLevelId) =>
+  onAddColor: (levelId, hueId, previousLevelId) => {
     upsertColor(
       levelId,
       hueId,
       previousLevelId ? getColor$(previousLevelId, hueId).value : FALLBACK_CELL_COLOR,
-    ),
-  onFinish: (levelId) => recalculateColors([levelId]),
+    );
+  },
+  onFinish: (levelId) => {
+    // Compensate for the new level being inserted before the bgLightStart
+    if ($levelIds.value.indexOf(levelId) < $bgLightStart.value) {
+      $bgLightStart.set(bgLightStart($bgLightStart.value + 1));
+    }
+
+    recalculateColors([levelId]);
+  },
 });
 
 export function removeLevel(levelId: LevelId) {
