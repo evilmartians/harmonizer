@@ -1,4 +1,5 @@
 import { batch, type WritableSignal } from "@spred/core";
+import debounce from "lodash-es/debounce";
 
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import {
@@ -128,9 +129,13 @@ function precalculateColors() {
   calculateColors(collectColorCalculationData(), handleGeneratedColor);
 }
 
-export function recalculateColors(recalcOnlyLevels?: LevelId[]) {
-  generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
-}
+export const recalculateColors = debounce(
+  (recalcOnlyLevels?: LevelId[]) => {
+    generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+  },
+  100,
+  { maxWait: 333 },
+);
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
   const color$ = colorsMap.get(getColorIdentifier(levelId, hueId));

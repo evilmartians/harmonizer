@@ -87,12 +87,8 @@ export function updateBgLightStart(start: BgLightStart): boolean {
     return false;
   }
 
-  const idsToUpdate = $levelIds.value.slice(
-    Math.min(oldStart, newStart),
-    Math.max(oldStart, newStart),
-  );
   $bgLightStart.set(bgLightStart(newStart));
-  recalculateColors(idsToUpdate);
+  recalculateColors();
   return true;
 }
 
