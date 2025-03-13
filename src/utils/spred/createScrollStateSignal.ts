@@ -1,13 +1,12 @@
 import { effect, type Signal, signal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
+import debounce from "lodash-es/debounce";
 
 import { getScrollState, type ScrollState, type ScrollType } from "../dom/getScrollState";
 
 import { createResizeObserverSignal } from "./createResizeObserverSignal";
 import { toSignal } from "./toSignal";
 import type { InitialSignalValue, SignalOrValue } from "./types";
-
-import { debounceRaf } from "@/utils/timers/debounceRaf";
 
 const DEFAULT_SCROLL_STATE = {
   hasScroll: false,
@@ -43,15 +42,24 @@ export function createScrollStateSignal<E extends HTMLElement>(
       }
 
       const recalculateState = () => $scrollState.set(getScrollState(element, type));
-      const debouncedRecalculateState = debounceRaf(recalculateState);
+      const debouncedRecalculateState = debounce(recalculateState, 33, {
+        leading: true,
+        maxWait: 100,
+      });
       const scrollEventTarget = element === document.documentElement ? globalThis : element;
 
-      scrollEventTarget.addEventListener("scroll", debouncedRecalculateState);
+      scrollEventTarget.addEventListener("scroll", debouncedRecalculateState, {
+        capture: true,
+        passive: true,
+      });
 
       get($resizeObserver); // Activate the resize observer
       recalculateState();
 
-      return () => scrollEventTarget.removeEventListener("scroll", debouncedRecalculateState);
+      return () =>
+        scrollEventTarget.removeEventListener("scroll", debouncedRecalculateState, {
+          capture: true,
+        });
     });
   }
 
