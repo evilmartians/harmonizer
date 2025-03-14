@@ -1,4 +1,4 @@
-import { invariant } from "./invariant";
+import { invariant } from "../assertions/invariant";
 
 import type { HueAngle } from "@/types";
 

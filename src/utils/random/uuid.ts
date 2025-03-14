@@ -1,3 +1,3 @@
-export function getRandomId() {
+export function uuid() {
   return crypto.randomUUID().replaceAll("-", "");
 }

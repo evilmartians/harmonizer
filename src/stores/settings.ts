@@ -16,8 +16,9 @@ import {
   type ContrastModel,
   type DirectionMode,
 } from "@/types";
-import { apcaToWcag, wcagToApca } from "@/utils/color";
-import { initialConfig } from "@/utils/config";
+import { apcaToWcag } from "@/utils/colors/apcaToWcag";
+import { wcagToApca } from "@/utils/colors/wcagToApca";
+import { initialConfig } from "@/utils/initialConfig";
 
 export const $contrastModel = signal(initialConfig.settings.contrastModel);
 export const $directionMode = signal(initialConfig.settings.directionMode);

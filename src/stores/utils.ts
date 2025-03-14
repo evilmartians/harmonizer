@@ -13,12 +13,13 @@ import type {
   LevelData,
   LevelId,
 } from "@/types";
-import { getMiddleContrastLevel, getMiddleHueAngle } from "@/utils/color";
-import { getClosestColorName } from "@/utils/colorNames";
-import { getRandomId } from "@/utils/id";
-import { invariant } from "@/utils/invariant";
-import { getMiddleValue } from "@/utils/misc";
-import type { PartialOptional } from "@/utils/types";
+import { invariant } from "@/utils/assertions/invariant";
+import { getClosestColorName } from "@/utils/colors/getClosestColorName";
+import { getMiddleContrastLevel } from "@/utils/colors/getMiddleContrastLevel";
+import { getMiddleHueAngle } from "@/utils/colors/getMiddleHueAngle";
+import { getMiddleNumber } from "@/utils/number/getMiddleNumber";
+import { uuid } from "@/utils/random/uuid";
+import type { PartialOptional } from "@/utils/ts/generics";
 
 export type AnyId = string;
 export type ItemWithId<Id extends string> = { id: Id; [key: string]: unknown };
@@ -31,7 +32,7 @@ export type WithReactiveFields<Obj extends Record<string, unknown>, Fields exten
 export function withId<Id extends string, Item extends ItemWithId<Id>>(
   data: Omit<Item, "id">,
 ): Item {
-  return { ...data, id: getRandomId() } as Item;
+  return { ...data, id: uuid() } as Item;
 }
 
 type IndexedStore<Item extends ItemWithId<AnyId>> = {
@@ -102,7 +103,7 @@ function getMiddleLevelName(lowerName: string, upperName: string): string {
   const nextName = Number.parseInt(upperName, 10);
 
   return !Number.isNaN(prevName) && !Number.isNaN(nextName)
-    ? String(getMiddleValue(prevName, nextName))
+    ? String(getMiddleNumber(prevName, nextName))
     : lowerName;
 }
 

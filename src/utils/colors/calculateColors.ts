@@ -1,24 +1,12 @@
-import {
-  apcach,
-  crToBg,
-  crToFg,
-  inColorSpace,
-  maxChroma,
-  type Apcach,
-  type ChromaFunction,
-  type ColorSpace,
-} from "apcach";
-import { formatCss } from "culori";
+import { maxChroma, type ColorSpace } from "apcach";
 
-import { getMiddleValue } from "./misc";
+import { calculateColorCell } from "./calculateColorCell";
+import { maxCommonChroma } from "./maxCommonChroma";
 
 import {
   chromaLevel,
-  colorString,
   contrastLevel,
   hueAngle,
-  lightnessLevel,
-  type ChromaLevel,
   type ChromaMode,
   type ColorCellData,
   type ColorHueTintData,
@@ -29,83 +17,8 @@ import {
   type DirectionMode,
   type HueAngle,
   type HueId,
-  type LchColor,
   type LevelId,
 } from "@/types";
-
-export type SearchDirection = "lighter" | "darker";
-
-type ApcachOptions = {
-  directionMode: DirectionMode;
-  contrastModel: ContrastModel;
-  searchDirection: SearchDirection;
-  colorSpace: ColorSpace;
-  toColor: ColorString;
-  contrastLevel: ContrastLevel;
-  chroma: ChromaLevel | ChromaFunction;
-  hueAngle: HueAngle;
-};
-
-export function formatOklch(color: LchColor, alpha = 1) {
-  return colorString(formatCss({ mode: "oklch", ...color, alpha }));
-}
-
-export function calculateApcach({
-  directionMode,
-  contrastModel,
-  searchDirection,
-  colorSpace,
-  toColor,
-  contrastLevel,
-  chroma,
-  hueAngle,
-}: ApcachOptions): Apcach {
-  const method = directionMode === "fgToBg" ? crToBg : crToFg;
-  const bg = method(toColor, contrastLevel, contrastModel, searchDirection);
-
-  return apcach(bg, chroma, hueAngle, 100, colorSpace);
-}
-
-type MaxCommonChromaOptions = Omit<ApcachOptions, "hueAngle" | "chroma"> & {
-  hueAngles: HueAngle[];
-};
-
-export function maxCommonChroma({
-  hueAngles,
-  ...restOptions
-}: MaxCommonChromaOptions): ChromaLevel {
-  let maxCommonChroma = 100;
-
-  for (const hueAngle of hueAngles) {
-    const apcachColor = calculateApcach({
-      ...restOptions,
-      chroma: maxChroma(),
-      hueAngle: hueAngle,
-    });
-
-    if (apcachColor.chroma < maxCommonChroma) {
-      maxCommonChroma = apcachColor.chroma;
-    }
-  }
-  return chromaLevel(maxCommonChroma);
-}
-
-type ColorCellOptions = ApcachOptions;
-
-export function calculateColorCell(options: ColorCellOptions): ColorCellData {
-  const apcachColor = calculateApcach(options);
-  const l = lightnessLevel(apcachColor.lightness);
-  const c = chromaLevel(apcachColor.chroma);
-
-  return {
-    cr: options.contrastLevel,
-    l,
-    c,
-    h: options.hueAngle,
-    p3: !inColorSpace(apcachColor, "srgb"),
-    css: formatOklch({ l, c, h: options.hueAngle }),
-  };
-}
 
 export type GenerateColorsPayload = {
   levels: { id: LevelId; contrast: ContrastLevel }[];
@@ -119,10 +32,6 @@ export type GenerateColorsPayload = {
   directionMode: DirectionMode;
   contrastModel: ContrastModel;
 };
-
-const HUE_TINT_CR = contrastLevel(80);
-const HUE_TINT_CHROMA = chromaLevel(0.05);
-const MIN_LEVEL_TINT_CR = contrastLevel(50);
 
 export type GeneratedCellPayload = {
   type: "cell";
@@ -145,6 +54,10 @@ export type GeneratedColorPayload =
   | GeneratedCellPayload
   | GeneratedLevelTintPayload
   | GeneratedHueTintPayload;
+
+const HUE_TINT_CR = contrastLevel(80);
+const HUE_TINT_CHROMA = chromaLevel(0.05);
+const MIN_LEVEL_TINT_CR = contrastLevel(50);
 
 export function calculateColors(
   {
@@ -249,40 +162,3 @@ export function calculateColors(
     }
   }
 }
-
-// These functions are approximation, since the APCA and WCAG algorithms are not directly comparable.
-export function apcaToWcag(apcaLc: number) {
-  if (apcaLc === 0) {
-    return 1;
-  }
-
-  const wcagRatio = (Math.abs(apcaLc) / 110) ** 2.4 * 21;
-  return Number.parseFloat(wcagRatio.toFixed(1));
-}
-
-export function wcagToApca(wcagRatio: number) {
-  if (wcagRatio <= 1) {
-    return 0;
-  }
-
-  const apcaLc = 110 * (wcagRatio / 21) ** (1 / 2.4);
-  return Number.parseFloat(apcaLc.toFixed(0));
-}
-
-/**
- * Calculates the middle hue angle between two given hue angles. The order of the hue angles does not matter.
- *
- * @param hueAngle1 - The first hue angle.
- * @param hueAngle2 - The second hue angle.
- * @returns The middle hue angle.
- */
-export const getMiddleHueAngle = getMiddleValue<HueAngle>;
-
-/**
- * Calculates the middle contrast level between two given contrast levels. The order of the contrast levels does not matter.
- *
- * @param contrast1 - The first contrast level.
- * @param contrast2 - The second contrast level.
- * @returns The middle contrast level.
- */
-export const getMiddleContrastLevel = getMiddleValue<ContrastLevel>;

@@ -35,14 +35,14 @@ import {
   type HueId,
   type LevelId,
 } from "@/types";
-import { assertUnreachable } from "@/utils/assertUnreachable";
+import { assertUnreachable } from "@/utils/assertions/assertUnreachable";
+import { invariant } from "@/utils/assertions/invariant";
 import {
   calculateColors,
   type GenerateColorsPayload,
   type GeneratedColorPayload,
-} from "@/utils/color";
-import { initialConfig } from "@/utils/config";
-import { invariant } from "@/utils/invariant";
+} from "@/utils/colors/calculateColors";
+import { initialConfig } from "@/utils/initialConfig";
 import { generationWorker } from "@/worker/client";
 
 const levelsStore = createIndexedArrayStore(initialConfig.levels.map(getLevelStore));

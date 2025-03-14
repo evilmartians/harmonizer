@@ -8,7 +8,7 @@ import {
 } from "./constants";
 
 import { $hueIds } from "@/stores/colors";
-import { buildStyle } from "@/utils/styles";
+import { buildStyleString } from "@/utils/style/buildStyleString";
 
 export const GridStylesHueHover = memo(function GridStylesHueHover() {
   const hueIds = useSubscribe($hueIds);
@@ -21,5 +21,5 @@ export const GridStylesHueHover = memo(function GridStylesHueHover() {
     ];
   });
 
-  return <style>{buildStyle(selectors, REMOVE_BUTTON_HOVER_STYLE)}</style>;
+  return <style>{buildStyleString(selectors, REMOVE_BUTTON_HOVER_STYLE)}</style>;
 });

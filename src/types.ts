@@ -17,7 +17,7 @@ import {
   type contrastModelSchema,
   type directionSchema,
 } from "@/schemas/settings";
-import { getBranded } from "@/utils/branded";
+import { getBranded } from "@/utils/ts/getBranded";
 
 export type LightnessLevel = InferOutput<typeof lightnessLevelSchema>;
 export type ChromaLevel = InferOutput<typeof chromaLevelSchema>;

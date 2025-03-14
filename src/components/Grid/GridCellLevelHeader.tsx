@@ -36,7 +36,7 @@ import {
   $directionMode,
 } from "@/stores/settings";
 import { chromaLevel, contrastLevel, type LevelId } from "@/types";
-import { formatOklch } from "@/utils/color";
+import { formatOklch } from "@/utils/colors/formatOklch";
 import type { AnyProps } from "@/utils/react/types";
 import { getInputNumberValidator } from "@/utils/schema/getInputValidator";
 

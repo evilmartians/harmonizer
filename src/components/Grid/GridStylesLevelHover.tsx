@@ -8,7 +8,7 @@ import {
 } from "./constants";
 
 import { $levelIds } from "@/stores/colors";
-import { buildStyle } from "@/utils/styles";
+import { buildStyleString } from "@/utils/style/buildStyleString";
 
 export const GridStylesLevelHover = memo(function GridStylesLevelHover() {
   const levelIds = useSubscribe($levelIds);
@@ -21,5 +21,5 @@ export const GridStylesLevelHover = memo(function GridStylesLevelHover() {
     ];
   });
 
-  return <style>{buildStyle(selectors, REMOVE_BUTTON_HOVER_STYLE)}</style>;
+  return <style>{buildStyleString(selectors, REMOVE_BUTTON_HOVER_STYLE)}</style>;
 });

@@ -1,4 +1,4 @@
-import type { GenerateColorsPayload, GeneratedColorPayload } from "@/utils/color";
+import type { GenerateColorsPayload, GeneratedColorPayload } from "@/utils/colors/calculateColors";
 
 // CLient to Worker messages
 export type ClientMessages = {
