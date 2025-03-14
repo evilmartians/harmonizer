@@ -6,11 +6,11 @@ import { getBranded } from "./utils/branded";
 import {
   chromaLevelSchema,
   colorStringSchema,
-  contrastLevelSchema,
   hueAngleSchema,
   type hueIdSchema,
   type levelIdSchema,
   lightnessLevelSchema,
+  baseContrastSchema,
 } from "@/schemas/color";
 import {
   bgLightStartSchema,
@@ -24,7 +24,7 @@ export type LightnessLevel = InferOutput<typeof lightnessLevelSchema>;
 export type ChromaLevel = InferOutput<typeof chromaLevelSchema>;
 export type HueAngle = InferOutput<typeof hueAngleSchema>;
 export type ColorString = InferOutput<typeof colorStringSchema>;
-export type ContrastLevel = InferOutput<typeof contrastLevelSchema>;
+export type ContrastLevel = InferOutput<typeof baseContrastSchema>;
 
 export type ChromaMode = InferOutput<typeof chromaModeSchema>;
 export type ColorSpace = InferOutput<typeof colorSpaceSchema>;
@@ -37,7 +37,7 @@ export const chromaMode = getBranded(v.pipe(v.string(), chromaModeSchema));
 export const chromaLevel = getBranded(chromaLevelSchema);
 export const hueAngle = getBranded(hueAngleSchema);
 export const colorString = getBranded(colorStringSchema);
-export const contrastLevel = getBranded(contrastLevelSchema);
+export const contrastLevel = getBranded(baseContrastSchema);
 export const bgLightStart = getBranded(bgLightStartSchema);
 
 export type LevelId = InferOutput<typeof levelIdSchema>;

@@ -30,9 +30,18 @@ export const colorStringSchema = v.pipe(
   ),
   v.brand("ColorString"),
 );
-export const contrastLevelSchema = v.pipe(
+
+const contrastBrand = v.brand<number, "ContrastLevel">("ContrastLevel");
+export const baseContrastSchema = v.pipe(v.number(), contrastBrand);
+export const apcaContrastLevelSchema = v.pipe(
   v.number(),
   v.minValue(0),
   v.maxValue(106),
-  v.brand("ContrastLevel"),
+  contrastBrand,
+);
+export const wcagContrastLevelSchema = v.pipe(
+  v.number(),
+  v.minValue(0),
+  v.maxValue(21),
+  contrastBrand,
 );
