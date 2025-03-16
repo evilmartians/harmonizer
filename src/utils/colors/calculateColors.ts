@@ -1,5 +1,7 @@
 import { maxChroma, type ColorSpace } from "apcach";
 
+import { ensureNonNullable } from "../assertions/ensureNonNullable";
+
 import { calculateColorCell } from "./calculateColorCell";
 import { maxCommonChroma } from "./maxCommonChroma";
 
@@ -33,16 +35,11 @@ export type GenerateColorsPayload = {
   contrastModel: ContrastModel;
 };
 
-export type GeneratedCellPayload = {
-  type: "cell";
+export type GeneratedLevelPayload = {
+  type: "level";
   levelId: LevelId;
-  hueId: HueId;
-  color: ColorCellData;
-};
-export type GeneratedLevelTintPayload = {
-  type: "level-tint";
-  levelId: LevelId;
-  color: ColorLevelTintData;
+  cells: Record<HueId, ColorCellData>;
+  tint: ColorLevelTintData;
 };
 export type GeneratedHueTintPayload = {
   type: "hue-tint";
@@ -50,10 +47,7 @@ export type GeneratedHueTintPayload = {
   color: ColorHueTintData;
 };
 
-export type GeneratedColorPayload =
-  | GeneratedCellPayload
-  | GeneratedLevelTintPayload
-  | GeneratedHueTintPayload;
+export type GeneratedColorPayload = GeneratedLevelPayload | GeneratedHueTintPayload;
 
 const HUE_TINT_CR = contrastLevel(80);
 const HUE_TINT_CHROMA = chromaLevel(0.05);
@@ -118,9 +112,9 @@ export function calculateColors(
     // Reset level tint color when there are no hue rows
     if (hues.length === 0) {
       onGeneratedColor({
-        type: "level-tint",
+        type: "level",
         levelId: level.id,
-        color: {
+        tint: {
           ...calculateColorCell({
             ...commonApcacheOptions,
             hueAngle: hueAngle(0),
@@ -129,8 +123,12 @@ export function calculateColors(
           }),
           referencedC: chromaLevel(0),
         },
+        cells: {},
       });
     }
+
+    const cells: GeneratedLevelPayload["cells"] = {};
+    let tint: ColorLevelTintData | null = null;
 
     for (const [hueIndex, hue] of hues.entries()) {
       const cellColor = calculateColorCell({
@@ -139,14 +137,15 @@ export function calculateColors(
         contrastLevel: level.contrast,
         chroma,
       });
-      onGeneratedColor({ type: "cell", levelId: level.id, hueId: hue.id, color: cellColor });
+
+      cells[hue.id] = cellColor;
 
       // Calculate level tint based only on the first hue row
       if (hueIndex === 0) {
-        let levelTintColor: ColorLevelTintData = { ...cellColor, referencedC: cellColor.c };
+        tint = { ...cellColor, referencedC: cellColor.c };
 
-        if (levelTintColor.cr < MIN_LEVEL_TINT_CR) {
-          levelTintColor = {
+        if (tint.cr < MIN_LEVEL_TINT_CR) {
+          tint = {
             ...calculateColorCell({
               ...commonApcacheOptions,
               hueAngle: hue.angle,
@@ -156,9 +155,14 @@ export function calculateColors(
             referencedC: cellColor.c,
           };
         }
-
-        onGeneratedColor({ type: "level-tint", levelId: level.id, color: levelTintColor });
       }
     }
+
+    onGeneratedColor({
+      type: "level",
+      levelId: level.id,
+      tint: ensureNonNullable(tint, "Level tint is not calculated"),
+      cells,
+    });
   }
 }

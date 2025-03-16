@@ -43,6 +43,7 @@ import {
   type GeneratedColorPayload,
 } from "@/utils/colors/calculateColors";
 import { initialConfig } from "@/utils/initialConfig";
+import { objectEntries } from "@/utils/object/objectEntries";
 import { generationWorker } from "@/worker/client";
 
 const levelsStore = createIndexedArrayStore(initialConfig.levels.map(getLevelStore));
@@ -81,12 +82,16 @@ function handleGeneratedColor(payload: GeneratedColorPayload) {
   const type = payload.type;
 
   switch (type) {
-    case "cell": {
-      upsertColor(payload.levelId, payload.hueId, payload.color);
-      break;
-    }
-    case "level-tint": {
-      getLevel(payload.levelId).$tintColor.set(payload.color);
+    case "level": {
+      batch(() => {
+        const levelStore = getLevel(payload.levelId);
+
+        levelStore.$tintColor.set(payload.tint);
+        for (const [hueId, color] of objectEntries(payload.cells)) {
+          upsertColor(payload.levelId, hueId, color);
+        }
+      });
+
       break;
     }
     case "hue-tint": {
