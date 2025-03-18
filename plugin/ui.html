@@ -1,0 +1,26 @@
+<h2>Rectangle Creator</h2>
+<p>Config: <textarea id="textarea"></textarea></p>
+<button id="create">Create</button>
+<button id="cancel">Cancel</button>
+<script>
+  const createButton = document.getElementById("create");
+
+  window.addEventListener("message", (event) => {
+    const paletteExists = event.data.pluginMessage.paletteExists;
+    createButton.textContent = paletteExists
+      ? "Update palette"
+      : "Create palette";
+  });
+
+  document.getElementById("create").onclick = () => {
+    const textarea = document.getElementById("textarea");
+    parent.postMessage(
+      { pluginMessage: { type: "create-palette", json: textarea.value } },
+      "*"
+    );
+  };
+
+  document.getElementById("cancel").onclick = () => {
+    parent.postMessage({ pluginMessage: { type: "cancel" } }, "*");
+  };
+</script>
