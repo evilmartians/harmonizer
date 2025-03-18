@@ -6,33 +6,27 @@
 
 .insertBeforeContainer {
   position: absolute;
+  inset-block: 0;
   inset-inline-start: 0;
   translate: -50%;
-  inset-block-start: 0;
-  inset-block-end: 0;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  &:dir(rtl) {
-    translate: 50%;
-  }
-
   &::before,
   &::after {
-    position: absolute;
     content: "";
-    display: block;
-    block-size: calc(100% / 2 - calc(var(--spacing) * 7));
-    inline-size: 1px;
-    background-color: var(--color-border);
-    opacity: 0;
-  }
 
-  [data-bg-mode="dark"] &::before,
-  [data-bg-mode="dark"] &::after {
-    background-color: var(--color-border-inverted);
+    position: absolute;
+
+    display: block;
+
+    inline-size: 1px;
+    block-size: calc(100% / 2 - calc(var(--spacing) * 7));
+
+    opacity: 0;
+    background-color: var(--color-border);
   }
 
   &::before {
@@ -41,6 +35,15 @@
 
   &::after {
     inset-block-end: calc(var(--spacing) * 3);
+  }
+
+  &:dir(rtl) {
+    translate: 50%;
+  }
+
+  [data-bg-mode="dark"] &::before,
+  [data-bg-mode="dark"] &::after {
+    background-color: var(--color-border-inverted);
   }
 
   &:hover::before,

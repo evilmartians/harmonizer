@@ -1,12 +1,15 @@
 .container {
   display: inline-flex;
-  inline-size: 100%;
-  max-inline-size: 100%;
   flex-direction: column;
   gap: calc(var(--spacing) / 2);
+
+  inline-size: 100%;
+  max-inline-size: 100%;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
+
   color: var(--input-color, var(--color-primary));
+
   background: var(--input-bg-color, transparent);
 
   transition:
@@ -19,8 +22,8 @@
   }
 
   &:has(:where(:focus, :invalid)) {
-    outline-inline-size: 1px;
     outline-style: solid;
+    outline-width: 1px;
   }
 
   &:where(:hover:not(:has(:disabled))) {
@@ -59,18 +62,19 @@
 }
 
 .label {
-  text-align: center;
-  font-weight: 500;
   cursor: text;
+
   font-size: var(--text-ui-s);
+  font-weight: 500;
   line-height: var(--text-ui-s--line-height);
+  text-align: center;
   letter-spacing: var(--text-ui-s--font-stretch);
 }
 
 .inputContainer {
   display: flex;
-  align-items: center;
   gap: calc(var(--spacing) * 1.5);
+  align-items: center;
 
   :where(.size_xl) & {
     inline-size: 100%;
@@ -78,13 +82,22 @@
 }
 
 .input {
+  inline-size: 100%;
+  max-inline-size: 100%;
   font-size: var(--text-m);
   line-height: 1.25rem;
 
   :where(.size_xl) & {
+    inline-size: 100%;
+
     font-size: var(--text-ui-l);
     line-height: var(--text-ui-l--line-height);
+    text-align: center;
     letter-spacing: var(--text-ui-l--font-stretch);
+  }
+
+  &:focus {
+    outline: none;
   }
 
   &:invalid {
@@ -93,19 +106,5 @@
 
   &:invalid::placeholder {
     color: var(--color-universal-error);
-  }
-}
-
-.input {
-  max-inline-size: 100%;
-  inline-size: 100%;
-
-  &:focus {
-    outline: none;
-  }
-
-  :where(.size_xl) & {
-    inline-size: 100%;
-    text-align: center;
   }
 }

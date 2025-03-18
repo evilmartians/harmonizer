@@ -4,10 +4,10 @@
 }
 
 .nativeSelect {
-  position: absolute;
-  opacity: 0;
-  inset: 0;
   cursor: pointer;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
 }
 
 :is(.nativeSelect:focus-visible + .button) {
@@ -27,14 +27,14 @@
   }
 
   &:where(.size_m) {
-    margin: calc(var(--spacing) * -1.5);
     inline-size: var(--text-ui-l--line-height);
     block-size: var(--text-ui-l--line-height);
+    margin: calc(var(--spacing) * -1.5);
   }
 
   &:where(.size_l) {
-    margin: calc(var(--spacing) * -2);
     inline-size: var(--text-ui-l--line-height);
     block-size: var(--text-ui-l--line-height);
+    margin: calc(var(--spacing) * -2);
   }
 }

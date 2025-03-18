@@ -1,20 +1,21 @@
 @import "tailwindcss";
+
 @source "./**/*.module.css";
 
 @font-face {
-  font-family: Martian Grotesk;
-  font-display: swap;
-  src: url("https://cdn.evilmartians.com/front/fonts/MartianGrotesk.woff2") format("woff2");
+  font-family: "Martian Grotesk";
   font-weight: 300 500;
+  font-display: swap;
   font-stretch: 75% 200%; /* Cn: 75%,  Nr: 87.5%,  Std: 100%,  sWd: 112.5%,  Wd: 125%,  xWd: 150%,  uWd: 200% */
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianGrotesk.woff2") format("woff2");
 }
 
 @font-face {
-  font-family: Martian Mono;
-  font-display: swap;
-  src: url("https://cdn.evilmartians.com/front/fonts/MartianMono.woff2") format("woff2");
+  font-family: "Martian Mono";
   font-weight: 100 800; /* Th: 100, xLt: 200, Lt: 300, Rg: 400, Md: 500, (no 600), Bd: 700, xBd: 800 */
+  font-display: swap;
   font-stretch: 100% 112.5%;
+  src: url("https://cdn.evilmartians.com/front/fonts/MartianMono.woff2") format("woff2");
 }
 
 @theme {
@@ -22,22 +23,20 @@
     "Martian Grotesk", system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono:
-    "Martian Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Martian Mono", ui-monospace, sfmono-regular, menlo, monaco, consolas, "Liberation Mono",
     "Courier New", monospace;
-
-  --color-primary: oklch(0% 0 0);
-  --color-primary-inverted: oklch(100% 0 0);
-  --color-secondary: oklch(0% 0 0 / 58.82%);
-  --color-secondary-inverted: oklch(100% 0 0 / 58.82%);
-  --color-button: oklch(0% 0 0 / 12.55%);
-  --color-button-inverted: oklch(100% 0 0 / 12.55%);
-  --color-button-hover: oklch(0% 0 0 / 25.1%);
-  --color-button-hover-inverted: oklch(100% 0 0 / 25.1%);
-  --color-border: oklch(0% 0 0 / 25.1%);
-  --color-border-inverted: oklch(100% 0 0 / 25.1%);
-  --color-universal-focus: oklch(70% 0.1661 242.68 / 90%);
-  --color-universal-error: oklch(79.41% 0.0931 20.98 / 50%);
-
+  --color-primary: oklch(0% 0 0deg);
+  --color-primary-inverted: oklch(100% 0 0deg);
+  --color-secondary: oklch(0% 0 0deg / 58.82%);
+  --color-secondary-inverted: oklch(100% 0 0deg / 58.82%);
+  --color-button: oklch(0% 0 0deg / 12.55%);
+  --color-button-inverted: oklch(100% 0 0deg / 12.55%);
+  --color-button-hover: oklch(0% 0 0deg / 25.1%);
+  --color-button-hover-inverted: oklch(100% 0 0deg / 25.1%);
+  --color-border: oklch(0% 0 0deg / 25.1%);
+  --color-border-inverted: oklch(100% 0 0deg / 25.1%);
+  --color-universal-focus: oklch(70% 0.1661 242.68deg / 90%);
+  --color-universal-error: oklch(79.41% 0.0931 20.98deg / 50%);
   --text-xs: 7.5px;
   --text-xs--line-height: 10px;
   --text-xs--font-stretch: 1;
@@ -71,11 +70,12 @@
 body,
 html,
 #root {
+  inline-size: 100%;
+  block-size: 100%;
   margin: 0;
   padding: 0;
-  block-size: 100%;
-  inline-size: 100%;
+
+  font-family: var(--font-sans);
 
   background-color: var(--color-primary-inverted);
-  font-family: var(--font-sans);
 }

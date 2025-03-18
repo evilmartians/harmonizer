@@ -1,35 +1,33 @@
 .cell {
   composes: gridRowHeader from "./Grid.module.css";
+  gap: var(--spacing);
   align-items: stretch;
   justify-content: center;
-
-  gap: var(--spacing);
 }
 
 .insertBeforeContainer {
   position: absolute;
-  inset-inline-start: 0;
-  inset-inline-end: 0;
-  translate: 0 -50%;
   inset-block-start: 0;
+  inset-inline: 0;
+  translate: 0 -50%;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  &:dir(rtl) {
-    translate: 0 50%;
-  }
-
   &::before,
   &::after {
-    position: absolute;
     content: "";
+
+    position: absolute;
+
     display: block;
+
     inline-size: calc(100% / 2 - calc(var(--spacing) * 7));
     block-size: 1px;
-    background-color: var(--color-border-inverted);
+
     opacity: 0;
+    background-color: var(--color-border-inverted);
   }
 
   &::before {
@@ -38,6 +36,10 @@
 
   &::after {
     inset-inline-end: calc(var(--spacing) * 3);
+  }
+
+  &:dir(rtl) {
+    translate: 0 50%;
   }
 
   &:hover::before,
@@ -52,15 +54,13 @@
   opacity: 0;
 
   .insertBeforeContainer:hover &,
-  .insertBeforeContainer:hover &,
-  .insertBeforeContainer:has(:focus-visible) &,
   .insertBeforeContainer:has(:focus-visible) & {
     opacity: 1;
   }
 }
 
 .control {
-  max-inline-size: calc(100% + 14px);
   inline-size: calc(100% + 14px);
+  max-inline-size: calc(100% + 14px);
   margin-inline-start: -7px;
 }

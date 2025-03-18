@@ -1,10 +1,8 @@
 .cell {
   composes: gridRowHeader from "./Grid.module.css";
-  justify-content: center;
-
   gap: var(--spacing);
-  padding-inline-start: calc(var(--spacing) * 6);
-  padding-inline-end: calc(var(--spacing) * 4);
+  justify-content: center;
+  padding-inline: calc(var(--spacing) * 6) calc(var(--spacing) * 4);
 }
 
 .button::before {

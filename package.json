@@ -10,9 +10,11 @@
     "lint": "pnpm run --parallel --filter='.' /^lint:*/",
     "lint:eslint": "eslint . --cache --cache-location=./node_modules/.tmp/eslint/.cache",
     "lint:prettier": "prettier --check .",
+    "lint:styles": "pnpm stylelint **/*.{css,module.css}",
     "format": "pnpm run --parallel --filter='.' /^format:*/",
     "format:eslint": "pnpm run lint --fix",
     "format:prettier": "prettier . --write",
+    "format:styles": "pnpm lint:styles --fix && prettier --write '**/*.{css,module.css}'",
     "preview": "vite preview",
     "postinstall": "pnpm exec simple-git-hooks"
   },
@@ -48,6 +50,12 @@
     "prettier": "^3.5.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "simple-git-hooks": "^2.11.1",
+    "stylelint": "^16.16.0",
+    "stylelint-config-clean-order": "^7.0.0",
+    "stylelint-config-css-modules": "^4.4.0",
+    "stylelint-config-html": "^1.1.0",
+    "stylelint-config-standard": "^37.0.0",
+    "stylelint-order": "^6.0.4",
     "tailwindcss": "^4.0.9",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.24.0",
@@ -62,6 +70,10 @@
   "nano-staged": {
     "*.{js,cjs,mjs,jsx,ts,mts,tsx}": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,module.css}": [
+      "stylelint --fix",
       "prettier --write"
     ]
   },
