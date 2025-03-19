@@ -32,7 +32,7 @@
     "lodash-es": "^4.17.21",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "valibot": "^1.0.0-rc.2"
+    "valibot": "^1.0.0"
   },
   "devDependencies": {
     "@hideoo/eslint-config": "^4.0.0",
