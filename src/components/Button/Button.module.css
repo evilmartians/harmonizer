@@ -1,0 +1,111 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.2s,
+    background-color 0.2s;
+
+  :where([data-bg-mode="light"]) & {
+    color: var(--color-primary);
+  }
+
+  :where([data-bg-mode="dark"]) & {
+    color: var(--color-primary-inverted);
+  }
+
+  &:hover {
+    :where([data-bg-mode="light"]) & {
+      background-color: var(--color-button-hover);
+    }
+
+    :where([data-bg-mode="dark"]) & {
+      background-color: var(--color-button-hover-inverted);
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-universal-focus);
+  }
+}
+
+.kind_primary {
+  :where([data-bg-mode="light"]) & {
+    background-color: var(--color-button-hover);
+  }
+
+  :where([data-bg-mode="dark"]) & {
+    background-color: var(--color-button-hover-inverted);
+  }
+}
+
+.size_xs {
+  gap: calc(var(--spacing) / 2);
+
+  padding: calc(var(--spacing) / 2);
+  border-radius: var(--radius-xs);
+
+  font-size: var(--text-ui-s);
+  line-height: var(--text-ui-s--line-height);
+
+  :where(.icon) {
+    inline-size: var(--text-ui-s--line-height);
+    block-size: var(--text-ui-s--line-height);
+  }
+}
+
+.size_s {
+  gap: var(--spacing);
+
+  padding: var(--spacing);
+  border-radius: var(--radius-xs);
+
+  font-size: var(--text-ui-s);
+  line-height: var(--text-ui-s--line-height);
+
+  :where(.icon) {
+    inline-size: var(--text-ui-s--line-height);
+    block-size: var(--text-ui-s--line-height);
+  }
+}
+
+.size_m {
+  gap: calc(var(--spacing) * 1.5);
+
+  padding: calc(var(--spacing) * 1.5);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--text-ui-m);
+  line-height: var(--text-ui-m--line-height);
+
+  :where(.icon) {
+    inline-size: var(--text-ui-m--line-height);
+    block-size: var(--text-ui-m--line-height);
+  }
+}
+
+.size_l {
+  gap: calc(var(--spacing) * 2);
+
+  padding: calc(var(--spacing) * 2);
+  border-radius: var(--radius-sm);
+
+  font-size: var(--text-ui-l);
+  line-height: var(--text-ui-l--line-height);
+
+  :where(.icon) {
+    inline-size: var(--text-ui-l--line-height);
+    block-size: var(--text-ui-l--line-height);
+  }
+}
+
+.rounded {
+  border-radius: 50%;
+}

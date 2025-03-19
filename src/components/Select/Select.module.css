@@ -1,0 +1,40 @@
+.container {
+  position: relative;
+  display: inline-flex;
+}
+
+.nativeSelect {
+  cursor: pointer;
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+:is(.nativeSelect:focus-visible + .button) {
+  outline: 2px solid var(--color-universal-focus);
+}
+
+.icon {
+  inline-size: var(--text-ui-m--line-height);
+  block-size: var(--text-ui-m--line-height);
+
+  &:where(.size_xs) {
+    margin: calc(var(--spacing) / -2);
+  }
+
+  &:where(.size_s) {
+    margin: calc(var(--spacing) / -1);
+  }
+
+  &:where(.size_m) {
+    inline-size: var(--text-ui-l--line-height);
+    block-size: var(--text-ui-l--line-height);
+    margin: calc(var(--spacing) * -1.5);
+  }
+
+  &:where(.size_l) {
+    inline-size: var(--text-ui-l--line-height);
+    block-size: var(--text-ui-l--line-height);
+    margin: calc(var(--spacing) * -2);
+  }
+}

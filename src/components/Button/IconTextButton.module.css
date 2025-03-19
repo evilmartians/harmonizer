@@ -1,7 +1,0 @@
-.button {
-  @apply flex items-center gap-1 pl-1 pr-2 py-1 bg-button rounded hover:bg-button-hover transition-colors;
-}
-
-.text {
-  @apply text-ui-m font-medium;
-}

@@ -1,10 +1,10 @@
 import type { ColorData, ColorCellData, ColorLevelTintData, LevelData, HueData } from "@/types";
 
 export const FALLBACK_COLOR_DATA = {
-  l: 38.67,
+  l: 43.13,
   c: 0,
   h: 0,
-  css: "#444",
+  css: "rgba(80, 80, 80, 0.2)",
   cr: 0,
 } as ColorData;
 

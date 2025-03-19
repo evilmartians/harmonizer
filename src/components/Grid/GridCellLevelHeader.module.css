@@ -1,0 +1,68 @@
+.cell {
+  composes: gridColumnHeader from "./Grid.module.css";
+  align-items: center;
+  justify-content: space-between;
+}
+
+.insertBeforeContainer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  translate: -50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &::before,
+  &::after {
+    content: "";
+
+    position: absolute;
+
+    display: block;
+
+    inline-size: 1px;
+    block-size: calc(100% / 2 - calc(var(--spacing) * 7));
+
+    opacity: 0;
+    background-color: var(--color-border);
+  }
+
+  &::before {
+    inset-block-start: calc(var(--spacing) * 3);
+  }
+
+  &::after {
+    inset-block-end: calc(var(--spacing) * 3);
+  }
+
+  &:dir(rtl) {
+    translate: 50%;
+  }
+
+  [data-bg-mode="dark"] &::before,
+  [data-bg-mode="dark"] &::after {
+    background-color: var(--color-border-inverted);
+  }
+
+  &:hover::before,
+  &:hover::after,
+  &:has(:focus-visible)::before,
+  &:has(:focus-visible)::after {
+    opacity: 1;
+  }
+}
+
+.insertBeforeButton {
+  opacity: 0;
+
+  &.edgeIcon {
+    background-color: var(--bg-light);
+  }
+
+  .insertBeforeContainer:hover &,
+  .insertBeforeContainer:has(:focus-visible) & {
+    opacity: 1;
+  }
+}

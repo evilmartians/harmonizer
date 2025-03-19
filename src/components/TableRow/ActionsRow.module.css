@@ -1,7 +1,0 @@
-.container {
-  @apply inline-flex h-[88px];
-}
-
-.addButton {
-  @apply text-primary-inverted;
-}

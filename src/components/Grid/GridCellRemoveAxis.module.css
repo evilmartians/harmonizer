@@ -1,0 +1,15 @@
+.cell {
+  position: relative;
+}
+
+.button {
+  &::before {
+    content: "";
+    position: absolute;
+    inset: calc(var(--spacing) * 4);
+  }
+
+  @media (hover: hover) {
+    opacity: 0;
+  }
+}

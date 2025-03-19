@@ -1,0 +1,5 @@
+.button {
+  @media (hover: hover) {
+    opacity: 0;
+  }
+}

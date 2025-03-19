@@ -7,7 +7,8 @@ import {
   getLevel,
   overwriteHues,
   overwriteLevels,
-  recalculateColors,
+  requestColorsRecalculation,
+  pregenerateFallbackColorsMap,
 } from "./colors";
 import {
   $bgColorDark,
@@ -47,6 +48,9 @@ export function getConfig(): ExportConfig {
 
 export function updateConfig(config: ExportConfig) {
   batch(() => {
+    const levels = config.levels.map(getLevelStore);
+    const hues = config.hues.map(getHueStore);
+
     $contrastModel.set(config.settings.contrastModel);
     $directionMode.set(config.settings.directionMode);
     $chromaMode.set(config.settings.chromaMode);
@@ -54,8 +58,12 @@ export function updateConfig(config: ExportConfig) {
     $bgColorDark.set(config.settings.bgColorDark);
     $bgLightStart.set(config.settings.bgLightStart);
     $colorSpace.set(config.settings.colorSpace);
-    overwriteLevels(config.levels.map(getLevelStore));
-    overwriteHues(config.hues.map(getHueStore));
+    overwriteLevels(levels);
+    overwriteHues(hues);
+    pregenerateFallbackColorsMap(
+      levels.map((level) => level.id),
+      hues.map((hue) => hue.id),
+    );
   });
-  recalculateColors();
+  requestColorsRecalculation();
 }

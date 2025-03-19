@@ -1,7 +1,16 @@
 import { batch, type WritableSignal } from "@spred/core";
+import debounce from "lodash-es/debounce";
 
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
-import { $bgColorDark, $bgColorLight, $bgLightStart, $chromaMode, $colorSpace } from "./settings";
+import {
+  $bgColorDark,
+  $bgColorLight,
+  $bgLightStart,
+  $chromaMode,
+  $colorSpace,
+  $contrastModel,
+  $directionMode,
+} from "./settings";
 import {
   cleanupColors,
   createIndexedArrayStore,
@@ -26,14 +35,15 @@ import {
   type HueId,
   type LevelId,
 } from "@/types";
-import { assertUnreachable } from "@/utils/assertUnreachable";
+import { assertUnreachable } from "@/utils/assertions/assertUnreachable";
+import { invariant } from "@/utils/assertions/invariant";
 import {
   calculateColors,
   type GenerateColorsPayload,
   type GeneratedColorPayload,
-} from "@/utils/color";
-import { initialConfig } from "@/utils/config";
-import { invariant } from "@/utils/invariant";
+} from "@/utils/colors/calculateColors";
+import { initialConfig } from "@/utils/initialConfig";
+import { objectEntries } from "@/utils/object/objectEntries";
 import { generationWorker } from "@/worker/client";
 
 const levelsStore = createIndexedArrayStore(initialConfig.levels.map(getLevelStore));
@@ -42,7 +52,6 @@ export const {
   items: levels,
   getItem: getLevel,
   addItem: addLevel,
-  removeItem: _removeLevel,
   overwrite: overwriteLevels,
 } = levelsStore;
 export const huesStore = createIndexedArrayStore(initialConfig.hues.map(getHueStore));
@@ -51,7 +60,6 @@ export const {
   items: hues,
   getItem: getHue,
   addItem: addHue,
-  removeItem: _removeHue,
   overwrite: overwriteHues,
 } = huesStore;
 
@@ -60,17 +68,30 @@ const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 precalculateColors();
 generationWorker.on("generated:color", handleGeneratedColor);
 
+export function pregenerateFallbackColorsMap(levelIds: LevelId[], hueIds: HueId[]) {
+  colorsMap.clear();
+  for (const levelId of levelIds) {
+    for (const hueId of hueIds) {
+      colorsMap.set(getColorIdentifier(levelId, hueId), getColorSignal(FALLBACK_CELL_COLOR));
+    }
+  }
+}
+
 // Color methods
 function handleGeneratedColor(payload: GeneratedColorPayload) {
   const type = payload.type;
 
   switch (type) {
-    case "cell": {
-      upsertColor(payload.levelId, payload.hueId, payload.color);
-      break;
-    }
-    case "level-tint": {
-      getLevel(payload.levelId).$tintColor.set(payload.color);
+    case "level": {
+      batch(() => {
+        const levelStore = getLevel(payload.levelId);
+
+        levelStore.$tintColor.set(payload.tint);
+        for (const [hueId, color] of objectEntries(payload.cells)) {
+          upsertColor(payload.levelId, hueId, color);
+        }
+      });
+
       break;
     }
     case "hue-tint": {
@@ -96,6 +117,8 @@ function upsertColor(levelId: LevelId, hueId: HueId, color: ColorCellData) {
 
 function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColorsPayload {
   return {
+    directionMode: $directionMode.value,
+    contrastModel: $contrastModel.value,
     levels: $levelIds.value.map((id) => ({ id, contrast: getLevel(id).$contrast.value })),
     recalcOnlyLevels,
     hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).$angle.value })),
@@ -111,9 +134,39 @@ function precalculateColors() {
   calculateColors(collectColorCalculationData(), handleGeneratedColor);
 }
 
-export function recalculateColors(recalcOnlyLevels?: LevelId[]) {
+export const requestColorsRecalculation = debounce(
+  (recalcOnlyLevels?: LevelId[]) => {
+    generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+  },
+  100,
+  { maxWait: 333 },
+);
+
+const levelsAccumulation = { levels: new Set<LevelId>(), all: false };
+const requestColorsRecalculationAndResetLevelsAccumulation = debounce(
+  (recalcOnlyLevels?: LevelId[]) => {
+    generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+    levelsAccumulation.all = false;
+    levelsAccumulation.levels.clear();
+  },
+  300,
+);
+export const requestColorsRecalculationWithLevelsAccumulation = (recalcOnlyLevels?: LevelId[]) => {
+  if (!levelsAccumulation.all && recalcOnlyLevels) {
+    for (const level of recalcOnlyLevels) {
+      levelsAccumulation.levels.add(level);
+    }
+  } else {
+    levelsAccumulation.all = true;
+  }
+  requestColorsRecalculationAndResetLevelsAccumulation(
+    levelsAccumulation.all ? undefined : [...levelsAccumulation.levels],
+  );
+};
+
+export const recalculateColorsWithBigDebounce = debounce((recalcOnlyLevels?: LevelId[]) => {
   generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
-}
+}, 300);
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
   const color$ = colorsMap.get(getColorIdentifier(levelId, hueId));
@@ -129,20 +182,28 @@ export const insertLevel = getInsertItem({
   cross: huesStore,
   getNewItem: () => getLevelStore(FALLBACK_LEVEL_DATA),
   getMiddleItem: getMiddleLevel,
-  onAddColor: (levelId, hueId, previousLevelId) =>
+  onAddColor: (levelId, hueId, previousLevelId) => {
     upsertColor(
       levelId,
       hueId,
       previousLevelId ? getColor$(previousLevelId, hueId).value : FALLBACK_CELL_COLOR,
-    ),
-  onFinish: (levelId) => recalculateColors([levelId]),
+    );
+  },
+  onFinish: (levelId) => {
+    // Compensate for the new level being inserted before the bgLightStart
+    if ($levelIds.value.indexOf(levelId) < $bgLightStart.value) {
+      $bgLightStart.set(bgLightStart($bgLightStart.value + 1));
+    }
+
+    requestColorsRecalculation([levelId]);
+  },
 });
 
 export function removeLevel(levelId: LevelId) {
   batch(() => {
     const levelIndex = $levelIds.value.indexOf(levelId);
 
-    _removeLevel(levelId);
+    levelsStore.removeItem(levelId);
     cleanupColors(colorsMap, matchesLevelColorKey, levelId);
 
     if (levelIndex < $bgLightStart.value) {
@@ -157,12 +218,12 @@ export function updateLevelName(id: LevelId, name: string) {
 
 export function updateLevelContrast(id: LevelId, contrast: ContrastLevel) {
   getLevel(id).$contrast.set(contrast);
-  recalculateColors([id]);
+  requestColorsRecalculation([id]);
 }
 
 export function updateLevelChroma(id: LevelId, chroma: ChromaLevel) {
   getLevel(id).$chroma.set(chroma);
-  recalculateColors([id]);
+  requestColorsRecalculation([id]);
 }
 
 // Hue methods
@@ -177,16 +238,16 @@ export const insertHue = getInsertItem({
       hueId,
       previousHueId ? getColor$(levelId, previousHueId).value : FALLBACK_CELL_COLOR,
     ),
-  onFinish: () => recalculateColors(),
+  onFinish: () => requestColorsRecalculation(),
 });
 
 export function removeHue(hueId: HueId) {
   batch(() => {
-    _removeHue(hueId);
+    huesStore.removeItem(hueId);
     cleanupColors(colorsMap, matchesHueColorKey, hueId);
   });
   // Removing hue might affect the chroma of levels, so we need to recalculate colors
-  recalculateColors();
+  requestColorsRecalculation();
 }
 
 export function updateHueName(id: HueId, name: string) {
@@ -195,5 +256,5 @@ export function updateHueName(id: HueId, name: string) {
 
 export function updateHueAngle(id: HueId, angle: HueAngle) {
   getHue(id).$angle.set(angle);
-  recalculateColors();
+  requestColorsRecalculation();
 }

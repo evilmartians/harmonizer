@@ -1,0 +1,18 @@
+name: Lint code
+on:
+  push:
+    branches:
+      - "**"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      CI_RUN: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/prepare-runner
+      - run: pnpm lint:styles

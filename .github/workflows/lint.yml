@@ -1,4 +1,4 @@
-name: CI
+name: Lint styles
 on:
   push:
     branches:
@@ -15,4 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-runner
-      - run: pnpm lint
+      - run: pnpm lint:eslint && pnpm lint:prettier
