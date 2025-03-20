@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+
+    // FIXME: This is temporary until we prepare types for apcach
+    "types": ["../core/src/globals.d.ts"],
+
+    "baseUrl": ".",
+    "paths": {
+      "@core/*": ["../core/src/*"]
+    }
+  },
+  "include": ["src"]
+}

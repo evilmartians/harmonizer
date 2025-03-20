@@ -1,51 +1,30 @@
 {
-  "name": "vite-react-typescript-starter",
+  "name": "harmonizer",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "typecheck": "tsc --build",
-    "lint": "pnpm run --parallel --filter='.' /^lint:*/",
+    "web": "pnpm --filter @harmonizer/web-app",
+    "core": "pnpm --filter @harmonizer/core",
+    "lint": "pnpm --parallel -w /^lint:*/",
     "lint:eslint": "eslint . --cache --cache-location=./node_modules/.tmp/eslint/.cache",
     "lint:prettier": "prettier --check .",
     "lint:styles": "pnpm stylelint **/*.{css,module.css}",
-    "format": "pnpm run --parallel --filter='.' /^format:*/",
-    "format:eslint": "pnpm run lint --fix",
+    "format": "pnpm --parallel -w /^format:*/",
+    "format:eslint": "pnpm lint:eslint --fix",
     "format:prettier": "prettier . --write",
     "format:styles": "pnpm lint:styles --fix && prettier --write '**/*.{css,module.css}'",
-    "preview": "vite preview",
+    "typecheck": "pnpm --recursive --parallel typecheck",
     "postinstall": "pnpm exec simple-git-hooks"
   },
   "engines": {
     "node": ">=22.x",
     "pnpm": ">=9.15.0"
   },
-  "dependencies": {
-    "@spred/core": "^0.40.2",
-    "@spred/react": "^0.4.2",
-    "apcach": "^0.6.4",
-    "clsx": "^2.1.1",
-    "culori": "^4.0.1",
-    "fast-equals": "^5.2.2",
-    "lodash-es": "^4.17.21",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "valibot": "^1.0.0"
-  },
   "devDependencies": {
     "@hideoo/eslint-config": "^4.0.0",
-    "@tailwindcss/vite": "^4.0.14",
-    "@types/culori": "^2.1.1",
-    "@types/lodash-es": "^4.17.12",
-    "@types/node": "^22.13.10",
-    "@types/react": "^19.0.12",
-    "@types/react-dom": "^19.0.4",
-    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^9.22.0",
     "globals": "^15.15.0",
-    "lightningcss": "^1.29.3",
     "nano-staged": "^0.8.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
@@ -56,12 +35,8 @@
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-standard": "^37.0.0",
     "stylelint-order": "^6.0.4",
-    "tailwindcss": "^4.0.14",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1",
-    "vite": "^6.2.2",
-    "vite-css-modules": "^1.8.4",
-    "vite-tsconfig-paths": "^5.1.4"
+    "typescript-eslint": "^8.26.1"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged",
@@ -70,6 +45,9 @@
   "nano-staged": {
     "*.{js,cjs,mjs,jsx,ts,mts,tsx}": [
       "eslint --fix",
+      "prettier --write"
+    ],
+    "*.html": [
       "prettier --write"
     ],
     "*.{css,module.css}": [
