@@ -47,17 +47,14 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
     const lightBackgroundStartAt = background["lightStartAt"];
     const lightBackground = hexToRgba(background["light"]);
     const frame = figma.createFrame();
-    const frameWidth =
-      SLOT_WIDTH * levelInfo.length + HUE_SECTION_WIDTH + PADDING * 2;
-    const frameHeight =
-      SLOT_HEIGHT * hueInfo.length + LEVEL_SECTION_HEIGHT + PADDING * 2;
+    const frameWidth = SLOT_WIDTH * levelInfo.length + HUE_SECTION_WIDTH + PADDING * 2;
+    const frameHeight = SLOT_HEIGHT * hueInfo.length + LEVEL_SECTION_HEIGHT + PADDING * 2;
     frame.resize(frameWidth, frameHeight);
     frame.x = centerX;
     frame.y = centerY;
     frame.name = PALETTE_NAME;
     const lightBackgroundStop =
-      (PADDING + HUE_SECTION_WIDTH + SLOT_WIDTH * lightBackgroundStartAt) /
-      frameWidth;
+      (PADDING + HUE_SECTION_WIDTH + SLOT_WIDTH * lightBackgroundStartAt) / frameWidth;
     frame.fills = [
       {
         type: "GRADIENT_LINEAR",
@@ -71,7 +68,7 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
         ],
       },
     ];
-    figma.currentPage.appendChild(frame);
+    figma.currentPage.append(frame);
 
     // Color samples
     const colorConfigs = await parseColors(jsonData["hues"]);
@@ -88,7 +85,7 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
         },
       ];
       rect.name = colorConfig.name;
-      frame.appendChild(rect);
+      frame.append(rect);
     }
 
     // Levels
@@ -104,7 +101,7 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
       contrastLabel.x = HUE_SECTION_WIDTH + PADDING + SLOT_WIDTH * level.x;
       contrastLabel.y = PADDING;
       contrastLabel.characters = level.contrast;
-      frame.appendChild(contrastLabel);
+      frame.append(contrastLabel);
       // Model
       const modelLabel = figma.createText();
       modelLabel.fontName = { family: "Inter", style: "Regular" };
@@ -115,7 +112,7 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
       modelLabel.x = HUE_SECTION_WIDTH + PADDING + SLOT_WIDTH * level.x;
       modelLabel.y = PADDING + contrastLabel.height;
       modelLabel.characters = model;
-      frame.appendChild(modelLabel);
+      frame.append(modelLabel);
       // Level
       const levelLabel = figma.createText();
       levelLabel.fontName = { family: "Inter", style: "Regular" };
@@ -127,7 +124,7 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
       levelLabel.x = HUE_SECTION_WIDTH + PADDING + SLOT_WIDTH * level.x;
       levelLabel.y = PADDING + contrastLabel.height + modelLabel.height + 24;
       levelLabel.characters = level.name;
-      frame.appendChild(levelLabel);
+      frame.append(levelLabel);
     }
 
     // Hues
@@ -138,15 +135,10 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
       hueLabel.lineHeight = LABEL_LINE_HEIGHT;
       hueLabel.fills = [LABEL_FILL];
       hueLabel.x = PADDING;
-      hueLabel.y =
-        LEVEL_SECTION_HEIGHT +
-        PADDING +
-        SLOT_HEIGHT / 2 -
-        10 +
-        SLOT_HEIGHT * hue.y;
+      hueLabel.y = LEVEL_SECTION_HEIGHT + PADDING + SLOT_HEIGHT / 2 - 10 + SLOT_HEIGHT * hue.y;
       hueLabel.characters = hue.name;
       hueLabel.name = hue.name;
-      frame.appendChild(hueLabel);
+      frame.append(hueLabel);
     }
 
     // Wrap created items in a group
@@ -155,11 +147,11 @@ figma.ui.onmessage = async (msg: { type: string; json: string }) => {
   }
 };
 
-interface LevelInfo {
+type LevelInfo = {
   name: string;
   contrast: string;
   x: number;
-}
+};
 
 function parseColorLevels(levels: Record<string, string>): LevelInfo[] {
   const levelInfo: LevelInfo[] = [];
@@ -178,10 +170,10 @@ function parseColorLevels(levels: Record<string, string>): LevelInfo[] {
   return levelInfo;
 }
 
-interface HueInfo {
+type HueInfo = {
   name: string;
   y: number;
-}
+};
 
 function parseHue(json: Record<string, Record<string, string>>): HueInfo[] {
   const hues = Object.keys(json)
@@ -191,17 +183,15 @@ function parseHue(json: Record<string, Record<string, string>>): HueInfo[] {
   return hues;
 }
 
-interface ColorConfig {
+type ColorConfig = {
   name: string;
   x: number;
   y: number;
   color: { r: number; g: number; b: number };
   colorVariable: VariableAlias | undefined;
-}
+};
 
-async function parseColors(
-  json: Record<string, Record<string, string>>
-): Promise<ColorConfig[]> {
+async function parseColors(json: Record<string, Record<string, string>>): Promise<ColorConfig[]> {
   const paletteCollection = await getPalette();
   if (!paletteCollection) return [];
   const colorConfigs: ColorConfig[] = [];
@@ -238,7 +228,7 @@ async function parseColors(
 
 function hexToRgb(hex: string) {
   hex = hex.replace(/^#/, "");
-  const bigint = parseInt(hex, 16);
+  const bigint = Number.parseInt(hex, 16);
   return {
     r: ((bigint >> 16) & 255) / 255,
     g: ((bigint >> 8) & 255) / 255,
@@ -248,7 +238,7 @@ function hexToRgb(hex: string) {
 
 function hexToRgba(hex: string) {
   hex = hex.replace(/^#/, "");
-  const bigint = parseInt(hex, 16);
+  const bigint = Number.parseInt(hex, 16);
   return {
     r: ((bigint >> 16) & 255) / 255,
     g: ((bigint >> 8) & 255) / 255,
@@ -257,21 +247,19 @@ function hexToRgba(hex: string) {
   };
 }
 
-async function createOrUpdateVariables(
-  hues: Record<string, Record<string, string>>
-) {
+async function createOrUpdateVariables(hues: Record<string, Record<string, string>>) {
   console.log("createOrUpdateVariables");
   const paletteCollection = await getPalette();
-  if (paletteCollection !== undefined) {
-    updateVariables(hues, paletteCollection);
-  } else {
+  if (paletteCollection === undefined) {
     createVariables(hues);
+  } else {
+    updateVariables(hues, paletteCollection);
   }
 }
 
 async function updateVariables(
   hues: Record<string, Record<string, string>>,
-  paletteCollection: VariableCollection
+  paletteCollection: VariableCollection,
 ) {
   const modeId = paletteCollection.modes[0].modeId;
 
@@ -292,8 +280,7 @@ async function updateVariables(
 }
 
 function createVariables(hues: Record<string, Record<string, string>>) {
-  const paletteCollection =
-    figma.variables.createVariableCollection(PALETTE_NAME);
+  const paletteCollection = figma.variables.createVariableCollection(PALETTE_NAME);
   for (const hue in hues) {
     for (const shade in hues[hue]) {
       const hex = hues[hue][shade];
@@ -302,12 +289,7 @@ function createVariables(hues: Record<string, Record<string, string>>) {
   }
 }
 
-function createVariable(
-  collection: VariableCollection,
-  hue: string,
-  shade: string,
-  hex: string
-) {
+function createVariable(collection: VariableCollection, hue: string, shade: string, hex: string) {
   const rgb = hexToRgb(hex);
   const varName = `${hue}-${shade}`;
   const modeId = collection.modes[0].modeId;
@@ -317,14 +299,11 @@ function createVariable(
 
 async function getPalette() {
   return (await figma.variables.getLocalVariableCollectionsAsync()).find(
-    (collection) => collection.name === PALETTE_NAME
+    (collection) => collection.name === PALETTE_NAME,
   );
 }
 
-async function getVariableWithName(
-  collection: VariableCollection,
-  name: string
-) {
+async function getVariableWithName(collection: VariableCollection, name: string) {
   for (const variableId of collection.variableIds) {
     const variable = await figma.variables.getVariableByIdAsync(variableId);
     if (variable?.name === name) {

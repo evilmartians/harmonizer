@@ -1,11 +1,12 @@
 {
   "name": "harmonizer",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "web": "pnpm --filter @harmonizer/web-app",
     "core": "pnpm --filter @harmonizer/core",
+    "web": "pnpm --filter @harmonizer/web-app",
+    "figma": "pnpm --filter @harmonizer/figma-plugin",
     "lint": "pnpm --parallel -w /^lint:*/",
     "lint:eslint": "eslint . --cache --cache-location=./node_modules/.tmp/eslint/.cache",
     "lint:prettier": "prettier --check .",
@@ -22,6 +23,8 @@
     "pnpm": ">=9.15.0"
   },
   "devDependencies": {
+    "@eslint/compat": "^1.2.7",
+    "@figma/eslint-plugin-figma-plugins": "^0.16.1",
     "@hideoo/eslint-config": "^4.0.0",
     "eslint": "^9.22.0",
     "globals": "^15.15.0",
