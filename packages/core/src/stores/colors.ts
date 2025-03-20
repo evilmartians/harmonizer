@@ -17,7 +17,7 @@ import {
 } from "@core/utils/colors/calculateColors";
 import { initialConfig } from "@core/utils/initialConfig";
 import { objectEntries } from "@core/utils/object/objectEntries";
-import { generationWorker } from "@core/worker/client";
+import { clientChannel } from "@core/worker/client";
 import { batch, type WritableSignal } from "@spred/core";
 import debounce from "lodash-es/debounce";
 
@@ -65,7 +65,7 @@ export const {
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 // Synchronously precalculate colors
 precalculateColors();
-generationWorker.on("generated:color", handleGeneratedColor);
+clientChannel.on("generated:color", handleGeneratedColor);
 
 export function pregenerateFallbackColorsMap(levelIds: LevelId[], hueIds: HueId[]) {
   colorsMap.clear();
@@ -135,7 +135,7 @@ function precalculateColors() {
 
 export const requestColorsRecalculation = debounce(
   (recalcOnlyLevels?: LevelId[]) => {
-    generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+    clientChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
   },
   100,
   { maxWait: 333 },
@@ -144,7 +144,7 @@ export const requestColorsRecalculation = debounce(
 const levelsAccumulation = { levels: new Set<LevelId>(), all: false };
 const requestColorsRecalculationAndResetLevelsAccumulation = debounce(
   (recalcOnlyLevels?: LevelId[]) => {
-    generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+    clientChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
     levelsAccumulation.all = false;
     levelsAccumulation.levels.clear();
   },
@@ -164,7 +164,7 @@ export const requestColorsRecalculationWithLevelsAccumulation = (recalcOnlyLevel
 };
 
 export const recalculateColorsWithBigDebounce = debounce((recalcOnlyLevels?: LevelId[]) => {
-  generationWorker.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+  clientChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
 }, 300);
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
