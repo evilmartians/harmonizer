@@ -29,23 +29,19 @@
 .size_xs {
   font-size: var(--text-xs);
   line-height: var(--text-xs--line-height);
-  letter-spacing: var(--text-xs--font-stretch);
 }
 
 .size_s {
   font-size: var(--text-s);
   line-height: var(--text-s--line-height);
-  letter-spacing: var(--text-s--font-stretch);
 }
 
 .size_m {
   font-size: var(--text-m);
   line-height: var(--text-m--line-height);
-  letter-spacing: var(--text-m--font-stretch);
 }
 
 .size_l {
   font-size: var(--text-l);
   line-height: var(--text-l--line-height);
-  letter-spacing: var(--text-l--font-stretch);
 }

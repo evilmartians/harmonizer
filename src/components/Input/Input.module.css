@@ -68,7 +68,6 @@
   font-weight: 500;
   line-height: var(--text-ui-s--line-height);
   text-align: center;
-  letter-spacing: var(--text-ui-s--font-stretch);
 }
 
 .inputContainer {
@@ -89,11 +88,9 @@
 
   :where(.size_xl) & {
     inline-size: 100%;
-
     font-size: var(--text-ui-l);
     line-height: var(--text-ui-l--line-height);
     text-align: center;
-    letter-spacing: var(--text-ui-l--font-stretch);
   }
 
   &:focus {
