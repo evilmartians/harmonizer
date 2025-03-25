@@ -15,7 +15,7 @@ import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
 import { getMiddleContrastLevel } from "@core/utils/colors/getMiddleContrastLevel";
 import { getMiddleHueAngle } from "@core/utils/colors/getMiddleHueAngle";
 import { getMiddleNumber } from "@core/utils/number/getMiddleNumber";
-import { uuid } from "@core/utils/random/uuid";
+import { id } from "@core/utils/random/id";
 import type { PartialOptional } from "@core/utils/ts/generics";
 import { Signal, signal, type SignalOptions, type WritableSignal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
@@ -33,7 +33,7 @@ export type WithReactiveFields<Obj extends Record<string, unknown>, Fields exten
 export function withId<Id extends string, Item extends ItemWithId<Id>>(
   data: Omit<Item, "id">,
 ): Item {
-  return { ...data, id: uuid() } as Item;
+  return { ...data, id: id() } as Item;
 }
 
 type IndexedStore<Item extends ItemWithId<AnyId>> = {
