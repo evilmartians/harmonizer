@@ -27,7 +27,7 @@ import {
   $contrastModel,
   $directionMode,
 } from "@core/stores/settings";
-import { chromaLevel, contrastLevel, type LevelId } from "@core/types";
+import { ChromaLevel, ContrastLevel, type LevelIndex, LevelName, type LevelId } from "@core/types";
 import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
 import { getInputNumberValidator } from "@core/utils/schema/getInputValidator";
@@ -87,7 +87,7 @@ const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
       placeholder={PLACEHOLDER_LEVEL}
       value={name}
       title={HINT_LEVEL}
-      onChange={(e) => updateLevelName(levelId, e.target.value)}
+      onChange={(e) => updateLevelName(levelId, LevelName(e.target.value))}
     />
   );
 });
@@ -137,7 +137,7 @@ const ContrastInput = memo(function ContrastInput({
       title={HINT_CONTRAST}
       schema={levelContrastInputSchema}
       onChange={(e) =>
-        updateLevelContrast(levelId, contrastLevel(Number.parseFloat(e.target.value)))
+        updateLevelContrast(levelId, ContrastLevel(Number.parseFloat(e.target.value)))
       }
     />
   );
@@ -163,7 +163,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       title={HINT_CHROMA}
       schema={levelChromaInputSchema}
       disabled
-      onChange={(e) => updateLevelChroma(levelId, chromaLevel(Number.parseFloat(e.target.value)))}
+      onChange={(e) => updateLevelChroma(levelId, ChromaLevel(Number.parseFloat(e.target.value)))}
     />
   );
 });
@@ -171,7 +171,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 export const GridCellLevelHeader = memo(function GridCellLevelHeader({
   levelId,
   levelIndex,
-}: LevelComponentProps<{ levelIndex: number }>) {
+}: LevelComponentProps<{ levelIndex: LevelIndex }>) {
   const bgMode = useLevelBgMode(levelIndex);
 
   return (

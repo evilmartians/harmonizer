@@ -1,4 +1,4 @@
-import type { ExportConfig } from "@core/schemas/exportConfigSchema";
+import type { ExportConfig } from "@core/types";
 import { batch } from "@spred/core";
 
 import {

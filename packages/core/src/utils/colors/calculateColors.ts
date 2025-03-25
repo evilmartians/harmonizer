@@ -1,16 +1,14 @@
 import {
-  chromaLevel,
-  contrastLevel,
-  hueAngle,
+  ChromaLevel,
+  ContrastLevel,
+  HueAngle,
   type ChromaMode,
   type ColorCellData,
   type ColorHueTintData,
   type ColorLevelTintData,
   type ColorString,
-  type ContrastLevel,
   type ContrastModel,
   type DirectionMode,
-  type HueAngle,
   type HueId,
   type LevelId,
 } from "@core/types";
@@ -48,9 +46,9 @@ export type GeneratedHueTintPayload = {
 
 export type GeneratedColorPayload = GeneratedLevelPayload | GeneratedHueTintPayload;
 
-const HUE_TINT_CR = contrastLevel(80);
-const HUE_TINT_CHROMA = chromaLevel(0.05);
-const MIN_LEVEL_TINT_CR = contrastLevel(50);
+const HUE_TINT_CR = ContrastLevel(80);
+const HUE_TINT_CHROMA = ChromaLevel(0.05);
+const MIN_LEVEL_TINT_CR = ContrastLevel(50);
 
 export function calculateColors(
   {
@@ -116,11 +114,11 @@ export function calculateColors(
         tint: {
           ...calculateColorCell({
             ...commonApcacheOptions,
-            hueAngle: hueAngle(0),
+            hueAngle: HueAngle(0),
             contrastLevel: MIN_LEVEL_TINT_CR,
-            chroma: chromaLevel(0),
+            chroma: ChromaLevel(0),
           }),
-          referencedC: chromaLevel(0),
+          referencedC: ChromaLevel(0),
         },
         cells: {},
       });

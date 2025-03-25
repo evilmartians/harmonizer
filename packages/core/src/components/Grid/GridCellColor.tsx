@@ -2,7 +2,7 @@ import { Text } from "@core/components/Text/Text";
 import { $hueIds, $levelIds, getColor$ } from "@core/stores/colors";
 import { useLevelBgMode } from "@core/stores/hooks";
 import { $bgLightStart } from "@core/stores/settings";
-import type { ColorCellData, HueId, LevelId } from "@core/types";
+import type { ColorCellData, HueId, HueIndex, LevelId, LevelIndex } from "@core/types";
 import { useValueAsSignal } from "@core/utils/spred/useValueAsSignal";
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
@@ -17,7 +17,7 @@ function buildOklchUrl(color: ColorCellData) {
   return `https://oklch.com/#${color.l * 100},${color.c},${color.h},100`;
 }
 
-function useColorCellModifiers(levelIndex: number, hueIndex: number) {
+function useColorCellModifiers(levelIndex: LevelIndex, hueIndex: HueIndex) {
   const $levelIndex = useValueAsSignal(levelIndex);
   const $hueIndex = useValueAsSignal(hueIndex);
   const $modifiers = useSignal(
@@ -48,9 +48,9 @@ function useColorCellModifiers(levelIndex: number, hueIndex: number) {
 export type GridCellColorProps = {
   className?: string;
   levelId: LevelId;
-  levelIndex: number;
+  levelIndex: LevelIndex;
   hueId: HueId;
-  hueIndex: number;
+  hueIndex: HueIndex;
 };
 
 export const GridCellColor = memo(function GridCellColor({

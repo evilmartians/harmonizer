@@ -5,7 +5,7 @@ import { withValidation } from "@core/components/Input/enhancers/withValidation"
 import { Input } from "@core/components/Input/Input";
 import { hueAngleSchema } from "@core/schemas/color";
 import { getHue, insertHue, updateHueAngle, updateHueName } from "@core/stores/colors";
-import { hueAngle, type HueId } from "@core/types";
+import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
 import { getInputNumberValidator } from "@core/utils/schema/getInputValidator";
 import { useSubscribe } from "@spred/react";
@@ -56,7 +56,7 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
       placeholder={PLACEHOLDER_NAME}
       value={name}
       title={HINT_NAME}
-      onChange={(e) => updateHueName(hueId, e.target.value)}
+      onChange={(e) => updateHueName(hueId, HueName(e.target.value))}
     />
   );
 });
@@ -76,7 +76,7 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
       title={HINT_DEGREE}
       schema={hueAngleInputSchema}
       onChange={(e) =>
-        updateHueAngle(hueId, hueAngle(e.target.value ? Number.parseFloat(e.target.value) : 0))
+        updateHueAngle(hueId, HueAngle(e.target.value ? Number.parseFloat(e.target.value) : 0))
       }
     />
   );

@@ -4,6 +4,7 @@ import {
   $gridVerticallyScrolled,
   setScrollableContainer,
 } from "@core/stores/ui";
+import { HueIndex, LevelIndex } from "@core/types";
 import { useSubscribe } from "@spred/react";
 import { Fragment, memo, type PropsWithChildren } from "react";
 
@@ -60,7 +61,11 @@ export function Grid() {
         {/* Header */}
         <GridLeftTopCell />
         {levels.map((levelId, levelIndex) => (
-          <GridCellLevelHeader key={levelId} levelId={levelId} levelIndex={levelIndex} />
+          <GridCellLevelHeader
+            key={levelId}
+            levelId={levelId}
+            levelIndex={LevelIndex(levelIndex)}
+          />
         ))}
         <GridCellLevelAdd />
         <GridCellLight />
@@ -73,9 +78,9 @@ export function Grid() {
               <GridCellColor
                 key={`${hueId}-${levelId}`}
                 levelId={levelId}
-                levelIndex={levelIndex}
+                levelIndex={LevelIndex(levelIndex)}
                 hueId={hueId}
-                hueIndex={hueIndex}
+                hueIndex={HueIndex(hueIndex)}
               />
             ))}
             <GridCellHueRemove hueId={hueId} />
@@ -86,7 +91,11 @@ export function Grid() {
         {/* Level controls */}
         <GridCellHueAdd />
         {levels.map((levelId, levelIndex) => (
-          <GridCellLevelRemove key={levelId} levelId={levelId} levelIndex={levelIndex} />
+          <GridCellLevelRemove
+            key={levelId}
+            levelId={levelId}
+            levelIndex={LevelIndex(levelIndex)}
+          />
         ))}
         <GridCellLight />
         <GridCellLight />

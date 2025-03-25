@@ -1,4 +1,4 @@
-import { type ChromaLevel, chromaLevel, type HueAngle } from "@core/types";
+import { ChromaLevel, type HueAngle } from "@core/types";
 import { maxChroma } from "apcach";
 
 import { calculateApcach } from "./calculateApcach";
@@ -25,5 +25,5 @@ export function maxCommonChroma({
       maxCommonChroma = apcachColor.chroma;
     }
   }
-  return chromaLevel(maxCommonChroma);
+  return ChromaLevel(maxCommonChroma);
 }

@@ -1,12 +1,14 @@
-import type {
-  ColorCellData,
-  ColorIdentifier,
-  Hue,
-  HueData,
-  HueId,
-  Level,
-  LevelData,
-  LevelId,
+import {
+  HueName,
+  LevelName,
+  type ColorCellData,
+  type ColorIdentifier,
+  type Hue,
+  type HueData,
+  type HueId,
+  type Level,
+  type LevelData,
+  type LevelId,
 } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
@@ -111,7 +113,9 @@ export function getMiddleLevel(
   upperLevelStore: LevelStore,
 ): LevelStore {
   return cloneStore(lowerLevelStore, {
-    $name: signal(getMiddleLevelName(lowerLevelStore.$name.value, upperLevelStore.$name.value)),
+    $name: signal(
+      LevelName(getMiddleLevelName(lowerLevelStore.$name.value, upperLevelStore.$name.value)),
+    ),
     $contrast: signal(
       getMiddleContrastLevel(lowerLevelStore.$contrast.value, upperLevelStore.$contrast.value),
     ),
@@ -122,7 +126,7 @@ export function getMiddleHue(hueStore1: HueStore, hueStore2: HueStore): HueStore
   const middleHueAngle = getMiddleHueAngle(hueStore1.$angle.value, hueStore2.$angle.value);
 
   return cloneStore(hueStore1, {
-    $name: signal(getClosestColorName(middleHueAngle)),
+    $name: signal(HueName(getClosestColorName(middleHueAngle))),
     $angle: signal(middleHueAngle),
   });
 }

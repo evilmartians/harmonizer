@@ -1,7 +1,6 @@
 import {
-  bgLightStart,
-  contrastLevel,
-  type BgLightStart,
+  BgLightStart,
+  ContrastLevel,
   type ChromaMode,
   type ColorString,
   type ContrastModel,
@@ -32,7 +31,7 @@ export function updateContrastModel(model: ContrastModel) {
     $contrastModel.set(model);
     for (const level of levels.values()) {
       level.$contrast.set(
-        contrastLevel(
+        ContrastLevel(
           model === "wcag" ? apcaToWcag(level.$contrast.value) : wcagToApca(level.$contrast.value),
         ),
       );
@@ -95,7 +94,7 @@ export function updateBgLightStart(start: BgLightStart): boolean {
     Math.min(oldStart, newStart),
     Math.max(oldStart, newStart),
   );
-  $bgLightStart.set(bgLightStart(newStart));
+  $bgLightStart.set(BgLightStart(newStart));
   requestColorsRecalculationWithLevelsAccumulation(idsToUpdate);
   return true;
 }
@@ -105,5 +104,5 @@ export function updateBgLightStart(start: BgLightStart): boolean {
  * @returns whether the value was updated
  */
 export function updateBgLightStartByOffset(offset: number): boolean {
-  return updateBgLightStart(bgLightStart($bgLightStart.value + offset));
+  return updateBgLightStart(BgLightStart($bgLightStart.value + offset));
 }

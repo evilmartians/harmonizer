@@ -7,6 +7,8 @@ import {
   wcagContrastLevelSchema,
   hueAngleSchema,
   baseContrastSchema,
+  levelNameSchema,
+  hueNameSchema,
 } from "./color";
 import {
   bgLightStartSchema,
@@ -19,9 +21,9 @@ import {
 export const exportConfigSchema = v.pipe(
   v.object({
     levels: v.array(
-      v.object({ name: v.string(), contrast: baseContrastSchema, chroma: chromaLevelSchema }),
+      v.object({ name: levelNameSchema, contrast: baseContrastSchema, chroma: chromaLevelSchema }),
     ),
-    hues: v.array(v.object({ name: v.string(), angle: hueAngleSchema })),
+    hues: v.array(v.object({ name: hueNameSchema, angle: hueAngleSchema })),
     settings: v.object({
       contrastModel: contrastModelSchema,
       directionMode: directionSchema,
@@ -39,5 +41,3 @@ export const exportConfigSchema = v.pipe(
     return levels.every(({ contrast }) => v.safeParse(contrastSchema, contrast).success);
   }, "Contrast levels are out of selected contrast model bounds"),
 );
-
-export type ExportConfig = v.InferOutput<typeof exportConfigSchema>;

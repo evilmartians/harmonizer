@@ -11,7 +11,7 @@ import {
   toggleDirectionMode,
   updateChromaMode,
 } from "@core/stores/settings";
-import { chromaMode } from "@core/types";
+import { ChromaMode } from "@core/types";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { memo } from "react";
@@ -63,7 +63,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
           size="xs"
           value={chromaModeValue}
           options={CHROMA_OPTIONS}
-          onChange={(e) => updateChromaMode(chromaMode(e.target.value))}
+          onChange={(e) => updateChromaMode(ChromaMode(e.target.value))}
           title={LABEL_CHROMA_MODE}
         />
         <div className={clsx(styles.container, styles.colorModePicker)}>

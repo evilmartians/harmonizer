@@ -1,5 +1,6 @@
 import {
-  bgLightStart,
+  BgLightStart,
+  type LchColor,
   type ChromaLevel,
   type ColorCellData,
   type ColorIdentifier,
@@ -7,6 +8,10 @@ import {
   type HueAngle,
   type HueId,
   type LevelId,
+  type HueName,
+  type LevelName,
+  LevelIndex,
+  HueIndex,
 } from "@core/types";
 import { assertUnreachable } from "@core/utils/assertions/assertUnreachable";
 import { invariant } from "@core/utils/assertions/invariant";
@@ -17,9 +22,10 @@ import {
 } from "@core/utils/colors/calculateColors";
 import { initialConfig } from "@core/utils/initialConfig";
 import { objectEntries } from "@core/utils/object/objectEntries";
-import { clientChannel } from "@core/worker/client";
+import { workerChannel } from "@core/worker/workerChannel";
 import { batch, type WritableSignal } from "@spred/core";
 import debounce from "lodash-es/debounce";
+import pick from "lodash-es/pick";
 
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import {
@@ -65,7 +71,7 @@ export const {
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 // Synchronously precalculate colors
 precalculateColors();
-clientChannel.on("generated:color", handleGeneratedColor);
+workerChannel.on("generated:color", handleGeneratedColor);
 
 export function pregenerateFallbackColorsMap(levelIds: LevelId[], hueIds: HueId[]) {
   colorsMap.clear();
@@ -135,7 +141,7 @@ function precalculateColors() {
 
 export const requestColorsRecalculation = debounce(
   (recalcOnlyLevels?: LevelId[]) => {
-    clientChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+    workerChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
   },
   100,
   { maxWait: 333 },
@@ -144,7 +150,7 @@ export const requestColorsRecalculation = debounce(
 const levelsAccumulation = { levels: new Set<LevelId>(), all: false };
 const requestColorsRecalculationAndResetLevelsAccumulation = debounce(
   (recalcOnlyLevels?: LevelId[]) => {
-    clientChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+    workerChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
     levelsAccumulation.all = false;
     levelsAccumulation.levels.clear();
   },
@@ -164,7 +170,7 @@ export const requestColorsRecalculationWithLevelsAccumulation = (recalcOnlyLevel
 };
 
 export const recalculateColorsWithBigDebounce = debounce((recalcOnlyLevels?: LevelId[]) => {
-  clientChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
+  workerChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
 }, 300);
 
 export function getColor$(levelId: LevelId, hueId: HueId) {
@@ -191,7 +197,7 @@ export const insertLevel = getInsertItem({
   onFinish: (levelId) => {
     // Compensate for the new level being inserted before the bgLightStart
     if ($levelIds.value.indexOf(levelId) < $bgLightStart.value) {
-      $bgLightStart.set(bgLightStart($bgLightStart.value + 1));
+      $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
     }
 
     requestColorsRecalculation([levelId]);
@@ -206,12 +212,12 @@ export function removeLevel(levelId: LevelId) {
     cleanupColors(colorsMap, matchesLevelColorKey, levelId);
 
     if (levelIndex < $bgLightStart.value) {
-      $bgLightStart.set(bgLightStart($bgLightStart.value - 1));
+      $bgLightStart.set(BgLightStart($bgLightStart.value - 1));
     }
   });
 }
 
-export function updateLevelName(id: LevelId, name: string) {
+export function updateLevelName(id: LevelId, name: LevelName) {
   getLevel(id).$name.set(name);
 }
 
@@ -249,11 +255,27 @@ export function removeHue(hueId: HueId) {
   requestColorsRecalculation();
 }
 
-export function updateHueName(id: HueId, name: string) {
+export function updateHueName(id: HueId, name: HueName) {
   getHue(id).$name.set(name);
 }
 
 export function updateHueAngle(id: HueId, angle: HueAngle) {
   getHue(id).$angle.set(angle);
   requestColorsRecalculation();
+}
+
+export function getIndexedColors() {
+  const colors: Record<`${LevelIndex}-${HueIndex}`, LchColor> = {};
+
+  for (const [li, levelId] of $levelIds.value.entries()) {
+    for (const [hi, hueId] of $hueIds.value.entries()) {
+      colors[`${LevelIndex(li)}-${HueIndex(hi)}`] = pick(getColor$(levelId, hueId).value, [
+        "l",
+        "c",
+        "h",
+      ]);
+    }
+  }
+
+  return colors;
 }

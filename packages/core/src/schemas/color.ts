@@ -2,7 +2,11 @@ import { parse } from "culori";
 import * as v from "valibot";
 
 export const levelIdSchema = v.pipe(v.string(), v.brand("LevelId"));
+export const levelIndexSchema = v.pipe(v.number(), v.brand("LevelIndex"));
+export const levelNameSchema = v.pipe(v.string(), v.brand("LevelName"));
 export const hueIdSchema = v.pipe(v.string(), v.brand("HueId"));
+export const hueIndexSchema = v.pipe(v.number(), v.brand("HueIndex"));
+export const hueNameSchema = v.pipe(v.string(), v.brand("HueName"));
 
 export const lightnessLevelSchema = v.pipe(
   v.number(),

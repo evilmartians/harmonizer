@@ -6,17 +6,23 @@ import {
   type levelIdSchema,
   lightnessLevelSchema,
   baseContrastSchema,
+  levelNameSchema,
+  hueNameSchema,
+  levelIndexSchema,
+  hueIndexSchema,
 } from "@core/schemas/color";
 import {
   bgLightStartSchema,
   chromaModeSchema,
-  type colorSpaceSchema,
-  type contrastModelSchema,
-  type directionSchema,
+  colorSpaceSchema,
+  contrastModelSchema,
+  directionSchema,
 } from "@core/schemas/settings";
 import { getBranded } from "@core/utils/ts/getBranded";
 import type { InferOutput } from "valibot";
 import * as v from "valibot";
+
+import type { exportConfigSchema } from "./schemas/exportConfig";
 
 export type LightnessLevel = InferOutput<typeof lightnessLevelSchema>;
 export type ChromaLevel = InferOutput<typeof chromaLevelSchema>;
@@ -30,17 +36,26 @@ export type BgLightStart = InferOutput<typeof bgLightStartSchema>;
 export type ContrastModel = InferOutput<typeof contrastModelSchema>;
 export type DirectionMode = InferOutput<typeof directionSchema>;
 
-export const lightnessLevel = getBranded(lightnessLevelSchema);
-export const chromaMode = getBranded(v.pipe(v.string(), chromaModeSchema));
-export const chromaLevel = getBranded(chromaLevelSchema);
-export const hueAngle = getBranded(hueAngleSchema);
-export const colorString = getBranded(colorStringSchema);
-export const contrastLevel = getBranded(baseContrastSchema);
-export const bgLightStart = getBranded(bgLightStartSchema);
+export const LevelIndex = getBranded(levelIndexSchema);
+export const LevelName = getBranded(levelNameSchema);
+export const LightnessLevel = getBranded(lightnessLevelSchema);
+export const ChromaMode = getBranded(v.pipe(v.string(), chromaModeSchema));
+export const ColorSpace = getBranded(v.pipe(v.string(), colorSpaceSchema));
+export const ChromaLevel = getBranded(chromaLevelSchema);
+export const HueIndex = getBranded(hueIndexSchema);
+export const HueName = getBranded(hueNameSchema);
+export const HueAngle = getBranded(hueAngleSchema);
+export const ColorString = getBranded(colorStringSchema);
+export const ContrastLevel = getBranded(baseContrastSchema);
+export const BgLightStart = getBranded(bgLightStartSchema);
+export const ContrastModel = getBranded(contrastModelSchema);
+export const DirectionMode = getBranded(directionSchema);
 
 export type LevelId = InferOutput<typeof levelIdSchema>;
+export type LevelIndex = InferOutput<typeof levelIndexSchema>;
+export type LevelName = InferOutput<typeof levelNameSchema>;
 export type LevelData = {
-  name: string;
+  name: LevelName;
   contrast: ContrastLevel;
   chroma: ChromaLevel;
   tintColor: ColorLevelTintData;
@@ -48,8 +63,10 @@ export type LevelData = {
 export type Level = { id: LevelId } & LevelData;
 
 export type HueId = InferOutput<typeof hueIdSchema>;
+export type HueIndex = InferOutput<typeof hueIndexSchema>;
+export type HueName = InferOutput<typeof hueNameSchema>;
 export type HueData = {
-  name: string;
+  name: HueName;
   angle: HueAngle;
   tintColor: ColorHueTintData;
 };
@@ -70,3 +87,6 @@ export type ColorLevelTintData = ColorData & { referencedC: ChromaLevel };
 export type ColorCellData = ColorData & {
   p3: boolean;
 };
+
+export type ExportConfig = v.InferOutput<typeof exportConfigSchema>;
+export type IndexedColors = Record<`${LevelIndex}-${HueIndex}`, LchColor>;

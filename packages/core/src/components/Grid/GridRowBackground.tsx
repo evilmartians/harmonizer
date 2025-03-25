@@ -18,7 +18,7 @@ import {
   updateBgColorLight,
   updateBgLightStartByOffset,
 } from "@core/stores/settings";
-import { colorString } from "@core/types";
+import { ColorString } from "@core/types";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
 import { signal } from "@spred/core";
 import { useSubscribe } from "@spred/react";
@@ -127,7 +127,7 @@ const BgDarkSpan = memo(function BgDarkSpan() {
           placeholder="#000"
           schema={colorStringSchema}
           value={bgColorDark}
-          onChange={(e) => updateBgColorDark(colorString(e.target.value))}
+          onChange={(e) => updateBgColorDark(ColorString(e.target.value))}
         />
       </div>
     </BgMode>
@@ -173,7 +173,7 @@ const BgLightSpan = memo(function BgLightSpan() {
           placeholder="#fff"
           schema={colorStringSchema}
           value={bgColorLight}
-          onChange={(e) => updateBgColorLight(colorString(e.target.value))}
+          onChange={(e) => updateBgColorLight(ColorString(e.target.value))}
         />
       </div>
     </BgMode>
