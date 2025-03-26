@@ -1,17 +1,17 @@
 import {
   BgLightStart,
-  type LchColor,
+  HueIndex,
+  LevelIndex,
   type ChromaLevel,
   type ColorCellData,
   type ColorIdentifier,
   type ContrastLevel,
   type HueAngle,
   type HueId,
-  type LevelId,
   type HueName,
+  type LchColor,
+  type LevelId,
   type LevelName,
-  LevelIndex,
-  HueIndex,
 } from "@core/types";
 import { assertUnreachable } from "@core/utils/assertions/assertUnreachable";
 import { invariant } from "@core/utils/assertions/invariant";
@@ -20,7 +20,6 @@ import {
   type GenerateColorsPayload,
   type GeneratedColorPayload,
 } from "@core/utils/colors/calculateColors";
-import { initialConfig } from "@core/utils/initialConfig";
 import { objectEntries } from "@core/utils/object/objectEntries";
 import { workerChannel } from "@core/worker/workerChannel";
 import { batch, type WritableSignal } from "@spred/core";
@@ -47,11 +46,13 @@ import {
   getLevelStore,
   getMiddleHue,
   getMiddleLevel,
+  type HueStore,
+  type LevelStore,
   matchesHueColorKey,
   matchesLevelColorKey,
 } from "./utils";
 
-const levelsStore = createIndexedArrayStore(initialConfig.levels.map(getLevelStore));
+const levelsStore = createIndexedArrayStore<LevelStore>([]);
 export const {
   $ids: $levelIds,
   items: levels,
@@ -59,7 +60,7 @@ export const {
   addItem: addLevel,
   overwrite: overwriteLevels,
 } = levelsStore;
-export const huesStore = createIndexedArrayStore(initialConfig.hues.map(getHueStore));
+export const huesStore = createIndexedArrayStore<HueStore>([]);
 export const {
   $ids: $hueIds,
   items: hues,
@@ -69,8 +70,7 @@ export const {
 } = huesStore;
 
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
-// Synchronously precalculate colors
-precalculateColors();
+
 workerChannel.on("generated:color", handleGeneratedColor);
 
 export function pregenerateFallbackColorsMap(levelIds: LevelId[], hueIds: HueId[]) {
@@ -80,6 +80,10 @@ export function pregenerateFallbackColorsMap(levelIds: LevelId[], hueIds: HueId[
       colorsMap.set(getColorIdentifier(levelId, hueId), getColorSignal(FALLBACK_CELL_COLOR));
     }
   }
+}
+
+export function calculateColorsSynchronously() {
+  calculateColors(collectColorCalculationData(), handleGeneratedColor);
 }
 
 // Color methods
@@ -133,10 +137,6 @@ function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColo
     colorSpace: $colorSpace.value,
     chromaMode: $chromaMode.value,
   };
-}
-
-function precalculateColors() {
-  calculateColors(collectColorCalculationData(), handleGeneratedColor);
 }
 
 export const requestColorsRecalculation = debounce(

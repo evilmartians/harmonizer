@@ -1,14 +1,15 @@
+import defaultConfig from "@core/defaultConfig.json";
 import {
   BgLightStart,
+  ChromaMode,
+  ColorString,
   ContrastLevel,
-  type ChromaMode,
-  type ColorString,
-  type ContrastModel,
-  type DirectionMode,
+  ContrastModel,
+  DirectionMode,
+  ColorSpace,
 } from "@core/types";
 import { apcaToWcag } from "@core/utils/colors/apcaToWcag";
 import { wcagToApca } from "@core/utils/colors/wcagToApca";
-import { initialConfig } from "@core/utils/initialConfig";
 import { batch, signal } from "@spred/core";
 
 import {
@@ -18,13 +19,14 @@ import {
   requestColorsRecalculationWithLevelsAccumulation,
 } from "./colors";
 
-export const $contrastModel = signal(initialConfig.settings.contrastModel);
-export const $directionMode = signal(initialConfig.settings.directionMode);
-export const $chromaMode = signal(initialConfig.settings.chromaMode);
-export const $bgColorLight = signal(initialConfig.settings.bgColorLight);
-export const $bgColorDark = signal(initialConfig.settings.bgColorDark);
-export const $bgLightStart = signal(initialConfig.settings.bgLightStart);
-export const $colorSpace = signal(initialConfig.settings.colorSpace);
+export const $contrastModel = signal(ContrastModel(defaultConfig.settings.contrastModel));
+export const $directionMode = signal(DirectionMode(defaultConfig.settings.directionMode));
+export const $chromaMode = signal(ChromaMode(defaultConfig.settings.chromaMode));
+export const $bgColorDark = signal(ColorString(defaultConfig.settings.bgColorDark));
+export const $bgColorLight = signal(ColorString(defaultConfig.settings.bgColorLight));
+export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
+export const $colorSpace = signal(ColorSpace(defaultConfig.settings.colorSpace));
+export const $isColorSpaceLocked = signal<boolean>(false);
 
 export function updateContrastModel(model: ContrastModel) {
   batch(() => {
@@ -44,10 +46,10 @@ export function toggleContrastModel() {
   const toWcag = $contrastModel.value === "apca";
 
   if (toWcag) {
-    $directionMode.set("fgToBg");
+    $directionMode.set(DirectionMode("fgToBg"));
   }
 
-  updateContrastModel(toWcag ? "wcag" : "apca");
+  updateContrastModel(ContrastModel(toWcag ? "wcag" : "apca"));
 }
 
 export function updateDirectionMode(mode: DirectionMode) {
@@ -56,11 +58,11 @@ export function updateDirectionMode(mode: DirectionMode) {
 }
 
 export function toggleDirectionMode() {
-  updateDirectionMode($directionMode.value === "bgToFg" ? "fgToBg" : "bgToFg");
+  updateDirectionMode(DirectionMode($directionMode.value === "bgToFg" ? "fgToBg" : "bgToFg"));
 }
 
 export function toggleColorSpace() {
-  $colorSpace.set($colorSpace.value === "p3" ? "srgb" : "p3");
+  $colorSpace.set(ColorSpace($colorSpace.value === "p3" ? "srgb" : "p3"));
   requestColorsRecalculation();
 }
 

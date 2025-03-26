@@ -73,10 +73,6 @@
   inline-size: 100%;
 }
 
-.iconUpload {
-  scale: 1 -1;
-}
-
 .dragContainer {
   position: absolute;
   inset-block: 0;

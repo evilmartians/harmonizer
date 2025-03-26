@@ -6,6 +6,7 @@ import {
   $colorSpace,
   $contrastModel,
   $directionMode,
+  $isColorSpaceLocked,
   toggleColorSpace,
   toggleContrastModel,
   toggleDirectionMode,
@@ -36,6 +37,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const directionMode = useSubscribe($directionMode);
   const chromaModeValue = useSubscribe($chromaMode);
   const colorSpace = useSubscribe($colorSpace);
+  const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
 
   return (
     <GridCell bgMode="dark" className={styles.cell}>
@@ -52,7 +54,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
               {LABEL_CONTRACT}
             </Text>
             <Button size="xs" onClick={toggleDirectionMode}>
-              {LABEL_DIRECTION_MODE[directionMode]}
+              {LABEL_DIRECTION_MODE[directionMode as keyof typeof LABEL_DIRECTION_MODE]}
             </Button>
           </>
         )}
@@ -67,7 +69,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
           title={LABEL_CHROMA_MODE}
         />
         <div className={clsx(styles.container, styles.colorModePicker)}>
-          <Button size="xs" onClick={toggleColorSpace}>
+          <Button size="xs" onClick={toggleColorSpace} disabled={isColorSpaceLocked}>
             {colorSpace}
           </Button>
           <Text size="s" kind="secondary">

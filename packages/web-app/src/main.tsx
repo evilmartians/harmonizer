@@ -1,10 +1,10 @@
-import { App } from "@harmonizer/core";
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
+import defaultConfig from "@core/defaultConfig.json";
+import { createApp } from "@harmonizer/core";
 
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-createRoot(document.querySelector("#root")!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+import { WebAppActions } from "./components/WebAppActions/WebAppActions";
+
+createApp(document.querySelector("#root"), {
+  config: defaultConfig,
+  lockColorSpace: false,
+  actions: <WebAppActions />,
+});
