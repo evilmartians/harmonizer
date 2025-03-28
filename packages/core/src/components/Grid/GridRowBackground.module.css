@@ -1,0 +1,138 @@
+.spacerCell {
+  composes: gridRowHeader from "./Grid.module.css";
+  justify-content: flex-end;
+  padding-block: calc(var(--spacing) * 4);
+}
+
+.bgSpan {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: calc(var(--spacing) * 4);
+}
+
+.dark {
+  position: relative;
+
+  grid-column-end: span max(1, var(--bg-light-started-at));
+  justify-content: flex-end;
+
+  color: var(--bg-light);
+
+  background-color: var(--bg-dark);
+
+  &.asRowHeader {
+    position: sticky;
+  }
+
+  &.asSpacer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.asRowHeader {
+  composes: gridRowHeader from "./Grid.module.css";
+}
+
+.light {
+  z-index: 1;
+  grid-column: calc(var(--bg-light-started-at) + 2) / span
+    calc(var(--grid-levels) - var(--bg-light-started-at) + 2);
+  color: var(--bg-dark);
+  background-color: var(--bg-light);
+
+  [data-horizontally-scrolled] & {
+    z-index: 0;
+  }
+}
+
+.bgControlContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--spacing) * 1.5);
+  align-items: center;
+  justify-content: flex-end;
+
+  .light & {
+    flex-direction: row-reverse;
+  }
+
+  .dark.asSpacer & {
+    justify-content: flex-start;
+    margin-block-start: calc(var(--spacing) * 4);
+  }
+}
+
+.importExportControls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing);
+  justify-content: stretch;
+
+  inline-size: 100%;
+}
+
+.dragContainer {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  translate: -50%;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
+  &:dir(rtl) {
+    translate: 50%;
+  }
+}
+
+.dragButton {
+  touch-action: none;
+  cursor: col-resize;
+
+  position: relative;
+  z-index: 1;
+
+  margin-block-end: calc(var(--spacing) * 4 + 1px);
+
+  background-color: oklch(92.8% 0.006 264.531deg);
+
+  &:hover {
+    background-color: oklch(87.2% 0.01 258.338deg);
+  }
+
+  &:focus-visible,
+  .light:hover &,
+  :is(.spacerCell, .dark):hover ~ .light & {
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    opacity: 0;
+  }
+}
+
+.highlitingLine {
+  --hightlighting-bg: ;
+
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 50%;
+  translate: -50%;
+
+  inline-size: 2px;
+  block-size: 1000vh;
+
+  opacity: 0;
+  background-color: oklch(72.27% 0.192 149.58deg);
+
+  &:dir(rtl) {
+    translate: 50%;
+  }
+
+  .dragButton:hover ~ & {
+    opacity: 1;
+  }
+}

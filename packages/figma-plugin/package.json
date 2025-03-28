@@ -1,0 +1,36 @@
+{
+  "name": "@harmonizer/figma-plugin",
+  "description": "Harmonizer Figma Plugin",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm --parallel --filter=. /^dev:/",
+    "dev:ui": "pnpm vite build --watch --mode=development -c vite.config.ui.ts",
+    "dev:plugin": "pnpm vite build --watch --mode=development -c vite.config.plugin.ts",
+    "build": "pnpm --parallel --filter=. /^build:/",
+    "build:ui": "pnpm vite build -c vite.config.ui.ts",
+    "build:plugin": "pnpm vite build -c vite.config.plugin.ts",
+    "typecheck": "pnpm --parallel --filter=. /^typecheck:/",
+    "typecheck:ui": "pnpm tsc --build tsconfig.ui.json",
+    "typecheck:plugin": "pnpm tsc --build tsconfig.plugin.json"
+  },
+  "dependencies": {
+    "@harmonizer/core": "workspace:^",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.108.0",
+    "@tailwindcss/vite": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "@vitejs/plugin-react": "catalog:",
+    "lightningcss": "catalog:",
+    "vite": "catalog:",
+    "vite-css-modules": "catalog:",
+    "vite-plugin-generate-file": "^0.2.0",
+    "vite-plugin-singlefile": "^2.2.0",
+    "vite-tsconfig-paths": "catalog:"
+  }
+}
