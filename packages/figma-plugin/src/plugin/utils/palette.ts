@@ -28,7 +28,7 @@ export function getExistingPaletteConfig() {
   return frame.getPluginData(PALETTE_CONFIG_KEY) || null;
 }
 
-function createPalleteFrame(paletteConfig: PaletteConfig, position: { x: number; y: number }) {
+function createPaletteFrame(paletteConfig: PaletteConfig, position: { x: number; y: number }) {
   const frame = figma.createFrame();
   const width =
     PALETTE.CELL_WIDTH * paletteConfig.levels.length +
@@ -54,7 +54,7 @@ function createLevelHeader(frame: FrameNode, paletteConfig: PaletteConfig, level
 
   // Contrast
   const contrastLabel = figma.createText();
-  contrastLabel.fontName = PALETTE.LABEL_FONT;
+  contrastLabel.fontName = PALETTE.LABEL_FONT_MONO;
   contrastLabel.fontSize = PALETTE.LABEL_FONT_SIZE_L;
   contrastLabel.fills = [PALETTE.LABEL_FILL];
   contrastLabel.resize(PALETTE.CELL_WIDTH, contrastLabel.height);
@@ -65,7 +65,7 @@ function createLevelHeader(frame: FrameNode, paletteConfig: PaletteConfig, level
   frame.appendChild(contrastLabel);
   // Model
   const modelLabel = figma.createText();
-  modelLabel.fontName = PALETTE.LABEL_FONT;
+  modelLabel.fontName = PALETTE.LABEL_FONT_SANS;
   modelLabel.fontSize = PALETTE.LABEL_FONT_SIZE_S;
   modelLabel.fills = [PALETTE.LABEL_FILL];
   modelLabel.resize(PALETTE.CELL_WIDTH, modelLabel.height);
@@ -76,7 +76,7 @@ function createLevelHeader(frame: FrameNode, paletteConfig: PaletteConfig, level
   frame.appendChild(modelLabel);
   // Level
   const levelLabel = figma.createText();
-  levelLabel.fontName = PALETTE.LABEL_FONT;
+  levelLabel.fontName = PALETTE.LABEL_FONT_SANS;
   levelLabel.fontSize = PALETTE.LABEL_FONT_SIZE_M;
   levelLabel.lineHeight = PALETTE.LABEL_LINE_HEIGHT;
   levelLabel.fills = [PALETTE.LABEL_FILL];
@@ -99,7 +99,7 @@ function createHueHeader(frame: FrameNode, paletteConfig: PaletteConfig, hueInde
   invariant(hue, "Hue not found");
 
   const hueLabel = figma.createText();
-  hueLabel.fontName = PALETTE.LABEL_FONT;
+  hueLabel.fontName = PALETTE.LABEL_FONT_SANS;
   hueLabel.fontSize = PALETTE.LABEL_FONT_SIZE_M;
   hueLabel.lineHeight = PALETTE.LABEL_LINE_HEIGHT;
   hueLabel.fills = [PALETTE.LABEL_FILL];
@@ -144,11 +144,12 @@ export async function drawPalette(
   paletteConfig: PaletteConfig,
   variablesCollection: PaletteVariablesCollection,
 ) {
-  await figma.loadFontAsync(PALETTE.LABEL_FONT);
+  await figma.loadFontAsync(PALETTE.LABEL_FONT_SANS);
+  await figma.loadFontAsync(PALETTE.LABEL_FONT_MONO);
 
   // Frame
   const existingFrame = getExistingPaletteFrame();
-  const frame = createPalleteFrame(paletteConfig, existingFrame ?? getViewportCenter());
+  const frame = createPaletteFrame(paletteConfig, existingFrame ?? getViewportCenter());
 
   // Color samples
   const darkBgWidth =
