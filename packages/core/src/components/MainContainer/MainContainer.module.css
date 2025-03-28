@@ -1,6 +1,10 @@
 .container {
   touch-action: pan-x pan-y;
+
+  position: relative;
+
   inline-size: 100%;
   block-size: 100%;
+
   background-color: var(--bg-light);
 }

@@ -1,0 +1,13 @@
+.button {
+  cursor: nwse-resize;
+
+  position: absolute;
+  z-index: 100;
+  right: 1px;
+  bottom: 1px;
+
+  width: calc(var(--spacing) * 4);
+  height: calc(var(--spacing) * 4);
+
+  color: var(--color-secondary);
+}
