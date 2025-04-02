@@ -47,7 +47,8 @@ const PLACEHOLDER_CONTRAST = "CR";
 const PLACEHOLDER_CHROMA = "Chroma";
 
 const HINT_LEVEL = "Color level name";
-const HINT_CONTRAST = "Contrast between color and background";
+const HINT_FG_TO_BG_CONTRAST = "Contrast of text color to the background";
+const HINT_BG_TO_FG_CONTRAST = "Contrast of background color to the text";
 const HINT_CHROMA = "Chroma of all colors in this column";
 
 const InsertBeforeArea = memo(function InsertBeforeArea({ levelId }: LevelComponentProps) {
@@ -134,7 +135,7 @@ const ContrastInput = memo(function ContrastInput({
       incrementStep={contrastModel === "apca" ? 1 : 0.1}
       placeholder={PLACEHOLDER_CONTRAST}
       value={contrast}
-      title={HINT_CONTRAST}
+      title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
       schema={levelContrastInputSchema}
       onChange={(e) =>
         updateLevelContrast(levelId, ContrastLevel(Number.parseFloat(e.target.value)))
