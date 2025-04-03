@@ -23,7 +23,9 @@
   }
 
   &[disabled] {
-    opacity: 0.7;
+    cursor: not-allowed;
+    color: var(--color-secondary);
+    background-color: var(--color-button-disabled);
   }
 }
 

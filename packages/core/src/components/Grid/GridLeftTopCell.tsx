@@ -12,6 +12,7 @@ import {
   toggleContrastModel,
   toggleDirectionMode,
   updateChromaMode,
+  $bgColorDarkBgMode,
 } from "@core/stores/settings";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
@@ -33,6 +34,7 @@ const CHROMA_OPTIONS = [
 ];
 
 export const GridLeftTopCell = memo(function GridLeftTopCell() {
+  const bgMode = useSubscribe($bgColorDarkBgMode);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
   const chromaModeValue = useSubscribe(chromaModeStore.$lastValidValue);
@@ -40,7 +42,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
 
   return (
-    <GridCell bgMode="dark" className={styles.cell}>
+    <GridCell bgMode={bgMode} className={styles.cell}>
       <Text size="s" kind="secondary" className={styles.levelLabel}>
         {LABEL_LEVEL}
       </Text>

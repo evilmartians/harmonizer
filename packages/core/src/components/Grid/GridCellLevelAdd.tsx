@@ -1,16 +1,19 @@
 import { Button } from "@core/components/Button/Button";
 import { LPlus } from "@core/components/Icon/LPlus";
 import { insertLevel } from "@core/stores/colors";
+import { $bgColorLightBgMode } from "@core/stores/settings";
+import { useSubscribe } from "@spred/react";
 import { memo, useCallback } from "react";
 
 import { GridCell } from "./GridCell";
 import styles from "./GridCellLevelAdd.module.css";
 
 export const GridCellLevelAdd = memo(function GridCellLevelAdd() {
+  const bgMode = useSubscribe($bgColorLightBgMode);
   const handleClick = useCallback(() => insertLevel(), []);
 
   return (
-    <GridCell bgMode="light" className={styles.cell}>
+    <GridCell bgMode={bgMode} className={styles.cell}>
       <Button
         className={styles.button}
         kind="ghost"

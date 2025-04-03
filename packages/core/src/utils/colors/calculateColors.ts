@@ -18,6 +18,7 @@ import { maxChroma } from "apcach";
 import { ensureNonNullable } from "../assertions/ensureNonNullable";
 
 import { calculateColorCell } from "./calculateColorCell";
+import { getBgMode } from "./getBgMode";
 import { maxCommonChroma } from "./maxCommonChroma";
 
 export type GenerateColorsPayload = {
@@ -69,7 +70,8 @@ export function calculateColors(
   for (const [levelIndex, level] of levels.entries()) {
     const isBgDark = bgLightStart > levelIndex;
     const toColor = isBgDark ? bgColorDark : bgColorLight;
-    const searchDirection = isBgDark ? "lighter" : "darker";
+    const bgMode = isBgDark ? getBgMode(bgColorDark) : getBgMode(bgColorLight);
+    const searchDirection = bgMode === "dark" ? "lighter" : "darker";
 
     const commonApcacheOptions = {
       colorSpace,
@@ -94,7 +96,6 @@ export function calculateColors(
         const hueTintColor = calculateColorCell({
           ...commonApcacheOptions,
           toColor: bgColorDark,
-          searchDirection: "lighter",
           hueAngle: hue.angle,
           contrastLevel: HUE_TINT_CR,
           chroma: HUE_TINT_CHROMA,
