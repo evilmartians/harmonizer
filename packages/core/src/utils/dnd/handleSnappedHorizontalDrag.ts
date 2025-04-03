@@ -1,5 +1,5 @@
 import { isRtl } from "@core/utils/dom/isRtlDirection";
-import throttle from "lodash-es/throttle";
+import { throttle } from "es-toolkit";
 
 type SnappedHorizontalDragOptions = {
   element: HTMLElement;

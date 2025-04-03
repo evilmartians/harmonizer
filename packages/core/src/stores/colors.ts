@@ -23,8 +23,8 @@ import {
 import { objectEntries } from "@core/utils/object/objectEntries";
 import { workerChannel } from "@core/worker/workerChannel";
 import { batch, type WritableSignal } from "@spred/core";
-import debounce from "lodash-es/debounce";
-import pick from "lodash-es/pick";
+import { pick } from "es-toolkit";
+import { debounce } from "es-toolkit/compat";
 
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import {
