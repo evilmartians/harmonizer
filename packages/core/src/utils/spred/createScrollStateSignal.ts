@@ -1,6 +1,6 @@
 import { effect, type Signal, signal } from "@spred/core";
+import { debounce } from "es-toolkit/compat";
 import { shallowEqual } from "fast-equals";
-import debounce from "lodash-es/debounce";
 
 import { getScrollState, type ScrollState, type ScrollType } from "../dom/getScrollState";
 
