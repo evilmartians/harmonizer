@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
 @source "./**/*.module.css";
+@source "./**/*.tsx";
 
 @font-face {
   font-family: MGrotesk;
