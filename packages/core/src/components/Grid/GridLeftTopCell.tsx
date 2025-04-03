@@ -32,6 +32,7 @@ const CHROMA_OPTIONS = [
   { value: "even", label: "Even chroma" },
   { value: "max", label: "Max chroma" },
 ];
+const HINT_LOCKED_COLOR_SPACE = "To change profile, adjust it in the Figma file settings";
 
 export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const bgMode = useSubscribe($bgColorDarkBgMode);
@@ -71,7 +72,12 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
           title={LABEL_CHROMA_MODE}
         />
         <div className={clsx(styles.container, styles.colorModePicker)}>
-          <Button size="xs" onClick={toggleColorSpace} disabled={isColorSpaceLocked}>
+          <Button
+            size="xs"
+            onClick={toggleColorSpace}
+            disabled={isColorSpaceLocked}
+            title={isColorSpaceLocked ? HINT_LOCKED_COLOR_SPACE : undefined}
+          >
             {colorSpace}
           </Button>
           <Text size="s" kind="secondary">
