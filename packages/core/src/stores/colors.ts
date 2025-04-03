@@ -29,6 +29,7 @@ import { batch, signal, type WritableSignal } from "@spred/core";
 import { pick } from "es-toolkit";
 import { debounce } from "es-toolkit/compat";
 
+import { appEvents } from "./appEvents";
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import {
   $bgLightStart,
@@ -244,6 +245,7 @@ export const insertLevel = getInsertMethod({
       $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
     }
 
+    requestAnimationFrame(() => appEvents.emit("levelAdded", levelId));
     requestColorsRecalculation([levelId]);
   },
 });
@@ -299,7 +301,10 @@ export const insertHue = getInsertMethod({
       hueId,
       previousHueId ? getColor$(levelId, previousHueId).value : FALLBACK_CELL_COLOR,
     ),
-  onFinish: () => requestColorsRecalculation(),
+  onFinish: (hueId) => {
+    requestAnimationFrame(() => appEvents.emit("hueAdded", hueId));
+    requestColorsRecalculation();
+  },
 });
 
 export function removeHue(hueId: HueId) {

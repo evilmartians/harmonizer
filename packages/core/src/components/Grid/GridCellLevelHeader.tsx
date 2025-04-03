@@ -5,6 +5,7 @@ import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
 import { withNumericIncrementControls } from "@core/components/Input/enhancers/withNumericIncrementControls";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
+import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
 import {
   $levelIds,
   getLevel,
@@ -15,9 +16,9 @@ import {
 } from "@core/stores/colors";
 import { useLevelBgMode } from "@core/stores/hooks";
 import {
+  $bgLightStart,
   bgColorDarkStore,
   bgColorLightStore,
-  $bgLightStart,
   chromaModeStore,
   contrastModelStore,
   directionModeStore,
@@ -27,7 +28,7 @@ import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useRef } from "react";
 
 import { DATA_ATTR_CELL_LEVEL_ID } from "./constants";
 import { GridCell } from "./GridCell";
@@ -72,12 +73,20 @@ const InsertBeforeArea = memo(function InsertBeforeArea({ levelId }: LevelCompon
 
 const LevelNameInput = withValidation(withAutosize(Input));
 const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const $name = getLevel(levelId).name;
   const name = useSubscribe($name.$raw);
   const error = useSubscribe($name.$validationError);
 
+  useAppEvent("levelAdded", (id) => {
+    if (id === levelId) {
+      inputRef.current?.focus();
+    }
+  });
+
   return (
     <LevelNameInput
+      ref={inputRef}
       className={styles.inputSecondary}
       size="m"
       kind="ghost"

@@ -3,11 +3,12 @@ import { MPlus } from "@core/components/Icon/MPlus";
 import { withNumericIncrementControls } from "@core/components/Input/enhancers/withNumericIncrementControls";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
+import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
 import { getHue, insertHue, updateHueAngle, updateHueName } from "@core/stores/colors";
 import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
 import { useSubscribe } from "@spred/react";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useRef } from "react";
 
 import { DATA_ATTR_CELL_HUE_ID } from "./constants";
 import { GridCell } from "./GridCell";
@@ -42,13 +43,21 @@ const InsertBeforeArea = memo(function InsertBeforeArea({ hueId }: HueComponentP
 
 const HueNameInput = withValidation(Input);
 const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const hue = getHue(hueId);
   const name = useSubscribe(hue.name.$raw);
   const error = useSubscribe(hue.name.$validationError);
   const tintColor = useSubscribe(hue.$tintColor);
 
+  useAppEvent("hueAdded", (id) => {
+    if (id === hueId) {
+      inputRef.current?.focus();
+    }
+  });
+
   return (
     <HueNameInput
+      ref={inputRef}
       className={styles.control}
       size="m"
       kind="ghost"
