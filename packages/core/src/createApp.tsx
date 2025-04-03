@@ -1,16 +1,22 @@
 import { batch } from "@spred/core";
-import { createElement, StrictMode } from "react";
+import { type ReactNode, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import "./app.css";
 
-import { App } from "./App";
-import type { AppDependencies } from "./DependenciesContext";
+import { Grid } from "./components/Grid/Grid";
+import { MainContainer } from "./components/MainContainer/MainContainer";
+import { DependenciesContext, type AppDependencies } from "./DependenciesContext";
 import { parseExportConfig } from "./schemas/exportConfig";
 import { calculateColorsSynchronously } from "./stores/colors";
 import { updateConfig } from "./stores/config";
 import { $isColorSpaceLocked } from "./stores/settings";
 import { invariant } from "./utils/assertions/invariant";
 
-export function createApp(element: HTMLElement | null, dependencies: AppDependencies) {
+export function createApp(
+  element: HTMLElement | null,
+  dependencies: AppDependencies,
+  customUI?: ReactNode,
+) {
   invariant(element, "Mount element not found");
 
   const { config, lockColorSpace } = dependencies;
@@ -23,5 +29,14 @@ export function createApp(element: HTMLElement | null, dependencies: AppDependen
   });
   calculateColorsSynchronously();
 
-  createRoot(element).render(createElement(StrictMode, null, createElement(App, { dependencies })));
+  createRoot(element).render(
+    <StrictMode>
+      <DependenciesContext.Provider value={dependencies}>
+        <MainContainer>
+          <Grid />
+          {customUI}
+        </MainContainer>
+      </DependenciesContext.Provider>
+    </StrictMode>,
+  );
 }
