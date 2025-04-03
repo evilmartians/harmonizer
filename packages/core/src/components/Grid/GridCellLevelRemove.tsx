@@ -18,7 +18,7 @@ export const GridCellLevelRemove = memo(function GridCellLevelRemove({
 }: GridCellLevelRemoveProps) {
   const bgMode = useLevelBgMode(levelIndex);
   const level = getLevel(levelId);
-  const name = useSubscribe(level.$name);
+  const name = useSubscribe(level.name.$raw);
   const handleClick = useCallback(() => removeLevel(levelId), [levelId]);
 
   return (

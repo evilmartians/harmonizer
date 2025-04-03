@@ -16,6 +16,7 @@
     "typecheck:plugin": "pnpm tsc --build tsconfig.plugin.json"
   },
   "dependencies": {
+    "@spred/react": "catalog:",
     "@harmonizer/core": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:"

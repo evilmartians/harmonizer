@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    '@spred/core':
+      specifier: ^0.40.2
+      version: 0.40.2
+    '@spred/react':
+      specifier: ^0.4.2
+      version: 0.4.2
     '@tailwindcss/vite':
       specifier: ^4.0.14
       version: 4.0.14
@@ -101,10 +107,10 @@ importers:
   packages/core:
     dependencies:
       '@spred/core':
-        specifier: ^0.40.2
+        specifier: 'catalog:'
         version: 0.40.2
       '@spred/react':
-        specifier: ^0.4.2
+        specifier: 'catalog:'
         version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       apcach:
         specifier: ^0.6.4
@@ -155,6 +161,9 @@ importers:
       '@harmonizer/core':
         specifier: workspace:^
         version: link:../core
+      '@spred/react':
+        specifier: 'catalog:'
+        version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       react:
         specifier: 'catalog:'
         version: 19.0.0
@@ -201,6 +210,9 @@ importers:
       '@harmonizer/core':
         specifier: workspace:^
         version: link:../core
+      '@spred/react':
+        specifier: 'catalog:'
+        version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       react:
         specifier: 'catalog:'
         version: 19.0.0

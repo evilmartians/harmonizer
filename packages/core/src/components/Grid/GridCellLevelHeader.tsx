@@ -6,11 +6,6 @@ import { withNumericIncrementControls } from "@core/components/Input/enhancers/w
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import {
-  apcaContrastLevelSchema,
-  chromaLevelSchema,
-  wcagContrastLevelSchema,
-} from "@core/schemas/color";
-import {
   $levelIds,
   getLevel,
   insertLevel,
@@ -20,20 +15,19 @@ import {
 } from "@core/stores/colors";
 import { useLevelBgMode } from "@core/stores/hooks";
 import {
-  $bgColorDark,
-  $bgColorLight,
+  bgColorDarkStore,
+  bgColorLightStore,
   $bgLightStart,
-  $chromaMode,
-  $contrastModel,
-  $directionMode,
+  chromaModeStore,
+  contrastModelStore,
+  directionModeStore,
 } from "@core/stores/settings";
-import { ChromaLevel, ContrastLevel, type LevelIndex, LevelName, type LevelId } from "@core/types";
+import { LevelChroma, LevelContrast, LevelName, type LevelId, type LevelIndex } from "@core/types";
 import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
-import { getInputNumberValidator } from "@core/utils/schema/getInputValidator";
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback } from "react";
 
 import { DATA_ATTR_CELL_LEVEL_ID } from "./constants";
 import { GridCell } from "./GridCell";
@@ -52,7 +46,7 @@ const HINT_BG_TO_FG_CONTRAST = "Contrast of background color to the text";
 const HINT_CHROMA = "Chroma of all colors in this column";
 
 const InsertBeforeArea = memo(function InsertBeforeArea({ levelId }: LevelComponentProps) {
-  const name = useSubscribe(getLevel(levelId).$name);
+  const name = useSubscribe(getLevel(levelId).name.$raw);
   const $isOnBgEdge = useSignal((get) => {
     const levelIds = get($levelIds);
     const bgLightStart = get($bgLightStart);
@@ -76,9 +70,11 @@ const InsertBeforeArea = memo(function InsertBeforeArea({ levelId }: LevelCompon
   );
 });
 
-const LevelNameInput = withAutosize(Input);
+const LevelNameInput = withValidation(withAutosize(Input));
 const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
-  const name = useSubscribe(getLevel(levelId).$name);
+  const $name = getLevel(levelId).name;
+  const name = useSubscribe($name.$raw);
+  const error = useSubscribe($name.$validationError);
 
   return (
     <LevelNameInput
@@ -88,6 +84,7 @@ const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
       placeholder={PLACEHOLDER_LEVEL}
       value={name}
       title={HINT_LEVEL}
+      error={error}
       onChange={(e) => updateLevelName(levelId, LevelName(e.target.value))}
     />
   );
@@ -99,19 +96,14 @@ const ContrastInput = memo(function ContrastInput({
   bgMode,
 }: LevelComponentProps<{ bgMode: BgModeType }>) {
   const level = getLevel(levelId);
-  const bgColorLight = useSubscribe($bgColorLight);
-  const bgColorDark = useSubscribe($bgColorDark);
-  const contrast = useSubscribe(level.$contrast);
-  const contrastModel = useSubscribe($contrastModel);
-  const levelContrastInputSchema = useMemo(
-    () =>
-      getInputNumberValidator(
-        contrastModel === "apca" ? apcaContrastLevelSchema : wcagContrastLevelSchema,
-      ),
-    [contrastModel],
-  );
+  const bgColorLight = useSubscribe(bgColorLightStore.$raw);
+  const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
+  const contrast = useSubscribe(level.contrast.$raw);
+  const error = useSubscribe(level.contrast.$validationError);
+  const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
+
   const tintColor = useSubscribe(level.$tintColor);
-  const directionMode = useSubscribe($directionMode);
+  const directionMode = useSubscribe(directionModeStore.$lastValidValue);
   const currentBgColor = bgMode === "dark" ? bgColorDark : bgColorLight;
 
   return (
@@ -136,22 +128,28 @@ const ContrastInput = memo(function ContrastInput({
       placeholder={PLACEHOLDER_CONTRAST}
       value={contrast}
       title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
-      schema={levelContrastInputSchema}
-      onChange={(e) =>
-        updateLevelContrast(levelId, ContrastLevel(Number.parseFloat(e.target.value)))
-      }
+      error={error}
+      onChange={(e) => {
+        let newValue = Number.parseFloat(e.target.value);
+        if (Number.isNaN(newValue)) {
+          newValue = 0;
+        }
+        updateLevelContrast(levelId, LevelContrast(newValue));
+      }}
     />
   );
 });
 
 const LevelChromaInput = withValidation(withNumericIncrementControls(withAutosize(Input)));
-const levelChromaInputSchema = getInputNumberValidator(chromaLevelSchema);
 const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) {
   const level = getLevel(levelId);
   const $chroma = useSignal((get) => {
-    return get($chromaMode) === "even" ? get(level.$tintColor).referencedC.toFixed(2) : "max";
+    return get(chromaModeStore.$lastValidValue) === "even"
+      ? get(level.$tintColor).referencedC.toFixed(2)
+      : "max";
   });
   const chroma = useSubscribe($chroma);
+  const error = useSubscribe(level.chroma.$validationError);
 
   return (
     <LevelChromaInput
@@ -162,9 +160,15 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       inputMode="decimal"
       value={chroma}
       title={HINT_CHROMA}
-      schema={levelChromaInputSchema}
+      error={error}
       disabled
-      onChange={(e) => updateLevelChroma(levelId, ChromaLevel(Number.parseFloat(e.target.value)))}
+      onChange={(e) => {
+        let newValue = Number.parseFloat(e.target.value);
+        if (Number.isNaN(newValue)) {
+          newValue = 0;
+        }
+        updateLevelChroma(levelId, LevelChroma(newValue));
+      }}
     />
   );
 });

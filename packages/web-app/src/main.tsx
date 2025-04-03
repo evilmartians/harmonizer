@@ -1,5 +1,5 @@
-import defaultConfig from "@core/defaultConfig.json";
 import { createApp } from "@harmonizer/core";
+import { defaultConfig } from "@harmonizer/core/src/defaultConfig";
 
 import { WebAppActions } from "./components/WebAppActions/WebAppActions";
 

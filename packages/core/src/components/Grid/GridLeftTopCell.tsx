@@ -1,18 +1,18 @@
 import { Button } from "@core/components/Button/Button";
 import { Select } from "@core/components/Select/Select";
 import { Text } from "@core/components/Text/Text";
+import { parseChromaMode } from "@core/schemas/settings";
 import {
-  $chromaMode,
-  $colorSpace,
-  $contrastModel,
-  $directionMode,
+  chromaModeStore,
+  colorSpaceStore,
+  contrastModelStore,
+  directionModeStore,
   $isColorSpaceLocked,
   toggleColorSpace,
   toggleContrastModel,
   toggleDirectionMode,
   updateChromaMode,
 } from "@core/stores/settings";
-import { ChromaMode } from "@core/types";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { memo } from "react";
@@ -33,10 +33,10 @@ const CHROMA_OPTIONS = [
 ];
 
 export const GridLeftTopCell = memo(function GridLeftTopCell() {
-  const contrastModel = useSubscribe($contrastModel);
-  const directionMode = useSubscribe($directionMode);
-  const chromaModeValue = useSubscribe($chromaMode);
-  const colorSpace = useSubscribe($colorSpace);
+  const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
+  const directionMode = useSubscribe(directionModeStore.$lastValidValue);
+  const chromaModeValue = useSubscribe(chromaModeStore.$lastValidValue);
+  const colorSpace = useSubscribe(colorSpaceStore.$lastValidValue);
   const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
 
   return (
@@ -65,7 +65,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
           size="xs"
           value={chromaModeValue}
           options={CHROMA_OPTIONS}
-          onChange={(e) => updateChromaMode(ChromaMode(e.target.value))}
+          onChange={(e) => updateChromaMode(parseChromaMode(e.target.value))}
           title={LABEL_CHROMA_MODE}
         />
         <div className={clsx(styles.container, styles.colorModePicker)}>

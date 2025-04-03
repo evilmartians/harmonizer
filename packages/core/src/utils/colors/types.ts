@@ -1,12 +1,13 @@
 import type {
-  ChromaLevel,
+  LevelChroma,
   ColorString,
-  ContrastLevel,
+  LevelContrast,
   ContrastModel,
   DirectionMode,
   HueAngle,
+  ColorSpace,
 } from "@core/types";
-import type { ChromaFunction, ColorSpace } from "apcach";
+import type { ChromaFunction } from "apcach";
 
 export type SearchDirection = "lighter" | "darker";
 export type ColorCalculationOptions = {
@@ -15,7 +16,7 @@ export type ColorCalculationOptions = {
   searchDirection: SearchDirection;
   colorSpace: ColorSpace;
   toColor: ColorString;
-  contrastLevel: ContrastLevel;
-  chroma: ChromaLevel | ChromaFunction;
+  contrastLevel: LevelContrast;
+  chroma: LevelChroma | ChromaFunction;
   hueAngle: HueAngle;
 };

@@ -6,10 +6,9 @@ import { withValidation } from "@core/components/Input/enhancers/withValidation"
 import { Input } from "@core/components/Input/Input";
 import { Text } from "@core/components/Text/Text";
 import { useDependencies } from "@core/DependenciesContext";
-import { colorStringSchema } from "@core/schemas/color";
 import {
-  $bgColorDark,
-  $bgColorLight,
+  bgColorDarkStore,
+  bgColorLightStore,
   $bgLightStart,
   updateBgColorDark,
   updateBgColorLight,
@@ -47,7 +46,8 @@ const SpacerCell = memo(function SpacerCell() {
   );
 });
 const BgDarkSpan = memo(function BgDarkSpan() {
-  const bgColorDark = useSubscribe($bgColorDark);
+  const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
+  const error = useSubscribe(bgColorDarkStore.$validationError);
   const lightStartAt0 = useSubscribe($bgColorLightAt0);
 
   return (
@@ -68,8 +68,8 @@ const BgDarkSpan = memo(function BgDarkSpan() {
         <BgColorInput
           size="m"
           placeholder="#000"
-          schema={colorStringSchema}
           value={bgColorDark}
+          error={error}
           onChange={(e) => updateBgColorDark(ColorString(e.target.value))}
         />
       </div>
@@ -80,7 +80,8 @@ const CELL_WIDTH = 104;
 const DRAG_THRESHOLD = 0.75;
 const BgLightSpan = memo(function BgLightSpan() {
   const dragButtonRef = useRef<HTMLButtonElement | null>(null);
-  const bgColorLight = useSubscribe($bgColorLight);
+  const bgColorLight = useSubscribe(bgColorLightStore.$raw);
+  const error = useSubscribe(bgColorLightStore.$validationError);
 
   useEffect(() => {
     if (!dragButtonRef.current) return;
@@ -114,8 +115,8 @@ const BgLightSpan = memo(function BgLightSpan() {
         <BgColorInput
           size="m"
           placeholder="#fff"
-          schema={colorStringSchema}
           value={bgColorLight}
+          error={error}
           onChange={(e) => updateBgColorLight(ColorString(e.target.value))}
         />
       </div>

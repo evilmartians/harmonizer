@@ -3,6 +3,8 @@ packages:
 catalog:
   "react": "^19.0.0"
   "react-dom": "^19.0.0"
+  "@spred/core": "^0.40.2"
+  "@spred/react": "^0.4.2"
   "@types/react": "^19.0.12"
   "@types/react-dom": "^19.0.4"
   "@tailwindcss/vite": "^4.0.14"

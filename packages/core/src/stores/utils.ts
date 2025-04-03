@@ -1,40 +1,41 @@
 import {
-  HueName,
+  getLevelContrastModel,
+  hueAngleSchema,
+  hueNameSchema,
+  levelChromaSchema,
+  levelNameSchema,
+} from "@core/schemas/color";
+import {
+  HueId,
+  LevelId,
   LevelName,
   type ColorCellData,
+  type ColorHueTintData,
   type ColorIdentifier,
-  type Hue,
+  type ColorLevelTintData,
+  type HueAngle,
   type HueData,
-  type HueId,
-  type Level,
+  type HueName,
+  type LevelChroma,
+  type LevelContrast,
   type LevelData,
-  type LevelId,
 } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
-import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
-import { getMiddleContrastLevel } from "@core/utils/colors/getMiddleContrastLevel";
-import { getMiddleHueAngle } from "@core/utils/colors/getMiddleHueAngle";
 import { getMiddleNumber } from "@core/utils/number/getMiddleNumber";
 import { id } from "@core/utils/random/id";
+import { isSignal } from "@core/utils/spred/isSignal";
 import type { PartialOptional } from "@core/utils/ts/generics";
-import { Signal, signal, type SignalOptions, type WritableSignal } from "@spred/core";
+import { effect, signal, type Signal, type SignalOptions, type WritableSignal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
+import type { BaseIssue, BaseSchema } from "valibot";
+import * as v from "valibot";
 
+import { huesStore, levelsStore } from "./colors";
 import { FALLBACK_HUE_TINT_COLOR, FALLBACK_LEVEL_TINT_COLOR } from "./constants";
+import { contrastModelStore } from "./settings";
 
 export type AnyId = string;
 export type ItemWithId<Id extends string> = { id: Id; [key: string]: unknown };
-export type WithReactiveFields<Obj extends Record<string, unknown>, Fields extends keyof Obj> = {
-  [F in keyof Obj as F extends Fields ? `$${F & string}` : F]: F extends Fields
-    ? WritableSignal<Obj[F]>
-    : Obj[F];
-};
-
-export function withId<Id extends string, Item extends ItemWithId<Id>>(
-  data: Omit<Item, "id">,
-): Item {
-  return { ...data, id: id() } as Item;
-}
 
 type IndexedStore<Item extends ItemWithId<AnyId>> = {
   $ids: WritableSignal<Item["id"][]>;
@@ -99,88 +100,37 @@ export function matchesHueColorKey(colorKey: ColorIdentifier, hueId: HueId): boo
   return colorKey.endsWith(hueId);
 }
 
-function getMiddleLevelName(lowerName: string, upperName: string): string {
+export function getMiddleLevelName(lowerName: LevelName, upperName: LevelName): LevelName {
   const prevName = Number.parseInt(lowerName, 10);
   const nextName = Number.parseInt(upperName, 10);
 
   return !Number.isNaN(prevName) && !Number.isNaN(nextName)
-    ? String(getMiddleNumber(prevName, nextName))
+    ? LevelName(String(getMiddleNumber(prevName, nextName)))
     : lowerName;
 }
 
-export function getMiddleLevel(
-  lowerLevelStore: LevelStore,
-  upperLevelStore: LevelStore,
-): LevelStore {
-  return cloneStore(lowerLevelStore, {
-    $name: signal(
-      LevelName(getMiddleLevelName(lowerLevelStore.$name.value, upperLevelStore.$name.value)),
-    ),
-    $contrast: signal(
-      getMiddleContrastLevel(lowerLevelStore.$contrast.value, upperLevelStore.$contrast.value),
-    ),
-  });
-}
-
-export function getMiddleHue(hueStore1: HueStore, hueStore2: HueStore): HueStore {
-  const middleHueAngle = getMiddleHueAngle(hueStore1.$angle.value, hueStore2.$angle.value);
-
-  return cloneStore(hueStore1, {
-    $name: signal(HueName(getClosestColorName(middleHueAngle))),
-    $angle: signal(middleHueAngle),
-  });
-}
-
-export function cloneStore<Item extends ItemWithId<AnyId>>(
-  store: Item,
-  overrides?: Partial<Item>,
-): Item {
-  const clonedStore: Record<string, unknown> = {};
-  for (const [key, value] of Object.entries(store)) {
-    if (overrides && key in overrides) {
-      clonedStore[key] = overrides[key];
-    } else {
-      clonedStore[key] = value instanceof Signal ? signal(value.value) : value;
-    }
-  }
-
-  return withId(clonedStore as Item);
-}
-
-type GetCloneItemOptions<
+type GetInsertMethodOptions<
   MainItem extends ItemWithId<AnyId>,
   CrossItem extends ItemWithId<AnyId>,
 > = {
   main: IndexedStore<MainItem>;
   cross: IndexedStore<CrossItem>;
-  getNewItem: () => MainItem;
-  getMiddleItem: (previous: MainItem, next: MainItem) => MainItem;
+  getNewItem: (previous?: MainItem, next?: MainItem) => MainItem;
   onAddColor: (id: MainItem["id"], crossId: CrossItem["id"], previousId?: MainItem["id"]) => void;
   onFinish: (id: MainItem["id"]) => void;
 };
-export function getInsertItem<
+export function getInsertMethod<
   MainItem extends ItemWithId<AnyId>,
   CrossItem extends ItemWithId<AnyId>,
->({
-  main,
-  cross,
-  onAddColor,
-  getNewItem,
-  getMiddleItem,
-  onFinish,
-}: GetCloneItemOptions<MainItem, CrossItem>) {
+>({ main, cross, onAddColor, getNewItem, onFinish }: GetInsertMethodOptions<MainItem, CrossItem>) {
   return (beforeId?: MainItem["id"]) => {
     const nextIndex = beforeId ? main.$ids.value.indexOf(beforeId) : main.$ids.value.length;
     const previousId = main.$ids.value[nextIndex - 1];
     const nextId = main.$ids.value[nextIndex];
-
-    let newItem = getNewItem();
-
-    if (previousId && nextId) {
-      newItem = getMiddleItem(main.getItem(previousId), main.getItem(nextId));
-    } else if (previousId) {
-      newItem = cloneStore(main.getItem(previousId));
-    }
+    const newItem = getNewItem(
+      previousId && main.getItem(previousId),
+      nextId && main.getItem(nextId),
+    );
 
     for (const oppositeId of cross.$ids.value) {
       onAddColor(newItem.id, oppositeId, previousId);
@@ -204,21 +154,118 @@ export function cleanupColors<Id extends AnyId>(
   }
 }
 
-export type LevelStore = WithReactiveFields<Level, "name" | "contrast" | "chroma" | "tintColor">;
-export function getLevelStore(data: PartialOptional<LevelData, "tintColor">): LevelStore {
-  return withId({
-    $name: signal(data.name),
-    $contrast: signal(data.contrast),
-    $chroma: signal(data.chroma),
-    $tintColor: getColorSignal(data.tintColor ?? FALLBACK_LEVEL_TINT_COLOR),
+type ValidationStore<Output> = {
+  $raw: WritableSignal<Output>;
+  $lastValidValue: Signal<Output>;
+  $validationError: Signal<string | null>;
+};
+
+export function validationStore<Input, Output>(
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  initialValue: Exclude<Output, Function>,
+  validationSchema:
+    | BaseSchema<Input, Output, BaseIssue<unknown>>
+    | Signal<BaseSchema<Input, Output, BaseIssue<unknown>>>,
+): ValidationStore<Output> {
+  const $raw = signal(initialValue);
+  const $lastValidValue = signal(initialValue);
+  const $validationSchema = isSignal(validationSchema)
+    ? validationSchema
+    : signal(validationSchema);
+  const $validationError = signal<string | null>(null);
+
+  effect((get) => {
+    const validationResult = v.safeParse(get($validationSchema), get($raw), {
+      abortEarly: true,
+      abortPipeEarly: true,
+    });
+
+    if (validationResult.success) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      $lastValidValue.set(validationResult.output as Exclude<Output, Function>);
+    }
+
+    $validationError.set(validationResult.success ? null : validationResult.issues[0].message);
   });
+
+  return {
+    $raw,
+    $lastValidValue,
+    $validationError,
+  };
 }
 
-export type HueStore = WithReactiveFields<Hue, "name" | "angle" | "tintColor">;
-export function getHueStore(data: PartialOptional<HueData, "tintColor">): HueStore {
-  return withId({
-    $name: signal(data.name),
-    $angle: signal(data.angle),
-    $tintColor: getColorSignal(data.tintColor ?? FALLBACK_HUE_TINT_COLOR),
-  });
+export function getNameValidationSchemaSignal<
+  Id extends AnyId,
+  Name extends string,
+  Item extends { id: Id; name: ValidationStore<Name> },
+>(id: Id, nameSchema: BaseSchema<string, Name, BaseIssue<unknown>>, store: IndexedStore<Item>) {
+  return signal((get) =>
+    v.pipe(
+      nameSchema,
+      v.check((name) => {
+        return get(store.$ids).every((itemId) => {
+          if (itemId === id) {
+            return true;
+          }
+
+          return name.toLowerCase() !== get(store.getItem(itemId).name.$raw).toLowerCase();
+        });
+      }, "Name must be unique"),
+    ),
+  );
+}
+
+export type LevelStore = {
+  id: LevelId;
+  name: ValidationStore<LevelName>;
+  contrast: ValidationStore<LevelContrast>;
+  chroma: ValidationStore<LevelChroma>;
+  $tintColor: WritableSignal<ColorLevelTintData>;
+};
+
+const $levelConstrastSchema = signal((get) =>
+  getLevelContrastModel(get(contrastModelStore.$lastValidValue)),
+);
+
+export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
+  const levelId = LevelId(id());
+  const $levelNameUniqueSchema = getNameValidationSchemaSignal(
+    levelId,
+    levelNameSchema,
+    levelsStore,
+  );
+  const name = validationStore(data.name, $levelNameUniqueSchema);
+  const contrast = validationStore(data.contrast, $levelConstrastSchema);
+  const chroma = validationStore(data.chroma, levelChromaSchema);
+  const $tintColor = signal(data.tintColor ?? FALLBACK_LEVEL_TINT_COLOR);
+
+  return {
+    id: levelId,
+    name,
+    contrast,
+    chroma,
+    $tintColor,
+  };
+}
+
+export type HueStore = {
+  id: HueId;
+  name: ValidationStore<HueName>;
+  angle: ValidationStore<HueAngle>;
+  $tintColor: WritableSignal<ColorHueTintData>;
+};
+export function getHueStore(data: PartialOptional<HueData, "tintColor">) {
+  const hueId = HueId(id());
+  const $hueNameUniqueSchema = getNameValidationSchemaSignal(hueId, hueNameSchema, huesStore);
+  const name = validationStore(data.name, $hueNameUniqueSchema);
+  const angle = validationStore(data.angle, hueAngleSchema);
+  const $tintColor = getColorSignal(data.tintColor ?? FALLBACK_HUE_TINT_COLOR);
+
+  return {
+    id: hueId,
+    name,
+    angle,
+    $tintColor,
+  };
 }

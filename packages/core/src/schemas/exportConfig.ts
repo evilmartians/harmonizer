@@ -1,35 +1,33 @@
 import { formatValidationError, safeParse } from "@core/schemas";
-import type { ExportConfig } from "@core/types";
 import { ValidationError } from "@core/utils/errors/ValidationError";
 import * as v from "valibot";
 
 import {
-  chromaLevelSchema,
-  colorStringSchema,
-  apcaContrastLevelSchema,
-  wcagContrastLevelSchema,
-  hueAngleSchema,
   baseContrastSchema,
-  levelNameSchema,
+  colorStringSchema,
+  getLevelContrastModel,
+  hueAngleSchema,
   hueNameSchema,
+  levelChromaSchema,
+  levelNameSchema,
 } from "./color";
 import {
   bgLightStartSchema,
   chromaModeSchema,
   colorSpaceSchema,
   contrastModelSchema,
-  directionSchema,
+  directionModeSchema,
 } from "./settings";
 
 export const exportConfigSchema = v.pipe(
   v.object({
     levels: v.array(
-      v.object({ name: levelNameSchema, contrast: baseContrastSchema, chroma: chromaLevelSchema }),
+      v.object({ name: levelNameSchema, contrast: baseContrastSchema, chroma: levelChromaSchema }),
     ),
     hues: v.array(v.object({ name: hueNameSchema, angle: hueAngleSchema })),
     settings: v.object({
       contrastModel: contrastModelSchema,
-      directionMode: directionSchema,
+      directionMode: directionModeSchema,
       chromaMode: chromaModeSchema,
       bgLightStart: bgLightStartSchema,
       bgColorLight: colorStringSchema,
@@ -38,12 +36,13 @@ export const exportConfigSchema = v.pipe(
     }),
   }),
   v.check(({ levels, settings }) => {
-    const contrastSchema =
-      settings.contrastModel === "apca" ? apcaContrastLevelSchema : wcagContrastLevelSchema;
-
-    return levels.every(({ contrast }) => v.safeParse(contrastSchema, contrast).success);
+    return levels.every(
+      ({ contrast }) =>
+        v.safeParse(getLevelContrastModel(settings.contrastModel), contrast).success,
+    );
   }, "Contrast levels are out of selected contrast model bounds"),
 );
+export type ExportConfig = v.InferOutput<typeof exportConfigSchema>;
 
 export function parseExportConfig(configString: string | Record<string, unknown>): ExportConfig {
   try {

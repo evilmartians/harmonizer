@@ -1,9 +1,16 @@
-import defaultConfig from "@core/defaultConfig.json";
+import { defaultConfig } from "@core/defaultConfig";
+import { colorStringSchema } from "@core/schemas/color";
+import {
+  chromaModeSchema,
+  colorSpaceSchema,
+  contrastModelSchema,
+  directionModeSchema,
+} from "@core/schemas/settings";
 import {
   BgLightStart,
   ChromaMode,
   ColorString,
-  ContrastLevel,
+  LevelContrast,
   ContrastModel,
   DirectionMode,
   ColorSpace,
@@ -18,23 +25,44 @@ import {
   requestColorsRecalculation,
   requestColorsRecalculationWithLevelsAccumulation,
 } from "./colors";
+import { validationStore } from "./utils";
 
-export const $contrastModel = signal(ContrastModel(defaultConfig.settings.contrastModel));
-export const $directionMode = signal(DirectionMode(defaultConfig.settings.directionMode));
-export const $chromaMode = signal(ChromaMode(defaultConfig.settings.chromaMode));
-export const $bgColorDark = signal(ColorString(defaultConfig.settings.bgColorDark));
-export const $bgColorLight = signal(ColorString(defaultConfig.settings.bgColorLight));
+export const contrastModelStore = validationStore(
+  ContrastModel(defaultConfig.settings.contrastModel),
+  contrastModelSchema,
+);
+export const directionModeStore = validationStore(
+  DirectionMode(defaultConfig.settings.directionMode),
+  directionModeSchema,
+);
+export const chromaModeStore = validationStore(
+  ChromaMode(defaultConfig.settings.chromaMode),
+  chromaModeSchema,
+);
+export const bgColorDarkStore = validationStore(
+  ColorString(defaultConfig.settings.bgColorDark),
+  colorStringSchema,
+);
+export const bgColorLightStore = validationStore(
+  ColorString(defaultConfig.settings.bgColorLight),
+  colorStringSchema,
+);
 export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
-export const $colorSpace = signal(ColorSpace(defaultConfig.settings.colorSpace));
+export const colorSpaceStore = validationStore(
+  ColorSpace(defaultConfig.settings.colorSpace),
+  colorSpaceSchema,
+);
 export const $isColorSpaceLocked = signal<boolean>(false);
 
 export function updateContrastModel(model: ContrastModel) {
   batch(() => {
-    $contrastModel.set(model);
+    contrastModelStore.$raw.set(model);
     for (const level of levels.values()) {
-      level.$contrast.set(
-        ContrastLevel(
-          model === "wcag" ? apcaToWcag(level.$contrast.value) : wcagToApca(level.$contrast.value),
+      level.contrast.$raw.set(
+        LevelContrast(
+          model === "wcag"
+            ? apcaToWcag(level.contrast.$lastValidValue.value)
+            : wcagToApca(level.contrast.$lastValidValue.value),
         ),
       );
     }
@@ -43,41 +71,45 @@ export function updateContrastModel(model: ContrastModel) {
 }
 
 export function toggleContrastModel() {
-  const toWcag = $contrastModel.value === "apca";
+  const toWcag = contrastModelStore.$lastValidValue.value === "apca";
 
   if (toWcag) {
-    $directionMode.set(DirectionMode("fgToBg"));
+    directionModeStore.$raw.set(DirectionMode("fgToBg"));
   }
 
   updateContrastModel(ContrastModel(toWcag ? "wcag" : "apca"));
 }
 
 export function updateDirectionMode(mode: DirectionMode) {
-  $directionMode.set(mode);
+  directionModeStore.$raw.set(mode);
   requestColorsRecalculation();
 }
 
 export function toggleDirectionMode() {
-  updateDirectionMode(DirectionMode($directionMode.value === "bgToFg" ? "fgToBg" : "bgToFg"));
+  updateDirectionMode(
+    DirectionMode(directionModeStore.$lastValidValue.value === "bgToFg" ? "fgToBg" : "bgToFg"),
+  );
 }
 
 export function toggleColorSpace() {
-  $colorSpace.set(ColorSpace($colorSpace.value === "p3" ? "srgb" : "p3"));
+  colorSpaceStore.$raw.set(
+    ColorSpace(colorSpaceStore.$lastValidValue.value === "p3" ? "srgb" : "p3"),
+  );
   requestColorsRecalculation();
 }
 
 export function updateChromaMode(mode: ChromaMode) {
-  $chromaMode.set(mode);
+  chromaModeStore.$raw.set(mode);
   requestColorsRecalculation();
 }
 
 export function updateBgColorLight(color: ColorString) {
-  $bgColorLight.set(color);
+  bgColorLightStore.$raw.set(color);
   requestColorsRecalculation($levelIds.value.slice($bgLightStart.value));
 }
 
 export function updateBgColorDark(color: ColorString) {
-  $bgColorDark.set(color);
+  bgColorDarkStore.$raw.set(color);
   requestColorsRecalculation($levelIds.value.slice(0, $bgLightStart.value));
 }
 
