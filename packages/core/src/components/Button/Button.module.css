@@ -3,28 +3,15 @@
   align-items: center;
   justify-content: center;
 
+  color: var(--color-primary);
   white-space: nowrap;
 
   transition:
     color 0.2s,
     background-color 0.2s;
 
-  :where([data-bg-mode="light"]) & {
-    color: var(--color-primary);
-  }
-
-  :where([data-bg-mode="dark"]) & {
-    color: var(--color-primary-inverted);
-  }
-
   &:hover {
-    :where([data-bg-mode="light"]) & {
-      background-color: var(--color-button-hover);
-    }
-
-    :where([data-bg-mode="dark"]) & {
-      background-color: var(--color-button-hover-inverted);
-    }
+    background-color: var(--color-button-hover);
   }
 
   &:focus {
@@ -41,13 +28,7 @@
 }
 
 .kind_primary {
-  :where([data-bg-mode="light"]) & {
-    background-color: var(--color-button-hover);
-  }
-
-  :where([data-bg-mode="dark"]) & {
-    background-color: var(--color-button-hover-inverted);
-  }
+  background-color: var(--color-button-hover);
 }
 
 .size_xs {
