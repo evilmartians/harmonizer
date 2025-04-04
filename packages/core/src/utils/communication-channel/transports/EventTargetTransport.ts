@@ -1,3 +1,4 @@
+import { CommunicationChannel } from "../CommunicationChannel";
 import type { AnyMessageOf, AnyMessages, CommunicationChannelTransport } from "../types";
 
 export class EventTargetTransport<
@@ -6,6 +7,15 @@ export class EventTargetTransport<
 > implements CommunicationChannelTransport<InboundMessages, OutboundMessages>
 {
   private eventTarget: EventTarget;
+
+  static createChannel<
+    InboundMessages extends AnyMessages,
+    OutboundMessages extends AnyMessages,
+  >(): CommunicationChannel<InboundMessages, OutboundMessages> {
+    const transport = new EventTargetTransport<InboundMessages, OutboundMessages>();
+
+    return new CommunicationChannel<InboundMessages, OutboundMessages>(transport);
+  }
 
   constructor() {
     this.eventTarget = new EventTarget();
