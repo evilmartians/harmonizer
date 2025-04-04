@@ -62,8 +62,5 @@
     "patchedDependencies": {
       "@hideoo/eslint-config@4.0.0": "patches/@hideoo__eslint-config@4.0.0.patch"
     }
-  },
-  "dependencies": {
-    "nanoevents": "^9.1.0"
   }
 }

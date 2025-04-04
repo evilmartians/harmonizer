@@ -4,45 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-catalogs:
-  default:
-    '@spred/core':
-      specifier: ^0.40.2
-      version: 0.40.2
-    '@spred/react':
-      specifier: ^0.4.2
-      version: 0.4.2
-    '@tailwindcss/vite':
-      specifier: ^4.0.14
-      version: 4.0.14
-    '@types/react':
-      specifier: ^19.0.12
-      version: 19.0.12
-    '@types/react-dom':
-      specifier: ^19.0.4
-      version: 19.0.4
-    '@vitejs/plugin-react':
-      specifier: ^4.3.4
-      version: 4.3.4
-    lightningcss:
-      specifier: ^1.29.3
-      version: 1.29.3
-    react:
-      specifier: ^19.0.0
-      version: 19.0.0
-    react-dom:
-      specifier: ^19.0.0
-      version: 19.0.0
-    vite:
-      specifier: ^6.2.2
-      version: 6.2.2
-    vite-css-modules:
-      specifier: ^1.8.4
-      version: 1.8.4
-    vite-tsconfig-paths:
-      specifier: ^5.1.4
-      version: 5.1.4
-
 patchedDependencies:
   '@hideoo/eslint-config@4.0.0':
     hash: 78f0b59752e78e87d699e79398c39d10ec8520948d21775aa8946f01a75528ba
@@ -51,10 +12,6 @@ patchedDependencies:
 importers:
 
   .:
-    dependencies:
-      nanoevents:
-        specifier: ^9.1.0
-        version: 9.1.0
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.7
@@ -2187,10 +2144,6 @@ packages:
     resolution: {integrity: sha512-QSEqPGTCJbkHU2yLvfY6huqYPjdBrOaTMKatO1F8nCSrkQGXeKwtCiCnsdxnuMhbg3DTVywKaeWLGCE5oJpq0g==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
-
-  nanoevents@9.1.0:
-    resolution: {integrity: sha512-Jd0fILWG44a9luj8v5kED4WI+zfkkgwKyRQKItTtlPfEsh7Lznfi1kr8/iZ+XAIss4Qq5GqRB0qtWbaz9ceO/A==}
-    engines: {node: ^18.0.0 || >=20.0.0}
 
   nanoid@3.3.8:
     resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
@@ -5021,8 +4974,6 @@ snapshots:
   nano-staged@0.8.0:
     dependencies:
       picocolors: 1.1.1
-
-  nanoevents@9.1.0: {}
 
   nanoid@3.3.8: {}
 

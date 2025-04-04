@@ -1,3 +1,4 @@
+import { CommunicationChannel } from "../CommunicationChannel";
 import type { AnyMessageOf, AnyMessages, CommunicationChannelTransport } from "../types";
 
 type PostMessageInterface = {
@@ -13,6 +14,14 @@ export class PostMessageTransport<
 > implements CommunicationChannelTransport<InboundMessages, OutboundMessages>
 {
   constructor(private target: PostMessageInterface = globalThis) {}
+
+  static createChannel<InboundMessages extends AnyMessages, OutboundMessages extends AnyMessages>(
+    target?: PostMessageInterface,
+  ): CommunicationChannel<InboundMessages, OutboundMessages> {
+    const transport = new PostMessageTransport<InboundMessages, OutboundMessages>(target);
+
+    return new CommunicationChannel<InboundMessages, OutboundMessages>(transport);
+  }
 
   onMessage = (handler: (message: AnyMessageOf<InboundMessages>) => void) => {
     const handleMessage = (e: MessageEvent<AnyMessageOf<InboundMessages>>) => {

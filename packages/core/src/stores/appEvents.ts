@@ -1,8 +1,9 @@
-import { createNanoEvents } from "nanoevents";
+import type { HueId, LevelId } from "@core/types";
+import { EventTargetTransport } from "@core/utils/communication-channel/transports/EventTargetTransport";
 
 export type AppEvents = {
-  levelAdded: (levelId: string) => void;
-  hueAdded: (hueId: string) => void;
+  levelAdded: LevelId;
+  hueAdded: HueId;
 };
 
-export const appEvents = createNanoEvents<AppEvents>();
+export const appEvents = EventTargetTransport.createChannel<AppEvents, AppEvents>();
