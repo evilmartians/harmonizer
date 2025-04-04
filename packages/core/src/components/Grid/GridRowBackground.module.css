@@ -119,6 +119,8 @@
 .highlitingLine {
   --hightlighting-bg: ;
 
+  pointer-events: none;
+
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 50%;
