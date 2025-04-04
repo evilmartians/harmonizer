@@ -33,6 +33,15 @@
   background-color: var(--color-button-hover);
 }
 
+.kind_floating {
+  color: var(--color-primary-dark);
+  background-color: var(--color-universal-elevation);
+
+  &:hover {
+    background-color: var(--color-universal-elevation-hover);
+  }
+}
+
 .size_xs {
   gap: calc(var(--spacing) / 2);
 
@@ -52,7 +61,7 @@
   gap: var(--spacing);
 
   padding: var(--spacing);
-  border-radius: var(--radius-xs);
+  border-radius: var(--radius-sm);
 
   font-size: var(--text-ui-s);
   line-height: var(--text-ui-s--line-height);
