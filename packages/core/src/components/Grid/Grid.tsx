@@ -1,4 +1,5 @@
 import { $hueIds, $levelIds } from "@core/stores/colors";
+import { $bgColorLightBgMode } from "@core/stores/settings";
 import {
   $gridHorizontallyScrolled,
   $gridVerticallyScrolled,
@@ -44,7 +45,9 @@ const GridContainer = memo(function GridContainer({ children }: PropsWithChildre
 });
 
 const GridCellLight = memo(function GridCellLight() {
-  return <GridCell bgMode="light" />;
+  const bgMode = useSubscribe($bgColorLightBgMode);
+
+  return <GridCell bgMode={bgMode} />;
 });
 
 export function Grid() {

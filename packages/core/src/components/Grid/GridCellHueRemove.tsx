@@ -1,4 +1,5 @@
 import { getHue, removeHue } from "@core/stores/colors";
+import { $bgColorLightBgMode } from "@core/stores/settings";
 import type { HueId } from "@core/types";
 import { useSubscribe } from "@spred/react";
 import { memo, useCallback } from "react";
@@ -13,13 +14,14 @@ export type GridCellHueRemoveProps = {
 export const GridCellHueRemove = memo(function GridCellHueRemove({
   hueId,
 }: GridCellHueRemoveProps) {
+  const bgMode = useSubscribe($bgColorLightBgMode);
   const hue = getHue(hueId);
   const name = useSubscribe(hue.name.$raw);
   const handleClick = useCallback(() => removeHue(hueId), [hueId]);
 
   return (
     <GridCellRemoveAxis
-      bgMode="light"
+      bgMode={bgMode}
       {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}
       onClick={handleClick}
       aria-label={`Delete hue row with name: ${name}`}

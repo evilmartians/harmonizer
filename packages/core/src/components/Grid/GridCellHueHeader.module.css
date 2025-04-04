@@ -27,7 +27,7 @@
     block-size: 1px;
 
     opacity: 0;
-    background-color: var(--color-border-inverted);
+    background-color: var(--color-border);
   }
 
   &::before {

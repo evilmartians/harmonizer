@@ -17,10 +17,6 @@
     background 0.3s,
     border-color 0.3s;
 
-  :where([data-bg-mode="dark"]) & {
-    color: var(--input-color, var(--color-primary-inverted));
-  }
-
   &:has(:where(:focus, :invalid)) {
     outline-style: solid;
     outline-width: 1px;
@@ -28,10 +24,6 @@
 
   &:where(:hover:not(:has(:disabled))) {
     border-color: var(--input-border-color, var(--color-border));
-
-    :where([data-bg-mode="dark"]) & {
-      border-color: var(--input-border-color, var(--color-border-inverted));
-    }
   }
 
   &:has(:invalid) {
@@ -47,10 +39,6 @@
 
 .kind_bordered {
   border-color: var(--input-border-color, var(--color-border));
-
-  :where([data-bg-mode="dark"]) & {
-    border-color: var(--input-border-color, var(--color-border-inverted));
-  }
 }
 
 .size_m {
@@ -98,7 +86,7 @@
   }
 
   &:invalid {
-    color: var(--color-red-500);
+    color: var(--color-universal-error-text);
   }
 
   &:invalid::placeholder {

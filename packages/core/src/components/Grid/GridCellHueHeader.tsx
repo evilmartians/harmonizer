@@ -5,6 +5,7 @@ import { withValidation } from "@core/components/Input/enhancers/withValidation"
 import { Input } from "@core/components/Input/Input";
 import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
 import { getHue, insertHue, updateHueAngle, updateHueName } from "@core/stores/colors";
+import { $bgColorDarkBgMode } from "@core/stores/settings";
 import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
 import { useSubscribe } from "@spred/react";
@@ -94,8 +95,10 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
 });
 
 export const GridCellHueHeader = memo(function GridCellHueHeader({ hueId }: HueComponentProps) {
+  const bgMode = useSubscribe($bgColorDarkBgMode);
+
   return (
-    <GridCell bgMode="dark" className={styles.cell} {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}>
+    <GridCell bgMode={bgMode} className={styles.cell} {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}>
       <InsertBeforeArea hueId={hueId} />
       <NameInput hueId={hueId} />
       <AngleInput hueId={hueId} />

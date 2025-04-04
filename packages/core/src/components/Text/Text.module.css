@@ -7,23 +7,11 @@
 }
 
 .kind_primary {
-  :where([data-bg-mode="light"]) & {
-    color: var(--color-primary);
-  }
-
-  :where([data-bg-mode="dark"]) & {
-    color: var(--color-primary-inverted);
-  }
+  color: var(--color-primary);
 }
 
 .kind_secondary {
-  :where([data-bg-mode="light"]) & {
-    color: var(--color-secondary);
-  }
-
-  :where([data-bg-mode="dark"]) & {
-    color: var(--color-secondary-inverted);
-  }
+  color: var(--color-secondary);
 }
 
 .size_xs {

@@ -41,11 +41,6 @@
     translate: 50%;
   }
 
-  [data-bg-mode="dark"] &::before,
-  [data-bg-mode="dark"] &::after {
-    background-color: var(--color-border-inverted);
-  }
-
   &:hover::before,
   &:hover::after,
   &:has(:focus-visible)::before,

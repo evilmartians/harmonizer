@@ -1,10 +1,6 @@
 .cell {
   --border: var(--color-border);
 
-  &[data-bg-mode="dark"] {
-    --border: var(--color-border-inverted);
-  }
-
   &:is(:hover, :focus-visible) :is(.lightness, .chroma, .contrast, .hue) {
     opacity: 1;
   }

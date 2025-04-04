@@ -9,13 +9,14 @@ import {
 import {
   BgLightStart,
   ChromaMode,
+  ColorSpace,
   ColorString,
-  LevelContrast,
   ContrastModel,
   DirectionMode,
-  ColorSpace,
+  LevelContrast,
 } from "@core/types";
 import { apcaToWcag } from "@core/utils/colors/apcaToWcag";
+import { getBgMode } from "@core/utils/colors/getBgMode";
 import { wcagToApca } from "@core/utils/colors/wcagToApca";
 import { batch, signal } from "@spred/core";
 
@@ -43,9 +44,13 @@ export const bgColorDarkStore = validationStore(
   ColorString(defaultConfig.settings.bgColorDark),
   colorStringSchema,
 );
+export const $bgColorDarkBgMode = signal((get) => getBgMode(get(bgColorDarkStore.$lastValidValue)));
 export const bgColorLightStore = validationStore(
   ColorString(defaultConfig.settings.bgColorLight),
   colorStringSchema,
+);
+export const $bgColorLightBgMode = signal((get) =>
+  getBgMode(get(bgColorLightStore.$lastValidValue)),
 );
 export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
 export const colorSpaceStore = validationStore(

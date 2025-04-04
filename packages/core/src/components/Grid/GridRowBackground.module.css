@@ -97,10 +97,12 @@
 
   margin-block-end: calc(var(--spacing) * 4 + 1px);
 
-  background-color: oklch(92.8% 0.006 264.531deg);
+  color: var(--color-primary-light);
+
+  background-color: var(--color-border-solid);
 
   &:hover {
-    background-color: oklch(87.2% 0.01 258.338deg);
+    background-color: oklch(from var(--color-border-solid) calc(l - 0.1) c h);
   }
 
   &:focus-visible,
@@ -126,7 +128,7 @@
   block-size: 1000vh;
 
   opacity: 0;
-  background-color: oklch(72.27% 0.192 149.58deg);
+  background-color: var(--color-highlight);
 
   &:dir(rtl) {
     translate: 50%;

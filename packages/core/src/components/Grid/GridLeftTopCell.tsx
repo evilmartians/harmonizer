@@ -12,6 +12,7 @@ import {
   toggleContrastModel,
   toggleDirectionMode,
   updateChromaMode,
+  $bgColorDarkBgMode,
 } from "@core/stores/settings";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
@@ -31,8 +32,10 @@ const CHROMA_OPTIONS = [
   { value: "even", label: "Even chroma" },
   { value: "max", label: "Max chroma" },
 ];
+const HINT_LOCKED_COLOR_SPACE = "To change profile, adjust it in the Figma file settings";
 
 export const GridLeftTopCell = memo(function GridLeftTopCell() {
+  const bgMode = useSubscribe($bgColorDarkBgMode);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
   const chromaModeValue = useSubscribe(chromaModeStore.$lastValidValue);
@@ -40,7 +43,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
 
   return (
-    <GridCell bgMode="dark" className={styles.cell}>
+    <GridCell bgMode={bgMode} className={styles.cell}>
       <Text size="s" kind="secondary" className={styles.levelLabel}>
         {LABEL_LEVEL}
       </Text>
@@ -69,7 +72,12 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
           title={LABEL_CHROMA_MODE}
         />
         <div className={clsx(styles.container, styles.colorModePicker)}>
-          <Button size="xs" onClick={toggleColorSpace} disabled={isColorSpaceLocked}>
+          <Button
+            size="xs"
+            onClick={toggleColorSpace}
+            disabled={isColorSpaceLocked}
+            title={isColorSpaceLocked ? HINT_LOCKED_COLOR_SPACE : undefined}
+          >
             {colorSpace}
           </Button>
           <Text size="s" kind="secondary">

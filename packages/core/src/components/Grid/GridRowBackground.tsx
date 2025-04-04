@@ -13,6 +13,8 @@ import {
   updateBgColorDark,
   updateBgColorLight,
   updateBgLightStartByOffset,
+  $bgColorDarkBgMode,
+  $bgColorLightBgMode,
 } from "@core/stores/settings";
 import { ColorString } from "@core/types";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
@@ -33,6 +35,7 @@ const ExportImportButtons = () => {
   return <div className={styles.importExportControls}>{actions}</div>;
 };
 const SpacerCell = memo(function SpacerCell() {
+  const bgMode = useSubscribe($bgColorDarkBgMode);
   const lightStartAt0 = useSubscribe($bgColorLightAt0);
 
   if (lightStartAt0) {
@@ -40,19 +43,20 @@ const SpacerCell = memo(function SpacerCell() {
   }
 
   return (
-    <GridCell bgMode="dark" className={styles.spacerCell}>
+    <GridCell bgMode={bgMode} className={styles.spacerCell}>
       <ExportImportButtons />
     </GridCell>
   );
 });
 const BgDarkSpan = memo(function BgDarkSpan() {
   const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
+  const bgMode = useSubscribe($bgColorDarkBgMode);
   const error = useSubscribe(bgColorDarkStore.$validationError);
   const lightStartAt0 = useSubscribe($bgColorLightAt0);
 
   return (
     <BgMode
-      bgMode="dark"
+      bgMode={bgMode}
       className={clsx(
         styles.bgSpan,
         styles.dark,
@@ -81,6 +85,7 @@ const DRAG_THRESHOLD = 0.75;
 const BgLightSpan = memo(function BgLightSpan() {
   const dragButtonRef = useRef<HTMLButtonElement | null>(null);
   const bgColorLight = useSubscribe(bgColorLightStore.$raw);
+  const bgMode = useSubscribe($bgColorLightBgMode);
   const error = useSubscribe(bgColorLightStore.$validationError);
 
   useEffect(() => {
@@ -95,7 +100,7 @@ const BgLightSpan = memo(function BgLightSpan() {
   });
 
   return (
-    <BgMode bgMode="light" className={clsx(styles.bgSpan, styles.light)}>
+    <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.light)}>
       <div className={styles.dragContainer}>
         <Button
           className={styles.dragButton}
