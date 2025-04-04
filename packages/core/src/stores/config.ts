@@ -1,46 +1,50 @@
 import type { ExportConfig } from "@core/types";
-import { batch } from "@spred/core";
+import { batch, signal } from "@spred/core";
 
 import {
+  $areHuesValid,
+  $areLevelsValid,
   $hueIds,
   $levelIds,
   getHue,
   getLevel,
   overwriteHues,
   overwriteLevels,
-  requestColorsRecalculation,
   pregenerateFallbackColorsMap,
+  requestColorsRecalculation,
 } from "./colors";
 import {
-  $bgColorDark,
-  $bgColorLight,
   $bgLightStart,
-  $chromaMode,
-  $colorSpace,
-  $contrastModel,
-  $directionMode,
+  chromaModeStore,
+  colorSpaceStore,
+  contrastModelStore,
+  directionModeStore,
+  bgColorDarkStore,
+  bgColorLightStore,
 } from "./settings";
 import { getHueStore, getLevelStore } from "./utils";
+
+export const $isExportConfigValid = signal((get) => get($areLevelsValid) && get($areHuesValid));
 
 export function getConfig(): ExportConfig {
   return {
     levels: $levelIds.value.map((levelId) => ({
-      name: getLevel(levelId).$name.value,
-      contrast: getLevel(levelId).$contrast.value,
-      chroma: getLevel(levelId).$chroma.value,
+      name: getLevel(levelId).name.$lastValidValue.value,
+      contrast: getLevel(levelId).contrast.$lastValidValue.value,
+      chroma: getLevel(levelId).chroma.$lastValidValue.value,
     })),
     hues: $hueIds.value.map((hueId) => ({
-      name: getHue(hueId).$name.value,
-      angle: getHue(hueId).$angle.value,
+      name: getHue(hueId).name.$lastValidValue.value,
+      angle: getHue(hueId).angle.$lastValidValue.value,
     })),
     settings: {
-      contrastModel: $contrastModel.value,
-      directionMode: $directionMode.value,
-      chromaMode: $chromaMode.value,
-      bgColorLight: $bgColorLight.value,
-      bgColorDark: $bgColorDark.value,
+      contrastModel: contrastModelStore.$lastValidValue.value,
+      directionMode: directionModeStore.$lastValidValue.value,
+      chromaMode: chromaModeStore.$lastValidValue.value,
+      bgColorLight: bgColorLightStore.$lastValidValue.value,
+      bgColorDark: bgColorDarkStore.$lastValidValue.value,
       bgLightStart: $bgLightStart.value,
-      colorSpace: $colorSpace.value,
+      colorSpace: colorSpaceStore.$lastValidValue.value,
     },
   };
 }
@@ -50,13 +54,13 @@ export function updateConfig(config: ExportConfig) {
     const levels = config.levels.map(getLevelStore);
     const hues = config.hues.map(getHueStore);
 
-    $contrastModel.set(config.settings.contrastModel);
-    $directionMode.set(config.settings.directionMode);
-    $chromaMode.set(config.settings.chromaMode);
-    $bgColorLight.set(config.settings.bgColorLight);
-    $bgColorDark.set(config.settings.bgColorDark);
+    contrastModelStore.$raw.set(config.settings.contrastModel);
+    directionModeStore.$raw.set(config.settings.directionMode);
+    chromaModeStore.$raw.set(config.settings.chromaMode);
+    bgColorLightStore.$raw.set(config.settings.bgColorLight);
+    bgColorDarkStore.$raw.set(config.settings.bgColorDark);
     $bgLightStart.set(config.settings.bgLightStart);
-    $colorSpace.set(config.settings.colorSpace);
+    colorSpaceStore.$raw.set(config.settings.colorSpace);
     overwriteLevels(levels);
     overwriteHues(hues);
     pregenerateFallbackColorsMap(

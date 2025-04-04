@@ -1,5 +1,6 @@
-import defaultConfig from "@core/defaultConfig.json";
+import { getDefaultConfigCopy } from "@core/defaultConfig";
 import { parseExportConfig } from "@core/schemas/exportConfig";
+import { ColorSpace } from "@core/types";
 import { createApp } from "@harmonizer/core";
 import { FigmaPluginActions } from "@ui/components/FigmaPluginActions/FigmaPluginActions";
 import { pluginChannel } from "@ui/pluginChannel";
@@ -8,9 +9,9 @@ import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindow
 
 pluginChannel.on("ready", ({ paletteConfig, inP3 }) => {
   const palettePresents = !!paletteConfig;
-  const config = palettePresents ? parseExportConfig(paletteConfig) : defaultConfig;
+  const config = palettePresents ? parseExportConfig(paletteConfig) : getDefaultConfigCopy();
 
-  config.settings.colorSpace = inP3 ? "p3" : "srgb";
+  config.settings.colorSpace = ColorSpace(inP3 ? "p3" : "srgb");
 
   createApp(
     document.querySelector("#root"),

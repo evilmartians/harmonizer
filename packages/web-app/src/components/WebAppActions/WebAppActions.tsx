@@ -2,7 +2,8 @@ import { Button } from "@core/components/Button/Button";
 import { FileInputButton } from "@core/components/FileInputButton/FileInputButton";
 import { MArrowDownwards } from "@core/components/Icon/MArrowDownwards";
 import { parseExportConfig } from "@core/schemas/exportConfig";
-import { getConfig, updateConfig } from "@core/stores/config";
+import { $isExportConfigValid, getConfig, updateConfig } from "@core/stores/config";
+import { useSubscribe } from "@spred/react";
 import type { ChangeEvent } from "react";
 
 import styles from "./WebAppActions.module.css";
@@ -39,6 +40,8 @@ function handleDownload() {
 }
 
 export function WebAppActions() {
+  const isValid = useSubscribe($isExportConfigValid);
+
   return (
     <>
       <FileInputButton
@@ -49,7 +52,13 @@ export function WebAppActions() {
       >
         Upload
       </FileInputButton>
-      <Button kind="primary" size="s" onClick={handleDownload} iconStart={<MArrowDownwards />}>
+      <Button
+        kind="primary"
+        size="s"
+        onClick={handleDownload}
+        iconStart={<MArrowDownwards />}
+        disabled={!isValid}
+      >
         Download
       </Button>
     </>

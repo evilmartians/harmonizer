@@ -10,6 +10,7 @@
     "typecheck": "pnpm tsc --build"
   },
   "dependencies": {
+    "@spred/react": "catalog:",
     "@harmonizer/core": "workspace:^",
     "react": "catalog:",
     "react-dom": "catalog:"

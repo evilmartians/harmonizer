@@ -1,16 +1,16 @@
 import {
   BgLightStart,
-  HueIndex,
-  LevelIndex,
-  type ChromaLevel,
   type ColorCellData,
   type ColorIdentifier,
-  type ContrastLevel,
   type HueAngle,
   type HueId,
-  type HueName,
+  HueIndex,
+  HueName,
   type LchColor,
+  type LevelChroma,
+  type LevelContrast,
   type LevelId,
+  LevelIndex,
   type LevelName,
 } from "@core/types";
 import { assertUnreachable } from "@core/utils/assertions/assertUnreachable";
@@ -20,21 +20,25 @@ import {
   type GenerateColorsPayload,
   type GeneratedColorPayload,
 } from "@core/utils/colors/calculateColors";
+import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
+import { getMiddleContrastLevel } from "@core/utils/colors/getMiddleContrastLevel";
+import { getMiddleHueAngle } from "@core/utils/colors/getMiddleHueAngle";
 import { objectEntries } from "@core/utils/object/objectEntries";
 import { workerChannel } from "@core/worker/workerChannel";
-import { batch, type WritableSignal } from "@spred/core";
+import { batch, signal, type WritableSignal } from "@spred/core";
 import { pick } from "es-toolkit";
 import { debounce } from "es-toolkit/compat";
 
+import { appEvents } from "./appEvents";
 import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
 import {
-  $bgColorDark,
-  $bgColorLight,
   $bgLightStart,
-  $chromaMode,
-  $colorSpace,
-  $contrastModel,
-  $directionMode,
+  bgColorDarkStore,
+  bgColorLightStore,
+  chromaModeStore,
+  colorSpaceStore,
+  contrastModelStore,
+  directionModeStore,
 } from "./settings";
 import {
   cleanupColors,
@@ -42,17 +46,16 @@ import {
   getColorIdentifier,
   getColorSignal,
   getHueStore,
-  getInsertItem,
+  getInsertMethod,
   getLevelStore,
-  getMiddleHue,
-  getMiddleLevel,
+  getMiddleLevelName,
   type HueStore,
   type LevelStore,
   matchesHueColorKey,
   matchesLevelColorKey,
 } from "./utils";
 
-const levelsStore = createIndexedArrayStore<LevelStore>([]);
+export const levelsStore = createIndexedArrayStore<LevelStore>([]);
 export const {
   $ids: $levelIds,
   items: levels,
@@ -68,6 +71,31 @@ export const {
   addItem: addHue,
   overwrite: overwriteHues,
 } = huesStore;
+
+export const $areLevelsValid = signal((get) => {
+  const levelIds = get($levelIds);
+
+  const allLevelsValid = levelIds.every((levelId) => {
+    const level = getLevel(levelId);
+
+    return (
+      !get(level.name.$validationError) &&
+      !get(level.contrast.$validationError) &&
+      !get(level.chroma.$validationError)
+    );
+  });
+
+  return allLevelsValid;
+});
+
+export const $areHuesValid = signal((get) => {
+  const hueIds = get($hueIds);
+  return hueIds.every((hueId) => {
+    const hue = getHue(hueId);
+
+    return !get(hue.name.$validationError) && !get(hue.angle.$validationError);
+  });
+});
 
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 
@@ -126,16 +154,19 @@ function upsertColor(levelId: LevelId, hueId: HueId, color: ColorCellData) {
 
 function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColorsPayload {
   return {
-    directionMode: $directionMode.value,
-    contrastModel: $contrastModel.value,
-    levels: $levelIds.value.map((id) => ({ id, contrast: getLevel(id).$contrast.value })),
+    directionMode: directionModeStore.$lastValidValue.value,
+    contrastModel: contrastModelStore.$lastValidValue.value,
+    levels: $levelIds.value.map((id) => ({
+      id,
+      contrast: getLevel(id).contrast.$lastValidValue.value,
+    })),
     recalcOnlyLevels,
-    hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).$angle.value })),
-    bgColorLight: $bgColorLight.value,
-    bgColorDark: $bgColorDark.value,
+    hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).angle.$lastValidValue.value })),
+    bgColorLight: bgColorLightStore.$lastValidValue.value,
+    bgColorDark: bgColorDarkStore.$lastValidValue.value,
     bgLightStart: $bgLightStart.value,
-    colorSpace: $colorSpace.value,
-    chromaMode: $chromaMode.value,
+    colorSpace: colorSpaceStore.$lastValidValue.value,
+    chromaMode: chromaModeStore.$lastValidValue.value,
   };
 }
 
@@ -182,11 +213,25 @@ export function getColor$(levelId: LevelId, hueId: HueId) {
 }
 
 // Level methods
-export const insertLevel = getInsertItem({
+export const insertLevel = getInsertMethod({
   main: levelsStore,
   cross: huesStore,
-  getNewItem: () => getLevelStore(FALLBACK_LEVEL_DATA),
-  getMiddleItem: getMiddleLevel,
+  getNewItem(prevLevel, nextLevel) {
+    if (prevLevel) {
+      return getLevelStore({
+        name: nextLevel
+          ? getMiddleLevelName(prevLevel.name.$raw.value, nextLevel.name.$raw.value)
+          : prevLevel.name.$raw.value,
+        contrast: nextLevel
+          ? getMiddleContrastLevel(prevLevel.contrast.$raw.value, nextLevel.contrast.$raw.value)
+          : prevLevel.contrast.$raw.value,
+        chroma: prevLevel.chroma.$raw.value,
+        tintColor: prevLevel.$tintColor.value,
+      });
+    }
+
+    return getLevelStore(FALLBACK_LEVEL_DATA);
+  },
   onAddColor: (levelId, hueId, previousLevelId) => {
     upsertColor(
       levelId,
@@ -200,6 +245,7 @@ export const insertLevel = getInsertItem({
       $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
     }
 
+    requestAnimationFrame(() => appEvents.emit("levelAdded", levelId));
     requestColorsRecalculation([levelId]);
   },
 });
@@ -218,32 +264,47 @@ export function removeLevel(levelId: LevelId) {
 }
 
 export function updateLevelName(id: LevelId, name: LevelName) {
-  getLevel(id).$name.set(name);
+  getLevel(id).name.$raw.set(name);
 }
 
-export function updateLevelContrast(id: LevelId, contrast: ContrastLevel) {
-  getLevel(id).$contrast.set(contrast);
+export function updateLevelContrast(id: LevelId, contrast: LevelContrast) {
+  getLevel(id).contrast.$raw.set(contrast);
   requestColorsRecalculation([id]);
 }
 
-export function updateLevelChroma(id: LevelId, chroma: ChromaLevel) {
-  getLevel(id).$chroma.set(chroma);
+export function updateLevelChroma(id: LevelId, chroma: LevelChroma) {
+  getLevel(id).chroma.$raw.set(chroma);
   requestColorsRecalculation([id]);
 }
 
 // Hue methods
-export const insertHue = getInsertItem({
+export const insertHue = getInsertMethod({
   main: huesStore,
   cross: levelsStore,
-  getNewItem: () => getHueStore(FALLBACK_HUE_DATA),
-  getMiddleItem: getMiddleHue,
+  getNewItem(prevHue, nextHue) {
+    if (prevHue) {
+      const angle = nextHue
+        ? getMiddleHueAngle(prevHue.angle.$raw.value, nextHue.angle.$raw.value)
+        : prevHue.angle.$raw.value;
+
+      return getHueStore({
+        name: HueName(getClosestColorName(angle)),
+        angle,
+      });
+    }
+
+    return getHueStore(FALLBACK_HUE_DATA);
+  },
   onAddColor: (hueId, levelId, previousHueId) =>
     upsertColor(
       levelId,
       hueId,
       previousHueId ? getColor$(levelId, previousHueId).value : FALLBACK_CELL_COLOR,
     ),
-  onFinish: () => requestColorsRecalculation(),
+  onFinish: (hueId) => {
+    requestAnimationFrame(() => appEvents.emit("hueAdded", hueId));
+    requestColorsRecalculation();
+  },
 });
 
 export function removeHue(hueId: HueId) {
@@ -256,11 +317,11 @@ export function removeHue(hueId: HueId) {
 }
 
 export function updateHueName(id: HueId, name: HueName) {
-  getHue(id).$name.set(name);
+  getHue(id).name.$raw.set(name);
 }
 
 export function updateHueAngle(id: HueId, angle: HueAngle) {
-  getHue(id).$angle.set(angle);
+  getHue(id).angle.$raw.set(angle);
   requestColorsRecalculation();
 }
 

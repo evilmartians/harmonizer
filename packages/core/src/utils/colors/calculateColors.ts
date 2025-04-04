@@ -1,7 +1,7 @@
 import {
-  ChromaLevel,
-  ContrastLevel,
+  LevelChroma,
   HueAngle,
+  LevelContrast,
   type ChromaMode,
   type ColorCellData,
   type ColorHueTintData,
@@ -11,8 +11,9 @@ import {
   type DirectionMode,
   type HueId,
   type LevelId,
+  type ColorSpace,
 } from "@core/types";
-import { maxChroma, type ColorSpace } from "apcach";
+import { maxChroma } from "apcach";
 
 import { ensureNonNullable } from "../assertions/ensureNonNullable";
 
@@ -20,7 +21,7 @@ import { calculateColorCell } from "./calculateColorCell";
 import { maxCommonChroma } from "./maxCommonChroma";
 
 export type GenerateColorsPayload = {
-  levels: { id: LevelId; contrast: ContrastLevel }[];
+  levels: { id: LevelId; contrast: LevelContrast }[];
   recalcOnlyLevels: LevelId[] | undefined;
   hues: { id: HueId; angle: HueAngle }[];
   bgColorLight: ColorString;
@@ -46,9 +47,9 @@ export type GeneratedHueTintPayload = {
 
 export type GeneratedColorPayload = GeneratedLevelPayload | GeneratedHueTintPayload;
 
-const HUE_TINT_CR = ContrastLevel(80);
-const HUE_TINT_CHROMA = ChromaLevel(0.05);
-const MIN_LEVEL_TINT_CR = ContrastLevel(50);
+const HUE_TINT_CR = LevelContrast(80);
+const HUE_TINT_CHROMA = LevelChroma(0.05);
+const MIN_LEVEL_TINT_CR = LevelContrast(50);
 
 export function calculateColors(
   {
@@ -116,9 +117,9 @@ export function calculateColors(
             ...commonApcacheOptions,
             hueAngle: HueAngle(0),
             contrastLevel: MIN_LEVEL_TINT_CR,
-            chroma: ChromaLevel(0),
+            chroma: LevelChroma(0),
           }),
-          referencedC: ChromaLevel(0),
+          referencedC: LevelChroma(0),
         },
         cells: {},
       });

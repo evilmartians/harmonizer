@@ -3,13 +3,12 @@ import { MPlus } from "@core/components/Icon/MPlus";
 import { withNumericIncrementControls } from "@core/components/Input/enhancers/withNumericIncrementControls";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
-import { hueAngleSchema } from "@core/schemas/color";
+import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
 import { getHue, insertHue, updateHueAngle, updateHueName } from "@core/stores/colors";
 import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
-import { getInputNumberValidator } from "@core/utils/schema/getInputValidator";
 import { useSubscribe } from "@spred/react";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useRef } from "react";
 
 import { DATA_ATTR_CELL_HUE_ID } from "./constants";
 import { GridCell } from "./GridCell";
@@ -24,7 +23,7 @@ const HINT_NAME = "Color name";
 const HINT_DEGREE = "Hue 0…360";
 
 const InsertBeforeArea = memo(function InsertBeforeArea({ hueId }: HueComponentProps) {
-  const name = useSubscribe(getHue(hueId).$name);
+  const name = useSubscribe(getHue(hueId).name.$raw);
   const handleInsert = useCallback(() => insertHue(hueId), [hueId]);
 
   return (
@@ -42,13 +41,23 @@ const InsertBeforeArea = memo(function InsertBeforeArea({ hueId }: HueComponentP
   );
 });
 
+const HueNameInput = withValidation(Input);
 const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
   const hue = getHue(hueId);
-  const name = useSubscribe(hue.$name);
+  const name = useSubscribe(hue.name.$raw);
+  const error = useSubscribe(hue.name.$validationError);
   const tintColor = useSubscribe(hue.$tintColor);
 
+  useAppEvent("hueAdded", (id) => {
+    if (id === hueId) {
+      inputRef.current?.focus();
+    }
+  });
+
   return (
-    <Input
+    <HueNameInput
+      ref={inputRef}
       className={styles.control}
       size="m"
       kind="ghost"
@@ -56,15 +65,17 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
       placeholder={PLACEHOLDER_NAME}
       value={name}
       title={HINT_NAME}
+      error={error}
       onChange={(e) => updateHueName(hueId, HueName(e.target.value))}
     />
   );
 });
 
 const HueAngleInput = withValidation(withNumericIncrementControls(Input));
-const hueAngleInputSchema = getInputNumberValidator(hueAngleSchema);
 const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
-  const angle = useSubscribe(getHue(hueId).$angle);
+  const hue = getHue(hueId);
+  const angle = useSubscribe(hue.angle.$raw);
+  const error = useSubscribe(hue.angle.$validationError);
 
   return (
     <HueAngleInput
@@ -74,7 +85,7 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
       placeholder={PLACEHOLDER_HUE}
       value={angle}
       title={HINT_DEGREE}
-      schema={hueAngleInputSchema}
+      error={error}
       onChange={(e) =>
         updateHueAngle(hueId, HueAngle(e.target.value ? Number.parseFloat(e.target.value) : 0))
       }

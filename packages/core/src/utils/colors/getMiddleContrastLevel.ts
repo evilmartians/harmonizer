@@ -1,4 +1,4 @@
-import type { ContrastLevel } from "@core/types";
+import type { LevelContrast } from "@core/types";
 
 import { getMiddleNumber } from "../number/getMiddleNumber";
 
@@ -10,4 +10,4 @@ import { getMiddleNumber } from "../number/getMiddleNumber";
  * @returns The middle contrast level.
  */
 
-export const getMiddleContrastLevel = getMiddleNumber<ContrastLevel>;
+export const getMiddleContrastLevel = getMiddleNumber<LevelContrast>;

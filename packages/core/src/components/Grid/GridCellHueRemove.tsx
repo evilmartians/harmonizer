@@ -14,7 +14,7 @@ export const GridCellHueRemove = memo(function GridCellHueRemove({
   hueId,
 }: GridCellHueRemoveProps) {
   const hue = getHue(hueId);
-  const name = useSubscribe(hue.$name);
+  const name = useSubscribe(hue.name.$raw);
   const handleClick = useCallback(() => removeHue(hueId), [hueId]);
 
   return (

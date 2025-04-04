@@ -6,6 +6,12 @@ settings:
 
 catalogs:
   default:
+    '@spred/core':
+      specifier: ^0.40.2
+      version: 0.40.2
+    '@spred/react':
+      specifier: ^0.4.2
+      version: 0.4.2
     '@tailwindcss/vite':
       specifier: ^4.0.14
       version: 4.0.14
@@ -45,6 +51,10 @@ patchedDependencies:
 importers:
 
   .:
+    dependencies:
+      nanoevents:
+        specifier: ^9.1.0
+        version: 9.1.0
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.7
@@ -101,10 +111,10 @@ importers:
   packages/core:
     dependencies:
       '@spred/core':
-        specifier: ^0.40.2
+        specifier: 'catalog:'
         version: 0.40.2
       '@spred/react':
-        specifier: ^0.4.2
+        specifier: 'catalog:'
         version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       apcach:
         specifier: ^0.6.4
@@ -155,6 +165,9 @@ importers:
       '@harmonizer/core':
         specifier: workspace:^
         version: link:../core
+      '@spred/react':
+        specifier: 'catalog:'
+        version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       react:
         specifier: 'catalog:'
         version: 19.0.0
@@ -201,6 +214,9 @@ importers:
       '@harmonizer/core':
         specifier: workspace:^
         version: link:../core
+      '@spred/react':
+        specifier: 'catalog:'
+        version: 0.4.2(@spred/core@0.40.2)(react@19.0.0)
       react:
         specifier: 'catalog:'
         version: 19.0.0
@@ -2171,6 +2187,10 @@ packages:
     resolution: {integrity: sha512-QSEqPGTCJbkHU2yLvfY6huqYPjdBrOaTMKatO1F8nCSrkQGXeKwtCiCnsdxnuMhbg3DTVywKaeWLGCE5oJpq0g==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     hasBin: true
+
+  nanoevents@9.1.0:
+    resolution: {integrity: sha512-Jd0fILWG44a9luj8v5kED4WI+zfkkgwKyRQKItTtlPfEsh7Lznfi1kr8/iZ+XAIss4Qq5GqRB0qtWbaz9ceO/A==}
+    engines: {node: ^18.0.0 || >=20.0.0}
 
   nanoid@3.3.8:
     resolution: {integrity: sha512-WNLf5Sd8oZxOm+TzppcYk8gVOgP+l58xNy58D0nbUnOxOWRWvlcCV4kUF7ltmI6PsrLl/BgKEyS4mqsGChFN0w==}
@@ -4998,6 +5018,8 @@ snapshots:
   nano-staged@0.8.0:
     dependencies:
       picocolors: 1.1.1
+
+  nanoevents@9.1.0: {}
 
   nanoid@3.3.8: {}
 

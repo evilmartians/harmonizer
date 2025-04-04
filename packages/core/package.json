@@ -8,8 +8,8 @@
     "typecheck": "pnpm tsc --build"
   },
   "dependencies": {
-    "@spred/core": "^0.40.2",
-    "@spred/react": "^0.4.2",
+    "@spred/core": "catalog:",
+    "@spred/react": "catalog:",
     "apcach": "^0.6.4",
     "clsx": "^2.1.1",
     "culori": "^4.0.1",
