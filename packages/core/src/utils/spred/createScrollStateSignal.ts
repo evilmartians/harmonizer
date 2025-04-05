@@ -4,6 +4,7 @@ import { shallowEqual } from "fast-equals";
 
 import { getScrollState, type ScrollState, type ScrollType } from "../dom/getScrollState";
 
+import { createMutationObserverSignal } from "./createMutationObserverSignal";
 import { createResizeObserverSignal } from "./createResizeObserverSignal";
 import { toSignal } from "./toSignal";
 import type { InitialSignalValue, SignalOrValue } from "./types";
@@ -32,6 +33,17 @@ export function createScrollStateSignal<E extends HTMLElement>(
     initialValue: $element.value?.[type === "x" ? "offsetWidth" : "offsetHeight"] ?? 0,
     mapper: (entry) => entry.contentRect[type === "x" ? "width" : "height"],
   });
+  const $mutationObserver = createMutationObserverSignal({
+    element,
+    initialValue: 0,
+    mapper: (_mutationsRecord, prevState) => prevState + 1, // We need just to trigger subscription
+    observerOptions: {
+      childList: true,
+      subtree: true,
+      characterData: true,
+      attributes: true,
+    },
+  });
 
   function onActivate() {
     return effect((get) => {
@@ -54,6 +66,7 @@ export function createScrollStateSignal<E extends HTMLElement>(
       });
 
       get($resizeObserver); // Activate the resize observer
+      get($mutationObserver); // Activate the mutation observer
       recalculateState();
 
       return () =>
