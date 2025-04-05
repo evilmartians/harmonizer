@@ -61,8 +61,8 @@ const BgDarkSpan = memo(function BgDarkSpan() {
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
       <div className={styles.bgControlContainer}>
-        <Text kind="secondary" size="s">
-          Dark mode background
+        <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
+          Dark mode <span className={styles.hideWhenTwoColumns}>background</span>
         </Text>
         <BgColorInput
           className={styles.bgColorInput}
@@ -79,6 +79,7 @@ const BgDarkSpan = memo(function BgDarkSpan() {
 
 const BgSingleSpan = memo(function BgSingleSpan() {
   const bgColorSingleStore = useSubscribe($bgColorSingleStore);
+  const levelsCount = useSubscribe($levelsCount);
   const bgColor = useSubscribe(bgColorSingleStore.$raw);
   const bgMode = useSubscribe($bgColorSingleBgMode);
   const error = useSubscribe(bgColorSingleStore.$validationError);
@@ -86,7 +87,7 @@ const BgSingleSpan = memo(function BgSingleSpan() {
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
       <div className={styles.bgControlContainer}>
-        <Text kind="secondary" size="s">
+        <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
           Background
         </Text>
         <BgColorInput
@@ -148,8 +149,8 @@ const BgLightSpan = memo(function BgLightSpan() {
         <div className={styles.highlitingLine} />
       </div>
       <div className={styles.bgControlContainer}>
-        <Text kind="secondary" size="s">
-          Light mode background
+        <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
+          Light mode <span className={styles.hideWhenTwoColumns}>background</span>
         </Text>
         <BgColorInput
           className={styles.bgColorInput}

@@ -53,14 +53,31 @@
 }
 
 .bgControlContainer {
+  container: bgControl / inline-size;
   display: flex;
-  flex-wrap: wrap;
+  flex-grow: 1;
   gap: calc(var(--spacing) * 1.5);
   align-items: center;
   justify-content: flex-end;
 
   .light & {
     flex-direction: row-reverse;
+  }
+
+  .single & {
+    justify-content: center;
+  }
+}
+
+.hideWhenTwoColumns {
+  @container bgControl (max-inline-size: 200px) {
+    display: none;
+  }
+}
+
+.hideWhenSingleColumn {
+  @container bgControl (max-inline-size: 150px) {
+    display: none;
   }
 }
 
