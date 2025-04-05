@@ -8,4 +8,12 @@
   flex-direction: column;
   gap: var(--spacing);
   justify-content: stretch;
+
+  [data-with-horizontal-scrollbar] + & {
+    inset-block-end: calc(var(--spacing) * 4 + var(--scrollbar-width));
+  }
+
+  [data-with-vertical-scrollbar] + & {
+    inset-inline-end: calc(var(--spacing) * 4 + var(--scrollbar-width));
+  }
 }

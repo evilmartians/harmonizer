@@ -1,6 +1,8 @@
 import { $hueIds, $levelIds } from "@core/stores/colors";
 import { $bgColorLightBgMode } from "@core/stores/settings";
 import {
+  $gridHasHorizontalScrollbar,
+  $gridHasVerticalScrollbar,
   $gridHorizontallyScrolled,
   $gridVerticallyScrolled,
   setScrollableContainer,
@@ -25,12 +27,23 @@ import { GridStylesHueHover } from "./GridStylesHueHover";
 import { GridStylesLevelHover } from "./GridStylesLevelHover";
 
 const GridContainer = memo(function GridContainer({ children }: PropsWithChildren) {
+  const hasHorizontalScrollbar = useSubscribe($gridHasHorizontalScrollbar);
   const isHorizontallyScrolled = useSubscribe($gridHorizontallyScrolled);
+  const hasVerticalScrollbar = useSubscribe($gridHasVerticalScrollbar);
   const isVerticallyScrolled = useSubscribe($gridVerticallyScrolled);
+
   const attrs: Record<string, string> = {};
+
+  if (hasHorizontalScrollbar) {
+    attrs["data-with-horizontal-scrollbar"] = "";
+  }
 
   if (isHorizontallyScrolled) {
     attrs["data-horizontally-scrolled"] = "";
+  }
+
+  if (hasVerticalScrollbar) {
+    attrs["data-with-vertical-scrollbar"] = "";
   }
 
   if (isVerticallyScrolled) {
