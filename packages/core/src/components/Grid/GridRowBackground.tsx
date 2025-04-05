@@ -65,6 +65,7 @@ const BgDarkSpan = memo(function BgDarkSpan() {
           Dark mode background
         </Text>
         <BgColorInput
+          className={styles.bgColorInput}
           size="m"
           placeholder="#000"
           value={bgColorDark}
@@ -89,6 +90,7 @@ const BgSingleSpan = memo(function BgSingleSpan() {
           Background
         </Text>
         <BgColorInput
+          className={styles.bgColorInput}
           size="m"
           placeholder="Color"
           value={bgColor}
@@ -150,6 +152,7 @@ const BgLightSpan = memo(function BgLightSpan() {
           Light mode background
         </Text>
         <BgColorInput
+          className={styles.bgColorInput}
           size="m"
           placeholder="#fff"
           value={bgColorLight}

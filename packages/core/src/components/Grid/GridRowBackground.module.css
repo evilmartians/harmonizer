@@ -64,6 +64,10 @@
   }
 }
 
+.bgColorInput {
+  --input-max-inline-size: 7ch;
+}
+
 .dragContainer {
   position: absolute;
   inset-block: 0;
