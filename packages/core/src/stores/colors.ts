@@ -63,6 +63,7 @@ export const {
   addItem: addLevel,
   overwrite: overwriteLevels,
 } = levelsStore;
+export const $levelsCount = signal((get) => get($levelIds).length);
 export const huesStore = createIndexedArrayStore<HueStore>([]);
 export const {
   $ids: $hueIds,
@@ -71,6 +72,7 @@ export const {
   addItem: addHue,
   overwrite: overwriteHues,
 } = huesStore;
+export const $huesCount = signal((get) => get($hueIds).length);
 
 export const $areLevelsValid = signal((get) => {
   const levelIds = get($levelIds);
@@ -240,8 +242,8 @@ export const insertLevel = getInsertMethod({
     );
   },
   onFinish: (levelId) => {
-    // Compensate for the new level being inserted before the bgLightStart
-    if ($levelIds.value.indexOf(levelId) < $bgLightStart.value) {
+    // Compensate for the new level being inserted before the bgLightStart or in single light mode
+    if ($levelIds.value.indexOf(levelId) <= $bgLightStart.value) {
       $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
     }
 

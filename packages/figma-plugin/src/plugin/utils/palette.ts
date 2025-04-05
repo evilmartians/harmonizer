@@ -1,3 +1,9 @@
+import {
+  getBgDarkValue,
+  getBgLightValue,
+  isSingleDarkBg,
+  isSingleLightBg,
+} from "@core/stores/utils/bg";
 import { HueIndex, LevelIndex } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { LABELS, PALETTE, PALETTE_CONFIG_KEY, PALETTE_NAME } from "@plugin/constants";
@@ -140,6 +146,22 @@ function createColorCell(
   (isDark ? groups.dark : groups.light).appendChild(node);
 }
 
+function getBgColorDark(paletteConfig: PaletteConfig) {
+  return getBgDarkValue(
+    isSingleLightBg(paletteConfig.settings.bgLightStart),
+    paletteConfig.settings.bgColorDark,
+    paletteConfig.settings.bgColorLight,
+  );
+}
+
+function getBgColorLight(paletteConfig: PaletteConfig) {
+  return getBgLightValue(
+    isSingleDarkBg(paletteConfig.settings.bgLightStart, paletteConfig.levels.length),
+    paletteConfig.settings.bgColorDark,
+    paletteConfig.settings.bgColorLight,
+  );
+}
+
 export async function drawPalette(
   paletteConfig: PaletteConfig,
   variablesCollection: PaletteVariablesCollection,
@@ -160,7 +182,7 @@ export async function drawPalette(
   const darkBg = figma.createRectangle();
   darkBg.resize(darkBgWidth, frame.height);
   darkBg.fills = [
-    getReferencedSolidPaint(paletteConfig.settings.bgColorDark, undefined, isDocumentInP3()),
+    getReferencedSolidPaint(getBgColorDark(paletteConfig), undefined, isDocumentInP3()),
   ];
   frame.appendChild(darkBg);
 
@@ -168,7 +190,7 @@ export async function drawPalette(
   lightBg.resize(lightBgWidth, frame.height);
   lightBg.x = darkBgWidth;
   lightBg.fills = [
-    getReferencedSolidPaint(paletteConfig.settings.bgColorLight, undefined, isDocumentInP3()),
+    getReferencedSolidPaint(getBgColorLight(paletteConfig), undefined, isDocumentInP3()),
   ];
   frame.appendChild(lightBg);
 

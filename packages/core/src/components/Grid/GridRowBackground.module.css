@@ -1,7 +1,11 @@
-.spacerCell {
+.rowHeader {
   composes: gridRowHeader from "./Grid.module.css";
+
+  align-items: flex-start;
   justify-content: flex-end;
+
   padding-block: calc(var(--spacing) * 4);
+  padding-inline-end: 0;
 }
 
 .bgSpan {
@@ -9,42 +13,43 @@
   display: flex;
   align-items: flex-end;
   padding: calc(var(--spacing) * 4);
-}
 
-.dark {
-  position: relative;
+  &.dark {
+    position: relative;
 
-  grid-column-end: span max(1, var(--bg-light-started-at));
-  justify-content: flex-end;
+    grid-column-end: span max(1, var(--bg-light-started-at));
+    justify-content: flex-end;
 
-  color: var(--bg-light);
+    color: var(--bg-light);
 
-  background-color: var(--bg-dark);
-
-  &.asRowHeader {
-    position: sticky;
+    background-color: var(--bg-dark);
   }
 
-  &.asSpacer {
-    flex-direction: column;
-    align-items: flex-start;
+  &.single {
+    grid-column: 2 / span var(--grid-levels);
+    justify-content: center;
+    background-color: var(--bg-light);
+
+    [bg-mode="dark"] & {
+      background-color: var(--bg-dark);
+    }
+  }
+
+  &.light {
+    z-index: 1;
+    grid-column: calc(var(--bg-light-started-at) + 2) / -1;
+    color: var(--bg-dark);
+    background-color: var(--bg-light);
+
+    [data-horizontally-scrolled] & {
+      z-index: 0;
+    }
   }
 }
 
-.asRowHeader {
-  composes: gridRowHeader from "./Grid.module.css";
-}
-
-.light {
-  z-index: 1;
-  grid-column: calc(var(--bg-light-started-at) + 2) / span
-    calc(var(--grid-levels) - var(--bg-light-started-at) + 2);
-  color: var(--bg-dark);
+.endSpacerCell {
+  grid-column: -3 / -1;
   background-color: var(--bg-light);
-
-  [data-horizontally-scrolled] & {
-    z-index: 0;
-  }
 }
 
 .bgControlContainer {
@@ -57,20 +62,6 @@
   .light & {
     flex-direction: row-reverse;
   }
-
-  .dark.asSpacer & {
-    justify-content: flex-start;
-    margin-block-start: calc(var(--spacing) * 4);
-  }
-}
-
-.importExportControls {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing);
-  justify-content: stretch;
-
-  inline-size: 100%;
 }
 
 .dragContainer {
@@ -107,7 +98,7 @@
 
   &:focus-visible,
   .light:hover &,
-  :is(.spacerCell, .dark):hover ~ .light & {
+  :is(.rowHeader, .dark):hover ~ .light & {
     opacity: 1;
   }
 

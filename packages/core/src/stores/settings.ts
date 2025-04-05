@@ -22,11 +22,13 @@ import { batch, signal } from "@spred/core";
 
 import {
   $levelIds,
+  $levelsCount,
   levels,
   requestColorsRecalculation,
   requestColorsRecalculationWithLevelsAccumulation,
 } from "./colors";
 import { validationStore } from "./utils";
+import { getBgDarkValue, getBgLightValue, isSingleDarkBg, isSingleLightBg } from "./utils/bg";
 
 export const contrastModelStore = validationStore(
   ContrastModel(defaultConfig.settings.contrastModel),
@@ -40,24 +42,47 @@ export const chromaModeStore = validationStore(
   ChromaMode(defaultConfig.settings.chromaMode),
   chromaModeSchema,
 );
-export const bgColorDarkStore = validationStore(
-  ColorString(defaultConfig.settings.bgColorDark),
-  colorStringSchema,
-);
-export const $bgColorDarkBgMode = signal((get) => getBgMode(get(bgColorDarkStore.$lastValidValue)));
-export const bgColorLightStore = validationStore(
-  ColorString(defaultConfig.settings.bgColorLight),
-  colorStringSchema,
-);
-export const $bgColorLightBgMode = signal((get) =>
-  getBgMode(get(bgColorLightStore.$lastValidValue)),
-);
-export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
 export const colorSpaceStore = validationStore(
   ColorSpace(defaultConfig.settings.colorSpace),
   colorSpaceSchema,
 );
 export const $isColorSpaceLocked = signal<boolean>(false);
+
+export const bgColorDarkStore = validationStore(
+  ColorString(defaultConfig.settings.bgColorDark),
+  colorStringSchema,
+);
+export const bgColorLightStore = validationStore(
+  ColorString(defaultConfig.settings.bgColorLight),
+  colorStringSchema,
+);
+
+export const $isChangingBgBoundary = signal(false);
+export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
+export const $isSingleDarkBg = signal((get) =>
+  isSingleDarkBg(get($bgLightStart), get($levelsCount)),
+);
+export const $isSingleLightBg = signal((get) => isSingleLightBg(get($bgLightStart)));
+
+export const $bgColorDark = signal((get) => {
+  const bgColorStore = getBgDarkValue(get($isSingleLightBg), bgColorDarkStore, bgColorLightStore);
+  return get(bgColorStore.$lastValidValue);
+});
+export const $bgColorLight = signal((get) => {
+  const bgColorStore = getBgLightValue(get($isSingleDarkBg), bgColorDarkStore, bgColorLightStore);
+  return get(bgColorStore.$lastValidValue);
+});
+
+export const $bgColorDarkBgMode = signal((get) => getBgMode(get($bgColorDark)));
+export const $bgColorLightBgMode = signal((get) => getBgMode(get($bgColorLight)));
+
+export const $bgColorSingleStore = signal((get) =>
+  getBgDarkValue(get($isSingleLightBg), bgColorDarkStore, bgColorLightStore),
+);
+
+export const $bgColorSingleBgMode = signal((get) =>
+  getBgMode(get(get($bgColorSingleStore).$lastValidValue)),
+);
 
 export function updateContrastModel(model: ContrastModel) {
   batch(() => {
@@ -118,6 +143,19 @@ export function updateBgColorDark(color: ColorString) {
   requestColorsRecalculation($levelIds.value.slice(0, $bgLightStart.value));
 }
 
+export function updateBgColorSingle(color: ColorString) {
+  $bgColorSingleStore.value.$raw.set(color);
+  requestColorsRecalculation();
+}
+
+export function startChangingBgBoundary() {
+  $isChangingBgBoundary.set(true);
+}
+
+export function stopChangingBgBoundary() {
+  $isChangingBgBoundary.set(false);
+}
+
 /**
  * Update the bg light start
  * @returns whether the value was updated
@@ -144,4 +182,10 @@ export function updateBgLightStart(start: BgLightStart): boolean {
  */
 export function updateBgLightStartByOffset(offset: number): boolean {
   return updateBgLightStart(BgLightStart($bgLightStart.value + offset));
+}
+
+export function enableDualBg() {
+  const levelsCount = $levelIds.value.length;
+
+  updateBgLightStart(BgLightStart(Math.floor(levelsCount / 2)));
 }

@@ -32,7 +32,7 @@
   --color-secondary-dark: oklch(100% 0 0deg / 58.82%);
   --color-button-light: oklch(0% 0 0deg / 12.55%);
   --color-button-dark: oklch(100% 0 0deg / 12.55%);
-  --color-button-disabled-ligth: oklch(0% 0 0deg / 12.55%);
+  --color-button-disabled-light: oklch(0% 0 0deg / 12.55%);
   --color-button-disabled-dark: oklch(100% 0 0deg / 12.55%);
   --color-button-hover-light: oklch(0% 0 0deg / 25.1%);
   --color-button-hover-dark: oklch(100% 0 0deg / 25.1%);

@@ -5,46 +5,51 @@ import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import { Text } from "@core/components/Text/Text";
-import { useDependencies } from "@core/DependenciesContext";
+import { $levelsCount } from "@core/stores/colors";
 import {
-  bgColorDarkStore,
-  bgColorLightStore,
-  $bgLightStart,
-  updateBgColorDark,
-  updateBgColorLight,
-  updateBgLightStartByOffset,
   $bgColorDarkBgMode,
   $bgColorLightBgMode,
+  $bgColorSingleBgMode,
+  $bgColorSingleStore,
+  $bgLightStart,
+  $isChangingBgBoundary,
+  $isSingleDarkBg,
+  $isSingleLightBg,
+  bgColorDarkStore,
+  bgColorLightStore,
+  enableDualBg,
+  startChangingBgBoundary,
+  stopChangingBgBoundary,
+  updateBgColorDark,
+  updateBgColorLight,
+  updateBgColorSingle,
+  updateBgLightStartByOffset,
 } from "@core/stores/settings";
 import { ColorString } from "@core/types";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
-import { signal } from "@spred/core";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { memo, useEffect, useRef } from "react";
 
+import { LPlus } from "../Icon/LPlus";
+
 import { GridCell } from "./GridCell";
 import styles from "./GridRowBackground.module.css";
 
-const $bgColorLightAt0 = signal((get) => get($bgLightStart) === 0);
+const HINT_SPLIT_BACKGROUND = "Split background into light and dark modes";
 
 const BgColorInput = withValidation(withAutosize(Input));
-const ExportImportButtons = () => {
-  const { actions } = useDependencies();
 
-  return <div className={styles.importExportControls}>{actions}</div>;
-};
-const SpacerCell = memo(function SpacerCell() {
+const RowHeaderCell = memo(function SpacerCell() {
   const bgMode = useSubscribe($bgColorDarkBgMode);
-  const lightStartAt0 = useSubscribe($bgColorLightAt0);
-
-  if (lightStartAt0) {
-    return null;
-  }
 
   return (
-    <GridCell bgMode={bgMode} className={styles.spacerCell}>
-      <ExportImportButtons />
+    <GridCell bgMode={bgMode} className={styles.rowHeader}>
+      <Text as="a" kind="secondary" size="s" href="https://evilmartians.com/" target="_blank">
+        Harmonizer
+        <br />
+        by Evil Martians
+      </Text>
     </GridCell>
   );
 });
@@ -52,19 +57,9 @@ const BgDarkSpan = memo(function BgDarkSpan() {
   const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
   const bgMode = useSubscribe($bgColorDarkBgMode);
   const error = useSubscribe(bgColorDarkStore.$validationError);
-  const lightStartAt0 = useSubscribe($bgColorLightAt0);
 
   return (
-    <BgMode
-      bgMode={bgMode}
-      className={clsx(
-        styles.bgSpan,
-        styles.dark,
-        lightStartAt0 && styles.asRowHeader,
-        lightStartAt0 && styles.asSpacer,
-      )}
-    >
-      {lightStartAt0 && <ExportImportButtons />}
+    <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
       <div className={styles.bgControlContainer}>
         <Text kind="secondary" size="s">
           Dark mode background
@@ -80,6 +75,41 @@ const BgDarkSpan = memo(function BgDarkSpan() {
     </BgMode>
   );
 });
+
+const BgSingleSpan = memo(function BgSingleSpan() {
+  const bgColorSingleStore = useSubscribe($bgColorSingleStore);
+  const bgColor = useSubscribe(bgColorSingleStore.$raw);
+  const bgMode = useSubscribe($bgColorSingleBgMode);
+  const error = useSubscribe(bgColorSingleStore.$validationError);
+
+  return (
+    <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
+      <div className={styles.bgControlContainer}>
+        <Text kind="secondary" size="s">
+          Background
+        </Text>
+        <BgColorInput
+          size="m"
+          placeholder="Color"
+          value={bgColor}
+          error={error}
+          onChange={(e) => updateBgColorSingle(ColorString(e.target.value))}
+        />
+        {levelsCount > 1 && (
+          <Button
+            size="m"
+            kind="bordered"
+            onClick={enableDualBg}
+            icon={<LPlus />}
+            title={HINT_SPLIT_BACKGROUND}
+            aria-label={HINT_SPLIT_BACKGROUND}
+          />
+        )}
+      </div>
+    </BgMode>
+  );
+});
+
 const CELL_WIDTH = 104;
 const DRAG_THRESHOLD = 0.75;
 const BgLightSpan = memo(function BgLightSpan() {
@@ -96,8 +126,10 @@ const BgLightSpan = memo(function BgLightSpan() {
       snapWidth: CELL_WIDTH,
       threshold: DRAG_THRESHOLD,
       onChange: updateBgLightStartByOffset,
+      onStart: startChangingBgBoundary,
+      onEnd: stopChangingBgBoundary,
     });
-  });
+  }, []);
 
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.light)}>
@@ -129,12 +161,26 @@ const BgLightSpan = memo(function BgLightSpan() {
   );
 });
 
+export function EndSpacerCell() {
+  const bgMode = useSubscribe($bgColorLightBgMode);
+
+  return <GridCell bgMode={bgMode} className={styles.endSpacerCell} />;
+}
+
 export const GridRowBackground = memo(function GridRowBackground() {
+  const isSingleDarkBg = useSubscribe($isSingleDarkBg);
+  const isSingleLightBg = useSubscribe($isSingleLightBg);
+  const isSingleBg = isSingleDarkBg || isSingleLightBg;
+  const bgLightStart = useSubscribe($bgLightStart);
+  const isChangingBgBoundary = useSubscribe($isChangingBgBoundary);
+
   return (
     <>
-      <SpacerCell />
-      <BgDarkSpan />
-      <BgLightSpan />
+      <RowHeaderCell />
+      {(!isSingleBg || (isChangingBgBoundary && bgLightStart !== 0)) && <BgDarkSpan />}
+      {isSingleBg && !isChangingBgBoundary && <BgSingleSpan />}
+      {(!isSingleBg || isChangingBgBoundary) && <BgLightSpan />}
+      {isSingleBg && <EndSpacerCell />}
     </>
   );
 });

@@ -3,6 +3,7 @@ import { type ReactNode, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./app.css";
 
+import { Actions } from "./components/Actions/Actions";
 import { Grid } from "./components/Grid/Grid";
 import { MainContainer } from "./components/MainContainer/MainContainer";
 import { DependenciesContext, type AppDependencies } from "./DependenciesContext";
@@ -34,6 +35,7 @@ export function createApp(
       <DependenciesContext.Provider value={dependencies}>
         <MainContainer>
           <Grid />
+          <Actions />
           {customUI}
         </MainContainer>
       </DependenciesContext.Provider>

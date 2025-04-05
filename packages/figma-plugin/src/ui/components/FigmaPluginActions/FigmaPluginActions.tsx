@@ -20,7 +20,7 @@ export function FigmaPluginActions({ isUpdate }: FigmaPluginActionsProps) {
   return (
     <>
       <Button
-        kind="primary"
+        kind="floating"
         size="s"
         onClick={upsertPalette}
         iconStart={<MFourSquares />}
