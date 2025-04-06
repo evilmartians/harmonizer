@@ -3,37 +3,39 @@ import type { AnyMessageOf, AnyMessages, CommunicationChannelTransport } from ".
 
 export class EventTargetTransport<
   InboundMessages extends AnyMessages,
-  OutboundMessages extends AnyMessages,
+  OutboundMessages extends AnyMessages = InboundMessages,
 > implements CommunicationChannelTransport<InboundMessages, OutboundMessages>
 {
-  private eventTarget: EventTarget;
+  private static EVENT_DEFAULT_OPTIONS = { passive: true };
 
   static createChannel<
     InboundMessages extends AnyMessages,
-    OutboundMessages extends AnyMessages,
-  >(): CommunicationChannel<InboundMessages, OutboundMessages> {
-    const transport = new EventTargetTransport<InboundMessages, OutboundMessages>();
+    OutboundMessages extends AnyMessages = InboundMessages,
+  >(target?: EventTarget): CommunicationChannel<InboundMessages, OutboundMessages> {
+    const transport = new EventTargetTransport<InboundMessages, OutboundMessages>(target);
 
     return new CommunicationChannel<InboundMessages, OutboundMessages>(transport);
   }
 
-  constructor() {
-    this.eventTarget = new EventTarget();
-  }
+  constructor(private target = new EventTarget()) {}
 
-  onMessage = (handler: (message: AnyMessageOf<InboundMessages>) => void) => {
+  onMessage = (
+    handler: (message: AnyMessageOf<InboundMessages>) => void,
+    options: AddEventListenerOptions = EventTargetTransport.EVENT_DEFAULT_OPTIONS,
+  ) => {
     const handleMessage = (e: Event) => {
       handler((e as CustomEvent<AnyMessageOf<InboundMessages>>).detail);
     };
 
-    this.eventTarget.addEventListener("message", handleMessage, { passive: true });
+    this.target.addEventListener("message", handleMessage, options);
 
-    return () => {
-      this.eventTarget.removeEventListener("message", handleMessage);
+    return (options?: EventListenerOptions) => {
+      this.target.removeEventListener("message", handleMessage, options);
     };
   };
+
   postMessage = (message: AnyMessageOf<OutboundMessages>) => {
     const event = new CustomEvent("message", { detail: message });
-    this.eventTarget.dispatchEvent(event);
+    this.target.dispatchEvent(event);
   };
 }

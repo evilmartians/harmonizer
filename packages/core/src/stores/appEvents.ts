@@ -6,4 +6,4 @@ export type AppEvents = {
   hueAdded: HueId;
 };
 
-export const appEvents = EventTargetTransport.createChannel<AppEvents, AppEvents>();
+export const appEvents = EventTargetTransport.createChannel<AppEvents>();

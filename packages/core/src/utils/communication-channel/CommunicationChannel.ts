@@ -10,12 +10,19 @@ export class CommunicationChannel<
   private unsubscribeIncomingMessages: CleanupFunction | undefined;
 
   constructor(private transport: CommunicationChannelTransport<InboundMessages, OutboundMessages>) {
-    this.unsubscribeIncomingMessages = this.transport.onMessage(this.handleIncomingMessage);
+    this.listen();
   }
 
-  destroy() {
+  listen() {
+    if (!this.unsubscribeIncomingMessages) {
+      this.unsubscribeIncomingMessages = this.transport.onMessage(this.handleIncomingMessage);
+    }
+  }
+
+  unlisten() {
     if (this.unsubscribeIncomingMessages) {
       this.unsubscribeIncomingMessages();
+      this.unsubscribeIncomingMessages = undefined;
     }
   }
 
