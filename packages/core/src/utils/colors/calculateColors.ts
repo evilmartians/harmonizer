@@ -126,10 +126,16 @@ export function calculateColors(
       });
     }
 
+    const huesEntries = [...hues.entries()];
+
+    if (huesEntries.length === 0) {
+      continue;
+    }
+
     const cells: GeneratedLevelPayload["cells"] = {};
     let tint: ColorLevelTintData | null = null;
 
-    for (const [hueIndex, hue] of hues.entries()) {
+    for (const [hueIndex, hue] of huesEntries) {
       const cellColor = calculateColorCell({
         ...commonApcacheOptions,
         hueAngle: hue.angle,
