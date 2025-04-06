@@ -32,7 +32,7 @@
   --color-secondary-dark: oklch(100% 0 0deg / 58.82%);
   --color-button-light: oklch(0% 0 0deg / 12.55%);
   --color-button-dark: oklch(100% 0 0deg / 12.55%);
-  --color-button-disabled-ligth: oklch(0% 0 0deg / 12.55%);
+  --color-button-disabled-light: oklch(0% 0 0deg / 12.55%);
   --color-button-disabled-dark: oklch(100% 0 0deg / 12.55%);
   --color-button-hover-light: oklch(0% 0 0deg / 25.1%);
   --color-button-hover-dark: oklch(100% 0 0deg / 25.1%);
@@ -40,6 +40,8 @@
   --color-border-dark: oklch(100% 0 0deg / 25.1%);
   --color-border-solid-light: oklch(92.8% 0.006 264.531deg);
   --color-border-solid-dark: oklch(92.8% 0.006 264.531deg);
+  --color-universal-elevation: oklch(32% 0 0deg);
+  --color-universal-elevation-hover: oklch(40% 0 0deg);
   --color-universal-focus: oklch(70% 0.1661 242.68deg / 90%);
   --color-universal-error: oklch(79.41% 0.0931 20.98deg / 50%);
   --color-highlight: oklch(72.27% 0.192 149.58deg);

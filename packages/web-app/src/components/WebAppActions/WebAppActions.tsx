@@ -45,7 +45,7 @@ export function WebAppActions() {
   return (
     <>
       <FileInputButton
-        kind="primary"
+        kind="floating"
         size="s"
         onFilesChange={handleFileUpload}
         iconStart={<MArrowDownwards className={styles.iconUpload} />}
@@ -53,7 +53,7 @@ export function WebAppActions() {
         Upload
       </FileInputButton>
       <Button
-        kind="primary"
+        kind="floating"
         size="s"
         onClick={handleDownload}
         iconStart={<MArrowDownwards />}

@@ -25,7 +25,7 @@ function getWindowScrollXInfo() {
 
 function getElementScrollYInfo(el: HTMLElement) {
   return {
-    size: el.offsetHeight,
+    size: el.clientHeight,
     scrollSize: el.scrollHeight,
     scrollAt: el.scrollTop,
   };
@@ -33,7 +33,7 @@ function getElementScrollYInfo(el: HTMLElement) {
 
 function getElementScrollXInfo(el: HTMLElement) {
   return {
-    size: el.offsetWidth,
+    size: el.clientWidth,
     scrollSize: el.scrollWidth,
     scrollAt: el.scrollLeft,
   };

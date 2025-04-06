@@ -11,11 +11,11 @@ function getCellBgStyles(columns: number, bgLightStart: number): [string[], stri
   const lightBgSelectors: string[] = [];
 
   for (let i = 1; i <= bgLightStart; i++) {
-    darkBgSelectors.push(`.${styles.cell}:nth-child(${columns + 1}n+${i})`);
+    darkBgSelectors.push(`:where(.${styles.cell}:nth-child(${columns + 1}n+${i}))`);
   }
 
   for (let i = bgLightStart + 1; i <= columns; i++) {
-    lightBgSelectors.push(`.${styles.cell}:nth-child(${columns + 1}n+${i})`);
+    lightBgSelectors.push(`:where(.${styles.cell}:nth-child(${columns + 1}n+${i}))`);
   }
 
   return [

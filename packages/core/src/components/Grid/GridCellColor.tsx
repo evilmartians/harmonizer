@@ -1,7 +1,6 @@
 import { Text } from "@core/components/Text/Text";
-import { $hueIds, $levelIds, getColor$ } from "@core/stores/colors";
+import { $huesCount, $levelsCount, getColor$ } from "@core/stores/colors";
 import { useLevelBgMode } from "@core/stores/hooks";
-import { $bgLightStart } from "@core/stores/settings";
 import type { ColorCellData, HueId, HueIndex, LevelId, LevelIndex } from "@core/types";
 import { useValueAsSignal } from "@core/utils/spred/useValueAsSignal";
 import { useSignal, useSubscribe } from "@spred/react";
@@ -22,20 +21,19 @@ function useColorCellModifiers(levelIndex: LevelIndex, hueIndex: HueIndex) {
   const $hueIndex = useValueAsSignal(hueIndex);
   const $modifiers = useSignal(
     (get) => {
-      const levelsTotal = get($levelIds).length;
+      const levelsCount = get($levelsCount);
       const levelIndex = get($levelIndex);
-      const huesTotal = get($hueIds).length;
+      const huesCount = get($huesCount);
       const hueIndex = get($hueIndex);
-      const bgLightStart = get($bgLightStart);
       const isFirstLevel = levelIndex === 0;
       const isFirstHue = hueIndex === 0;
-      const isLastLevel = levelIndex === levelsTotal - 1;
-      const isLastHue = hueIndex === huesTotal - 1;
+      const isLastLevel = levelIndex === levelsCount - 1;
+      const isLastHue = hueIndex === huesCount - 1;
 
-      const isTl = isFirstLevel && isFirstHue && bgLightStart !== 0;
-      const isTr = isLastLevel && isFirstHue && bgLightStart < levelsTotal;
-      const isBl = isFirstLevel && isLastHue && bgLightStart !== 0;
-      const isBr = isLastLevel && isLastHue && bgLightStart < levelsTotal;
+      const isTl = isFirstLevel && isFirstHue;
+      const isTr = isLastLevel && isFirstHue;
+      const isBl = isFirstLevel && isLastHue;
+      const isBr = isLastLevel && isLastHue;
 
       return { isTl, isTr, isBl, isBr };
     },

@@ -70,7 +70,7 @@
 
 .input {
   inline-size: 100%;
-  max-inline-size: 100%;
+  max-inline-size: var(--input-max-inline-size, 100%);
   font-size: var(--text-m);
   line-height: 1.25rem;
 

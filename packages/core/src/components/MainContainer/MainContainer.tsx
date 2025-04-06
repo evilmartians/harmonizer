@@ -1,5 +1,6 @@
+import { useScrollbarWidth } from "@core/hooks/useScrollbarWidth";
 import { $hueIds, $levelIds } from "@core/stores/colors";
-import { bgColorDarkStore, bgColorLightStore, $bgLightStart } from "@core/stores/settings";
+import { $bgColorDark, $bgColorLight, $bgLightStart } from "@core/stores/settings";
 import { useSubscribe } from "@spred/react";
 import type { CSSProperties, PropsWithChildren } from "react";
 
@@ -10,9 +11,10 @@ type MainContainerProps = PropsWithChildren;
 export function MainContainer({ children }: MainContainerProps) {
   const levels = useSubscribe($levelIds);
   const hues = useSubscribe($hueIds);
-  const bgDark = useSubscribe(bgColorDarkStore.$lastValidValue);
-  const bgLight = useSubscribe(bgColorLightStore.$lastValidValue);
+  const bgDark = useSubscribe($bgColorDark);
+  const bgLight = useSubscribe($bgColorLight);
   const bgLightStart = useSubscribe($bgLightStart);
+  const scrollbarWidth = useScrollbarWidth();
 
   return (
     <div
@@ -24,6 +26,7 @@ export function MainContainer({ children }: MainContainerProps) {
           "--bg-light-started-at": bgLightStart,
           "--grid-levels": levels.length,
           "--grid-hues": hues.length,
+          "--scrollbar-width": `${scrollbarWidth}px`,
         } as CSSProperties
       }
     >

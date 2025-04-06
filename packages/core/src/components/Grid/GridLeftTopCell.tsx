@@ -32,7 +32,7 @@ const CHROMA_OPTIONS = [
   { value: "even", label: "Even chroma" },
   { value: "max", label: "Max chroma" },
 ];
-const HINT_LOCKED_COLOR_SPACE = "To change profile, adjust it in the Figma file settings";
+const HINT_LOCKED_COLOR_SPACE = "To change color profile, adjust it in the Figma file settings";
 
 export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const bgMode = useSubscribe($bgColorDarkBgMode);

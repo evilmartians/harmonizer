@@ -16,7 +16,7 @@ export const GridCellLevelAdd = memo(function GridCellLevelAdd() {
     <GridCell bgMode={bgMode} className={styles.cell}>
       <Button
         className={styles.button}
-        kind="ghost"
+        kind="bordered"
         size="l"
         icon={<LPlus />}
         onClick={handleClick}
