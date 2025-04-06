@@ -10,30 +10,36 @@ import {
   HueName,
   LevelChroma,
   LevelContrast,
-  LevelId,
   LevelIndex,
   LevelName,
   LightnessLevel,
 } from "./brand";
 
-export const levelIdSchema = v.pipe(v.string(), v.transform(LevelId));
 export const levelIndexSchema = v.pipe(v.number(), v.transform(LevelIndex));
 export const levelNameSchema = v.pipe(
   v.string(),
   v.minLength(1, "Level name is mandatory"),
   v.transform(LevelName),
 );
+
+export const CONTRAST_MIN = 0;
+export const CONTRAST_APCA_MAX = 106;
+export const CONTRAST_WCAG_MAX = 21;
+
+export function getMaxContrastLevel(contrastModel: ContrastModel) {
+  return contrastModel === "apca" ? CONTRAST_APCA_MAX : CONTRAST_WCAG_MAX;
+}
 export const baseContrastSchema = v.pipe(v.number(), v.transform(LevelContrast));
 export const levelApcaContrastSchema = v.pipe(
   v.number(),
-  v.minValue(0),
-  v.maxValue(106),
+  v.minValue(CONTRAST_MIN),
+  v.maxValue(CONTRAST_APCA_MAX),
   v.transform(LevelContrast),
 );
 export const levelWcagContrastSchema = v.pipe(
   v.number(),
-  v.minValue(0),
-  v.maxValue(21),
+  v.minValue(CONTRAST_MIN),
+  v.maxValue(CONTRAST_WCAG_MAX),
   v.transform(LevelContrast),
 );
 export const getLevelContrastModel = (contrastModel: ContrastModel) => {
@@ -71,10 +77,12 @@ export const lightnessLevelSchema = v.pipe(
   v.maxValue(100),
   v.transform(LightnessLevel),
 );
+export const HUE_MIN_ANGLE = 0;
+export const HUE_MAX_ANGLE = 360;
 export const hueAngleSchema = v.pipe(
   v.number(),
-  v.minValue(0),
-  v.maxValue(360),
+  v.minValue(HUE_MIN_ANGLE),
+  v.maxValue(HUE_MAX_ANGLE),
   v.transform(HueAngle),
 );
 export const colorStringSchema = v.pipe(
