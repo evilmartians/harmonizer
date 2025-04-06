@@ -5,7 +5,7 @@ import type { ComponentPropsWithRef } from "react";
 import styles from "./Button.module.css";
 
 export type ButtonSize = "xs" | "s" | "m" | "l";
-export type ButtonKind = "primary" | "ghost" | "floating";
+export type ButtonKind = "primary" | "bordered" | "ghost" | "floating";
 export type ButtonProps = ComponentPropsWithRef<"button"> & {
   size: ButtonSize;
   kind?: ButtonKind;

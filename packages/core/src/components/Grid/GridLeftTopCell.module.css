@@ -1,6 +1,6 @@
 .cell {
   composes: gridTopLeftCell from "./Grid.module.css";
-  gap: calc(var(--spacing) * 5);
+  gap: calc(var(--spacing) * 4.5);
   align-items: flex-start;
   justify-content: flex-start;
 }
@@ -13,14 +13,11 @@
 }
 
 .levelLabel {
-  margin-top: -1px;
-}
-
-.middle {
-  margin: 1px 0;
+  translate: 0 -1px;
 }
 
 .bottom {
+  translate: 0 -1px;
   margin-top: auto;
 }
 

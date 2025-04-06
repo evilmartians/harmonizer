@@ -3,6 +3,8 @@
   align-items: center;
   justify-content: center;
 
+  border: 1px solid transparent;
+
   color: var(--color-primary);
   white-space: nowrap;
 
@@ -31,6 +33,10 @@
 
 .kind_primary {
   background-color: var(--color-button-hover);
+}
+
+.kind_bordered {
+  border-color: var(--color-border);
 }
 
 .kind_floating {
