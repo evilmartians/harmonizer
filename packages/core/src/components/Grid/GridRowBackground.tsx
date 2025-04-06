@@ -12,19 +12,21 @@ import {
   $bgColorSingleBgMode,
   $bgColorSingleStore,
   $bgLightStart,
-  $isChangingBgBoundary,
   $isSingleDarkBg,
   $isSingleLightBg,
   bgColorDarkStore,
   bgColorLightStore,
   enableDualBg,
-  startChangingBgBoundary,
-  stopChangingBgBoundary,
   updateBgColorDark,
   updateBgColorLight,
   updateBgColorSingle,
   updateBgLightStartByOffset,
 } from "@core/stores/settings";
+import {
+  $isChangingBgBoundary,
+  startChangingBgBoundary,
+  stopChangingBgBoundary,
+} from "@core/stores/ui";
 import { ColorString } from "@core/types";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
 import { useSubscribe } from "@spred/react";

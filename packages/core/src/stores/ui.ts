@@ -15,6 +15,16 @@ export const $gridHorizontallyScrolled = signal(
 export const $gridHasVerticalScrollbar = signal((get) => get($gridVerticalScrollState).hasScroll);
 export const $gridVerticallyScrolled = signal((get) => get($gridVerticalScrollState).scrollAt > 0);
 
+export const $isChangingBgBoundary = signal(false);
+
 export function setScrollableContainer(container: HTMLElement | null) {
   $scrollableContainer.set(container);
+}
+
+export function startChangingBgBoundary() {
+  $isChangingBgBoundary.set(true);
+}
+
+export function stopChangingBgBoundary() {
+  $isChangingBgBoundary.set(false);
 }

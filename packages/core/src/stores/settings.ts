@@ -57,7 +57,6 @@ export const bgColorLightStore = validationStore(
   colorStringSchema,
 );
 
-export const $isChangingBgBoundary = signal(false);
 export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
 export const $isSingleDarkBg = signal((get) =>
   isSingleDarkBg(get($bgLightStart), get($levelsCount)),
@@ -146,14 +145,6 @@ export function updateBgColorDark(color: ColorString) {
 export function updateBgColorSingle(color: ColorString) {
   $bgColorSingleStore.value.$raw.set(color);
   requestColorsRecalculation();
-}
-
-export function startChangingBgBoundary() {
-  $isChangingBgBoundary.set(true);
-}
-
-export function stopChangingBgBoundary() {
-  $isChangingBgBoundary.set(false);
 }
 
 /**
