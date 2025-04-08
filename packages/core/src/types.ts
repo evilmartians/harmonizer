@@ -12,6 +12,7 @@ import type {
   LightnessLevel,
 } from "@core/schemas/brand";
 
+import type { ExportConfig } from "./schemas/exportConfig";
 export type { ExportConfig } from "./schemas/exportConfig";
 
 export {
@@ -65,3 +66,6 @@ export type ColorCellData = ColorData & {
 };
 
 export type IndexedColors = Record<`${LevelIndex}-${HueIndex}`, LchColor>;
+export type ExportConfigWithColors = ExportConfig & {
+  colors: IndexedColors;
+};

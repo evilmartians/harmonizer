@@ -1,5 +1,5 @@
 import { parseExportConfig } from "@core/schemas/exportConfig";
-import type { ExportConfig } from "@core/types";
+import type { ExportConfig, ExportConfigWithColors } from "@core/types";
 import { downloadTextFile } from "@core/utils/file/downloadTextFile";
 import { batch, signal } from "@spred/core";
 
@@ -9,6 +9,7 @@ import {
   $hueIds,
   $levelIds,
   getHue,
+  getIndexedColors,
   getLevel,
   overwriteHues,
   overwriteLevels,
@@ -48,6 +49,13 @@ export function getConfig(): ExportConfig {
       bgLightStart: $bgLightStart.value,
       colorSpace: colorSpaceStore.$lastValidValue.value,
     },
+  };
+}
+
+export function getExportConfigWithColors(): ExportConfigWithColors {
+  return {
+    ...getConfig(),
+    colors: getIndexedColors(),
   };
 }
 

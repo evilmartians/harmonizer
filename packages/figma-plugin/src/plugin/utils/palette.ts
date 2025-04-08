@@ -5,11 +5,11 @@ import {
   isSingleLightBg,
 } from "@core/stores/utils/bg";
 import { HueIndex, LevelIndex } from "@core/types";
+import type { ExportConfigWithColors } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { LABELS, PALETTE, PALETTE_CONFIG_KEY, PALETTE_NAME } from "@plugin/constants";
 import type { PaletteVariablesCollection } from "@plugin/types";
 import { getReferencedSolidPaint, getVariableColorName, isDocumentInP3 } from "@plugin/utils/color";
-import type { PaletteConfig } from "src/shared/types";
 
 function getViewportCenter() {
   const viewportBounds = figma.viewport.bounds;
@@ -24,7 +24,7 @@ export function getExistingPaletteFrame() {
   return figma.currentPage.findOne((node) => node.type === "FRAME" && node.name === PALETTE_NAME);
 }
 
-export function getExistingPaletteConfig() {
+export function getStoredConfig() {
   const frame = getExistingPaletteFrame();
 
   if (!frame) {
@@ -34,16 +34,12 @@ export function getExistingPaletteConfig() {
   return frame.getPluginData(PALETTE_CONFIG_KEY) || null;
 }
 
-function createPaletteFrame(paletteConfig: PaletteConfig, position: { x: number; y: number }) {
+function createPaletteFrame(config: ExportConfigWithColors, position: { x: number; y: number }) {
   const frame = figma.createFrame();
   const width =
-    PALETTE.CELL_WIDTH * paletteConfig.levels.length +
-    PALETTE.HUE_HEADER_WIDTH +
-    PALETTE.PADDING * 2;
+    PALETTE.CELL_WIDTH * config.levels.length + PALETTE.HUE_HEADER_WIDTH + PALETTE.PADDING * 2;
   const height =
-    PALETTE.CELL_HEIGHT * paletteConfig.hues.length +
-    PALETTE.LEVEL_HEADER_HEIGHT +
-    PALETTE.PADDING * 2;
+    PALETTE.CELL_HEIGHT * config.hues.length + PALETTE.LEVEL_HEADER_HEIGHT + PALETTE.PADDING * 2;
 
   frame.name = PALETTE_NAME;
   frame.resize(width, height);
@@ -53,8 +49,12 @@ function createPaletteFrame(paletteConfig: PaletteConfig, position: { x: number;
   return frame;
 }
 
-function createLevelHeader(frame: FrameNode, paletteConfig: PaletteConfig, levelIndex: LevelIndex) {
-  const level = paletteConfig.levels[levelIndex];
+function createLevelHeader(
+  frame: FrameNode,
+  config: ExportConfigWithColors,
+  levelIndex: LevelIndex,
+) {
+  const level = config.levels[levelIndex];
 
   invariant(level, "Level not found");
 
@@ -78,7 +78,7 @@ function createLevelHeader(frame: FrameNode, paletteConfig: PaletteConfig, level
   modelLabel.textAlignHorizontal = "CENTER";
   modelLabel.x = PALETTE.HUE_HEADER_WIDTH + PALETTE.PADDING + PALETTE.CELL_WIDTH * levelIndex;
   modelLabel.y = PALETTE.PADDING + contrastLabel.height;
-  modelLabel.characters = paletteConfig.settings.contrastModel;
+  modelLabel.characters = config.settings.contrastModel;
   frame.appendChild(modelLabel);
   // Level
   const levelLabel = figma.createText();
@@ -99,8 +99,8 @@ function createLevelHeader(frame: FrameNode, paletteConfig: PaletteConfig, level
   return levelHeaderGroup;
 }
 
-function createHueHeader(frame: FrameNode, paletteConfig: PaletteConfig, hueIndex: HueIndex) {
-  const hue = paletteConfig.hues[hueIndex];
+function createHueHeader(frame: FrameNode, config: ExportConfigWithColors, hueIndex: HueIndex) {
+  const hue = config.hues[hueIndex];
 
   invariant(hue, "Hue not found");
 
@@ -125,15 +125,15 @@ function createHueHeader(frame: FrameNode, paletteConfig: PaletteConfig, hueInde
 
 function createColorCell(
   groups: { dark: GroupNode; light: GroupNode },
-  paletteConfig: PaletteConfig,
+  config: ExportConfigWithColors,
   levelIndex: LevelIndex,
   hueIndex: HueIndex,
   paint: SolidPaint,
 ) {
   const node = figma.createRectangle();
-  const isDark = levelIndex < paletteConfig.settings.bgLightStart;
-  const levelName = paletteConfig.levels[levelIndex]?.name;
-  const hueName = paletteConfig.hues[hueIndex]?.name;
+  const isDark = levelIndex < config.settings.bgLightStart;
+  const levelName = config.levels[levelIndex]?.name;
+  const hueName = config.hues[hueIndex]?.name;
 
   invariant(levelName, "Level name not found");
   invariant(hueName, "Hue name not found");
@@ -146,24 +146,24 @@ function createColorCell(
   (isDark ? groups.dark : groups.light).appendChild(node);
 }
 
-function getBgColorDark(paletteConfig: PaletteConfig) {
+function getBgColorDark(config: ExportConfigWithColors) {
   return getBgDarkValue(
-    isSingleLightBg(paletteConfig.settings.bgLightStart),
-    paletteConfig.settings.bgColorDark,
-    paletteConfig.settings.bgColorLight,
+    isSingleLightBg(config.settings.bgLightStart),
+    config.settings.bgColorDark,
+    config.settings.bgColorLight,
   );
 }
 
-function getBgColorLight(paletteConfig: PaletteConfig) {
+function getBgColorLight(config: ExportConfigWithColors) {
   return getBgLightValue(
-    isSingleDarkBg(paletteConfig.settings.bgLightStart, paletteConfig.levels.length),
-    paletteConfig.settings.bgColorDark,
-    paletteConfig.settings.bgColorLight,
+    isSingleDarkBg(config.settings.bgLightStart, config.levels.length),
+    config.settings.bgColorDark,
+    config.settings.bgColorLight,
   );
 }
 
 export async function drawPalette(
-  paletteConfig: PaletteConfig,
+  config: ExportConfigWithColors,
   variablesCollection: PaletteVariablesCollection,
 ) {
   await figma.loadFontAsync(PALETTE.LABEL_FONT_SANS);
@@ -171,27 +171,21 @@ export async function drawPalette(
 
   // Frame
   const existingFrame = getExistingPaletteFrame();
-  const frame = createPaletteFrame(paletteConfig, existingFrame ?? getViewportCenter());
+  const frame = createPaletteFrame(config, existingFrame ?? getViewportCenter());
 
   // Color samples
   const darkBgWidth =
-    PALETTE.PADDING +
-    PALETTE.HUE_HEADER_WIDTH +
-    PALETTE.CELL_WIDTH * paletteConfig.settings.bgLightStart;
+    PALETTE.PADDING + PALETTE.HUE_HEADER_WIDTH + PALETTE.CELL_WIDTH * config.settings.bgLightStart;
   const lightBgWidth = frame.width - darkBgWidth;
   const darkBg = figma.createRectangle();
   darkBg.resize(darkBgWidth, frame.height);
-  darkBg.fills = [
-    getReferencedSolidPaint(getBgColorDark(paletteConfig), undefined, isDocumentInP3()),
-  ];
+  darkBg.fills = [getReferencedSolidPaint(getBgColorDark(config), undefined, isDocumentInP3())];
   frame.appendChild(darkBg);
 
   const lightBg = figma.createRectangle();
   lightBg.resize(lightBgWidth, frame.height);
   lightBg.x = darkBgWidth;
-  lightBg.fills = [
-    getReferencedSolidPaint(getBgColorLight(paletteConfig), undefined, isDocumentInP3()),
-  ];
+  lightBg.fills = [getReferencedSolidPaint(getBgColorLight(config), undefined, isDocumentInP3())];
   frame.appendChild(lightBg);
 
   const darkGroup = figma.group([darkBg], frame);
@@ -203,24 +197,24 @@ export async function drawPalette(
   const levelHeaderGroups = [];
   const hueHeaderGroups = [];
   // Draw all cells
-  for (const [levelKey, level] of paletteConfig.levels.entries()) {
+  for (const [levelKey, level] of config.levels.entries()) {
     const levelIndex = LevelIndex(levelKey);
 
-    levelHeaderGroups.push(createLevelHeader(frame, paletteConfig, levelIndex));
+    levelHeaderGroups.push(createLevelHeader(frame, config, levelIndex));
 
-    for (const [hueKey, hue] of paletteConfig.hues.entries()) {
+    for (const [hueKey, hue] of config.hues.entries()) {
       const hueIndex = HueIndex(hueKey);
-      const color = paletteConfig.colors[`${levelIndex}-${hueIndex}`];
+      const color = config.colors[`${levelIndex}-${hueIndex}`];
 
       invariant(color, `Color not found for level ${levelIndex} and hue ${hueIndex}`);
 
       if (levelKey === 0) {
-        hueHeaderGroups.push(createHueHeader(frame, paletteConfig, hueIndex));
+        hueHeaderGroups.push(createHueHeader(frame, config, hueIndex));
       }
 
       createColorCell(
         { dark: darkGroup, light: lightGroup },
-        paletteConfig,
+        config,
         levelIndex,
         hueIndex,
         getReferencedSolidPaint(
@@ -237,7 +231,7 @@ export async function drawPalette(
   const huesGroup = figma.group(hueHeaderGroups, frame);
   huesGroup.name = "Hues";
 
-  const { colors, ...exportConfig } = paletteConfig;
+  const { colors, ...exportConfig } = config;
   frame.setPluginData(PALETTE_CONFIG_KEY, JSON.stringify(exportConfig));
 
   existingFrame?.remove();

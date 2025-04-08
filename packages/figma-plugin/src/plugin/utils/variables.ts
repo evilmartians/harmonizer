@@ -1,4 +1,5 @@
 import { HueIndex, LevelIndex } from "@core/types";
+import type { ExportConfigWithColors } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { PALETTE_NAME } from "@plugin/constants";
 import type {
@@ -8,7 +9,6 @@ import type {
   VariableColorName,
 } from "@plugin/types";
 import { getVariableColorName, isDocumentInP3, toFigmaRGB } from "@plugin/utils/color";
-import type { PaletteConfig } from "src/shared/types";
 
 export function canCreateVariableModes() {
   const collection = figma.variables.createVariableCollection("__test-plan-modes__");
@@ -59,7 +59,7 @@ function updateVariable(
 }
 
 export async function upsertPaletteVariablesCollection(
-  paletteConfig: PaletteConfig,
+  config: ExportConfigWithColors,
 ): Promise<PaletteVariablesCollection> {
   const collection =
     (await getPalette(PALETTE_NAME)) ?? figma.variables.createVariableCollection(PALETTE_NAME);
@@ -68,10 +68,10 @@ export async function upsertPaletteVariablesCollection(
   const modeId = collection.modes[0]?.modeId;
   invariant(modeId, "Default mode not found");
 
-  for (const [hueKey, hue] of paletteConfig.hues.entries()) {
-    for (const [levelKey, level] of paletteConfig.levels.entries()) {
+  for (const [hueKey, hue] of config.hues.entries()) {
+    for (const [levelKey, level] of config.levels.entries()) {
       const variableName = getVariableColorName(level.name, hue.name);
-      const color = paletteConfig.colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
+      const color = config.colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
 
       invariant(color, `Color not found for level ${levelKey} and hue ${hueKey}`);
       variables[variableName] = updateVariable(collection, variables, modeId, variableName, color);
@@ -81,7 +81,7 @@ export async function upsertPaletteVariablesCollection(
   return { collection, variables };
 }
 
-// upsertPaletteVariablesCollection({ paletteConfig: PaletteConfig }) {
+// upsertPaletteVariablesCollection({ config: ExportConfigWithColors }) {
 // if (canCreateVariableModes()) {
 //   const darkModeId = getDarkModeId(collection);
 //   const lightModeId = getLightModeId(collection);
@@ -90,21 +90,21 @@ export async function upsertPaletteVariablesCollection(
 //     variables,
 //     darkModeId,
 //     LABELS.BACKGROUND,
-//     paletteConfig.settings.bgColorDark,
+//     config.settings.bgColorDark,
 //   );
 //   variables[LABELS.BACKGROUND] = updateVariable(
 //     collection,
 //     variables,
 //     lightModeId,
 //     LABELS.BACKGROUND,
-//     paletteConfig.settings.bgColorLight,
+//     config.settings.bgColorLight,
 //   );
 
-//   for (const [hueKey, hue] of paletteConfig.hues.entries()) {
-//     for (const [levelKey, level] of paletteConfig.levels.entries()) {
-//       const isDark = levelKey < paletteConfig.settings.bgLightStart;
+//   for (const [hueKey, hue] of config.hues.entries()) {
+//     for (const [levelKey, level] of config.levels.entries()) {
+//       const isDark = levelKey < config.settings.bgLightStart;
 //       const variableName = getVariableColorName(level.name, hue.name);
-//       const color = paletteConfig.colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
+//       const color = config.colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
 
 //       invariant(color, `Color not found for level ${levelKey} and hue ${hueKey}`);
 //       variables[variableName] = updateVariable(

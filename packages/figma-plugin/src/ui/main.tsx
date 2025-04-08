@@ -7,16 +7,16 @@ import { pluginChannel } from "@ui/pluginChannel";
 
 import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindowHandle";
 
-pluginChannel.on("ready", ({ paletteConfig, inP3 }) => {
-  const palettePresents = !!paletteConfig;
-  const config = palettePresents ? parseExportConfig(paletteConfig) : getDefaultConfigCopy();
+pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
+  const palettePresents = !!storedConfig;
+  const appConfig = palettePresents ? parseExportConfig(storedConfig) : getDefaultConfigCopy();
 
-  config.settings.colorSpace = ColorSpace(inP3 ? "p3" : "srgb");
+  appConfig.settings.colorSpace = ColorSpace(inP3 ? "p3" : "srgb");
 
   createApp(
     document.querySelector("#root"),
     {
-      config,
+      config: appConfig,
       lockColorSpace: true,
       actions: <FigmaPluginActions isUpdate={palettePresents} />,
     },

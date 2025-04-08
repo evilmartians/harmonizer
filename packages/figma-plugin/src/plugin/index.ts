@@ -1,6 +1,6 @@
 import { uiChannel } from "@plugin/uiChannel";
 import { isDocumentInP3 } from "@plugin/utils/color";
-import { drawPalette, getExistingPaletteConfig } from "@plugin/utils/palette";
+import { drawPalette, getStoredConfig } from "@plugin/utils/palette";
 import { upsertPaletteVariablesCollection } from "@plugin/utils/variables";
 
 import { DEFAULT_HEIGHT, DEFAULT_WIDTH, getWindowSize, updateWindowSize } from "./utils/window";
@@ -13,15 +13,15 @@ function main() {
 
   figma.on("run", () => {
     uiChannel.emit("ready", {
-      paletteConfig: getExistingPaletteConfig(),
+      storedConfig: getStoredConfig(),
       inP3: isDocumentInP3(),
     });
   });
 
-  uiChannel.on("palette:generate", async (paletteConfig) => {
-    const variablesCollection = await upsertPaletteVariablesCollection(paletteConfig);
+  uiChannel.on("palette:generate", async (config) => {
+    const variablesCollection = await upsertPaletteVariablesCollection(config);
 
-    void drawPalette(paletteConfig, variablesCollection);
+    void drawPalette(config, variablesCollection);
   });
 
   uiChannel.on("window:resize", updateWindowSize);
