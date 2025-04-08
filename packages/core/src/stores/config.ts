@@ -1,4 +1,6 @@
+import { parseExportConfig } from "@core/schemas/exportConfig";
 import type { ExportConfig } from "@core/types";
+import { downloadTextFile } from "@core/utils/file/downloadTextFile";
 import { batch, signal } from "@spred/core";
 
 import {
@@ -69,4 +71,19 @@ export function updateConfig(config: ExportConfig) {
     );
   });
   requestColorsRecalculation();
+}
+
+export async function uploadConfig(file?: File) {
+  if (!file) return;
+
+  const text = await file.text();
+  updateConfig(parseExportConfig(text));
+}
+
+export function downloadConfig() {
+  downloadTextFile({
+    filename: "My Harmony config.json",
+    mimetype: "application/json",
+    data: JSON.stringify(getConfig(), null, 2),
+  });
 }
