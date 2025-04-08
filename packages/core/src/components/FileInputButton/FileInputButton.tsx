@@ -1,6 +1,8 @@
 import { type ButtonProps, Button } from "@core/components/Button/Button";
 import { mergeProps } from "@core/utils/react/mergeProps";
-import { type ChangeEvent, useCallback, useRef } from "react";
+import type { ChangeEvent } from "react";
+
+import { useFileUploader } from "./useFileUploader";
 
 export type FileInputButtonProps = ButtonProps & {
   accept?: string;
@@ -14,22 +16,12 @@ export function FileInputButton({
   onFilesChange,
   ...restProps
 }: FileInputButtonProps) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const handleUpload = useCallback(() => inputRef.current?.click(), []);
+  const { fileInput, triggerUpload } = useFileUploader({ accept, multiple, onFilesChange });
 
   return (
     <>
-      <input
-        className="sr-only"
-        ref={inputRef}
-        type="file"
-        accept={accept}
-        multiple={multiple}
-        onChange={onFilesChange}
-        aria-hidden="true"
-        tabIndex={-1}
-      />
-      <Button {...mergeProps(restProps, { onClick: handleUpload })} />
+      {fileInput}
+      <Button {...mergeProps(restProps, { onClick: triggerUpload })} />
     </>
   );
 }
