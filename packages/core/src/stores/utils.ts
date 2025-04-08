@@ -23,7 +23,7 @@ import {
 import { invariant } from "@core/utils/assertions/invariant";
 import { getMiddleNumber } from "@core/utils/number/getMiddleNumber";
 import { id } from "@core/utils/random/id";
-import { isSignal } from "@core/utils/spred/isSignal";
+import { type ValidationStore, validationStore } from "@core/utils/stores/validationStore";
 import type { PartialOptional } from "@core/utils/ts/generics";
 import { effect, signal, type Signal, type SignalOptions, type WritableSignal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
@@ -152,47 +152,6 @@ export function cleanupColors<Id extends AnyId>(
       colorsMap.delete(identifier);
     }
   }
-}
-
-type ValidationStore<Output> = {
-  $raw: WritableSignal<Output>;
-  $lastValidValue: Signal<Output>;
-  $validationError: Signal<string | null>;
-};
-
-export function validationStore<Input, Output>(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  initialValue: Exclude<Output, Function>,
-  validationSchema:
-    | BaseSchema<Input, Output, BaseIssue<unknown>>
-    | Signal<BaseSchema<Input, Output, BaseIssue<unknown>>>,
-): ValidationStore<Output> {
-  const $raw = signal(initialValue);
-  const $lastValidValue = signal(initialValue);
-  const $validationSchema = isSignal(validationSchema)
-    ? validationSchema
-    : signal(validationSchema);
-  const $validationError = signal<string | null>(null);
-
-  effect((get) => {
-    const validationResult = v.safeParse(get($validationSchema), get($raw), {
-      abortEarly: true,
-      abortPipeEarly: true,
-    });
-
-    if (validationResult.success) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      $lastValidValue.set(validationResult.output as Exclude<Output, Function>);
-    }
-
-    $validationError.set(validationResult.success ? null : validationResult.issues[0].message);
-  });
-
-  return {
-    $raw,
-    $lastValidValue,
-    $validationError,
-  };
 }
 
 export function getNameValidationSchemaSignal<

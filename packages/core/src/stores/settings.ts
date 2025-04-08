@@ -18,6 +18,7 @@ import {
 import { apcaToWcag } from "@core/utils/colors/apcaToWcag";
 import { getBgMode } from "@core/utils/colors/getBgMode";
 import { wcagToApca } from "@core/utils/colors/wcagToApca";
+import { validationStore } from "@core/utils/stores/validationStore";
 import { batch, signal } from "@spred/core";
 
 import {
@@ -27,7 +28,6 @@ import {
   requestColorsRecalculation,
   requestColorsRecalculationWithLevelsAccumulation,
 } from "./colors";
-import { validationStore } from "./utils";
 import { getBgDarkValue, getBgLightValue, isSingleDarkBg, isSingleLightBg } from "./utils/bg";
 
 export const contrastModelStore = validationStore(
