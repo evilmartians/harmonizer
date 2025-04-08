@@ -81,6 +81,10 @@
   }
 }
 
+.singleModeLabel {
+  text-transform: capitalize;
+}
+
 .bgColorInput {
   --input-max-inline-size: 7ch;
 }

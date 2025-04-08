@@ -16,6 +16,7 @@ import {
   $isSingleLightBg,
   bgColorDarkStore,
   bgColorLightStore,
+  directionModeStore,
   enableDualBg,
   updateBgColorDark,
   updateBgColorLight,
@@ -40,6 +41,27 @@ import styles from "./GridRowBackground.module.css";
 
 const HINT_SPLIT_BACKGROUND = "Split background into light and dark modes";
 
+const BgLabel = memo(function BgLabel({ bgType }: { bgType: "dark" | "light" | "single" }) {
+  const directionMode = useSubscribe(directionModeStore.$lastValidValue);
+  const bgModeLabel = (() => {
+    if (bgType === "dark") return "Dark mode";
+    if (bgType === "light") return "Light mode";
+
+    return "";
+  })();
+
+  return (
+    <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
+      {bgModeLabel}{" "}
+      <span
+        className={clsx(styles.hideWhenTwoColumns, bgType === "single" && styles.singleModeLabel)}
+      >
+        {directionMode === "fgToBg" ? "background" : "text"}
+      </span>
+    </Text>
+  );
+});
+
 const BgColorInput = withValidation(withAutosize(Input));
 
 const RowHeaderCell = memo(function SpacerCell() {
@@ -55,6 +77,7 @@ const RowHeaderCell = memo(function SpacerCell() {
     </GridCell>
   );
 });
+
 const BgDarkSpan = memo(function BgDarkSpan() {
   const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
   const bgMode = useSubscribe($bgColorDarkBgMode);
@@ -63,9 +86,7 @@ const BgDarkSpan = memo(function BgDarkSpan() {
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
       <div className={styles.bgControlContainer}>
-        <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
-          Dark mode <span className={styles.hideWhenTwoColumns}>background</span>
-        </Text>
+        <BgLabel bgType="dark" />
         <BgColorInput
           className={styles.bgColorInput}
           size="m"
@@ -89,9 +110,7 @@ const BgSingleSpan = memo(function BgSingleSpan() {
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
       <div className={styles.bgControlContainer}>
-        <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
-          Background
-        </Text>
+        <BgLabel bgType="single" />
         <BgColorInput
           className={styles.bgColorInput}
           size="m"
@@ -151,9 +170,7 @@ const BgLightSpan = memo(function BgLightSpan() {
         <div className={styles.highlitingLine} />
       </div>
       <div className={styles.bgControlContainer}>
-        <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
-          Light mode <span className={styles.hideWhenTwoColumns}>background</span>
-        </Text>
+        <BgLabel bgType="light" />
         <BgColorInput
           className={styles.bgColorInput}
           size="m"
