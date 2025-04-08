@@ -3,6 +3,7 @@ import { FileInputButton } from "@core/components/FileInputButton/FileInputButto
 import { MArrowDownwards } from "@core/components/Icon/MArrowDownwards";
 import { parseExportConfig } from "@core/schemas/exportConfig";
 import { $isExportConfigValid, getConfig, updateConfig } from "@core/stores/config";
+import { downloadTextFile } from "@core/utils/file/downloadTextFile";
 import { useSubscribe } from "@spred/react";
 import type { ChangeEvent } from "react";
 
@@ -25,18 +26,11 @@ async function handleFileUpload(e: ChangeEvent<HTMLInputElement>) {
 }
 
 function handleDownload() {
-  const config = JSON.stringify(getConfig(), null, 2);
-  const blob = new Blob([config], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "My Harmony config.json";
-  document.body.append(a);
-  a.click();
-  a.remove();
-
-  URL.revokeObjectURL(url);
+  downloadTextFile({
+    filename: "My Harmony config.json",
+    mimetype: "application/json",
+    data: JSON.stringify(getConfig(), null, 2),
+  });
 }
 
 export function WebAppActions() {
