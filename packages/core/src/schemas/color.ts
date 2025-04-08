@@ -26,8 +26,11 @@ export const CONTRAST_MIN = 0;
 export const CONTRAST_APCA_MAX = 106;
 export const CONTRAST_WCAG_MAX = 21;
 
-export function getMaxContrastLevel(contrastModel: ContrastModel) {
+export function getContrastMaxLevel(contrastModel: ContrastModel) {
   return contrastModel === "apca" ? CONTRAST_APCA_MAX : CONTRAST_WCAG_MAX;
+}
+export function getContrastStep(contrastModel: ContrastModel) {
+  return contrastModel === "apca" ? 1 : 0.1;
 }
 export const baseContrastSchema = v.pipe(v.number(), v.transform(LevelContrast));
 export const levelApcaContrastSchema = v.pipe(
