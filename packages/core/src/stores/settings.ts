@@ -34,6 +34,7 @@ export const contrastModelStore = validationStore(
   ContrastModel(defaultConfig.settings.contrastModel),
   contrastModelSchema,
 );
+
 export const directionModeStore = validationStore(
   DirectionMode(defaultConfig.settings.directionMode),
   directionModeSchema,
