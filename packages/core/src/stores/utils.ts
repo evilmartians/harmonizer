@@ -117,7 +117,7 @@ export function matchesHueColorKey(colorKey: ColorIdentifier, hueId: HueId): boo
 export const getLevelInsertionDataProducer = getInsertionDataProducer<
   StoreProducerRules<LevelStore>
 >({
-  name: { min: 0, step: 100 },
+  name: { min: 0, step: 100, forceStep: true },
   contrast: {
     min: CONTRAST_MIN,
     max: () => getContrastMaxLevel(contrastModelStore.$lastValidValue.value),

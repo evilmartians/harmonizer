@@ -14,6 +14,7 @@ type StoreProducerRule = {
   min?: StoreProducerRuleValue<number>;
   max?: StoreProducerRuleValue<number>;
   step?: StoreProducerRuleValue<number>;
+  forceStep?: boolean;
 };
 
 export type StoreProducerRules<Store extends AnyStore> = Partial<
@@ -98,7 +99,10 @@ function produceStoreDataAtEnds<Store extends AnyStore, Rules extends StoreProdu
       continue;
     }
 
-    if (!nextToClosestStoreNumberValue && isNumber(step)) {
+    if (
+      isNumber(step) &&
+      (!nextToClosestStoreNumberValue || (nextToClosestStoreNumberValue && rule.forceStep))
+    ) {
       newKeyValue = clampStoreValue(
         getRuleValue(rule.min),
         closestStoreNumberValue + step * (position === "start" ? -1 : 1),
