@@ -84,9 +84,11 @@ html,
   block-size: 100%;
   margin: 0;
   padding: 0;
+}
 
+#root {
+  isolation: isolate;
   font-family: var(--font-sans);
-
   background-color: var(--color-primary-inverted);
 }
 

@@ -4,6 +4,45 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+catalogs:
+  default:
+    '@spred/core':
+      specifier: ^0.40.2
+      version: 0.40.2
+    '@spred/react':
+      specifier: ^0.4.2
+      version: 0.4.2
+    '@tailwindcss/vite':
+      specifier: ^4.0.14
+      version: 4.0.14
+    '@types/react':
+      specifier: ^19.0.12
+      version: 19.0.12
+    '@types/react-dom':
+      specifier: ^19.0.4
+      version: 19.0.4
+    '@vitejs/plugin-react':
+      specifier: ^4.3.4
+      version: 4.3.4
+    lightningcss:
+      specifier: ^1.29.3
+      version: 1.29.3
+    react:
+      specifier: ^19.0.0
+      version: 19.0.0
+    react-dom:
+      specifier: ^19.0.0
+      version: 19.0.0
+    vite:
+      specifier: ^6.2.2
+      version: 6.2.2
+    vite-css-modules:
+      specifier: ^1.8.4
+      version: 1.8.4
+    vite-tsconfig-paths:
+      specifier: ^5.1.4
+      version: 5.1.4
+
 patchedDependencies:
   '@hideoo/eslint-config@4.0.0':
     hash: 78f0b59752e78e87d699e79398c39d10ec8520948d21775aa8946f01a75528ba
@@ -12,6 +51,13 @@ patchedDependencies:
 importers:
 
   .:
+    dependencies:
+      '@zag-js/menu':
+        specifier: ^1.9.0
+        version: 1.9.0
+      '@zag-js/react':
+        specifier: ^1.9.0
+        version: 1.9.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.7
@@ -527,6 +573,15 @@ packages:
   '@figma/plugin-typings@1.109.0':
     resolution: {integrity: sha512-6l628rOQGNd5ZD3Bru36/NK+PSKmHpsrWz0NMwUYZ8AIyfIl6sCJRc8+OhAy9+WkDXq/Dx3BYiBStjmCJ8O3Lw==}
 
+  '@floating-ui/core@1.6.9':
+    resolution: {integrity: sha512-uMXCuQ3BItDUbAMhIXw7UPXRfAlOAvZzdK9BWpE60MCn+Svt3aLn9jsPTi/WNGlRUu2uI0v5S7JiIUsbsvh3fw==}
+
+  '@floating-ui/dom@1.6.13':
+    resolution: {integrity: sha512-umqzocjDgNRGTuO7Q8CU32dkHkECqI8ZdMZ5Swb6QAM0t5rnlrN3lGo1hdpscRd3WS8T6DKYK4ephgIH9iRh3w==}
+
+  '@floating-ui/utils@0.2.9':
+    resolution: {integrity: sha512-MDWhGtE+eHw5JW7lq4qhc5yRLS11ERl1c7Z6Xd0a58DozHES6EnNNwUWbMiG4J9Cgj053Bhk8zvlhFYKVhULwg==}
+
   '@hideoo/eslint-config@4.0.0':
     resolution: {integrity: sha512-QtcFEH37jaCNp2oWBQ1goySA7LAgA334RIhigm3PV4sfvbtUInXO5Hau6DePHJOwgku5niRR/qvDq4dgsmjpsQ==}
     peerDependencies:
@@ -963,6 +1018,45 @@ packages:
     engines: {node: ^14.18.0 || >=16.0.0}
     peerDependencies:
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0
+
+  '@zag-js/anatomy@1.9.0':
+    resolution: {integrity: sha512-gkbvsXEXw183u4j7iP50RvMv34R6tnUQajXzK/gNqLcQkPiyISCHaz27VdZGMC4uetg08damvRSwnJatreY7Yw==}
+
+  '@zag-js/core@1.9.0':
+    resolution: {integrity: sha512-gUVVwP4Upln3lhTYameCOEzAcEeN005jLJlooArpy0wJkU9BgzOJMOi2P/WUAEegHs1jhASDKKw+JOTPwuSGoQ==}
+
+  '@zag-js/dismissable@1.9.0':
+    resolution: {integrity: sha512-h93utgwwbH3sL9rABopoc0bRP02hZ7SCeIWAZ6ozjdgowUP0MxVc8FVK/b+2ggfiboLkNmmBe2tdsBJt8peFwA==}
+
+  '@zag-js/dom-query@1.9.0':
+    resolution: {integrity: sha512-6Ju79zZR7Y9iiATUiUTJntWl6qPgzyzkD3YLGsIi7ix7xaVHoEaCxdtFjpbKYTxCxiZFn7qkAiUgIipABP+/RQ==}
+
+  '@zag-js/interact-outside@1.9.0':
+    resolution: {integrity: sha512-trjNrAR1Cty+mF2Zk9AcMKByrJKztokn6kDWzgpu9EAbhARFhroRStrHzTwHuirx8/+Jz+j5FgPjWITzO4TmKA==}
+
+  '@zag-js/menu@1.9.0':
+    resolution: {integrity: sha512-mlJI7dOHHlj5AJC411RVmpSsRTkagUktARkE4Nl3v2BwvKzaFJYTTQLwIznVxjwN/EeYD00RMWaH9aD17xeijg==}
+
+  '@zag-js/popper@1.9.0':
+    resolution: {integrity: sha512-WaTpQmBwa0FMHjGzO0/cp23QnqekBcAguFLb2zpHGD91By8bss0HT7RRXLtl4wPqf2NrbIZXe+ycnkSz9IdqHA==}
+
+  '@zag-js/react@1.9.0':
+    resolution: {integrity: sha512-wmXmOiIOcQly1b7xt6kxyCxvNEYHLj51VDiqdnVCq91H8wJ6ZKf+JtlgQUjVHDmG8114YciOxrF5X2w1YHKM5g==}
+    peerDependencies:
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+
+  '@zag-js/rect-utils@1.9.0':
+    resolution: {integrity: sha512-ekTiI50oBhzJaJ+soKwFoBXyUp5JNW9p9Xbg+dyO1LSM5TVUoxC4tLWKbSi+W6ccPhicfFKuoecbRE6kMRAOpw==}
+
+  '@zag-js/store@1.9.0':
+    resolution: {integrity: sha512-Le/Pxx6ABE2JUTk/ndz7XRnApL0sq6u9pfMS1tdFFMYv0QU8w+b0de3AYWVZ9da9680ggk39pwG52a4AMC/HBA==}
+
+  '@zag-js/types@1.9.0':
+    resolution: {integrity: sha512-y2K0xkr8xGAEagrSxDUkJSyPmBlXYC1ng5LPPGOgJbxL/mT+Oz5ZVkNVRD1XIP7+8wnkqhYBhJXOu5e7kYPN5w==}
+
+  '@zag-js/utils@1.9.0':
+    resolution: {integrity: sha512-3kzc/6yimohvr85O7pBOxUlnFLYTy0acH3m/Vwiiiry9xLHh6CkG5ZwzJFyXoDOw7PbYY4pntKpa+CiD/ou3TQ==}
 
   acorn-jsx@5.3.2:
     resolution: {integrity: sha512-rq9s+JNhf0IChjtDXxllJ7g41oZk5SlXtp0LHwyA5cejwn7vKmKp4pPri6YEePv2PU65sAsegbXtIinmDFDXgQ==}
@@ -2401,6 +2495,9 @@ packages:
   prop-types@15.8.1:
     resolution: {integrity: sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==}
 
+  proxy-compare@3.0.1:
+    resolution: {integrity: sha512-V9plBAt3qjMlS1+nC8771KNf6oJ12gExvaxnNzN/9yVRLdTv/lc+oJlnSzrdYDAvBfTStPCoiaCOTmTs0adv7Q==}
+
   punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
@@ -3198,6 +3295,17 @@ snapshots:
 
   '@figma/plugin-typings@1.109.0': {}
 
+  '@floating-ui/core@1.6.9':
+    dependencies:
+      '@floating-ui/utils': 0.2.9
+
+  '@floating-ui/dom@1.6.13':
+    dependencies:
+      '@floating-ui/core': 1.6.9
+      '@floating-ui/utils': 0.2.9
+
+  '@floating-ui/utils@0.2.9': {}
+
   '@hideoo/eslint-config@4.0.0(patch_hash=78f0b59752e78e87d699e79398c39d10ec8520948d21775aa8946f01a75528ba)(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2)':
     dependencies:
       '@eslint/js': 9.16.0
@@ -3658,6 +3766,66 @@ snapshots:
       vite: 6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.3)
     transitivePeerDependencies:
       - supports-color
+
+  '@zag-js/anatomy@1.9.0': {}
+
+  '@zag-js/core@1.9.0':
+    dependencies:
+      '@zag-js/dom-query': 1.9.0
+      '@zag-js/utils': 1.9.0
+
+  '@zag-js/dismissable@1.9.0':
+    dependencies:
+      '@zag-js/dom-query': 1.9.0
+      '@zag-js/interact-outside': 1.9.0
+      '@zag-js/utils': 1.9.0
+
+  '@zag-js/dom-query@1.9.0':
+    dependencies:
+      '@zag-js/types': 1.9.0
+
+  '@zag-js/interact-outside@1.9.0':
+    dependencies:
+      '@zag-js/dom-query': 1.9.0
+      '@zag-js/utils': 1.9.0
+
+  '@zag-js/menu@1.9.0':
+    dependencies:
+      '@zag-js/anatomy': 1.9.0
+      '@zag-js/core': 1.9.0
+      '@zag-js/dismissable': 1.9.0
+      '@zag-js/dom-query': 1.9.0
+      '@zag-js/popper': 1.9.0
+      '@zag-js/rect-utils': 1.9.0
+      '@zag-js/types': 1.9.0
+      '@zag-js/utils': 1.9.0
+
+  '@zag-js/popper@1.9.0':
+    dependencies:
+      '@floating-ui/dom': 1.6.13
+      '@zag-js/dom-query': 1.9.0
+      '@zag-js/utils': 1.9.0
+
+  '@zag-js/react@1.9.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+    dependencies:
+      '@zag-js/core': 1.9.0
+      '@zag-js/store': 1.9.0
+      '@zag-js/types': 1.9.0
+      '@zag-js/utils': 1.9.0
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
+
+  '@zag-js/rect-utils@1.9.0': {}
+
+  '@zag-js/store@1.9.0':
+    dependencies:
+      proxy-compare: 3.0.1
+
+  '@zag-js/types@1.9.0':
+    dependencies:
+      csstype: 3.1.3
+
+  '@zag-js/utils@1.9.0': {}
 
   acorn-jsx@5.3.2(acorn@8.14.0):
     dependencies:
@@ -5168,6 +5336,8 @@ snapshots:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
+
+  proxy-compare@3.0.1: {}
 
   punycode@2.3.1: {}
 

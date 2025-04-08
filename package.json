@@ -62,5 +62,9 @@
     "patchedDependencies": {
       "@hideoo/eslint-config@4.0.0": "patches/@hideoo__eslint-config@4.0.0.patch"
     }
+  },
+  "dependencies": {
+    "@zag-js/menu": "^1.9.0",
+    "@zag-js/react": "^1.9.0"
   }
 }
