@@ -21,14 +21,14 @@ export const FALLBACK_CELL_COLOR = {
 } as ColorCellData;
 
 export const FALLBACK_LEVEL_DATA = {
-  name: "100",
+  name: "",
   contrast: 50,
   chroma: 0.2,
   tintColor: FALLBACK_LEVEL_TINT_COLOR,
 } as LevelData;
 
 export const FALLBACK_HUE_DATA = {
-  name: "Red",
+  name: "",
   angle: 0,
   tintColor: FALLBACK_HUE_TINT_COLOR,
 } as HueData;

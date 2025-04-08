@@ -6,6 +6,7 @@ import { withNumericIncrementControls } from "@core/components/Input/enhancers/w
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
+import { getContrastStep } from "@core/schemas/color";
 import {
   $levelIds,
   getLevel,
@@ -133,7 +134,7 @@ const ContrastInput = memo(function ContrastInput({
               "--input-bg-color": tintColor.css,
             }
       }
-      incrementStep={contrastModel === "apca" ? 1 : 0.1}
+      incrementStep={getContrastStep(contrastModel)}
       placeholder={PLACEHOLDER_CONTRAST}
       value={contrast}
       title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}

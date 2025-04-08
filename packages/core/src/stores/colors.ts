@@ -5,7 +5,7 @@ import {
   type HueAngle,
   type HueId,
   HueIndex,
-  HueName,
+  type HueName,
   type LchColor,
   type LevelChroma,
   type LevelContrast,
@@ -20,9 +20,6 @@ import {
   type GenerateColorsPayload,
   type GeneratedColorPayload,
 } from "@core/utils/colors/calculateColors";
-import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
-import { getMiddleContrastLevel } from "@core/utils/colors/getMiddleContrastLevel";
-import { getMiddleHueAngle } from "@core/utils/colors/getMiddleHueAngle";
 import { objectEntries } from "@core/utils/object/objectEntries";
 import { workerChannel } from "@core/worker/workerChannel";
 import { batch, signal, type WritableSignal } from "@spred/core";
@@ -30,7 +27,7 @@ import { pick } from "es-toolkit";
 import { debounce } from "es-toolkit/compat";
 
 import { appEvents } from "./appEvents";
-import { FALLBACK_CELL_COLOR, FALLBACK_HUE_DATA, FALLBACK_LEVEL_DATA } from "./constants";
+import { FALLBACK_CELL_COLOR } from "./constants";
 import {
   $bgLightStart,
   bgColorDarkStore,
@@ -45,10 +42,9 @@ import {
   createIndexedArrayStore,
   getColorIdentifier,
   getColorSignal,
-  getHueStore,
   getInsertMethod,
-  getLevelStore,
-  getMiddleLevelName,
+  getNewInsertingHue,
+  getNewInsertingLevel,
   type HueStore,
   type LevelStore,
   matchesHueColorKey,
@@ -218,22 +214,7 @@ export function getColor$(levelId: LevelId, hueId: HueId) {
 export const insertLevel = getInsertMethod({
   main: levelsStore,
   cross: huesStore,
-  getNewItem(prevLevel, nextLevel) {
-    if (prevLevel) {
-      return getLevelStore({
-        name: nextLevel
-          ? getMiddleLevelName(prevLevel.name.$raw.value, nextLevel.name.$raw.value)
-          : prevLevel.name.$raw.value,
-        contrast: nextLevel
-          ? getMiddleContrastLevel(prevLevel.contrast.$raw.value, nextLevel.contrast.$raw.value)
-          : prevLevel.contrast.$raw.value,
-        chroma: prevLevel.chroma.$raw.value,
-        tintColor: prevLevel.$tintColor.value,
-      });
-    }
-
-    return getLevelStore(FALLBACK_LEVEL_DATA);
-  },
+  getNewItem: getNewInsertingLevel,
   onAddColor: (levelId, hueId, previousLevelId) => {
     upsertColor(
       levelId,
@@ -283,20 +264,7 @@ export function updateLevelChroma(id: LevelId, chroma: LevelChroma) {
 export const insertHue = getInsertMethod({
   main: huesStore,
   cross: levelsStore,
-  getNewItem(prevHue, nextHue) {
-    if (prevHue) {
-      const angle = nextHue
-        ? getMiddleHueAngle(prevHue.angle.$raw.value, nextHue.angle.$raw.value)
-        : prevHue.angle.$raw.value;
-
-      return getHueStore({
-        name: HueName(getClosestColorName(angle)),
-        angle,
-      });
-    }
-
-    return getHueStore(FALLBACK_HUE_DATA);
-  },
+  getNewItem: getNewInsertingHue,
   onAddColor: (hueId, levelId, previousHueId) =>
     upsertColor(
       levelId,

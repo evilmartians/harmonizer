@@ -1,37 +1,51 @@
 import {
+  CONTRAST_MIN,
+  getContrastMaxLevel,
+  getContrastStep,
   getLevelContrastModel,
+  HUE_MAX_ANGLE,
+  HUE_MIN_ANGLE,
   hueAngleSchema,
   hueNameSchema,
   levelChromaSchema,
   levelNameSchema,
 } from "@core/schemas/color";
 import {
-  HueId,
-  LevelId,
-  LevelName,
   type ColorCellData,
   type ColorHueTintData,
   type ColorIdentifier,
   type ColorLevelTintData,
-  type HueAngle,
+  HueAngle,
   type HueData,
-  type HueName,
+  HueId,
+  HueName,
   type LevelChroma,
-  type LevelContrast,
+  LevelContrast,
   type LevelData,
+  LevelId,
+  LevelName,
 } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
-import { getMiddleNumber } from "@core/utils/number/getMiddleNumber";
+import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
 import { id } from "@core/utils/random/id";
-import { isSignal } from "@core/utils/spred/isSignal";
+import {
+  getInsertionDataProducer,
+  type StoreProducerRules,
+} from "@core/utils/stores/getNewItemInserter";
+import { type ValidationStore, validationStore } from "@core/utils/stores/validationStore";
 import type { PartialOptional } from "@core/utils/ts/generics";
-import { effect, signal, type Signal, type SignalOptions, type WritableSignal } from "@spred/core";
+import { signal, type SignalOptions, type WritableSignal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
 import type { BaseIssue, BaseSchema } from "valibot";
 import * as v from "valibot";
 
 import { huesStore, levelsStore } from "./colors";
-import { FALLBACK_HUE_TINT_COLOR, FALLBACK_LEVEL_TINT_COLOR } from "./constants";
+import {
+  FALLBACK_HUE_DATA,
+  FALLBACK_HUE_TINT_COLOR,
+  FALLBACK_LEVEL_DATA,
+  FALLBACK_LEVEL_TINT_COLOR,
+} from "./constants";
 import { contrastModelStore } from "./settings";
 
 export type AnyId = string;
@@ -100,13 +114,45 @@ export function matchesHueColorKey(colorKey: ColorIdentifier, hueId: HueId): boo
   return colorKey.endsWith(hueId);
 }
 
-export function getMiddleLevelName(lowerName: LevelName, upperName: LevelName): LevelName {
-  const prevName = Number.parseInt(lowerName, 10);
-  const nextName = Number.parseInt(upperName, 10);
+export const getLevelInsertionDataProducer = getInsertionDataProducer<
+  StoreProducerRules<LevelStore>
+>({
+  name: { min: 0, step: 100, forceStep: true },
+  contrast: {
+    min: CONTRAST_MIN,
+    max: () => getContrastMaxLevel(contrastModelStore.$lastValidValue.value),
+    step: () => getContrastStep(contrastModelStore.$lastValidValue.value) * 5,
+  },
+});
 
-  return !Number.isNaN(prevName) && !Number.isNaN(nextName)
-    ? LevelName(String(getMiddleNumber(prevName, nextName)))
-    : lowerName;
+export function getNewInsertingLevel(insertAt: number, levels: LevelStore[]) {
+  const newData = getLevelInsertionDataProducer(insertAt, levels);
+  const newLevelData = { ...FALLBACK_LEVEL_DATA };
+
+  if (newData.name) Object.assign(newLevelData, { name: LevelName(String(newData.name)) });
+  if (newData.contrast) Object.assign(newLevelData, { contrast: LevelContrast(newData.contrast) });
+
+  return getLevelStore(newLevelData);
+}
+
+export const getHueInsertionDataProducer = getInsertionDataProducer({
+  angle: { min: HUE_MIN_ANGLE, max: HUE_MAX_ANGLE, step: 10 },
+});
+
+export function getNewInsertingHue(insertAt: number, hues: HueStore[]) {
+  const newData = getHueInsertionDataProducer(insertAt, hues);
+  const newHueData = { ...FALLBACK_HUE_DATA };
+
+  if (newData.angle) {
+    const hueAngle = HueAngle(newData.angle);
+
+    Object.assign(newHueData, {
+      angle: hueAngle,
+      name: HueName(getClosestColorName(hueAngle)),
+    });
+  }
+
+  return getHueStore(newHueData);
 }
 
 type GetInsertMethodOptions<
@@ -115,7 +161,7 @@ type GetInsertMethodOptions<
 > = {
   main: IndexedStore<MainItem>;
   cross: IndexedStore<CrossItem>;
-  getNewItem: (previous?: MainItem, next?: MainItem) => MainItem;
+  getNewItem: (insertAt: number, items: MainItem[]) => MainItem;
   onAddColor: (id: MainItem["id"], crossId: CrossItem["id"], previousId?: MainItem["id"]) => void;
   onFinish: (id: MainItem["id"]) => void;
 };
@@ -126,10 +172,9 @@ export function getInsertMethod<
   return (beforeId?: MainItem["id"]) => {
     const nextIndex = beforeId ? main.$ids.value.indexOf(beforeId) : main.$ids.value.length;
     const previousId = main.$ids.value[nextIndex - 1];
-    const nextId = main.$ids.value[nextIndex];
     const newItem = getNewItem(
-      previousId && main.getItem(previousId),
-      nextId && main.getItem(nextId),
+      nextIndex,
+      main.$ids.value.map((id) => main.getItem(id)),
     );
 
     for (const oppositeId of cross.$ids.value) {
@@ -152,47 +197,6 @@ export function cleanupColors<Id extends AnyId>(
       colorsMap.delete(identifier);
     }
   }
-}
-
-type ValidationStore<Output> = {
-  $raw: WritableSignal<Output>;
-  $lastValidValue: Signal<Output>;
-  $validationError: Signal<string | null>;
-};
-
-export function validationStore<Input, Output>(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  initialValue: Exclude<Output, Function>,
-  validationSchema:
-    | BaseSchema<Input, Output, BaseIssue<unknown>>
-    | Signal<BaseSchema<Input, Output, BaseIssue<unknown>>>,
-): ValidationStore<Output> {
-  const $raw = signal(initialValue);
-  const $lastValidValue = signal(initialValue);
-  const $validationSchema = isSignal(validationSchema)
-    ? validationSchema
-    : signal(validationSchema);
-  const $validationError = signal<string | null>(null);
-
-  effect((get) => {
-    const validationResult = v.safeParse(get($validationSchema), get($raw), {
-      abortEarly: true,
-      abortPipeEarly: true,
-    });
-
-    if (validationResult.success) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-      $lastValidValue.set(validationResult.output as Exclude<Output, Function>);
-    }
-
-    $validationError.set(validationResult.success ? null : validationResult.issues[0].message);
-  });
-
-  return {
-    $raw,
-    $lastValidValue,
-    $validationError,
-  };
 }
 
 export function getNameValidationSchemaSignal<
