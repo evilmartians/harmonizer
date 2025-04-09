@@ -1,3 +1,4 @@
+import { useDragScrollByMiddleClick } from "@core/hooks/useDragScrollByMiddleClick";
 import { $hueIds, $levelIds } from "@core/stores/colors";
 import { $bgColorLightBgMode } from "@core/stores/settings";
 import {
@@ -8,8 +9,9 @@ import {
   setScrollableContainer,
 } from "@core/stores/ui";
 import { HueIndex, LevelIndex } from "@core/types";
+import { mergeRefs } from "@core/utils/react/mergeRefs";
 import { useSubscribe } from "@spred/react";
-import { Fragment, memo, type PropsWithChildren } from "react";
+import { Fragment, memo, useRef, type PropsWithChildren } from "react";
 
 import styles from "./Grid.module.css";
 import { GridCell } from "./GridCell";
@@ -27,6 +29,7 @@ import { GridStylesHueHover } from "./GridStylesHueHover";
 import { GridStylesLevelHover } from "./GridStylesLevelHover";
 
 const GridContainer = memo(function GridContainer({ children }: PropsWithChildren) {
+  const gridRef = useRef<HTMLDivElement>(null);
   const hasHorizontalScrollbar = useSubscribe($gridHasHorizontalScrollbar);
   const isHorizontallyScrolled = useSubscribe($gridHorizontallyScrolled);
   const hasVerticalScrollbar = useSubscribe($gridHasVerticalScrollbar);
@@ -50,8 +53,10 @@ const GridContainer = memo(function GridContainer({ children }: PropsWithChildre
     attrs["data-vertically-scrolled"] = "";
   }
 
+  useDragScrollByMiddleClick(gridRef);
+
   return (
-    <div className={styles.grid} ref={setScrollableContainer} {...attrs}>
+    <div className={styles.grid} ref={mergeRefs(gridRef, setScrollableContainer)} {...attrs}>
       {children}
     </div>
   );
