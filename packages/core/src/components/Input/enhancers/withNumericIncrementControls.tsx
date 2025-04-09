@@ -1,10 +1,11 @@
+import { isNumber } from "@core/utils/number/isNumber";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 import { type ChangeEvent, type ComponentType, useCallback, useEffect, useRef } from "react";
 
 import type { InputProps } from "../Input";
 
 type WithNumericIncrementControlsProps = {
-  incrementStep?: number;
+  step?: number;
 };
 
 function formatWithFractional(value: string, fractionalLength: number): string {
@@ -16,24 +17,46 @@ export function withNumericIncrementControls<P extends InputProps>(
   WrappedComponent: ComponentType<P>,
 ) {
   const NumberKeyboardInput = ({
-    incrementStep = 1,
+    step = 1,
     value,
     ...props
   }: P & WithNumericIncrementControlsProps) => {
     const { onChange } = props;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const labelRef = useRef<HTMLLabelElement>(null);
-    const fractionalLength = -Math.log10(incrementStep);
+    const fractionalLength = -Math.log10(step);
+    const formattedValue = formatWithFractional(String(value), fractionalLength);
 
     const updateValue = useCallback(
-      (input: HTMLInputElement, increment: number) => {
-        const currentValue = Number.parseFloat(input.value);
+      (
+        input: HTMLInputElement,
+        {
+          multiplier,
+          direction,
+          value,
+        }:
+          | { multiplier: number; direction: -1 | 1; value?: undefined }
+          | { value: number; multiplier?: undefined; direction?: undefined },
+      ) => {
+        const newValue = (() => {
+          if (value !== undefined) {
+            return value;
+          }
 
-        if (Number.isNaN(currentValue)) {
+          const currentValue = Number.parseFloat(input.value);
+
+          if (Number.isNaN(currentValue)) {
+            return;
+          }
+
+          return Number(currentValue + step * multiplier * direction);
+        })();
+
+        if (newValue === undefined) {
           return;
         }
 
-        input.value = Number((currentValue + increment).toFixed(fractionalLength)).toString();
+        input.value = Number(newValue.toFixed(fractionalLength)).toString();
 
         if (onChange) {
           const nativeEvent = new Event("change", { bubbles: true });
@@ -55,19 +78,28 @@ export function withNumericIncrementControls<P extends InputProps>(
       if (!input) return;
 
       const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+        const isPageUpOrDown = e.key === "PageUp" || e.key === "PageDown";
+        const isArrowUpOrDown = e.key === "ArrowUp" || e.key === "ArrowDown";
 
-        const increment = e.shiftKey ? incrementStep * 10 : incrementStep;
-        const direction = e.key === "ArrowUp" ? 1 : -1;
-
-        e.preventDefault();
-        updateValue(input, increment * direction);
+        if (isPageUpOrDown || isArrowUpOrDown) {
+          e.preventDefault();
+          updateValue(input, {
+            multiplier: e.shiftKey || isPageUpOrDown ? 10 : 1,
+            direction: e.key === "ArrowUp" || e.key === "PageUp" ? 1 : -1,
+          });
+        } else if (e.key === "Home" && isNumber(props.min)) {
+          e.preventDefault();
+          updateValue(input, { value: props.min });
+        } else if (e.key === "End" && isNumber(props.max)) {
+          e.preventDefault();
+          updateValue(input, { value: props.max });
+        }
       };
 
       input.addEventListener("keydown", handleKeyDown);
 
       return () => input.removeEventListener("keydown", handleKeyDown);
-    }, [incrementStep, updateValue]);
+    }, [step, updateValue, props.min, props.max]);
 
     useEffect(() => {
       const label = labelRef.current;
@@ -78,22 +110,27 @@ export function withNumericIncrementControls<P extends InputProps>(
       const handleWheel = (e: WheelEvent) => {
         if (document.activeElement !== input || !label.matches(":hover")) return;
 
-        const increment = e.shiftKey ? incrementStep * 10 : incrementStep;
-        const direction = e[e.shiftKey ? "deltaX" : "deltaY"] < 0 ? 1 : -1;
-
         e.preventDefault();
-        updateValue(input, increment * direction);
+        updateValue(input, {
+          multiplier: e.shiftKey ? 10 : 1,
+          direction: e[e.shiftKey ? "deltaX" : "deltaY"] < 0 ? 1 : -1,
+        });
       };
 
       label.addEventListener("wheel", handleWheel);
 
       return () => label.removeEventListener("wheel", handleWheel);
-    }, [incrementStep, updateValue]);
+    }, [step, updateValue]);
 
     return (
       <WrappedComponent
         {...(props as P)}
-        value={formatWithFractional(String(value), fractionalLength)}
+        role="spinbutton"
+        step={step}
+        aria-valuenow={formattedValue}
+        aria-valuemin={props.min}
+        aria-valuemax={props.max}
+        value={formattedValue}
         ref={mergeRefs(inputRef, props.ref)}
         labelRef={mergeRefs(labelRef, props.labelRef)}
       />

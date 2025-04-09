@@ -32,6 +32,7 @@ import { ColorString } from "@core/types";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
+import { upperFirst } from "es-toolkit";
 import { memo, useEffect, useRef } from "react";
 
 import { LPlus } from "../Icon/LPlus";
@@ -41,22 +42,30 @@ import styles from "./GridRowBackground.module.css";
 
 const HINT_SPLIT_BACKGROUND = "Split background into light and dark modes";
 
-const BgLabel = memo(function BgLabel({ bgType }: { bgType: "dark" | "light" | "single" }) {
+type BgLabelParts = readonly [bgTypePrefix: string | null, directionAppendix: string];
+function useBgLabel(bgType: "dark" | "light" | "single"): { text: string; parts: BgLabelParts } {
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
-  const bgModeLabel = (() => {
-    if (bgType === "dark") return "Dark mode";
-    if (bgType === "light") return "Light mode";
+  const directionAppendix = directionMode === "fgToBg" ? "background" : "text";
 
-    return "";
-  })();
+  if (bgType === "single") {
+    const directionAppendixUpper = upperFirst(directionAppendix);
 
+    return { text: directionAppendixUpper, parts: [null, directionAppendixUpper] };
+  }
+
+  const bgModeLabel = bgType === "dark" ? "Dark mode" : "Light mode";
+  const parts = [bgModeLabel, directionAppendix] as const;
+
+  return { text: parts.join(" "), parts };
+}
+
+type BgLabelProps = { bgLabelParts: BgLabelParts; isSingleBg?: boolean };
+const BgLabel = memo(function BgLabel({ bgLabelParts, isSingleBg }: BgLabelProps) {
   return (
-    <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn}>
-      {bgModeLabel}{" "}
-      <span
-        className={clsx(styles.hideWhenTwoColumns, bgType === "single" && styles.singleModeLabel)}
-      >
-        {directionMode === "fgToBg" ? "background" : "text"}
+    <Text kind="secondary" size="s" className={styles.hideWhenSingleColumn} aria-hidden>
+      {bgLabelParts[0]}{" "}
+      <span className={clsx(styles.hideWhenTwoColumns, isSingleBg && styles.singleModeLabel)}>
+        {bgLabelParts[1]}
       </span>
     </Text>
   );
@@ -82,14 +91,16 @@ const BgDarkSpan = memo(function BgDarkSpan() {
   const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
   const bgMode = useSubscribe($bgColorDarkBgMode);
   const error = useSubscribe(bgColorDarkStore.$validationError);
+  const { text: label, parts: bgLabelParts } = useBgLabel("dark");
 
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
       <div className={styles.bgControlContainer}>
-        <BgLabel bgType="dark" />
+        <BgLabel bgLabelParts={bgLabelParts} />
         <BgColorInput
           className={styles.bgColorInput}
           size="m"
+          label={label}
           placeholder="#000"
           value={bgColorDark}
           error={error}
@@ -106,14 +117,16 @@ const BgSingleSpan = memo(function BgSingleSpan() {
   const bgColor = useSubscribe(bgColorSingleStore.$raw);
   const bgMode = useSubscribe($bgColorSingleBgMode);
   const error = useSubscribe(bgColorSingleStore.$validationError);
+  const { text: label, parts: bgLabelParts } = useBgLabel("single");
 
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
       <div className={styles.bgControlContainer}>
-        <BgLabel bgType="single" />
+        <BgLabel bgLabelParts={bgLabelParts} isSingleBg />
         <BgColorInput
           className={styles.bgColorInput}
           size="m"
+          label={label}
           placeholder="Color"
           value={bgColor}
           error={error}
@@ -141,6 +154,7 @@ const BgLightSpan = memo(function BgLightSpan() {
   const bgColorLight = useSubscribe(bgColorLightStore.$raw);
   const bgMode = useSubscribe($bgColorLightBgMode);
   const error = useSubscribe(bgColorLightStore.$validationError);
+  const { text: label, parts: bgLabelParts } = useBgLabel("light");
 
   useEffect(() => {
     if (!dragButtonRef.current) return;
@@ -170,10 +184,11 @@ const BgLightSpan = memo(function BgLightSpan() {
         <div className={styles.highlitingLine} />
       </div>
       <div className={styles.bgControlContainer}>
-        <BgLabel bgType="light" />
+        <BgLabel bgLabelParts={bgLabelParts} />
         <BgColorInput
           className={styles.bgColorInput}
           size="m"
+          label={label}
           placeholder="#fff"
           value={bgColorLight}
           error={error}
