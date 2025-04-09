@@ -13,10 +13,15 @@ import { updateConfig } from "./stores/config";
 import { $isColorSpaceLocked } from "./stores/settings";
 import { invariant } from "./utils/assertions/invariant";
 
+type AppOptions = {
+  customUI?: ReactNode;
+  precalculateColors?: boolean;
+};
+
 export function createApp(
   element: HTMLElement | null,
   dependencies: AppDependencies,
-  customUI?: ReactNode,
+  { customUI, precalculateColors }: AppOptions,
 ) {
   invariant(element, "Mount element not found");
 
@@ -28,7 +33,10 @@ export function createApp(
     updateConfig(parsedConfig);
     $isColorSpaceLocked.set(lockColorSpace);
   });
-  calculateColorsSynchronously();
+
+  if (precalculateColors) {
+    calculateColorsSynchronously();
+  }
 
   createRoot(element).render(
     <StrictMode>

@@ -20,6 +20,10 @@ pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
       lockColorSpace: true,
       actions: <FigmaPluginActions isUpdate={palettePresents} />,
     },
-    <ResizeWindowHandle onResize={(size) => pluginChannel.emit("window:resize", size)} />,
+    {
+      customUI: (
+        <ResizeWindowHandle onResize={(size) => pluginChannel.emit("window:resize", size)} />
+      ),
+    },
   );
 });
