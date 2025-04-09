@@ -6,7 +6,7 @@ import { withNumericIncrementControls } from "@core/components/Input/enhancers/w
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
-import { getContrastStep } from "@core/schemas/color";
+import { CONTRAST_MIN, getContrastMaxLevel, getContrastStep } from "@core/schemas/color";
 import {
   $levelIds,
   getLevel,
@@ -38,6 +38,8 @@ import styles from "./GridCellLevelHeader.module.css";
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type LevelComponentProps<P extends AnyProps = {}> = { levelId: LevelId } & P;
 
+const LABEL_NAME = "Level name";
+const LABEL_CHROMA = "Level chroma";
 const PLACEHOLDER_LEVEL = "Level";
 const PLACEHOLDER_CONTRAST = "CR";
 const PLACEHOLDER_CHROMA = "Chroma";
@@ -88,9 +90,11 @@ const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
   return (
     <LevelNameInput
       ref={inputRef}
+      id={`level-name-${levelId}`}
       className={styles.inputSecondary}
       size="m"
       kind="ghost"
+      label={LABEL_NAME}
       placeholder={PLACEHOLDER_LEVEL}
       value={name}
       title={HINT_LEVEL}
@@ -118,9 +122,9 @@ const ContrastInput = memo(function ContrastInput({
 
   return (
     <LevelContrastInput
+      id={`level-contrast-${levelId}`}
       className={styles.inputPrimary}
       size="xl"
-      label={contrastModel.toUpperCase()}
       kind="bordered"
       customization={
         directionMode === "fgToBg"
@@ -134,7 +138,10 @@ const ContrastInput = memo(function ContrastInput({
               "--input-bg-color": tintColor.css,
             }
       }
-      incrementStep={getContrastStep(contrastModel)}
+      min={CONTRAST_MIN}
+      max={getContrastMaxLevel(contrastModel)}
+      step={getContrastStep(contrastModel)}
+      label={contrastModel.toUpperCase()}
       placeholder={PLACEHOLDER_CONTRAST}
       value={contrast}
       title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
@@ -163,9 +170,11 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 
   return (
     <LevelChromaInput
+      id={`level-chroma-${levelId}`}
       className={styles.inputSecondary}
       size="m"
       kind="ghost"
+      label={LABEL_CHROMA}
       placeholder={PLACEHOLDER_CHROMA}
       inputMode="decimal"
       value={chroma}

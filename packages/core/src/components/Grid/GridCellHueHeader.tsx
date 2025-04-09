@@ -4,6 +4,7 @@ import { withNumericIncrementControls } from "@core/components/Input/enhancers/w
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
+import { HUE_MAX_ANGLE, HUE_MIN_ANGLE } from "@core/schemas/color";
 import { getHue, insertHue, updateHueAngle, updateHueName } from "@core/stores/colors";
 import { $bgColorDarkBgMode } from "@core/stores/settings";
 import { HueAngle, HueName, type HueId } from "@core/types";
@@ -18,6 +19,8 @@ import styles from "./GridCellHueHeader.module.css";
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 type HueComponentProps<P extends AnyProps = {}> = { hueId: HueId } & P;
 
+const LABEL_NAME = "Hue name";
+const LABEL_HUE = "Hue angle";
 const PLACEHOLDER_NAME = "Name";
 const PLACEHOLDER_HUE = "Hue";
 const HINT_NAME = "Color name";
@@ -59,10 +62,12 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
   return (
     <HueNameInput
       ref={inputRef}
+      id={`hue-name-${hueId}`}
       className={styles.control}
       size="m"
       kind="ghost"
       customization={{ "--input-color": tintColor.css }}
+      label={LABEL_NAME}
       placeholder={PLACEHOLDER_NAME}
       value={name}
       title={HINT_NAME}
@@ -81,9 +86,13 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
   return (
     <HueAngleInput
       className={styles.control}
+      id={`hue-angle-${hueId}`}
       size="m"
       kind="ghost"
+      label={LABEL_HUE}
       placeholder={PLACEHOLDER_HUE}
+      min={HUE_MIN_ANGLE}
+      max={HUE_MAX_ANGLE}
       value={angle}
       title={HINT_DEGREE}
       error={error}
