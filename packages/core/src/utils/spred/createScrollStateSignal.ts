@@ -19,6 +19,10 @@ const DEFAULT_SCROLL_STATE = {
 export function createScrollStateSignal<E extends HTMLElement>(
   element: InitialSignalValue<SignalOrValue<E | null>>,
   type: ScrollType,
+  options: {
+    resizeObserverOptions?: ResizeObserverOptions;
+    mutationObserverOptions: MutationObserverInit;
+  },
 ): Signal<ScrollState> {
   const $element = toSignal(element);
   const $scrollState = signal<ScrollState>(
@@ -32,17 +36,13 @@ export function createScrollStateSignal<E extends HTMLElement>(
     element,
     initialValue: $element.value?.[type === "x" ? "offsetWidth" : "offsetHeight"] ?? 0,
     mapper: (entry) => entry.contentRect[type === "x" ? "width" : "height"],
+    observerOptions: options.resizeObserverOptions,
   });
   const $mutationObserver = createMutationObserverSignal({
     element,
     initialValue: 0,
     mapper: (_mutationsRecord, prevState) => prevState + 1, // We need just to trigger subscription
-    observerOptions: {
-      childList: true,
-      subtree: true,
-      characterData: true,
-      attributes: true,
-    },
+    observerOptions: options.mutationObserverOptions,
   });
 
   function onActivate() {
