@@ -65,6 +65,7 @@
   },
   "dependencies": {
     "@zag-js/menu": "^1.9.0",
-    "@zag-js/react": "^1.9.0"
+    "@zag-js/react": "^1.9.0",
+    "@zag-js/select": "^1.9.0"
   }
 }

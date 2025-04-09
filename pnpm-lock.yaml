@@ -58,6 +58,9 @@ importers:
       '@zag-js/react':
         specifier: ^1.9.0
         version: 1.9.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@zag-js/select':
+        specifier: ^1.9.0
+        version: 1.9.0
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.7
@@ -1022,6 +1025,9 @@ packages:
   '@zag-js/anatomy@1.9.0':
     resolution: {integrity: sha512-gkbvsXEXw183u4j7iP50RvMv34R6tnUQajXzK/gNqLcQkPiyISCHaz27VdZGMC4uetg08damvRSwnJatreY7Yw==}
 
+  '@zag-js/collection@1.9.0':
+    resolution: {integrity: sha512-NtckYZfL+AWlobz38a/vqi2n6iJn8at3t6mUS01u/Ebq+gzq8Zqj7OTPTVxzH8P06Kfiz7WYNjuWEJXjLUgBGw==}
+
   '@zag-js/core@1.9.0':
     resolution: {integrity: sha512-gUVVwP4Upln3lhTYameCOEzAcEeN005jLJlooArpy0wJkU9BgzOJMOi2P/WUAEegHs1jhASDKKw+JOTPwuSGoQ==}
 
@@ -1048,6 +1054,9 @@ packages:
 
   '@zag-js/rect-utils@1.9.0':
     resolution: {integrity: sha512-ekTiI50oBhzJaJ+soKwFoBXyUp5JNW9p9Xbg+dyO1LSM5TVUoxC4tLWKbSi+W6ccPhicfFKuoecbRE6kMRAOpw==}
+
+  '@zag-js/select@1.9.0':
+    resolution: {integrity: sha512-FNiKnNW6N9nJQyA++qjTuolk/MEuz0xIhIh1qpY4LTLqkf55RP2LWd2UdiNugv+1thmf1FmrsShgqM+fOxa5qQ==}
 
   '@zag-js/store@1.9.0':
     resolution: {integrity: sha512-Le/Pxx6ABE2JUTk/ndz7XRnApL0sq6u9pfMS1tdFFMYv0QU8w+b0de3AYWVZ9da9680ggk39pwG52a4AMC/HBA==}
@@ -3769,6 +3778,10 @@ snapshots:
 
   '@zag-js/anatomy@1.9.0': {}
 
+  '@zag-js/collection@1.9.0':
+    dependencies:
+      '@zag-js/utils': 1.9.0
+
   '@zag-js/core@1.9.0':
     dependencies:
       '@zag-js/dom-query': 1.9.0
@@ -3816,6 +3829,17 @@ snapshots:
       react-dom: 19.0.0(react@19.0.0)
 
   '@zag-js/rect-utils@1.9.0': {}
+
+  '@zag-js/select@1.9.0':
+    dependencies:
+      '@zag-js/anatomy': 1.9.0
+      '@zag-js/collection': 1.9.0
+      '@zag-js/core': 1.9.0
+      '@zag-js/dismissable': 1.9.0
+      '@zag-js/dom-query': 1.9.0
+      '@zag-js/popper': 1.9.0
+      '@zag-js/types': 1.9.0
+      '@zag-js/utils': 1.9.0
 
   '@zag-js/store@1.9.0':
     dependencies:
