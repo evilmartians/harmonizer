@@ -21,6 +21,8 @@ export function withValidation<P extends InputProps>(WrappedComponent: Component
       <WrappedComponent
         {...(restProps as unknown as P)}
         title={error ?? restProps.title ?? ""}
+        aria-invalid={!!error}
+        aria-errormessage={error}
         ref={mergeRefs(inputRef, restProps.ref)}
       />
     );
