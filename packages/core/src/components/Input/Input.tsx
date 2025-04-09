@@ -1,3 +1,4 @@
+import { useIdWithFallback } from "@core/hooks/useIdWithFallback";
 import clsx from "clsx";
 import type { ComponentPropsWithRef, RefObject } from "react";
 
@@ -30,16 +31,30 @@ export function Input({
   customization,
   ...restProps
 }: InputProps) {
+  const id = useIdWithFallback(restProps.id);
+  const labelId = `${id}-label`;
+
   return (
     <label
       className={clsx(className, styles.container, styles[`kind_${kind}`], styles[`size_${size}`])}
       style={{ ...style, ...customization }}
       title={title}
       ref={labelRef}
+      htmlFor={id}
     >
-      {label && <span className={clsx(styles.label, size === "m" && "sr-only")}>{label}</span>}
+      {label && (
+        <span id={labelId} className={clsx(styles.label, size === "m" && "sr-only")}>
+          {label}
+        </span>
+      )}
       <div className={styles.inputContainer}>
-        <input className={styles.input} value={value} {...restProps} />
+        <input
+          {...(label ? { "aria-labelledby": labelId } : undefined)}
+          {...restProps}
+          value={value}
+          className={styles.input}
+          id={id}
+        />
       </div>
     </label>
   );
