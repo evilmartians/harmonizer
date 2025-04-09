@@ -2,8 +2,12 @@ import { createScrollStateSignal } from "@core/utils/spred/createScrollStateSign
 import { signal } from "@spred/core";
 
 export const $scrollableContainer = signal<HTMLElement | null>(null);
-export const $gridHorizontalScrollState = createScrollStateSignal($scrollableContainer, "x");
-export const $gridVerticalScrollState = createScrollStateSignal($scrollableContainer, "y");
+export const $gridHorizontalScrollState = createScrollStateSignal($scrollableContainer, "x", {
+  mutationObserverOptions: { childList: true },
+});
+export const $gridVerticalScrollState = createScrollStateSignal($scrollableContainer, "y", {
+  mutationObserverOptions: { childList: true },
+});
 
 export const $gridHasHorizontalScrollbar = signal(
   (get) => get($gridHorizontalScrollState).hasScroll,
