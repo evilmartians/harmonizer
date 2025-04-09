@@ -5,7 +5,7 @@ import { invariant } from "./utils/assertions/invariant";
 export type AppDependencies = {
   config: string | Record<string, unknown>;
   lockColorSpace: boolean;
-  actions: ReactNode;
+  actions?: ReactNode;
 };
 
 export const DependenciesContext = createContext<AppDependencies | null>(null);

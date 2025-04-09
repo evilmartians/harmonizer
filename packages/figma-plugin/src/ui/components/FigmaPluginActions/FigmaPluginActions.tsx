@@ -17,12 +17,12 @@ export function FigmaPluginActions({ isUpdate }: FigmaPluginActionsProps) {
     <>
       <Button
         kind="floating"
-        size="s"
+        size="m"
         onClick={upsertPalette}
         iconStart={<MFourSquares />}
         disabled={!isValid}
       >
-        {isUpdate ? "Update" : "Create"}
+        {isUpdate ? "Update palette" : "Create palette"}
       </Button>
     </>
   );
