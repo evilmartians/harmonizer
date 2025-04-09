@@ -1,5 +1,8 @@
 import { parseExportConfig } from "@core/schemas/exportConfig";
 import type { ExportConfig, ExportConfigWithColors } from "@core/types";
+import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
+import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
+import { getTailwindConfig } from "@core/utils/config/getTailwindConfig";
 import { downloadTextFile } from "@core/utils/file/downloadTextFile";
 import { batch, signal } from "@spred/core";
 
@@ -18,12 +21,12 @@ import {
 } from "./colors";
 import {
   $bgLightStart,
+  bgColorDarkStore,
+  bgColorLightStore,
   chromaModeStore,
   colorSpaceStore,
   contrastModelStore,
   directionModeStore,
-  bgColorDarkStore,
-  bgColorLightStore,
 } from "./settings";
 import { getHueStore, getLevelStore } from "./utils";
 
@@ -88,10 +91,41 @@ export async function uploadConfig(file?: File) {
   updateConfig(parseExportConfig(text));
 }
 
-export function downloadConfig() {
-  downloadTextFile({
-    filename: "My Harmony config.json",
+export const ExportTargets = {
+  "tailwind-v3": {
+    name: "Tailwind v3",
+    filename: "tailwind.config.js",
+    mimetype: "application/javascript",
+    getFileData: () => getTailwindConfig(getExportConfigWithColors()),
+  },
+  "css-variables": {
+    name: "CSS variables",
+    filename: "harmonized-palette.css",
+    mimetype: "application/javascript",
+    getFileData: () => getCssVariablesConfig(getExportConfigWithColors()),
+  },
+  json: {
+    name: "JSON Config",
+    filename: "harmonized-palette.json",
     mimetype: "application/json",
-    data: JSON.stringify(getConfig(), null, 2),
+    getFileData: () => JSON.stringify(getJsonVariablesConfig(getExportConfigWithColors()), null, 2),
+  },
+  harmonizer: {
+    name: "Harmonizer Config",
+    filename: "harmonizer-config.json",
+    mimetype: "application/json",
+    getFileData: () => JSON.stringify(getConfig(), null, 2),
+  },
+};
+
+export type ExportTarget = keyof typeof ExportTargets;
+
+export function downloadConfigTarget(type: ExportTarget) {
+  const targetConfig = ExportTargets[type];
+
+  downloadTextFile({
+    filename: targetConfig.filename,
+    mimetype: targetConfig.mimetype,
+    data: targetConfig.getFileData(),
   });
 }
