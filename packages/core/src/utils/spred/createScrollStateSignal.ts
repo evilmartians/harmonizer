@@ -1,8 +1,7 @@
+import { getScrollState, type ScrollState, type ScrollType } from "@core/utils/dom/getScrollState";
 import { effect, type Signal, signal } from "@spred/core";
 import { debounce } from "es-toolkit/compat";
 import { shallowEqual } from "fast-equals";
-
-import { getScrollState, type ScrollState, type ScrollType } from "../dom/getScrollState";
 
 import { createMutationObserverSignal } from "./createMutationObserverSignal";
 import { createResizeObserverSignal } from "./createResizeObserverSignal";

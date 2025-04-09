@@ -13,9 +13,8 @@ import {
   type LevelId,
   type ColorSpace,
 } from "@core/types";
+import { ensureNonNullable } from "@core/utils/assertions/ensureNonNullable";
 import { maxChroma } from "apcach";
-
-import { ensureNonNullable } from "../assertions/ensureNonNullable";
 
 import { calculateColorCell } from "./calculateColorCell";
 import { getBgMode } from "./getBgMode";
