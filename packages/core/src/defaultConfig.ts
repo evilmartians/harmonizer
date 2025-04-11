@@ -14,10 +14,9 @@ export const defaultConfig = {
   ],
   hues: [
     { name: "Red", angle: 20 },
-    { name: "Amber", angle: 80 },
-    { name: "Lime", angle: 140 },
-    { name: "Cyan", angle: 200 },
-    { name: "Blue", angle: 260 },
+    { name: "Mustard", angle: 90 },
+    { name: "Turquoise", angle: 180 },
+    { name: "Azure", angle: 250 },
     { name: "Fuchsia", angle: 320 },
   ],
   settings: {
