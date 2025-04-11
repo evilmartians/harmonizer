@@ -224,7 +224,7 @@ export const insertLevel = getInsertMethod({
   },
   onFinish: (levelId) => {
     // Compensate for the new level being inserted before the bgLightStart or in single light mode
-    if ($levelIds.value.indexOf(levelId) <= $bgLightStart.value) {
+    if ($levelIds.value.indexOf(levelId) <= $bgLightStart.value && $bgLightStart.value > 0) {
       $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
     }
 
