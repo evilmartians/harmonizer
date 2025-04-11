@@ -1,7 +1,7 @@
 import { Text } from "@core/components/Text/Text";
 import { $huesCount, $levelsCount, getColor$ } from "@core/stores/colors";
-import { useLevelBgMode } from "@core/stores/hooks";
 import type { ColorCellData, HueId, HueIndex, LevelId, LevelIndex } from "@core/types";
+import { isLightColor } from "@core/utils/colors/isLightColor";
 import { useValueAsSignal } from "@core/utils/spred/useValueAsSignal";
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
@@ -58,9 +58,9 @@ export const GridCellColor = memo(function GridCellColor({
   hueId,
   hueIndex,
 }: GridCellColorProps) {
-  const bgMode = useLevelBgMode(levelIndex);
   const color = useSubscribe(getColor$(levelId, hueId));
   const { isTl, isTr, isBl, isBr } = useColorCellModifiers(levelIndex, hueIndex);
+  const bgMode = isLightColor(color.l) ? "dark" : "light";
 
   return (
     <GridCell
