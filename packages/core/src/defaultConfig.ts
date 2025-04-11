@@ -1,3 +1,5 @@
+import { HueAngle } from "@core/types";
+import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
 import type { NoDeepReadonly } from "@core/utils/ts/generics";
 
 export const defaultConfig = {
@@ -12,13 +14,10 @@ export const defaultConfig = {
     { name: "800", contrast: 90, chroma: 0 },
     { name: "900", contrast: 100, chroma: 0 },
   ],
-  hues: [
-    { name: "Red", angle: 20 },
-    { name: "Mustard", angle: 90 },
-    { name: "Turquoise", angle: 180 },
-    { name: "Azure", angle: 250 },
-    { name: "Fuchsia", angle: 320 },
-  ],
+  hues: [20, 90, 180, 250, 320].map((angle) => ({
+    name: getClosestColorName(HueAngle(angle)),
+    angle,
+  })),
   settings: {
     contrastModel: "apca",
     directionMode: "fgToBg",
