@@ -3,12 +3,12 @@ import { isDocumentInP3 } from "@plugin/utils/color";
 import { drawPalette, getExistingPaletteConfig } from "@plugin/utils/palette";
 import { upsertPaletteVariablesCollection } from "@plugin/utils/variables";
 
-import { getWindowSize, updateWindowSize } from "./utils/window";
+import { DEFAULT_HEIGHT, DEFAULT_WIDTH, getWindowSize, updateWindowSize } from "./utils/window";
 
 main();
 
 function main() {
-  figma.showUI(__html__, { width: 0, height: 0 });
+  figma.showUI(__html__, { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
   void getWindowSize().then(updateWindowSize);
 
   figma.on("run", () => {

@@ -1,8 +1,8 @@
 import type { WindowSize } from "@shared/types";
 
 const WINDOW_SIZE_KEY = "windowSize";
-const DEFAULT_WIDTH = 1088;
-const DEFAULT_HEIGHT = 824;
+export const DEFAULT_WIDTH = 1088;
+export const DEFAULT_HEIGHT = 824;
 
 export function updateWindowSize(size: WindowSize) {
   figma.ui.resize(size.width, size.height);
