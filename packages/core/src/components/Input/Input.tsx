@@ -1,6 +1,6 @@
 import { useIdWithFallback } from "@core/hooks/useIdWithFallback";
 import clsx from "clsx";
-import type { ComponentPropsWithRef, RefObject } from "react";
+import type { ComponentPropsWithRef, ReactNode, RefObject } from "react";
 
 import styles from "./Input.module.css";
 
@@ -17,6 +17,8 @@ export type InputProps = Omit<ComponentPropsWithRef<"input">, "size"> & {
     "--input-border-color"?: string;
     "--input-bg-color"?: string;
   };
+  slotStart?: ReactNode;
+  slotEnd?: ReactNode;
 };
 
 export function Input({
@@ -29,6 +31,8 @@ export function Input({
   title,
   value,
   customization,
+  slotStart,
+  slotEnd,
   ...restProps
 }: InputProps) {
   const id = useIdWithFallback(restProps.id);
@@ -48,6 +52,7 @@ export function Input({
         </span>
       )}
       <div className={styles.inputContainer}>
+        {slotStart && <div className={clsx(styles.slot, styles.slotStart)}>{slotStart}</div>}
         <input
           {...(label ? { "aria-labelledby": labelId } : undefined)}
           {...restProps}
@@ -55,6 +60,7 @@ export function Input({
           className={styles.input}
           id={id}
         />
+        {slotEnd && <div className={clsx(styles.slot, styles.slotEnd)}>{slotEnd}</div>}
       </div>
     </label>
   );
