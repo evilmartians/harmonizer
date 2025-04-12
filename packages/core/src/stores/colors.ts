@@ -290,6 +290,13 @@ export function updateHueName(id: HueId, name: HueName) {
   getHue(id).name.$raw.set(name);
 }
 
+export function resetHueName(id: HueId) {
+  const hue = getHue(id);
+  const closestColorName = hue.$closestColorName.value;
+
+  hue.name.$raw.set(closestColorName);
+}
+
 export function updateHueAngle(id: HueId, angle: HueAngle) {
   getHue(id).angle.$raw.set(angle);
   requestColorsRecalculation();

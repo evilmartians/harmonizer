@@ -1,11 +1,18 @@
 import { Button } from "@core/components/Button/Button";
+import { MArrowBack } from "@core/components/Icon/MArrowBack";
 import { MPlus } from "@core/components/Icon/MPlus";
 import { withNumericIncrementControls } from "@core/components/Input/enhancers/withNumericIncrementControls";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
 import { HUE_MAX_ANGLE, HUE_MIN_ANGLE } from "@core/schemas/color";
-import { getHue, insertHue, updateHueAngle, updateHueName } from "@core/stores/colors";
+import {
+  getHue,
+  insertHue,
+  resetHueName,
+  updateHueAngle,
+  updateHueName,
+} from "@core/stores/colors";
 import { $bgColorDarkBgMode } from "@core/stores/settings";
 import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
@@ -21,10 +28,10 @@ type HueComponentProps<P extends AnyProps = {}> = { hueId: HueId } & P;
 
 const LABEL_NAME = "Hue name";
 const LABEL_HUE = "Hue angle";
-const PLACEHOLDER_NAME = "Name";
 const PLACEHOLDER_HUE = "Hue";
 const HINT_NAME = "Color name";
 const HINT_DEGREE = "Hue 0…360";
+const HINT_RESTORE_COLOR_NAME = "Restore standard name";
 
 const InsertBeforeArea = memo(function InsertBeforeArea({ hueId }: HueComponentProps) {
   const name = useSubscribe(getHue(hueId).name.$raw);
@@ -50,8 +57,10 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const hue = getHue(hueId);
   const name = useSubscribe(hue.name.$raw);
+  const closestColorName = useSubscribe(hue.$closestColorName);
   const error = useSubscribe(hue.name.$validationError);
   const tintColor = useSubscribe(hue.$tintColor);
+  const showResetNameButton = name !== closestColorName;
 
   useAppEvent("hueAdded", (id) => {
     if (id === hueId) {
@@ -68,10 +77,28 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
       kind="ghost"
       customization={{ "--input-color": tintColor.css }}
       label={LABEL_NAME}
-      placeholder={PLACEHOLDER_NAME}
+      placeholder={closestColorName}
       value={name}
       title={HINT_NAME}
       error={error}
+      onBlur={() => {
+        if (name === "") {
+          resetHueName(hueId);
+        }
+      }}
+      slotEnd={
+        showResetNameButton && (
+          <Button
+            kind="ghost"
+            size="m"
+            className={styles.resetColorNameButton}
+            icon={<MArrowBack />}
+            title={HINT_RESTORE_COLOR_NAME}
+            aria-label={HINT_RESTORE_COLOR_NAME}
+            onClick={() => resetHueName(hueId)}
+          />
+        )
+      }
       onChange={(e) => updateHueName(hueId, HueName(e.target.value))}
     />
   );

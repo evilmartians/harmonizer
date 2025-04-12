@@ -64,3 +64,15 @@
   max-inline-size: calc(100% + 14px);
   margin-inline-start: -7px;
 }
+
+.resetColorNameButton {
+  overflow: hidden;
+  inline-size: 0;
+  padding: 1px;
+  opacity: 0;
+
+  .control:has(:where(:focus, :active)) & {
+    inline-size: auto;
+    opacity: 1;
+  }
+}
