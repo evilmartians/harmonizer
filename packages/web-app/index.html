@@ -2,13 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="stylesheet" href="/src/main.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Harmonizer web app</title>
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <img src="/logo.svg" alt="Harmonizer logo" width="96" height="96" class="loader" />
+      <noscript class="nojs">
+        <h1>JavaScript Required</h1>
+        <p>
+          This web application relies entirely on JavaScript. It seems that JavaScript is either
+          disabled or not supported by your browser.
+        </p>
+        <p>Please enable JavaScript in your browser settings and then refresh the page.</p>
+      </noscript>
+    </div>
+
     <!-- <script src="https://cdn.jsdelivr.net/npm/react-render-tracker" data-config="inpage:true"></script> -->
     <!-- <script crossOrigin="anonymous" src="//unpkg.com/react-scan/dist/auto.global.js"></script> -->
     <script type="module" src="/src/main.tsx"></script>

@@ -1,5 +1,4 @@
-import { createApp } from "@harmonizer/core";
-import { defaultConfig } from "@harmonizer/core/src/defaultConfig";
+import { createApp, defaultConfig } from "@harmonizer/core";
 
 createApp(
   document.querySelector("#root"),

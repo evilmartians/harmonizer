@@ -77,21 +77,6 @@
   }
 }
 
-body,
-html,
-#root {
-  inline-size: 100%;
-  block-size: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-#root {
-  isolation: isolate;
-  font-family: var(--font-sans);
-  background-color: var(--color-primary-inverted);
-}
-
 :root {
   --color-universal-error-text: var(--color-red-500);
 
@@ -114,4 +99,41 @@ html,
     --color-border: var(--color-border-dark);
     --color-border-solid: var(--color-border-solid-dark);
   }
+}
+
+body,
+html,
+#root {
+  inline-size: 100%;
+  block-size: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  isolation: isolate;
+
+  display: flex;
+  gap: calc(var(--spacing) * 8);
+  align-items: center;
+  justify-content: center;
+
+  font-family: var(--font-sans);
+
+  @media (prefers-color-scheme: dark) {
+    background-color: var(--color-primary-light);
+  }
+
+  @media (prefers-color-scheme: light) {
+    background-color: var(--color-primary-dark);
+  }
+}
+
+.nojs {
+  max-width: 70ch;
+  text-wrap: balance;
+}
+
+.loader {
+  animation: var(--animate-pulse);
 }

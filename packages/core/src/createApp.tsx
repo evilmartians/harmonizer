@@ -1,7 +1,6 @@
 import { batch } from "@spred/core";
 import { type ReactNode, StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./app.css";
 
 import { Actions } from "./components/Actions/Actions";
 import { Grid } from "./components/Grid/Grid";

@@ -1,7 +1,4 @@
-import { getDefaultConfigCopy } from "@core/defaultConfig";
-import { parseExportConfig } from "@core/schemas/exportConfig";
-import { ColorSpace } from "@core/types";
-import { createApp } from "@harmonizer/core";
+import { createApp, getDefaultConfigCopy, ColorSpace, parseExportConfig } from "@harmonizer/core";
 import { FigmaPluginActions } from "@ui/components/FigmaPluginActions/FigmaPluginActions";
 import { pluginChannel } from "@ui/pluginChannel";
 
@@ -9,7 +6,17 @@ import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindow
 
 pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
   const palettePresents = !!storedConfig;
-  const appConfig = palettePresents ? parseExportConfig(storedConfig) : getDefaultConfigCopy();
+  const appConfig = (() => {
+    try {
+      if (palettePresents) {
+        return parseExportConfig(storedConfig);
+      }
+    } catch {
+      // Ignore error and use default config
+    }
+
+    return getDefaultConfigCopy();
+  })();
 
   appConfig.settings.colorSpace = ColorSpace(inP3 ? "p3" : "srgb");
 
