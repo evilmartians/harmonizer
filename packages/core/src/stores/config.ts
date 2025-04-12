@@ -21,6 +21,7 @@ import {
 } from "./colors";
 import {
   $bgLightStart,
+  $isColorSpaceLocked,
   bgColorDarkStore,
   bgColorLightStore,
   chromaModeStore,
@@ -64,6 +65,9 @@ export function getExportConfigWithColors(): ExportConfigWithColors {
 
 export function updateConfig(config: ExportConfig) {
   batch(() => {
+    const isDifferentFromLockedColorSpace =
+      $isColorSpaceLocked.value &&
+      colorSpaceStore.$lastValidValue.value !== config.settings.colorSpace;
     const levels = config.levels.map(getLevelStore);
     const hues = config.hues.map(getHueStore);
 
@@ -73,13 +77,22 @@ export function updateConfig(config: ExportConfig) {
     bgColorLightStore.$raw.set(config.settings.bgColorLight);
     bgColorDarkStore.$raw.set(config.settings.bgColorDark);
     $bgLightStart.set(config.settings.bgLightStart);
-    colorSpaceStore.$raw.set(config.settings.colorSpace);
+    if (!isDifferentFromLockedColorSpace) {
+      colorSpaceStore.$raw.set(config.settings.colorSpace);
+    }
     overwriteLevels(levels);
     overwriteHues(hues);
     pregenerateFallbackColorsMap(
       levels.map((level) => level.id),
       hues.map((hue) => hue.id),
     );
+
+    if (isDifferentFromLockedColorSpace) {
+      // eslint-disable-next-line no-alert
+      alert(
+        "The color space in the config is different from the document color space. Colors will be generated in the document color space.",
+      );
+    }
   });
   requestColorsRecalculation();
 }
