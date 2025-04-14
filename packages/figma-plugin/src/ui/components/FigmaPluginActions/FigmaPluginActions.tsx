@@ -1,15 +1,11 @@
 import { Button } from "@core/components/Button/Button";
 import { MFourSquares } from "@core/components/Icon/MFourSquares";
-import { getIndexedColors } from "@core/stores/colors";
-import { $isExportConfigValid, getConfig } from "@core/stores/config";
+import { $isExportConfigValid, getExportConfigWithColors } from "@core/stores/config";
 import { useSubscribe } from "@spred/react";
 import { pluginChannel } from "@ui/pluginChannel";
 
 function upsertPalette() {
-  pluginChannel.emit("palette:generate", {
-    ...getConfig(),
-    colors: getIndexedColors(),
-  });
+  pluginChannel.emit("palette:generate", getExportConfigWithColors());
 }
 
 export type FigmaPluginActionsProps = { isUpdate?: boolean };
@@ -21,12 +17,12 @@ export function FigmaPluginActions({ isUpdate }: FigmaPluginActionsProps) {
     <>
       <Button
         kind="floating"
-        size="s"
+        size="m"
         onClick={upsertPalette}
         iconStart={<MFourSquares />}
         disabled={!isValid}
       >
-        {isUpdate ? "Update" : "Create"}
+        {isUpdate ? "Update palette" : "Create palette"}
       </Button>
     </>
   );

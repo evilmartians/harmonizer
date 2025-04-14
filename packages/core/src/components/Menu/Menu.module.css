@@ -1,0 +1,9 @@
+.dropdown {
+  min-inline-size: calc(var(--spacing) * 50);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-universal-elevation);
+}
+
+.item {
+  text-align: left;
+}

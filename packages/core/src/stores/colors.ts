@@ -224,7 +224,7 @@ export const insertLevel = getInsertMethod({
   },
   onFinish: (levelId) => {
     // Compensate for the new level being inserted before the bgLightStart or in single light mode
-    if ($levelIds.value.indexOf(levelId) <= $bgLightStart.value) {
+    if ($levelIds.value.indexOf(levelId) <= $bgLightStart.value && $bgLightStart.value > 0) {
       $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
     }
 
@@ -288,6 +288,13 @@ export function removeHue(hueId: HueId) {
 
 export function updateHueName(id: HueId, name: HueName) {
   getHue(id).name.$raw.set(name);
+}
+
+export function resetHueName(id: HueId) {
+  const hue = getHue(id);
+  const closestColorName = hue.$closestColorName.value;
+
+  hue.name.$raw.set(closestColorName);
 }
 
 export function updateHueAngle(id: HueId, angle: HueAngle) {

@@ -1,5 +1,6 @@
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
+import { LPlus } from "@core/components/Icon/LPlus";
 import { MSixDots } from "@core/components/Icon/MSixDots";
 import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
@@ -34,8 +35,6 @@ import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { upperFirst } from "es-toolkit";
 import { memo, useEffect, useRef } from "react";
-
-import { LPlus } from "../Icon/LPlus";
 
 import { GridCell } from "./GridCell";
 import styles from "./GridRowBackground.module.css";

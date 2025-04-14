@@ -43,6 +43,14 @@
 
 .size_m {
   padding: var(--spacing) calc(var(--spacing) * 1.5);
+
+  &:has(.slotStart) {
+    padding-left: var(--spacing);
+  }
+
+  &:has(.slotEnd) {
+    padding-right: var(--spacing);
+  }
 }
 
 .size_xl {
@@ -60,12 +68,17 @@
 
 .inputContainer {
   display: flex;
-  gap: calc(var(--spacing) * 1.5);
+  gap: var(--spacing);
   align-items: center;
 
   :where(.size_xl) & {
     inline-size: 100%;
   }
+}
+
+.slot {
+  flex-shrink: 0;
+  line-height: 1;
 }
 
 .input {

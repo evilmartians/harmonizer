@@ -1,6 +1,5 @@
 import type { HueAngle } from "@core/types";
-
-import { invariant } from "../assertions/invariant";
+import { invariant } from "@core/utils/assertions/invariant";
 
 const colorNames: Record<number, string> = {
   0: "Flamingo",

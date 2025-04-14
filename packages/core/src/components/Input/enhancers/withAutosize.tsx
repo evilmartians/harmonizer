@@ -1,6 +1,6 @@
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 import clsx from "clsx";
-import { type ComponentType, useLayoutEffect, useRef } from "react";
+import { type ComponentType, useLayoutEffect, useMemo, useRef } from "react";
 
 import type { InputProps } from "../Input";
 
@@ -10,6 +10,7 @@ export function withAutosize<P extends InputProps>(WrappedComponent: ComponentTy
   const AutosizeInput = (props: P) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { value, placeholder } = props;
+    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
 
     useLayoutEffect(() => {
       if (!inputRef.current) return;
@@ -21,7 +22,7 @@ export function withAutosize<P extends InputProps>(WrappedComponent: ComponentTy
     return (
       <WrappedComponent
         {...props}
-        ref={mergeRefs(inputRef, props.ref)}
+        ref={refCallback}
         className={clsx(props.className, styles.autosize)}
       />
     );

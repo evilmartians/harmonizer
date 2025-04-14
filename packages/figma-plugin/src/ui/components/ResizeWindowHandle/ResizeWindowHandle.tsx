@@ -50,8 +50,8 @@ export function ResizeWindowHandle({ onResize }: ResizeWindowHandleProps) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          fill-rule="evenodd"
-          clip-rule="evenodd"
+          fillRule="evenodd"
+          clipRule="evenodd"
           d="M11 0C11.5523 0 12 0.447715 12 1C12 7.07513 7.07513 12 1 12C0.447715 12 0 11.5523 0 11C0 10.4477 0.447715 10 1 10C5.97056 10 10 5.97056 10 1C10 0.447715 10.4477 0 11 0Z"
           fill="#808080"
         />

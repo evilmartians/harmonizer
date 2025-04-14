@@ -54,7 +54,7 @@ const InsertBeforeArea = memo(function InsertBeforeArea({ levelId }: LevelCompon
   const $isOnBgEdge = useSignal((get) => {
     const levelIds = get($levelIds);
     const bgLightStart = get($bgLightStart);
-    return levelIds[bgLightStart] === levelId;
+    return levelIds[bgLightStart] === levelId && bgLightStart > 0;
   });
   const isOnBgEdge = useSubscribe($isOnBgEdge);
   const handleInsert = useCallback(() => insertLevel(levelId), [levelId]);

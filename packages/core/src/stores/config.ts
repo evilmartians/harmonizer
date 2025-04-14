@@ -1,4 +1,9 @@
-import type { ExportConfig } from "@core/types";
+import { parseExportConfig } from "@core/schemas/exportConfig";
+import type { ExportConfig, ExportConfigWithColors } from "@core/types";
+import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
+import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
+import { getTailwindConfig } from "@core/utils/config/getTailwindConfig";
+import { downloadTextFile } from "@core/utils/file/downloadTextFile";
 import { batch, signal } from "@spred/core";
 
 import {
@@ -7,6 +12,7 @@ import {
   $hueIds,
   $levelIds,
   getHue,
+  getIndexedColors,
   getLevel,
   overwriteHues,
   overwriteLevels,
@@ -15,12 +21,13 @@ import {
 } from "./colors";
 import {
   $bgLightStart,
+  $isColorSpaceLocked,
+  bgColorDarkStore,
+  bgColorLightStore,
   chromaModeStore,
   colorSpaceStore,
   contrastModelStore,
   directionModeStore,
-  bgColorDarkStore,
-  bgColorLightStore,
 } from "./settings";
 import { getHueStore, getLevelStore } from "./utils";
 
@@ -49,8 +56,18 @@ export function getConfig(): ExportConfig {
   };
 }
 
+export function getExportConfigWithColors(): ExportConfigWithColors {
+  return {
+    ...getConfig(),
+    colors: getIndexedColors(),
+  };
+}
+
 export function updateConfig(config: ExportConfig) {
   batch(() => {
+    const isDifferentFromLockedColorSpace =
+      $isColorSpaceLocked.value &&
+      colorSpaceStore.$lastValidValue.value !== config.settings.colorSpace;
     const levels = config.levels.map(getLevelStore);
     const hues = config.hues.map(getHueStore);
 
@@ -60,13 +77,68 @@ export function updateConfig(config: ExportConfig) {
     bgColorLightStore.$raw.set(config.settings.bgColorLight);
     bgColorDarkStore.$raw.set(config.settings.bgColorDark);
     $bgLightStart.set(config.settings.bgLightStart);
-    colorSpaceStore.$raw.set(config.settings.colorSpace);
+    if (!isDifferentFromLockedColorSpace) {
+      colorSpaceStore.$raw.set(config.settings.colorSpace);
+    }
     overwriteLevels(levels);
     overwriteHues(hues);
     pregenerateFallbackColorsMap(
       levels.map((level) => level.id),
       hues.map((hue) => hue.id),
     );
+
+    if (isDifferentFromLockedColorSpace) {
+      // eslint-disable-next-line no-alert
+      alert(
+        "The color space in the config is different from the document color space. Colors will be generated in the document color space.",
+      );
+    }
   });
   requestColorsRecalculation();
+}
+
+export async function uploadConfig(file?: File) {
+  if (!file) return;
+
+  const text = await file.text();
+  updateConfig(parseExportConfig(text));
+}
+
+export const ExportTargets = {
+  "tailwind-v3": {
+    name: "Tailwind v3",
+    filename: "tailwind.config.js",
+    mimetype: "application/javascript",
+    getFileData: () => getTailwindConfig(getExportConfigWithColors()),
+  },
+  "css-variables": {
+    name: "CSS variables",
+    filename: "harmonized-palette.css",
+    mimetype: "application/javascript",
+    getFileData: () => getCssVariablesConfig(getExportConfigWithColors()),
+  },
+  json: {
+    name: "JSON Config",
+    filename: "harmonized-palette.json",
+    mimetype: "application/json",
+    getFileData: () => JSON.stringify(getJsonVariablesConfig(getExportConfigWithColors()), null, 2),
+  },
+  harmonizer: {
+    name: "Harmonizer Config",
+    filename: "harmonizer-config.json",
+    mimetype: "application/json",
+    getFileData: () => JSON.stringify(getConfig(), null, 2),
+  },
+};
+
+export type ExportTarget = keyof typeof ExportTargets;
+
+export function downloadConfigTarget(type: ExportTarget) {
+  const targetConfig = ExportTargets[type];
+
+  downloadTextFile({
+    filename: targetConfig.filename,
+    mimetype: targetConfig.mimetype,
+    data: targetConfig.getFileData(),
+  });
 }

@@ -34,7 +34,7 @@ import {
 } from "@core/utils/stores/getNewItemInserter";
 import { type ValidationStore, validationStore } from "@core/utils/stores/validationStore";
 import type { PartialOptional } from "@core/utils/ts/generics";
-import { signal, type SignalOptions, type WritableSignal } from "@spred/core";
+import { type Signal, signal, type SignalOptions, type WritableSignal } from "@spred/core";
 import { shallowEqual } from "fast-equals";
 import type { BaseIssue, BaseSchema } from "valibot";
 import * as v from "valibot";
@@ -258,6 +258,7 @@ export type HueStore = {
   name: ValidationStore<HueName>;
   angle: ValidationStore<HueAngle>;
   $tintColor: WritableSignal<ColorHueTintData>;
+  $closestColorName: Signal<HueName>;
 };
 export function getHueStore(data: PartialOptional<HueData, "tintColor">) {
   const hueId = HueId(id());
@@ -265,11 +266,15 @@ export function getHueStore(data: PartialOptional<HueData, "tintColor">) {
   const name = validationStore(data.name, $hueNameUniqueSchema);
   const angle = validationStore(data.angle, hueAngleSchema);
   const $tintColor = getColorSignal(data.tintColor ?? FALLBACK_HUE_TINT_COLOR);
+  const $closestColorName = signal((get) =>
+    HueName(getClosestColorName(get(angle.$lastValidValue))),
+  );
 
   return {
     id: hueId,
     name,
     angle,
     $tintColor,
+    $closestColorName,
   };
 }

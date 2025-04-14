@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none">
+  <g clip-path="url(#a)" data-figma-skip-parse="true">
+    <foreignObject width="6000" height="6000" x="-3000" y="-3000" transform="matrix(0 .002 -.002 0 12 5)">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,#09b1bc 0deg,#09b1bc 25.9615deg,#a18ffe 89.6131deg,#6f9dfe 180.715deg,#03a9ef 270deg,#09b1bc 360deg);height:100%;width:100%;opacity:1"/>
+    </foreignObject>
+  </g>
+  <path d="M9 5a3 3 0 1 1 6 0v1a3 3 0 0 1-3 3h-1V7h1a1 1 0 0 0 1-1V5a1 1 0 1 0-2 0H9Z" clip-rule="evenodd" data-figma-gradient-fill="{&quot;type&quot;:&quot;GRADIENT_ANGULAR&quot;,&quot;stops&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.036728978157043457,&quot;g&quot;:0.69576340913772583,&quot;b&quot;:0.74080401659011841,&quot;a&quot;:1.0},&quot;position&quot;:0.072115384042263031},{&quot;color&quot;:{&quot;r&quot;:0.63152480125427246,&quot;g&quot;:0.56152814626693726,&quot;b&quot;:0.99884122610092163,&quot;a&quot;:1.0},&quot;position&quot;:0.24892522394657135},{&quot;color&quot;:{&quot;r&quot;:0.43793088197708130,&quot;g&quot;:0.61853063106536865,&quot;b&quot;:0.99836909770965576,&quot;a&quot;:1.0},&quot;position&quot;:0.50198608636856079},{&quot;color&quot;:{&quot;r&quot;:0.014935921877622604,&quot;g&quot;:0.66657257080078125,&quot;b&quot;:0.93816560506820679,&quot;a&quot;:1.0},&quot;position&quot;:0.750},{&quot;color&quot;:{&quot;r&quot;:0.036728978157043457,&quot;g&quot;:0.69576340913772583,&quot;b&quot;:0.74080401659011841,&quot;a&quot;:1.0},&quot;position&quot;:1.0}],&quot;stopsVar&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.036728978157043457,&quot;g&quot;:0.69576340913772583,&quot;b&quot;:0.74080401659011841,&quot;a&quot;:1.0},&quot;position&quot;:0.072115384042263031},{&quot;color&quot;:{&quot;r&quot;:0.63152480125427246,&quot;g&quot;:0.56152814626693726,&quot;b&quot;:0.99884122610092163,&quot;a&quot;:1.0},&quot;position&quot;:0.24892522394657135},{&quot;color&quot;:{&quot;r&quot;:0.43793088197708130,&quot;g&quot;:0.61853063106536865,&quot;b&quot;:0.99836909770965576,&quot;a&quot;:1.0},&quot;position&quot;:0.50198608636856079},{&quot;color&quot;:{&quot;r&quot;:0.014935921877622604,&quot;g&quot;:0.66657257080078125,&quot;b&quot;:0.93816560506820679,&quot;a&quot;:1.0},&quot;position&quot;:0.750},{&quot;color&quot;:{&quot;r&quot;:0.036728978157043457,&quot;g&quot;:0.69576340913772583,&quot;b&quot;:0.74080401659011841,&quot;a&quot;:1.0},&quot;position&quot;:1.0}],&quot;transform&quot;:{&quot;m00&quot;:-2.8610040203602694e-07,&quot;m01&quot;:-4.0000004768371582,&quot;m02&quot;:14.0,&quot;m10&quot;:4.0,&quot;m11&quot;:-2.8609616720132180e-07,&quot;m12&quot;:3.0000002384185791},&quot;opacity&quot;:1.0,&quot;blendMode&quot;:&quot;NORMAL&quot;,&quot;visible&quot;:true}"/>
+  <path fill="url(#b)" fill-rule="evenodd" d="M9 13V5h2v8a1 1 0 1 1-2 0Z" clip-rule="evenodd"/>
+  <path fill="url(#c)" fill-rule="evenodd" d="M11 9H7V7h4v2Z" clip-rule="evenodd"/>
+  <g clip-path="url(#d)" data-figma-skip-parse="true">
+    <foreignObject width="6000" height="6000" x="-3000" y="-3000" transform="matrix(.002 0 0 .002 4 11)">
+      <div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,#cd9502 0deg,#a6a503 90deg,#51b704 180deg,#03b689 270deg,#999 360deg);height:100%;width:100%;opacity:1"/>
+    </foreignObject>
+  </g>
+  <path d="M4 9a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0h2a3 3 0 1 1-6 0v-1a3 3 0 0 1 3-3h1v2H4Z" clip-rule="evenodd" data-figma-gradient-fill="{&quot;type&quot;:&quot;GRADIENT_ANGULAR&quot;,&quot;stops&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.80590504407882690,&quot;g&quot;:0.58612340688705444,&quot;b&quot;:0.011313900351524353,&quot;a&quot;:1.0},&quot;position&quot;:0.0},{&quot;color&quot;:{&quot;r&quot;:0.65184032917022705,&quot;g&quot;:0.65008509159088135,&quot;b&quot;:0.013189969584345818,&quot;a&quot;:1.0},&quot;position&quot;:0.250},{&quot;color&quot;:{&quot;r&quot;:0.32150357961654663,&quot;g&quot;:0.71866887807846069,&quot;b&quot;:0.016306176781654358,&quot;a&quot;:1.0},&quot;position&quot;:0.50},{&quot;color&quot;:{&quot;r&quot;:0.015163658186793327,&quot;g&quot;:0.71580004692077637,&quot;b&quot;:0.53947478532791138,&quot;a&quot;:1.0},&quot;position&quot;:0.750},{&quot;color&quot;:{&quot;r&quot;:0.60000002384185791,&quot;g&quot;:0.60000002384185791,&quot;b&quot;:0.60000002384185791,&quot;a&quot;:1.0},&quot;position&quot;:1.0}],&quot;stopsVar&quot;:[{&quot;color&quot;:{&quot;r&quot;:0.80590504407882690,&quot;g&quot;:0.58612340688705444,&quot;b&quot;:0.011313900351524353,&quot;a&quot;:1.0},&quot;position&quot;:0.0},{&quot;color&quot;:{&quot;r&quot;:0.65184032917022705,&quot;g&quot;:0.65008509159088135,&quot;b&quot;:0.013189969584345818,&quot;a&quot;:1.0},&quot;position&quot;:0.250},{&quot;color&quot;:{&quot;r&quot;:0.32150357961654663,&quot;g&quot;:0.71866887807846069,&quot;b&quot;:0.016306176781654358,&quot;a&quot;:1.0},&quot;position&quot;:0.50},{&quot;color&quot;:{&quot;r&quot;:0.015163658186793327,&quot;g&quot;:0.71580004692077637,&quot;b&quot;:0.53947478532791138,&quot;a&quot;:1.0},&quot;position&quot;:0.750},{&quot;color&quot;:{&quot;r&quot;:0.60000002384185791,&quot;g&quot;:0.60000002384185791,&quot;b&quot;:0.60000002384185791,&quot;a&quot;:1.0},&quot;position&quot;:1.0}],&quot;transform&quot;:{&quot;m00&quot;:4.0,&quot;m01&quot;:-1.7940735119736928e-07,&quot;m02&quot;:2.0000002384185791,&quot;m10&quot;:1.7941117391728767e-07,&quot;m11&quot;:4.0,&quot;m12&quot;:9.0},&quot;opacity&quot;:1.0,&quot;blendMode&quot;:&quot;NORMAL&quot;,&quot;visible&quot;:true}"/>
+  <path fill="url(#e)" fill-rule="evenodd" d="M6 2a1 1 0 0 1 1 1v8H5V3a1 1 0 0 1 1-1Z" clip-rule="evenodd"/>
+  <defs>
+    <linearGradient id="b" x1="10.5" x2="10.5" y1="9" y2="13" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A18FFF" style="stop-color:#a18fff;stop-color:color(display-p3 .6315 .5615 .9988);stop-opacity:1"/>
+      <stop offset="1" stop-color="#FF5DBC" style="stop-color:#ff5dbc;stop-color:color(display-p3 1 .3637 .7359);stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="c" x1="7" x2="11" y1="8.5" y2="8.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#04B78A" style="stop-color:#04b78a;stop-color:color(display-p3 .0152 .7158 .5395);stop-opacity:1"/>
+      <stop offset="1" stop-color="#09B1BD" style="stop-color:#09b1bd;stop-color:color(display-p3 .0367 .6958 .7408);stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="e" x1="6.5" x2="6.5" y1="3" y2="11" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6C72" style="stop-color:#ff6c72;stop-color:color(display-p3 .9989 .4252 .4464);stop-opacity:1"/>
+      <stop offset="1" stop-color="#CE9503" style="stop-color:#ce9503;stop-color:color(display-p3 .8059 .5861 .0113);stop-opacity:1"/>
+    </linearGradient>
+    <clipPath id="a">
+      <path fill-rule="evenodd" d="M9 5a3 3 0 1 1 6 0v1a3 3 0 0 1-3 3h-1V7h1a1 1 0 0 0 1-1V5a1 1 0 1 0-2 0H9Z" clip-rule="evenodd"/>
+    </clipPath>
+    <clipPath id="d">
+      <path fill-rule="evenodd" d="M4 9a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0h2a3 3 0 1 1-6 0v-1a3 3 0 0 1 3-3h1v2H4Z" clip-rule="evenodd"/>
+    </clipPath>
+  </defs>
+</svg>
