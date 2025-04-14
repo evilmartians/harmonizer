@@ -1,5 +1,5 @@
 import { mergeRefs } from "@core/utils/react/mergeRefs";
-import { type ComponentType, useEffect, useRef } from "react";
+import { type ComponentType, useEffect, useMemo, useRef } from "react";
 
 import type { InputProps } from "../Input";
 
@@ -10,6 +10,7 @@ type ValidationProps = {
 export function withValidation<P extends InputProps>(WrappedComponent: ComponentType<P>) {
   const ValidationInput = ({ error, ...restProps }: P & ValidationProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const refCallback = useMemo(() => mergeRefs(inputRef, restProps.ref), []);
 
     useEffect(() => {
       if (inputRef.current) {
@@ -23,7 +24,7 @@ export function withValidation<P extends InputProps>(WrappedComponent: Component
         title={error ?? restProps.title ?? ""}
         aria-invalid={!!error}
         aria-errormessage={error}
-        ref={mergeRefs(inputRef, restProps.ref)}
+        ref={refCallback}
       />
     );
   };

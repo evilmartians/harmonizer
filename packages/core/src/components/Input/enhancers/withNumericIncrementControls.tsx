@@ -1,6 +1,13 @@
 import { isNumber } from "@core/utils/number/isNumber";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
-import { type ChangeEvent, type ComponentType, useCallback, useEffect, useRef } from "react";
+import {
+  type ChangeEvent,
+  type ComponentType,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 
 import type { InputProps } from "../Input";
 
@@ -26,6 +33,8 @@ export function withNumericIncrementControls<P extends InputProps>(
     const labelRef = useRef<HTMLLabelElement>(null);
     const fractionalLength = -Math.log10(step);
     const formattedValue = formatWithFractional(String(value), fractionalLength);
+    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
+    const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), []);
 
     const updateValue = useCallback(
       (
@@ -131,8 +140,8 @@ export function withNumericIncrementControls<P extends InputProps>(
         aria-valuemin={props.min}
         aria-valuemax={props.max}
         value={formattedValue}
-        ref={mergeRefs(inputRef, props.ref)}
-        labelRef={mergeRefs(labelRef, props.labelRef)}
+        ref={refCallback}
+        labelRef={labelRefCallback}
       />
     );
   };

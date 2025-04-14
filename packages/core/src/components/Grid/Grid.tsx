@@ -11,7 +11,7 @@ import {
 import { HueIndex, LevelIndex } from "@core/types";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 import { useSubscribe } from "@spred/react";
-import { Fragment, memo, useRef, type PropsWithChildren } from "react";
+import { Fragment, memo, useMemo, useRef, type PropsWithChildren } from "react";
 
 import styles from "./Grid.module.css";
 import { GridCell } from "./GridCell";
@@ -35,6 +35,7 @@ const GridContainer = memo(function GridContainer({ children }: PropsWithChildre
   const hasVerticalScrollbar = useSubscribe($gridHasVerticalScrollbar);
   const isVerticallyScrolled = useSubscribe($gridVerticallyScrolled);
 
+  const gridRefCallback = useMemo(() => mergeRefs(gridRef, setScrollableContainer), []);
   const attrs: Record<string, string> = {};
 
   if (hasHorizontalScrollbar) {
@@ -56,7 +57,7 @@ const GridContainer = memo(function GridContainer({ children }: PropsWithChildre
   useDragScrollByMiddleClick(gridRef);
 
   return (
-    <div className={styles.grid} ref={mergeRefs(gridRef, setScrollableContainer)} {...attrs}>
+    <div className={styles.grid} ref={gridRefCallback} {...attrs}>
       {children}
     </div>
   );
