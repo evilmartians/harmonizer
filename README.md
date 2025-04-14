@@ -2,7 +2,7 @@
 
 Harmonizer is a Figma plugin (web version coming soon) that generates color systems with perceptually balanced lightness, contrast, and chroma. Built on OKLCH (for uniformity) and APCA (for modern contrast standards), it ensures your palettes work seamlessly for UI—no manual tweaking required.
 
-Try the Harmony Palette we generated with Harmonizer: https://www.figma.com/community/file/1287828769207775946
+Try the [Harmony Palette](https://www.figma.com/community/file/1287828769207775946) we generated with Harmonizer.
 
 ## Why Harmonizer?
 
@@ -33,6 +33,6 @@ Harmonizer solves this by generating color with perceptually consistent lightnes
 - Developer exports: Tailwind, CSS variables, JSON.
 
 ## Why OKLCH and APCA?
-- OKLCH, currently the most perceptually accurate color model, provides consistent perceptual chroma and lightness, making your colors feel “right” across all levels and hues.
-- APCA is a modern contrast formula optimized for self-illuminated displays, better reflecting how users perceive contrast on screens.
-- Harmonizer uses APCACH, our own custom calculator that blends these two technologies to generate balanced and accessible colors.
+- [OKLCH](https://oklch.com/#0.6486,0.2959,24.56,100), currently the most perceptually accurate color model, provides consistent perceptual chroma and lightness, making your colors feel “right” across all levels and hues.
+- [APCA](https://git.apcacontrast.com/documentation/APCA_in_a_Nutshell) is a modern contrast formula optimized for self-illuminated displays, better reflecting how users perceive contrast on screens.
+- [APCACH](https://github.com/antiflasher/apcach), our own custom calculator that blends these two technologies to generate balanced and accessible colors.
