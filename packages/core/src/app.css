@@ -99,6 +99,10 @@
     --color-border: var(--color-border-dark);
     --color-border-solid: var(--color-border-solid-dark);
   }
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
 }
 
 body,
