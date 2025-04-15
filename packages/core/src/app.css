@@ -132,12 +132,3 @@ html,
     background-color: var(--color-primary-dark);
   }
 }
-
-.nojs {
-  max-width: 70ch;
-  text-wrap: balance;
-}
-
-.loader {
-  animation: var(--animate-pulse);
-}
