@@ -3,7 +3,14 @@ import { isDocumentInP3 } from "@plugin/utils/color";
 import { drawPalette, getStoredConfig } from "@plugin/utils/palette";
 import { upsertPaletteVariablesCollection } from "@plugin/utils/variables";
 
-import { DEFAULT_HEIGHT, DEFAULT_WIDTH, getWindowSize, updateWindowSize } from "./utils/window";
+import {
+  DEFAULT_HEIGHT,
+  DEFAULT_WIDTH,
+  getWindowSize,
+  MIN_HEIGHT,
+  MIN_WIDTH,
+  updateWindowSize,
+} from "./utils/window";
 
 main();
 
@@ -25,5 +32,7 @@ function main() {
     figma.closePlugin();
   });
 
-  uiChannel.on("window:resize", updateWindowSize);
+  uiChannel.on("window:resize", ({ width, height }) =>
+    updateWindowSize({ width: Math.max(MIN_WIDTH, width), height: Math.max(MIN_HEIGHT, height) }),
+  );
 }
