@@ -24,7 +24,7 @@ import {
   contrastModelStore,
   directionModeStore,
 } from "@core/stores/settings";
-import { LevelChroma, LevelContrast, LevelName, type LevelId, type LevelIndex } from "@core/types";
+import { LevelChroma, LevelContrast, LevelName, type LevelId } from "@core/types";
 import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
 import { useSignal, useSubscribe } from "@spred/react";
@@ -194,9 +194,8 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 
 export const GridCellLevelHeader = memo(function GridCellLevelHeader({
   levelId,
-  levelIndex,
-}: LevelComponentProps<{ levelIndex: LevelIndex }>) {
-  const bgMode = useLevelBgMode(levelIndex);
+}: LevelComponentProps) {
+  const bgMode = useLevelBgMode(levelId);
 
   return (
     <GridCell bgMode={bgMode} className={styles.cell} {...{ [DATA_ATTR_CELL_LEVEL_ID]: levelId }}>
