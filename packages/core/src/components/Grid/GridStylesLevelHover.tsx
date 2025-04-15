@@ -9,6 +9,12 @@ import {
   REMOVE_BUTTON_HOVER_STYLE,
 } from "./constants";
 
+/**
+  This function generates CSS selectors and styles for the remove level button when the level row is hovered, focused, or has a focus-visible element.
+  The row is determined by the DATA_ATTR_CELL_LEVEL_ID atribute and levelId.
+  Such approach allows making the button visible without any JS logic.
+  The selectors are generated for each level column in the grid.
+*/
 export const GridStylesLevelHover = memo(function GridStylesLevelHover() {
   const levelIds = useSubscribe($levelIds);
   const selectors = levelIds.flatMap((levelId) => {

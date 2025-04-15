@@ -6,6 +6,13 @@ import { memo } from "react";
 
 import styles from "./GridCell.module.css";
 
+/**
+  This function generates CSS selectors and styles for cell backgrounds in a grid.
+  It creates two sets of selectors: one for dark backgrounds and one for light backgrounds.
+  The cells with dark background are coming till the `bgLightStart` column, and the light background continues from there.
+  The function returns an array of tuples, each containing an array of selectors and a corresponding style string.
+  The selectors are based on the number of columns in the grid, and the styles are applied to the cells using CSS custom properties.
+*/
 function getCellBgStyles(columns: number, bgLightStart: number): [string[], string][] {
   const darkBgSelectors: string[] = [];
   const lightBgSelectors: string[] = [];

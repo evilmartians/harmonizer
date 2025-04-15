@@ -1,16 +1,18 @@
 import type { BgModeType } from "@core/components/BgMode/types";
-import type { LevelIndex } from "@core/types";
-import { useValueAsSignal } from "@core/utils/spred/useValueAsSignal";
+import { $levelIdsToIndex } from "@core/stores/colors";
+import type { LevelId } from "@core/types";
+import { invariant } from "@core/utils/assertions/invariant";
 import { useSignal, useSubscribe } from "@spred/react";
 
 import { $bgColorDarkBgMode, $bgColorLightBgMode, $bgLightStart } from "./settings";
 
-export function useLevelBgMode(levelIndex: LevelIndex): BgModeType {
-  const $levelIndex = useValueAsSignal(levelIndex);
+export function useLevelBgMode(levelId: LevelId): BgModeType {
   const $levelBgMode = useSignal((get) => {
-    return get($levelIndex) < get($bgLightStart)
-      ? get($bgColorDarkBgMode)
-      : get($bgColorLightBgMode);
+    const levelIndex = get($levelIdsToIndex)[levelId];
+
+    invariant(levelIndex !== undefined, "Level not found for the given ID");
+
+    return levelIndex < get($bgLightStart) ? get($bgColorDarkBgMode) : get($bgColorLightBgMode);
   });
 
   return useSubscribe($levelBgMode);

@@ -99,6 +99,10 @@
     --color-border: var(--color-border-dark);
     --color-border-solid: var(--color-border-solid-dark);
   }
+
+  @media (prefers-color-scheme: dark) {
+    color-scheme: dark;
+  }
 }
 
 body,
@@ -127,13 +131,4 @@ html,
   @media (prefers-color-scheme: light) {
     background-color: var(--color-primary-dark);
   }
-}
-
-.nojs {
-  max-width: 70ch;
-  text-wrap: balance;
-}
-
-.loader {
-  animation: var(--animate-pulse);
 }

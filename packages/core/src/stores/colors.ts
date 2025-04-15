@@ -54,6 +54,7 @@ import {
 export const levelsStore = createIndexedArrayStore<LevelStore>([]);
 export const {
   $ids: $levelIds,
+  $idsToIndex: $levelIdsToIndex,
   items: levels,
   getItem: getLevel,
   addItem: addLevel,
@@ -63,6 +64,7 @@ export const $levelsCount = signal((get) => get($levelIds).length);
 export const huesStore = createIndexedArrayStore<HueStore>([]);
 export const {
   $ids: $hueIds,
+  $idsToIndex: $hueIdsToIndex,
   items: hues,
   getItem: getHue,
   addItem: addHue,

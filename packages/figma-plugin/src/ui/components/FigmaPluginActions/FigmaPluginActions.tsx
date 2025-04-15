@@ -8,9 +8,9 @@ function upsertPalette() {
   pluginChannel.emit("palette:generate", getExportConfigWithColors());
 }
 
-export type FigmaPluginActionsProps = { isUpdate?: boolean };
+export type FigmaPluginActionsProps = { hasPalette: boolean };
 
-export function FigmaPluginActions({ isUpdate }: FigmaPluginActionsProps) {
+export function FigmaPluginActions({ hasPalette }: FigmaPluginActionsProps) {
   const isValid = useSubscribe($isExportConfigValid);
 
   return (
@@ -22,7 +22,7 @@ export function FigmaPluginActions({ isUpdate }: FigmaPluginActionsProps) {
         iconStart={<MFourSquares />}
         disabled={!isValid}
       >
-        {isUpdate ? "Update palette" : "Create palette"}
+        {hasPalette ? "Update palette" : "Create palette"}
       </Button>
     </>
   );

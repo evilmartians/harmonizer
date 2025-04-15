@@ -1,1 +1,10 @@
 @import "@harmonizer/core/styles.css";
+
+.nojs {
+  max-width: 70ch;
+  text-wrap: balance;
+}
+
+.loader {
+  animation: var(--animate-pulse);
+}

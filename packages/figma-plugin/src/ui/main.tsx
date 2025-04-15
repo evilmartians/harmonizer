@@ -5,10 +5,10 @@ import { pluginChannel } from "@ui/pluginChannel";
 import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindowHandle";
 
 pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
-  const palettePresents = !!storedConfig;
+  const hasPalette = !!storedConfig;
   const appConfig = (() => {
     try {
-      if (palettePresents) {
+      if (hasPalette) {
         return parseExportConfig(storedConfig);
       }
     } catch {
@@ -25,7 +25,7 @@ pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
     {
       config: appConfig,
       lockColorSpace: true,
-      actions: <FigmaPluginActions isUpdate={palettePresents} />,
+      actions: <FigmaPluginActions hasPalette={hasPalette} />,
     },
     {
       customUI: (

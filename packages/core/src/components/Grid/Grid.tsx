@@ -8,7 +8,6 @@ import {
   $gridVerticallyScrolled,
   setScrollableContainer,
 } from "@core/stores/ui";
-import { HueIndex, LevelIndex } from "@core/types";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 import { useSubscribe } from "@spred/react";
 import { Fragment, memo, useMemo, useRef, type PropsWithChildren } from "react";
@@ -82,28 +81,18 @@ export function Grid() {
       <GridContainer>
         {/* Header */}
         <GridLeftTopCell />
-        {levels.map((levelId, levelIndex) => (
-          <GridCellLevelHeader
-            key={levelId}
-            levelId={levelId}
-            levelIndex={LevelIndex(levelIndex)}
-          />
+        {levels.map((levelId) => (
+          <GridCellLevelHeader key={levelId} levelId={levelId} />
         ))}
         <GridCellLevelAdd />
         <GridCellLight />
 
         {/* Hues rows */}
-        {hues.map((hueId, hueIndex) => (
+        {hues.map((hueId) => (
           <Fragment key={hueId}>
             <GridCellHueHeader hueId={hueId} />
-            {levels.map((levelId, levelIndex) => (
-              <GridCellColor
-                key={`${hueId}-${levelId}`}
-                levelId={levelId}
-                levelIndex={LevelIndex(levelIndex)}
-                hueId={hueId}
-                hueIndex={HueIndex(hueIndex)}
-              />
+            {levels.map((levelId) => (
+              <GridCellColor key={`${hueId}-${levelId}`} levelId={levelId} hueId={hueId} />
             ))}
             <GridCellHueRemove hueId={hueId} />
             <GridCellLight />
@@ -112,12 +101,8 @@ export function Grid() {
 
         {/* Level controls */}
         <GridCellHueAdd />
-        {levels.map((levelId, levelIndex) => (
-          <GridCellLevelRemove
-            key={levelId}
-            levelId={levelId}
-            levelIndex={LevelIndex(levelIndex)}
-          />
+        {levels.map((levelId) => (
+          <GridCellLevelRemove key={levelId} levelId={levelId} />
         ))}
         <GridCellLight />
         <GridCellLight />

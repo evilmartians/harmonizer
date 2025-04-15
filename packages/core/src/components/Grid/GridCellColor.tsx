@@ -1,8 +1,7 @@
 import { Text } from "@core/components/Text/Text";
-import { $huesCount, $levelsCount, getColor$ } from "@core/stores/colors";
-import type { ColorCellData, HueId, HueIndex, LevelId, LevelIndex } from "@core/types";
+import { $hueIds, $levelIds, getColor$ } from "@core/stores/colors";
+import type { ColorCellData, HueId, LevelId } from "@core/types";
 import { isLightColor } from "@core/utils/colors/isLightColor";
-import { useValueAsSignal } from "@core/utils/spred/useValueAsSignal";
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { shallowEqual } from "fast-equals";
@@ -16,19 +15,15 @@ function buildOklchUrl(color: ColorCellData) {
   return `https://oklch.com/#${color.l * 100},${color.c},${color.h},100`;
 }
 
-function useColorCellModifiers(levelIndex: LevelIndex, hueIndex: HueIndex) {
-  const $levelIndex = useValueAsSignal(levelIndex);
-  const $hueIndex = useValueAsSignal(hueIndex);
+function useColorCellModifiers(levelId: LevelId, hueId: HueId) {
   const $modifiers = useSignal(
     (get) => {
-      const levelsCount = get($levelsCount);
-      const levelIndex = get($levelIndex);
-      const huesCount = get($huesCount);
-      const hueIndex = get($hueIndex);
-      const isFirstLevel = levelIndex === 0;
-      const isFirstHue = hueIndex === 0;
-      const isLastLevel = levelIndex === levelsCount - 1;
-      const isLastHue = hueIndex === huesCount - 1;
+      const levelIds = get($levelIds);
+      const hueIds = get($hueIds);
+      const isFirstLevel = get($levelIds).at(0) === levelId;
+      const isFirstHue = hueIds.at(0) === hueId;
+      const isLastLevel = levelIds.at(-1) === levelId;
+      const isLastHue = hueIds.at(-1) === hueId;
 
       const isTl = isFirstLevel && isFirstHue;
       const isTr = isLastLevel && isFirstHue;
@@ -46,20 +41,16 @@ function useColorCellModifiers(levelIndex: LevelIndex, hueIndex: HueIndex) {
 export type GridCellColorProps = {
   className?: string;
   levelId: LevelId;
-  levelIndex: LevelIndex;
   hueId: HueId;
-  hueIndex: HueIndex;
 };
 
 export const GridCellColor = memo(function GridCellColor({
   className,
   levelId,
-  levelIndex,
   hueId,
-  hueIndex,
 }: GridCellColorProps) {
   const color = useSubscribe(getColor$(levelId, hueId));
-  const { isTl, isTr, isBl, isBr } = useColorCellModifiers(levelIndex, hueIndex);
+  const { isTl, isTr, isBl, isBr } = useColorCellModifiers(levelId, hueId);
   const bgMode = isLightColor(color.l) ? "dark" : "light";
 
   return (

@@ -1,6 +1,6 @@
 import { getLevel, removeLevel } from "@core/stores/colors";
 import { useLevelBgMode } from "@core/stores/hooks";
-import type { LevelId, LevelIndex } from "@core/types";
+import type { LevelId } from "@core/types";
 import { useSubscribe } from "@spred/react";
 import { memo, useCallback } from "react";
 
@@ -9,14 +9,12 @@ import { GridCellRemoveAxis } from "./GridCellRemoveAxis";
 
 export type GridCellLevelRemoveProps = {
   levelId: LevelId;
-  levelIndex: LevelIndex;
 };
 
 export const GridCellLevelRemove = memo(function GridCellLevelRemove({
   levelId,
-  levelIndex,
 }: GridCellLevelRemoveProps) {
-  const bgMode = useLevelBgMode(levelIndex);
+  const bgMode = useLevelBgMode(levelId);
   const level = getLevel(levelId);
   const name = useSubscribe(level.name.$raw);
   const handleClick = useCallback(() => removeLevel(levelId), [levelId]);
