@@ -1,4 +1,4 @@
-# Accessible, Consistent Color Palettes for UI Design
+<img width="830" alt="Frame 9" src="https://github.com/user-attachments/assets/a179dff7-f8b4-42c7-b099-a7e76f8f2a47" />
 
 Harmonizer is a Figma plugin (web version coming soon) that generates color systems with perceptually balanced lightness, contrast, and chroma. Built on OKLCH (for uniformity) and APCA (for modern contrast standards), it ensures your palettes work seamlessly for UI—no manual tweaking required.
 
