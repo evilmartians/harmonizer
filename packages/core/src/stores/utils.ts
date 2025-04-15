@@ -53,6 +53,7 @@ export type ItemWithId<Id extends string> = { id: Id; [key: string]: unknown };
 
 type IndexedStore<Item extends ItemWithId<AnyId>> = {
   $ids: WritableSignal<Item["id"][]>;
+  $idsToIndex: Signal<Record<Item["id"], number>>;
   items: Map<Item["id"], Item>;
   getItem: (id: Item["id"]) => Item;
   addItem: (item: Item, at?: number) => void;
@@ -67,6 +68,10 @@ export function createIndexedArrayStore<Item extends ItemWithId<AnyId>>(
   const mapIds = (items: Item[]) => items.map((item) => item.id);
 
   const $ids = signal(mapIds(initialItems));
+  const $idsToIndex = signal(
+    (get) =>
+      Object.fromEntries(get($ids).map((id, index) => [id, index])) as Record<Item["id"], number>,
+  );
   const items = new Map<Item["id"], Item>(mapEntries(initialItems));
   const addItem = (item: Item, at?: number) => {
     items.set(item.id, item);
@@ -91,7 +96,7 @@ export function createIndexedArrayStore<Item extends ItemWithId<AnyId>>(
     $ids.set(mapIds(newItems));
   };
 
-  return { $ids, items, addItem, getItem, removeItem, overwrite };
+  return { $ids, $idsToIndex, items, addItem, getItem, removeItem, overwrite };
 }
 
 export function getColorSignal<T>(
