@@ -21,7 +21,8 @@ function main() {
   uiChannel.on("palette:generate", async (config) => {
     const variablesCollection = await upsertPaletteVariablesCollection(config);
 
-    void drawPalette(config, variablesCollection);
+    await drawPalette(config, variablesCollection);
+    figma.closePlugin();
   });
 
   uiChannel.on("window:resize", updateWindowSize);
