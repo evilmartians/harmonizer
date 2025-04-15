@@ -30,7 +30,9 @@ import {
   stopChangingBgBoundary,
 } from "@core/stores/ui";
 import { ColorString } from "@core/types";
+import { invariant } from "@core/utils/assertions/invariant";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
+import { getResolvedCssCustomProperty } from "@core/utils/dom/getResolvedCssCustomProperty";
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { upperFirst } from "es-toolkit";
@@ -146,7 +148,6 @@ const BgSingleSpan = memo(function BgSingleSpan() {
   );
 });
 
-const CELL_WIDTH = 104;
 const DRAG_THRESHOLD = 0.75;
 const BgLightSpan = memo(function BgLightSpan() {
   const dragButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -158,9 +159,15 @@ const BgLightSpan = memo(function BgLightSpan() {
   useEffect(() => {
     if (!dragButtonRef.current) return;
 
+    const snapWidth = Number.parseInt(
+      getResolvedCssCustomProperty(dragButtonRef.current, "--grid-column-inline-size", "width"),
+    );
+
+    invariant(!Number.isNaN(snapWidth), "Invalid snap width");
+
     return handleSnappedHorizontalDrag({
       element: dragButtonRef.current,
-      snapWidth: CELL_WIDTH,
+      snapWidth,
       threshold: DRAG_THRESHOLD,
       onChange: updateBgLightStartByOffset,
       onStart: startChangingBgBoundary,
