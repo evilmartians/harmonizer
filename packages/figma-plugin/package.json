@@ -22,6 +22,8 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "browserslist": "catalog:",
+    "browserslist-to-esbuild": "catalog:",
     "@figma/plugin-typings": "^1.108.0",
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",

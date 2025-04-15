@@ -16,6 +16,8 @@
     "react-dom": "catalog:"
   },
   "devDependencies": {
+    "browserslist": "catalog:",
+    "browserslist-to-esbuild": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
