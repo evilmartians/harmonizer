@@ -8,7 +8,7 @@ import { DEFAULT_HEIGHT, DEFAULT_WIDTH, getWindowSize, updateWindowSize } from "
 main();
 
 function main() {
-  figma.showUI(__html__, { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT });
+  figma.showUI(__html__, { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT, themeColors: true });
   void getWindowSize().then(updateWindowSize);
 
   figma.on("run", () => {
