@@ -18,5 +18,5 @@ jobs:
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HARMONIZER_A0608 }}
-          projectId: harmonizer-a0608
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_HARMONIZER_WEB }}
+          projectId: harmonizer-web
