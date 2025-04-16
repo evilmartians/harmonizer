@@ -1,6 +1,7 @@
-import type { ContrastModel } from "@core/types";
 import { parse } from "culori";
 import * as v from "valibot";
+
+import type { ContrastModel } from "@core/types";
 
 import {
   ColorString,

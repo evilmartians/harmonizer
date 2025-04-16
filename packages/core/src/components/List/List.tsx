@@ -1,6 +1,7 @@
+import type { ComponentProps } from "react";
+
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { mergeProps } from "@core/utils/react/mergeProps";
-import type { ComponentProps } from "react";
 
 import styles from "./List.module.css";
 export type ListProps = ComponentProps<"ul">;

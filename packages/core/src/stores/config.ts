@@ -1,10 +1,11 @@
+import { batch, signal } from "@spred/core";
+
 import { parseExportConfig } from "@core/schemas/exportConfig";
 import type { ExportConfig, ExportConfigWithColors } from "@core/types";
 import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
 import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
 import { getTailwindConfig } from "@core/utils/config/getTailwindConfig";
 import { downloadTextFile } from "@core/utils/file/downloadTextFile";
-import { batch, signal } from "@spred/core";
 
 import {
   $areHuesValid,

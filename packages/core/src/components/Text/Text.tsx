@@ -1,6 +1,8 @@
-import type { PolymorphicComponentPropsWithRef } from "@core/utils/react/polymorphic";
-import clsx from "clsx";
 import type { ElementType } from "react";
+
+import clsx from "clsx";
+
+import type { PolymorphicComponentPropsWithRef } from "@core/utils/react/polymorphic";
 
 import styles from "./Text.module.css";
 

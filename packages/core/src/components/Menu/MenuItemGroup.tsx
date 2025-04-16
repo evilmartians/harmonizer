@@ -1,6 +1,7 @@
+import type { ComponentProps } from "react";
+
 import { ListItemGroup } from "@core/components/List/ListItemGroup";
 import { mergeProps } from "@core/utils/react/mergeProps";
-import type { ComponentProps } from "react";
 
 import { useMenuApi } from "./MenuContext";
 

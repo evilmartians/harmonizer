@@ -1,11 +1,13 @@
+import { memo } from "react";
+
+import { useSignal, useSubscribe } from "@spred/react";
+import clsx from "clsx";
+import { shallowEqual } from "fast-equals";
+
 import { Text } from "@core/components/Text/Text";
 import { $hueIds, $levelIds, getColor$ } from "@core/stores/colors";
 import type { ColorCellData, HueId, LevelId } from "@core/types";
 import { isLightColor } from "@core/utils/colors/isLightColor";
-import { useSignal, useSubscribe } from "@spred/react";
-import clsx from "clsx";
-import { shallowEqual } from "fast-equals";
-import { memo } from "react";
 
 import { DATA_ATTR_CELL_HUE_ID, DATA_ATTR_CELL_LEVEL_ID } from "./constants";
 import { GridCell } from "./GridCell";

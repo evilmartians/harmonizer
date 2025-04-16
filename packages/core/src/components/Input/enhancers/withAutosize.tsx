@@ -1,6 +1,8 @@
-import { mergeRefs } from "@core/utils/react/mergeRefs";
-import clsx from "clsx";
 import { type ComponentType, useLayoutEffect, useMemo, useRef } from "react";
+
+import clsx from "clsx";
+
+import { mergeRefs } from "@core/utils/react/mergeRefs";
 
 import type { InputProps } from "../Input";
 

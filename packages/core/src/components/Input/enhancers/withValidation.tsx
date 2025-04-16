@@ -1,5 +1,6 @@
-import { mergeRefs } from "@core/utils/react/mergeRefs";
 import { type ComponentType, useEffect, useMemo, useRef } from "react";
+
+import { mergeRefs } from "@core/utils/react/mergeRefs";
 
 import type { InputProps } from "../Input";
 

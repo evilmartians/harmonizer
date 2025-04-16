@@ -1,6 +1,8 @@
-import { invariant } from "@core/utils/assertions/invariant";
-import type { WindowSize } from "@shared/types";
 import { useCallback, type PointerEvent } from "react";
+
+import type { WindowSize } from "@shared/types";
+
+import { invariant } from "@core/utils/assertions/invariant";
 
 export const useResizeHandle = (onResize: (size: WindowSize) => void) => {
   const handleResize = useCallback(

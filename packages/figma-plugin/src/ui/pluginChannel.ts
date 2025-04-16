@@ -1,11 +1,12 @@
 /* eslint-disable unicorn/prefer-add-event-listener */
+import type { PluginMessages, UIMessages } from "src/shared/types";
+
 import { CommunicationChannel } from "@core/utils/communication-channel/CommunicationChannel";
 import type {
   AnyMessageOf,
   AnyMessages,
   CommunicationChannelTransport,
 } from "@core/utils/communication-channel/types";
-import type { PluginMessages, UIMessages } from "src/shared/types";
 
 export class FigmaUiTransport<
   InboundMessages extends AnyMessages,

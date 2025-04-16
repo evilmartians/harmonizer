@@ -1,3 +1,7 @@
+import { batch, signal, type WritableSignal } from "@spred/core";
+import { pick } from "es-toolkit";
+import { debounce } from "es-toolkit/compat";
+
 import {
   BgLightStart,
   type ColorCellData,
@@ -22,9 +26,6 @@ import {
 } from "@core/utils/colors/calculateColors";
 import { objectEntries } from "@core/utils/object/objectEntries";
 import { workerChannel } from "@core/worker/workerChannel";
-import { batch, signal, type WritableSignal } from "@spred/core";
-import { pick } from "es-toolkit";
-import { debounce } from "es-toolkit/compat";
 
 import { appEvents } from "./appEvents";
 import { FALLBACK_CELL_COLOR } from "./constants";

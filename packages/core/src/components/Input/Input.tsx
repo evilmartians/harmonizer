@@ -1,6 +1,8 @@
-import { useIdWithFallback } from "@core/hooks/useIdWithFallback";
-import clsx from "clsx";
 import type { ComponentPropsWithRef, ReactNode, RefObject } from "react";
+
+import clsx from "clsx";
+
+import { useIdWithFallback } from "@core/hooks/useIdWithFallback";
 
 import styles from "./Input.module.css";
 

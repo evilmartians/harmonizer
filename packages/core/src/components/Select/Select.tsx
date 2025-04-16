@@ -1,13 +1,15 @@
+import { type ComponentProps, useId } from "react";
+
+import { normalizeProps, Portal, useMachine } from "@zag-js/react";
+import * as select from "@zag-js/select";
+import clsx from "clsx";
+
 import { Button, type ButtonKind, type ButtonSize } from "@core/components/Button/Button";
 import { MCheck } from "@core/components/Icon/MCheck";
 import { MTriangleDown } from "@core/components/Icon/MTriangleDown";
 import { List } from "@core/components/List/List";
 import { ListItem } from "@core/components/List/ListItem";
 import { mergeProps } from "@core/utils/react/mergeProps";
-import { normalizeProps, Portal, useMachine } from "@zag-js/react";
-import * as select from "@zag-js/select";
-import clsx from "clsx";
-import { type ComponentProps, useId } from "react";
 
 import styles from "./Select.module.css";
 

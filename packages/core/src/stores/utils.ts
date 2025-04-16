@@ -1,3 +1,8 @@
+import { type Signal, signal, type SignalOptions, type WritableSignal } from "@spred/core";
+import { shallowEqual } from "fast-equals";
+import type { BaseIssue, BaseSchema } from "valibot";
+import * as v from "valibot";
+
 import {
   CONTRAST_MIN,
   getContrastMaxLevel,
@@ -34,10 +39,6 @@ import {
 } from "@core/utils/stores/getNewItemInserter";
 import { type ValidationStore, validationStore } from "@core/utils/stores/validationStore";
 import type { PartialOptional } from "@core/utils/ts/generics";
-import { type Signal, signal, type SignalOptions, type WritableSignal } from "@spred/core";
-import { shallowEqual } from "fast-equals";
-import type { BaseIssue, BaseSchema } from "valibot";
-import * as v from "valibot";
 
 import { huesStore, levelsStore } from "./colors";
 import {

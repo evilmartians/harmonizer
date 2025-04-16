@@ -1,5 +1,6 @@
-import type { PolymorphicComponentPropsWithRef } from "@core/utils/react/polymorphic";
 import type { ElementType } from "react";
+
+import type { PolymorphicComponentPropsWithRef } from "@core/utils/react/polymorphic";
 
 import type { BgModeType } from "./types";
 

@@ -1,6 +1,8 @@
-import { extendableProp, type ExtendableProp } from "@core/utils/react/extendableProp";
-import clsx from "clsx";
 import type { ComponentPropsWithRef } from "react";
+
+import clsx from "clsx";
+
+import { extendableProp, type ExtendableProp } from "@core/utils/react/extendableProp";
 
 import styles from "./Button.module.css";
 

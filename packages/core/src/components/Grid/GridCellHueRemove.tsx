@@ -1,8 +1,10 @@
+import { memo, useCallback } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { getHue, removeHue } from "@core/stores/colors";
 import { $bgColorLightBgMode } from "@core/stores/settings";
 import type { HueId } from "@core/types";
-import { useSubscribe } from "@spred/react";
-import { memo, useCallback } from "react";
 
 import { DATA_ATTR_CELL_HUE_ID } from "./constants";
 import { GridCellRemoveAxis } from "./GridCellRemoveAxis";

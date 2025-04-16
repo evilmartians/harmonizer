@@ -15,6 +15,27 @@ export default hideoo(
     },
     rules: {
       "unicorn/prefer-dom-node-append": "off",
+      "import-x/order": [
+        "warn",
+        {
+          "newlines-between": "always",
+          alphabetize: { order: "asc", caseInsensitive: true },
+          groups: ["builtin", "external", "internal", "parent", "sibling", "index"],
+          pathGroups: [
+            {
+              pattern: "react",
+              group: "builtin",
+              position: "before",
+            },
+            {
+              pattern: "@core/**",
+              group: "internal",
+              position: "after",
+            },
+          ],
+          pathGroupsExcludedImportTypes: [],
+        },
+      ],
     },
   },
 );

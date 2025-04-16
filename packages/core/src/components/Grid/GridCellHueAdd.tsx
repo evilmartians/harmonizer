@@ -1,9 +1,11 @@
+import { memo, useCallback } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { Button } from "@core/components/Button/Button";
 import { LPlus } from "@core/components/Icon/LPlus";
 import { insertHue } from "@core/stores/colors";
 import { $bgColorDarkBgMode } from "@core/stores/settings";
-import { useSubscribe } from "@spred/react";
-import { memo, useCallback } from "react";
 
 import { GridCell } from "./GridCell";
 import styles from "./GridCellHueAdd.module.css";

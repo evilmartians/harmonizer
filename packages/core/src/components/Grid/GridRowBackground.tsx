@@ -1,3 +1,9 @@
+import { memo, useEffect, useRef } from "react";
+
+import { useSubscribe } from "@spred/react";
+import clsx from "clsx";
+import { upperFirst } from "es-toolkit";
+
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
 import { LPlus } from "@core/components/Icon/LPlus";
@@ -33,10 +39,6 @@ import { ColorString } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { handleSnappedHorizontalDrag } from "@core/utils/dnd/handleSnappedHorizontalDrag";
 import { getResolvedCssCustomProperty } from "@core/utils/dom/getResolvedCssCustomProperty";
-import { useSubscribe } from "@spred/react";
-import clsx from "clsx";
-import { upperFirst } from "es-toolkit";
-import { memo, useEffect, useRef } from "react";
 
 import { GridCell } from "./GridCell";
 import styles from "./GridRowBackground.module.css";

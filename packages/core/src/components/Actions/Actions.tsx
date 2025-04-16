@@ -1,3 +1,7 @@
+import type { ChangeEvent } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
 import { useFileUploader } from "@core/components/FileInputButton/useFileUploader";
@@ -11,8 +15,6 @@ import { downloadConfigTarget, ExportTargets, uploadConfig } from "@core/stores/
 import { $bgColorLightBgMode } from "@core/stores/settings";
 import { ValidationError } from "@core/utils/errors/ValidationError";
 import { objectEntries } from "@core/utils/object/objectEntries";
-import { useSubscribe } from "@spred/react";
-import type { ChangeEvent } from "react";
 
 import styles from "./Actions.module.css";
 

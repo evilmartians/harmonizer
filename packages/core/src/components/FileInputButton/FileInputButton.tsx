@@ -1,6 +1,7 @@
+import type { ChangeEvent } from "react";
+
 import { type ButtonProps, Button } from "@core/components/Button/Button";
 import { mergeProps } from "@core/utils/react/mergeProps";
-import type { ChangeEvent } from "react";
 
 import { useFileUploader } from "./useFileUploader";
 

@@ -1,3 +1,8 @@
+import { memo, useCallback, useRef } from "react";
+
+import { useSignal, useSubscribe } from "@spred/react";
+import clsx from "clsx";
+
 import type { BgModeType } from "@core/components/BgMode/types";
 import { Button } from "@core/components/Button/Button";
 import { MPlus } from "@core/components/Icon/MPlus";
@@ -27,9 +32,6 @@ import {
 import { LevelChroma, LevelContrast, LevelName, type LevelId } from "@core/types";
 import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
-import { useSignal, useSubscribe } from "@spred/react";
-import clsx from "clsx";
-import { memo, useCallback, useRef } from "react";
 
 import { DATA_ATTR_CELL_LEVEL_ID } from "./constants";
 import { GridCell } from "./GridCell";

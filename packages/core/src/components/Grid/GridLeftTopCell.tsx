@@ -1,3 +1,8 @@
+import { memo } from "react";
+
+import { useSubscribe } from "@spred/react";
+import clsx from "clsx";
+
 import { Button } from "@core/components/Button/Button";
 import { Select } from "@core/components/Select/Select";
 import { Text } from "@core/components/Text/Text";
@@ -14,9 +19,6 @@ import {
   updateChromaMode,
   $bgColorDarkBgMode,
 } from "@core/stores/settings";
-import { useSubscribe } from "@spred/react";
-import clsx from "clsx";
-import { memo } from "react";
 
 import { GridCell } from "./GridCell";
 import styles from "./GridLeftTopCell.module.css";

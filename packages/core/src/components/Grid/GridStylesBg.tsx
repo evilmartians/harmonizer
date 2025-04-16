@@ -1,8 +1,10 @@
+import { memo } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { $levelIds } from "@core/stores/colors";
 import { $bgLightStart } from "@core/stores/settings";
 import { buildStyleString } from "@core/utils/style/buildStyleString";
-import { useSubscribe } from "@spred/react";
-import { memo } from "react";
 
 import styles from "./GridCell.module.css";
 

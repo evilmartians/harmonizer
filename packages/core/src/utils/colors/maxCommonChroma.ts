@@ -1,5 +1,6 @@
-import { LevelChroma, type HueAngle } from "@core/types";
 import { maxChroma } from "apcach";
+
+import { LevelChroma, type HueAngle } from "@core/types";
 
 import { calculateApcach } from "./calculateApcach";
 import type { ColorCalculationOptions } from "./types";

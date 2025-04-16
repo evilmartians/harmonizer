@@ -1,8 +1,10 @@
+import type { CSSProperties, PropsWithChildren } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { useScrollbarWidth } from "@core/hooks/useScrollbarWidth";
 import { $hueIds, $levelIds } from "@core/stores/colors";
 import { $bgColorDark, $bgColorLight, $bgLightStart } from "@core/stores/settings";
-import { useSubscribe } from "@spred/react";
-import type { CSSProperties, PropsWithChildren } from "react";
 
 import styles from "./MainContainer.module.css";
 
