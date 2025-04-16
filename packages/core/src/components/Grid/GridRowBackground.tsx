@@ -11,6 +11,7 @@ import { MSixDots } from "@core/components/Icon/MSixDots";
 import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
+import { Link } from "@core/components/Link/Link";
 import { Text } from "@core/components/Text/Text";
 import { $levelsCount } from "@core/stores/colors";
 import {
@@ -44,6 +45,7 @@ import { GridCell } from "./GridCell";
 import styles from "./GridRowBackground.module.css";
 
 const HINT_SPLIT_BACKGROUND = "Split background into light and dark modes";
+const EVIL_MARTIANS_URL = "https://evilmartians.com";
 
 type BgLabelParts = readonly [bgTypePrefix: string | null, directionAppendix: string];
 function useBgLabel(bgType: "dark" | "light" | "single"): { text: string; parts: BgLabelParts } {
@@ -81,11 +83,11 @@ const RowHeaderCell = memo(function SpacerCell() {
 
   return (
     <GridCell bgMode={bgMode} className={styles.rowHeader}>
-      <Text as="a" kind="secondary" size="s" href="https://evilmartians.com/" target="_blank">
+      <Link size="s" href={EVIL_MARTIANS_URL} target="_blank">
         Harmonizer
         <br />
         by Evil Martians
-      </Text>
+      </Link>
     </GridCell>
   );
 });
