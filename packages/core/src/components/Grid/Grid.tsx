@@ -1,3 +1,7 @@
+import { Fragment, memo, useMemo, useRef, type PropsWithChildren } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { useDragScrollByMiddleClick } from "@core/hooks/useDragScrollByMiddleClick";
 import { $hueIds, $levelIds } from "@core/stores/colors";
 import { $bgColorLightBgMode } from "@core/stores/settings";
@@ -9,8 +13,6 @@ import {
   setScrollableContainer,
 } from "@core/stores/ui";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
-import { useSubscribe } from "@spred/react";
-import { Fragment, memo, useMemo, useRef, type PropsWithChildren } from "react";
 
 import styles from "./Grid.module.css";
 import { GridCell } from "./GridCell";

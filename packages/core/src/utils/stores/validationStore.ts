@@ -1,7 +1,8 @@
-import { toSignal } from "@core/utils/spred/toSignal";
 import { effect, signal, type Signal, type WritableSignal } from "@spred/core";
 import type { BaseIssue, BaseSchema } from "valibot";
 import * as v from "valibot";
+
+import { toSignal } from "@core/utils/spred/toSignal";
 
 export type ValidationStore<Output> = {
   $raw: WritableSignal<Output>;

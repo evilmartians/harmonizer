@@ -1,5 +1,6 @@
-import { type ColorCellData, LightnessLevel, LevelChroma } from "@core/types";
 import { inColorSpace } from "apcach";
+
+import { type ColorCellData, LightnessLevel, LevelChroma } from "@core/types";
 
 import { calculateApcach } from "./calculateApcach";
 import { formatOklch } from "./formatOklch";

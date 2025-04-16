@@ -1,5 +1,6 @@
-import { isRtl } from "@core/utils/dom/isRtlDirection";
 import { throttle } from "es-toolkit";
+
+import { isRtl } from "@core/utils/dom/isRtlDirection";
 
 type SnappedHorizontalDragOptions = {
   element: HTMLElement;

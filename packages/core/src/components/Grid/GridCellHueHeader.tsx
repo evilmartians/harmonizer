@@ -1,3 +1,7 @@
+import { memo, useCallback, useRef } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { Button } from "@core/components/Button/Button";
 import { MArrowBack } from "@core/components/Icon/MArrowBack";
 import { MPlus } from "@core/components/Icon/MPlus";
@@ -16,8 +20,6 @@ import {
 import { $bgColorDarkBgMode } from "@core/stores/settings";
 import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
-import { useSubscribe } from "@spred/react";
-import { memo, useCallback, useRef } from "react";
 
 import { DATA_ATTR_CELL_HUE_ID } from "./constants";
 import { GridCell } from "./GridCell";

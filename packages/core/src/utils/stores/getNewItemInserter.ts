@@ -1,8 +1,9 @@
+import type { Signal } from "@spred/core";
+
 import { isNumber } from "@core/utils/number/isNumber";
 import { parseNumber } from "@core/utils/number/parseNumber";
 import { objectEntries } from "@core/utils/object/objectEntries";
 import { isSignal } from "@core/utils/spred/isSignal";
-import type { Signal } from "@spred/core";
 
 import { getStoreReactiveValue } from "./getStoreReactiveValue";
 import type { AnyStore, StoreReactivePaths } from "./types";

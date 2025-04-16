@@ -1,3 +1,5 @@
+import { batch, signal } from "@spred/core";
+
 import { defaultConfig } from "@core/defaultConfig";
 import { colorStringSchema } from "@core/schemas/color";
 import {
@@ -19,7 +21,6 @@ import { apcaToWcag } from "@core/utils/colors/apcaToWcag";
 import { getBgMode } from "@core/utils/colors/getBgMode";
 import { wcagToApca } from "@core/utils/colors/wcagToApca";
 import { validationStore } from "@core/utils/stores/validationStore";
-import { batch, signal } from "@spred/core";
 
 import {
   $levelIds,

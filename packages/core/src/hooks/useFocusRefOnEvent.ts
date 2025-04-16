@@ -1,5 +1,6 @@
-import { appEvents, type AppEvents } from "@core/stores/appEvents";
 import { useEffect, useRef } from "react";
+
+import { appEvents, type AppEvents } from "@core/stores/appEvents";
 
 export function useAppEvent<E extends keyof AppEvents>(
   event: E,

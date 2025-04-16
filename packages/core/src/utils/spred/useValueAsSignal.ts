@@ -1,5 +1,6 @@
-import { signal } from "@spred/core";
 import { useEffect, useRef } from "react";
+
+import { signal } from "@spred/core";
 
 /**
  * This is the util for creating signal from value in react components / hooks.

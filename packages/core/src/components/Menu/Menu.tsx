@@ -1,7 +1,9 @@
-import { List } from "@core/components/List/List";
+import { type HTMLAttributes, type ReactElement, type ReactNode, useId } from "react";
+
 import * as menu from "@zag-js/menu";
 import { normalizeProps, Portal, useMachine } from "@zag-js/react";
-import { type HTMLAttributes, type ReactElement, type ReactNode, useId } from "react";
+
+import { List } from "@core/components/List/List";
 
 import styles from "./Menu.module.css";
 import { MenuContext } from "./MenuContext";

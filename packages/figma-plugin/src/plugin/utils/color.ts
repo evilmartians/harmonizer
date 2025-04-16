@@ -1,9 +1,10 @@
+import type { SupportedColor, VariableColorName } from "@plugin/types";
+
 import type { HueName, LevelName } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { toP3 } from "@core/utils/colors/toP3";
 import { toRgb } from "@core/utils/colors/toRgb";
 import { clamp } from "@core/utils/number/clamp";
-import type { SupportedColor, VariableColorName } from "@plugin/types";
 
 export function isDocumentInP3() {
   return figma.root.documentColorProfile === "DISPLAY_P3";

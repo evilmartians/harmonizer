@@ -1,8 +1,9 @@
+import { useSignal, useSubscribe } from "@spred/react";
+
 import type { BgModeType } from "@core/components/BgMode/types";
 import { $levelIdsToIndex } from "@core/stores/colors";
 import type { LevelId } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
-import { useSignal, useSubscribe } from "@spred/react";
 
 import { $bgColorDarkBgMode, $bgColorLightBgMode, $bgLightStart } from "./settings";
 

@@ -1,8 +1,10 @@
+import { type HTMLAttributes, memo } from "react";
+
+import clsx from "clsx";
+
 import type { BgModeType } from "@core/components/BgMode/types";
 import { Button } from "@core/components/Button/Button";
 import { MBin } from "@core/components/Icon/MBin";
-import clsx from "clsx";
-import { type HTMLAttributes, memo } from "react";
 
 import { DATA_ATTR_REMOVE_BUTTON } from "./constants";
 import { GridCell } from "./GridCell";

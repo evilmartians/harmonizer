@@ -1,7 +1,9 @@
+import { memo } from "react";
+
+import { useSubscribe } from "@spred/react";
+
 import { $hueIds } from "@core/stores/colors";
 import { buildStyleString } from "@core/utils/style/buildStyleString";
-import { useSubscribe } from "@spred/react";
-import { memo } from "react";
 
 import {
   DATA_ATTR_CELL_HUE_ID,

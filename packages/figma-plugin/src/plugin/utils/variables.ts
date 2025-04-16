@@ -1,6 +1,3 @@
-import { HueIndex, LevelIndex } from "@core/types";
-import type { ExportConfigWithColors } from "@core/types";
-import { invariant } from "@core/utils/assertions/invariant";
 import { PALETTE_NAME } from "@plugin/constants";
 import type {
   PaletteVariables,
@@ -9,6 +6,10 @@ import type {
   VariableColorName,
 } from "@plugin/types";
 import { getVariableColorName, isDocumentInP3, toFigmaRGB } from "@plugin/utils/color";
+
+import { HueIndex, LevelIndex } from "@core/types";
+import type { ExportConfigWithColors } from "@core/types";
+import { invariant } from "@core/utils/assertions/invariant";
 
 export function canCreateVariableModes() {
   const collection = figma.variables.createVariableCollection("__test-plan-modes__");

@@ -1,3 +1,5 @@
+import { maxChroma } from "apcach";
+
 import {
   LevelChroma,
   HueAngle,
@@ -14,7 +16,6 @@ import {
   type ColorSpace,
 } from "@core/types";
 import { ensureNonNullable } from "@core/utils/assertions/ensureNonNullable";
-import { maxChroma } from "apcach";
 
 import { calculateColorCell } from "./calculateColorCell";
 import { getBgMode } from "./getBgMode";

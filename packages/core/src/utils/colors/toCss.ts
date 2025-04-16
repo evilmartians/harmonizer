@@ -1,6 +1,7 @@
+import { formatCss } from "culori";
+
 import type { ColorSpace, LchColor } from "@core/types";
 import { toHex } from "@core/utils/colors/toHex";
-import { formatCss } from "culori";
 
 export function toCss(color: LchColor, colorSpace: ColorSpace): string {
   if (colorSpace === "srgb") {

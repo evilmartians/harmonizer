@@ -1,5 +1,3 @@
-import { isNumber } from "@core/utils/number/isNumber";
-import { mergeRefs } from "@core/utils/react/mergeRefs";
 import {
   type ChangeEvent,
   type ComponentType,
@@ -8,6 +6,9 @@ import {
   useMemo,
   useRef,
 } from "react";
+
+import { isNumber } from "@core/utils/number/isNumber";
+import { mergeRefs } from "@core/utils/react/mergeRefs";
 
 import type { InputProps } from "../Input";
 

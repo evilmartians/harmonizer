@@ -1,5 +1,6 @@
-import { createScrollStateSignal } from "@core/utils/spred/createScrollStateSignal";
 import { signal } from "@spred/core";
+
+import { createScrollStateSignal } from "@core/utils/spred/createScrollStateSignal";
 
 export const $scrollableContainer = signal<HTMLDivElement | null>(null);
 export const $gridHorizontalScrollState = createScrollStateSignal($scrollableContainer, "x", {

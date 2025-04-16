@@ -1,6 +1,7 @@
+import { memo, useRef } from "react";
+
 import type { WindowSize } from "@shared/types";
 import { useResizeHandle } from "@ui/components/ResizeWindowHandle/useResizeHandle";
-import { memo, useRef } from "react";
 
 import styles from "./ResizeWindowHandle.module.css";
 

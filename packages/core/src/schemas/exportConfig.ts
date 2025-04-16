@@ -1,6 +1,7 @@
+import * as v from "valibot";
+
 import { formatValidationError, safeParse } from "@core/schemas";
 import { ValidationError } from "@core/utils/errors/ValidationError";
-import * as v from "valibot";
 
 import {
   baseContrastSchema,

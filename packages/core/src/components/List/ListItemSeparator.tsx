@@ -1,5 +1,6 @@
-import { mergeProps } from "@core/utils/react/mergeProps";
 import type { ComponentProps } from "react";
+
+import { mergeProps } from "@core/utils/react/mergeProps";
 
 import styles from "./List.module.css";
 

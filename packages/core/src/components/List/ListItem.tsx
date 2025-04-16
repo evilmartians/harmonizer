@@ -1,7 +1,9 @@
+import type { ComponentProps } from "react";
+
+import clsx from "clsx";
+
 import { Text } from "@core/components/Text/Text";
 import { mergeProps } from "@core/utils/react/mergeProps";
-import clsx from "clsx";
-import type { ComponentProps } from "react";
 
 import styles from "./List.module.css";
 

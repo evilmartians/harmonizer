@@ -1,6 +1,8 @@
-import { BgMode, type BgModeProps } from "@core/components/BgMode/BgMode";
-import clsx from "clsx";
 import type { ElementType } from "react";
+
+import clsx from "clsx";
+
+import { BgMode, type BgModeProps } from "@core/components/BgMode/BgMode";
 
 import styles from "./GridCell.module.css";
 
