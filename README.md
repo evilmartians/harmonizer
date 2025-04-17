@@ -1,6 +1,7 @@
 <img width="830" alt="Frame 9" src="https://github.com/user-attachments/assets/a179dff7-f8b4-42c7-b099-a7e76f8f2a47" />
 
-Harmonizer is a Figma plugin (web version coming soon) that generates color systems with perceptually balanced lightness, contrast, and chroma. Built on OKLCH (for uniformity) and APCA (for modern contrast standards), it ensures your palettes work seamlessly for UI—no manual tweaking required.
+
+Harmonizer is a tool for generating accessible, consistent color palettes for user interfaces. It’s currently available as a Figma plugin (a web version is coming soon). Using the OKLCH color model and APCA contrast formula, Harmonizer helps you create color palettes with consistent chroma and contrast across all levels and hues.
 
 Try the [Harmony Palette](https://www.figma.com/community/file/1287828769207775946) we generated with Harmonizer.
 
