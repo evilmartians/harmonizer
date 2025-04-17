@@ -1,9 +1,9 @@
-import { createApp, defaultConfig } from "@harmonizer/core";
+import { createApp, syncConfigWithLocationHash } from "@harmonizer/core";
 
 createApp(
   document.querySelector("#root"),
   {
-    config: defaultConfig,
+    config: syncConfigWithLocationHash(),
     lockColorSpace: false,
   },
   { precalculateColors: true },
