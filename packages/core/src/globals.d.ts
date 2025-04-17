@@ -1,19 +1,4 @@
-// These two are Vite specific, but since they are used in the codebase, we need to declare them here.
-declare module "*?worker" {
-  const workerConstructor: new (options?: { name?: string }) => Worker;
-  export default workerConstructor;
-}
-declare module "*?worker&inline" {
-  const workerConstructor: new (options?: { name?: string }) => Worker;
-  export default workerConstructor;
-}
-
-declare module "*.module.css" {
-  const classes: Readonly<Record<string, string>>;
-  export default classes;
-}
-
-declare module "*.css" {}
+/// <reference types="vite/client" />
 
 // Libraries that are not typed
 declare module "apcach" {

@@ -14,6 +14,7 @@ import { withValidation } from "@core/components/Input/enhancers/withValidation"
 import { Input } from "@core/components/Input/Input";
 import { Link } from "@core/components/Link/Link";
 import { Text } from "@core/components/Text/Text";
+import { EVIL_MARTIANS_URL, YOUTUBE_TUTORIAL_URL } from "@core/constants";
 import { $levelsCount } from "@core/stores/colors";
 import {
   $bgColorDarkBgMode,
@@ -46,8 +47,6 @@ import { GridCell } from "./GridCell";
 import styles from "./GridRowBackground.module.css";
 
 const HINT_SPLIT_BACKGROUND = "Split background into light and dark modes";
-const EVIL_MARTIANS_URL = "https://evilmartians.com";
-const YOUTUBE_TUTORIAL_URL = "https://www.youtube.com/watch?v=7nvw3Q4bxB4";
 
 type BgLabelParts = readonly [bgTypePrefix: string | null, directionAppendix: string];
 function useBgLabel(bgType: "dark" | "light" | "single"): { text: string; parts: BgLabelParts } {
