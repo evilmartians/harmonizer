@@ -7,10 +7,12 @@ import { upperFirst } from "es-toolkit";
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
 import { LPlus } from "@core/components/Icon/LPlus";
+import { LYoutube } from "@core/components/Icon/LYoutube";
 import { MSixDots } from "@core/components/Icon/MSixDots";
 import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
+import { Link } from "@core/components/Link/Link";
 import { Text } from "@core/components/Text/Text";
 import { $levelsCount } from "@core/stores/colors";
 import {
@@ -44,6 +46,8 @@ import { GridCell } from "./GridCell";
 import styles from "./GridRowBackground.module.css";
 
 const HINT_SPLIT_BACKGROUND = "Split background into light and dark modes";
+const EVIL_MARTIANS_URL = "https://evilmartians.com";
+const YOUTUBE_TUTORIAL_URL = "https://www.youtube.com/watch?v=7nvw3Q4bxB4";
 
 type BgLabelParts = readonly [bgTypePrefix: string | null, directionAppendix: string];
 function useBgLabel(bgType: "dark" | "light" | "single"): { text: string; parts: BgLabelParts } {
@@ -81,23 +85,34 @@ const RowHeaderCell = memo(function SpacerCell() {
 
   return (
     <GridCell bgMode={bgMode} className={styles.rowHeader}>
-      <Text as="a" kind="secondary" size="s" href="https://evilmartians.com/" target="_blank">
+      <Link size="s" href={EVIL_MARTIANS_URL} target="_blank">
         Harmonizer
         <br />
         by Evil Martians
-      </Text>
+      </Link>
     </GridCell>
+  );
+});
+
+const YoutubeLink = memo(function YoutubeLink() {
+  return (
+    <Link size="s" className={styles.youtubeLink} href={YOUTUBE_TUTORIAL_URL} target="_blank">
+      <LYoutube className={styles.youtubeIcon} />
+      Watch <br /> tutorial
+    </Link>
   );
 });
 
 const BgDarkSpan = memo(function BgDarkSpan() {
   const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
   const bgMode = useSubscribe($bgColorDarkBgMode);
+  const bgLightStart = useSubscribe($bgLightStart);
   const error = useSubscribe(bgColorDarkStore.$validationError);
   const { text: label, parts: bgLabelParts } = useBgLabel("dark");
 
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
+      {bgLightStart > 1 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} />
         <BgColorInput
@@ -124,6 +139,7 @@ const BgSingleSpan = memo(function BgSingleSpan() {
 
   return (
     <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
+      {levelsCount > 2 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} isSingleBg />
         <BgColorInput

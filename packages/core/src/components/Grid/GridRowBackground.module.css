@@ -81,6 +81,20 @@
   }
 }
 
+.youtubeLink {
+  display: flex;
+  gap: calc(var(--spacing) * 2);
+  align-items: center;
+  justify-content: center;
+
+  margin-inline-start: calc(var(--spacing) * -3);
+}
+
+.youtubeIcon {
+  flex-shrink: 0;
+  width: calc(var(--spacing) * 6);
+}
+
 .singleModeLabel {
   text-transform: capitalize;
 }

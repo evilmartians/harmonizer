@@ -1,0 +1,9 @@
+.link {
+  &:hover {
+    color: var(--color-primary);
+  }
+
+  &:active {
+    translate: 0 1px;
+  }
+}
