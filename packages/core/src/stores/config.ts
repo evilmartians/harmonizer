@@ -1,7 +1,12 @@
 import { batch, signal } from "@spred/core";
 
 import { defaultConfig } from "@core/defaultConfig";
-import { parseExportConfig } from "@core/schemas/exportConfig";
+import {
+  parseCompactExportConfig,
+  parseExportConfig,
+  toCompactExportConfig,
+  toExportConfig,
+} from "@core/schemas/exportConfig";
 import type { ExportConfig, ExportConfigWithColors } from "@core/types";
 import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
 import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
@@ -62,6 +67,11 @@ export const $exportConfig = signal<ExportConfig>((get) => {
     },
   };
 });
+export const $compactExportConfigHash = signal((get) => {
+  const compactExportConfig = toCompactExportConfig(get($exportConfig));
+
+  return `#${urlSafeBtoa(JSON.stringify(compactExportConfig))}`;
+});
 export const $isExportConfigValid = signal((get) => get($areLevelsValid) && get($areHuesValid));
 
 export function getConfig(): ExportConfig {
@@ -72,30 +82,34 @@ function parseConfigFromHash(hash: string) {
   try {
     const hashData = hash.replaceAll(/^#/g, "");
     const parsedHash = urlSafeAtob(hashData);
+    const compactConfig = parseCompactExportConfig(JSON.parse(parsedHash));
 
-    return parseExportConfig(parsedHash);
+    return toExportConfig(compactConfig);
   } catch {
     return null;
   }
 }
 
-export function syncConfigWithLocationHash() {
-  $exportConfig.subscribe((config) => {
-    const newHash = `#${urlSafeBtoa(JSON.stringify(config))}`;
+export function parseConfigFromHashAndUpdate(hash: string) {
+  const config = parseConfigFromHash(hash);
 
+  if (config) {
+    updateConfig(config);
+    return true;
+  }
+
+  return false;
+}
+
+export function syncConfigWithLocationHash() {
+  $compactExportConfigHash.subscribe((newHash) => {
     if (newHash !== globalThis.location.hash) {
       globalThis.history.replaceState(null, "", newHash);
     }
   }, false);
   globalThis.addEventListener(
     "hashchange",
-    () => {
-      const config = parseConfigFromHash(globalThis.location.hash);
-
-      if (config) {
-        updateConfig(config);
-      }
-    },
+    () => parseConfigFromHashAndUpdate(globalThis.location.hash),
     { passive: true },
   );
 
