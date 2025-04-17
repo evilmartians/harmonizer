@@ -50,7 +50,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
         {LABEL_LEVEL}
       </Text>
       <div className={clsx(styles.container, styles.middle)}>
-        <Button size="xs" onClick={toggleContrastModel}>
+        <Button className={styles.contrastModelButton} size="xs" onClick={toggleContrastModel}>
           {contrastModel}
         </Button>
         {contrastModel === "apca" && (

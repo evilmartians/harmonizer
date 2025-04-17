@@ -21,6 +21,10 @@
   margin-top: auto;
 }
 
+.contrastModelButton {
+  text-transform: uppercase;
+}
+
 .colorModePicker {
   flex-direction: row;
 }
