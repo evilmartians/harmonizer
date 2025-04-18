@@ -25,7 +25,7 @@ export function Text<C extends ElementType>({
   font = "sans",
   ...restProps
 }: TextProps<C>) {
-  const Component = as ?? "span";
+  const Component: ElementType = as ?? "span";
 
   return (
     <Component

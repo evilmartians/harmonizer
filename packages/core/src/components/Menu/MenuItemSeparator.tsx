@@ -6,10 +6,10 @@ import { mergeProps } from "@core/utils/react/mergeProps";
 
 import { useMenuApi } from "./MenuContext";
 
-export type MenuItemSeparatorProps = ListItemSeparatorProps;
+export type MenuItemSeparatorProps = Omit<ListItemSeparatorProps<"div">, "as">;
 
 export function MenuItemSeparator(props: MenuItemSeparatorProps) {
   const api = useMenuApi();
 
-  return <ListItemSeparator {...mergeProps(props, api.getSeparatorProps())} />;
+  return <ListItemSeparator as="div" {...mergeProps(props, api.getSeparatorProps())} />;
 }
