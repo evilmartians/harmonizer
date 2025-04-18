@@ -1,0 +1,7 @@
+.input {
+  outline: none;
+
+  &.hasError {
+    background-color: var(--color-universal-error-background);
+  }
+}

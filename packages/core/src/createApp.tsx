@@ -3,7 +3,7 @@ import { type ReactNode, StrictMode } from "react";
 import { batch } from "@spred/core";
 import { createRoot } from "react-dom/client";
 
-import { Actions } from "./components/Actions/Actions";
+import { FloatingActions } from "./components/FloatingActions/FloatingActions";
 import { Grid } from "./components/Grid/Grid";
 import { MainContainer } from "./components/MainContainer/MainContainer";
 import { DependenciesContext, type AppDependencies } from "./DependenciesContext";
@@ -43,7 +43,7 @@ export function createApp(
       <DependenciesContext.Provider value={dependencies}>
         <MainContainer>
           <Grid />
-          <Actions />
+          <FloatingActions />
           {customUI}
         </MainContainer>
       </DependenciesContext.Provider>
