@@ -19,7 +19,8 @@
     "@spred/react": "catalog:",
     "@harmonizer/core": "workspace:^",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "typed-channel": "catalog:"
   },
   "devDependencies": {
     "browserslist": "catalog:",

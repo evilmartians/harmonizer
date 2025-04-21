@@ -1,26 +1,27 @@
 /* eslint-disable unicorn/prefer-add-event-listener */
 import type { PluginMessages, UIMessages } from "@shared/types";
+import {
+  createTypedChannel,
+  type AnyMessages,
+  type AnyMessageOf,
+  type TypedChannelTransport,
+} from "typed-channel";
 
-import { CommunicationChannel } from "@core/utils/communication-channel/CommunicationChannel";
-import type {
-  AnyMessageOf,
-  AnyMessages,
-  CommunicationChannelTransport,
-} from "@core/utils/communication-channel/types";
-
-export class FigmaPluginTransport<
+function createFigmaPluginTransport<
   InboundMessages extends AnyMessages,
-  OutboundMessages extends AnyMessages,
-> implements CommunicationChannelTransport<InboundMessages, OutboundMessages>
-{
-  onMessage(handler: (message: AnyMessageOf<InboundMessages>) => void) {
+  OutboundMessages extends AnyMessages = InboundMessages,
+>(): TypedChannelTransport<InboundMessages, OutboundMessages> {
+  function on(handler: (message: AnyMessageOf<InboundMessages>) => void) {
     figma.ui.onmessage = handler;
     return () => (figma.ui.onmessage = undefined);
   }
-  postMessage(message: AnyMessageOf<OutboundMessages>) {
+
+  function emit(message: AnyMessageOf<OutboundMessages>) {
     figma.ui.postMessage(message);
   }
+
+  return { on, emit };
 }
 
-const transport = new FigmaPluginTransport<UIMessages, PluginMessages>();
-export const uiChannel = new CommunicationChannel<UIMessages, PluginMessages>(transport);
+const transport = createFigmaPluginTransport<UIMessages, PluginMessages>();
+export const uiChannel = createTypedChannel(transport);

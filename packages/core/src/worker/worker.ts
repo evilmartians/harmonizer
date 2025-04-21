@@ -1,12 +1,14 @@
+import { createPostMessageTransport, createTypedChannel } from "typed-channel";
+
 import { calculateColors } from "@core/utils/colors/calculateColors";
-import { PostMessageTransport } from "@core/utils/communication-channel/transports/PostMessageTransport";
 
 import type { ClientMessages, WorkerMessages } from "./types";
 
-const clientChannel = PostMessageTransport.createChannel<ClientMessages, WorkerMessages>();
+const postMessageTransport = createPostMessageTransport<ClientMessages, WorkerMessages>(globalThis);
+const clientChannel = createTypedChannel(postMessageTransport);
 
-clientChannel.on("generate:colors", function (payload) {
+clientChannel.on("generate:colors", (payload) => {
   calculateColors(payload, (payload) => {
-    this.emit(`generated:color`, payload);
+    clientChannel.emit(`generated:color`, payload);
   });
 });
