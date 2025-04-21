@@ -40,8 +40,8 @@ catalogs:
       specifier: ^19.0.0
       version: 19.0.0
     typed-channel:
-      specifier: ^0.9.1
-      version: 0.9.1
+      specifier: ^0.9.5
+      version: 0.9.5
     vite:
       specifier: ^6.2.2
       version: 6.2.2
@@ -160,7 +160,7 @@ importers:
         version: 4.1.2
       typed-channel:
         specifier: 'catalog:'
-        version: 0.9.1
+        version: 0.9.5
       valibot:
         specifier: ^1.0.0
         version: 1.0.0(typescript@5.8.2)
@@ -194,7 +194,7 @@ importers:
         version: 19.0.0(react@19.0.0)
       typed-channel:
         specifier: 'catalog:'
-        version: 0.9.1
+        version: 0.9.5
     devDependencies:
       '@figma/plugin-typings':
         specifier: ^1.108.0
@@ -2900,8 +2900,8 @@ packages:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
 
-  typed-channel@0.9.1:
-    resolution: {integrity: sha512-q0lH97gtC+X9ms3fM2Qs3bvs3JK8Ikfin9z7R7rxc2peHD+3i6M+KBhRjnCfD3haVw0d4KxCEsc/J18UYF9Eug==}
+  typed-channel@0.9.5:
+    resolution: {integrity: sha512-taCiroVT//iljqH0ijhcyEMhG/1IgLt+FE/LKPku+oOmx1xtkAjZ8upc8KoZKezYe/sL7sMsuAC6EHnnaXt1DA==}
 
   typescript-eslint@8.17.0:
     resolution: {integrity: sha512-409VXvFd/f1br1DCbuKNFqQpXICoTB+V51afcwG1pn1a3Cp92MqAUges3YjwEdQ0cMUoCIodjVDAYzyD8h3SYA==}
@@ -5872,7 +5872,7 @@ snapshots:
       possible-typed-array-names: 1.0.0
       reflect.getprototypeof: 1.0.10
 
-  typed-channel@0.9.1: {}
+  typed-channel@0.9.5: {}
 
   typescript-eslint@8.17.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2):
     dependencies:

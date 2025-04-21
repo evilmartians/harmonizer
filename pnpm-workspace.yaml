@@ -15,4 +15,4 @@ catalog:
   "vite": "^6.2.2"
   "vite-css-modules": "^1.8.4"
   "vite-tsconfig-paths": "^5.1.4"
-  "typed-channel": "^0.9.1"
+  "typed-channel": "^0.9.5"
