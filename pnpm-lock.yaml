@@ -39,6 +39,9 @@ catalogs:
     react-dom:
       specifier: ^19.0.0
       version: 19.0.0
+    typed-channel:
+      specifier: ^0.9.1
+      version: 0.9.1
     vite:
       specifier: ^6.2.2
       version: 6.2.2
@@ -155,6 +158,9 @@ importers:
       tailwindcss:
         specifier: ^4.1.2
         version: 4.1.2
+      typed-channel:
+        specifier: 'catalog:'
+        version: 0.9.1
       valibot:
         specifier: ^1.0.0
         version: 1.0.0(typescript@5.8.2)
@@ -186,6 +192,9 @@ importers:
       react-dom:
         specifier: 'catalog:'
         version: 19.0.0(react@19.0.0)
+      typed-channel:
+        specifier: 'catalog:'
+        version: 0.9.1
     devDependencies:
       '@figma/plugin-typings':
         specifier: ^1.108.0
@@ -2890,6 +2899,9 @@ packages:
   typed-array-length@1.0.7:
     resolution: {integrity: sha512-3KS2b+kL7fsuk/eJZ7EQdnEmQoaho/r6KUef7hxvltNA5DR8NAUM+8wJMbJyZ4G9/7i3v5zPBIMN5aybAh2/Jg==}
     engines: {node: '>= 0.4'}
+
+  typed-channel@0.9.1:
+    resolution: {integrity: sha512-q0lH97gtC+X9ms3fM2Qs3bvs3JK8Ikfin9z7R7rxc2peHD+3i6M+KBhRjnCfD3haVw0d4KxCEsc/J18UYF9Eug==}
 
   typescript-eslint@8.17.0:
     resolution: {integrity: sha512-409VXvFd/f1br1DCbuKNFqQpXICoTB+V51afcwG1pn1a3Cp92MqAUges3YjwEdQ0cMUoCIodjVDAYzyD8h3SYA==}
@@ -5859,6 +5871,8 @@ snapshots:
       is-typed-array: 1.1.15
       possible-typed-array-names: 1.0.0
       reflect.getprototypeof: 1.0.10
+
+  typed-channel@0.9.1: {}
 
   typescript-eslint@8.17.0(eslint@9.22.0(jiti@2.4.2))(typescript@5.8.2):
     dependencies:
