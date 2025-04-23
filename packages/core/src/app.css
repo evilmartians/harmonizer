@@ -108,6 +108,8 @@
 body,
 html,
 #root {
+  overscroll-behavior: none;
+
   inline-size: 100%;
   block-size: 100%;
   margin: 0;
