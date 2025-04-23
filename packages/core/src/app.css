@@ -136,3 +136,13 @@ html,
     background-color: var(--color-primary-dark);
   }
 }
+
+input,
+select,
+textarea {
+  --min-font-size: 0px;
+
+  @media (width <= 440px) {
+    --min-font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
