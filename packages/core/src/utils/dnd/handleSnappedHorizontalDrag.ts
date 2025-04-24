@@ -19,6 +19,7 @@ export function handleSnappedHorizontalDrag({
   onEnd,
 }: SnappedHorizontalDragOptions) {
   let startX = 0;
+  const initialUserSelect = document.documentElement.style.userSelect;
 
   function handlePointerDown(e: PointerEvent) {
     startX = e.clientX;
@@ -26,6 +27,7 @@ export function handleSnappedHorizontalDrag({
     element.setPointerCapture(e.pointerId);
     element.addEventListener("pointermove", handlePointerMove);
     element.addEventListener("pointerup", handlePointerUp);
+    document.documentElement.style.userSelect = "none";
   }
 
   const handlePointerMove = throttle((e: PointerEvent) => {
@@ -45,6 +47,7 @@ export function handleSnappedHorizontalDrag({
     element.releasePointerCapture(e.pointerId);
     element.removeEventListener("pointermove", handlePointerMove);
     element.removeEventListener("pointerup", handlePointerUp);
+    document.documentElement.style.userSelect = initialUserSelect;
   }
 
   element.addEventListener("pointerdown", handlePointerDown);
