@@ -26,6 +26,9 @@ export default defineConfig(({ mode }) => ({
             ? "[local]_[content-hash]"
             : "[name]_[local]_[content-hash]",
       },
+      drafts: {
+        customMedia: true,
+      },
     },
   },
   build: {

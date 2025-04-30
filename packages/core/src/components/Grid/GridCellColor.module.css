@@ -1,3 +1,5 @@
+@import "../../media.css";
+
 .cell {
   --border: var(--color-border);
 
@@ -58,7 +60,7 @@
 :is(.lightness, .chroma, .contrast, .hue) {
   font-variant-numeric: tabular-nums;
 
-  @media (hover: hover) {
+  @media (--has-cursor) {
     opacity: 0;
   }
 }

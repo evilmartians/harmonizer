@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./media.css";
 
 @source "./**/*.module.css";
 @source "./**/*.tsx";
@@ -101,7 +102,7 @@
     --color-border-solid: var(--color-border-solid-dark);
   }
 
-  @media (prefers-color-scheme: dark) {
+  @media (--theme-dark) {
     color-scheme: dark;
   }
 }
@@ -129,11 +130,11 @@ html,
 
   font-family: var(--font-sans);
 
-  @media (prefers-color-scheme: dark) {
+  @media (--theme-dark) {
     background-color: var(--color-primary-light);
   }
 
-  @media (prefers-color-scheme: light) {
+  @media (--theme-light) {
     background-color: var(--color-primary-dark);
   }
 }
@@ -143,7 +144,7 @@ select,
 textarea {
   --min-font-size: 0px;
 
-  @media (width <= 440px) {
+  @media (--mobiles-only) {
     --min-font-size: 16px; /* Prevent zoom on iOS */
   }
 }
