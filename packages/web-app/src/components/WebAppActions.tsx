@@ -6,7 +6,7 @@ import { ExportConfigsList } from "@core/components/ExportImportMenu/items/Expor
 import { PasteWebAppUrl } from "@core/components/ExportImportMenu/items/PasteWebAppUrl";
 import { UploadConfig } from "@core/components/ExportImportMenu/items/UploadConfig";
 import { MCheck } from "@core/components/Icon/MCheck";
-import { MCopy } from "@core/components/Icon/MCopy";
+import { MLink } from "@core/components/Icon/MLink";
 import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
 import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
 
@@ -25,7 +25,7 @@ export function CopyPermantentUrlButton() {
     <Button
       kind="floating"
       size="m"
-      icon={isCopied ? <MCheck /> : <MCopy />}
+      icon={isCopied ? <MCheck /> : <MLink />}
       aria-label="Copy URL"
       onClick={handleCopy}
     />
