@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { shallowEqual } from "fast-equals";
 
 import { Text } from "@core/components/Text/Text";
+import { OKLCH_WEB_URL } from "@core/constants";
 import { $hueIds, $levelIds, getColor$ } from "@core/stores/colors";
 import type { ColorCellData, HueId, LevelId } from "@core/types";
 import { isLightColor } from "@core/utils/colors/isLightColor";
@@ -14,7 +15,7 @@ import { GridCell } from "./GridCell";
 import styles from "./GridCellColor.module.css";
 
 function buildOklchUrl(color: ColorCellData) {
-  return `https://oklch.com/#${color.l * 100},${color.c},${color.h},100`;
+  return `${OKLCH_WEB_URL}/#${color.l * 100},${color.c},${color.h},100`;
 }
 
 function useColorCellModifiers(levelId: LevelId, hueId: HueId) {

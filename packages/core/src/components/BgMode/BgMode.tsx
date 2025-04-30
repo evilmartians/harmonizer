@@ -10,7 +10,7 @@ export type BgModeProps<E extends ElementType> = PolymorphicComponentPropsWithRe
 };
 
 export function BgMode<E extends ElementType>({ as, bgMode, ...restProps }: BgModeProps<E>) {
-  const Component = as ?? ("div" as ElementType);
+  const Component: ElementType = as ?? "div";
 
   return <Component {...restProps} data-bg-mode={bgMode} />;
 }

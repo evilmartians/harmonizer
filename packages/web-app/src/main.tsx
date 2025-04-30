@@ -1,10 +1,12 @@
-import { createApp, defaultConfig } from "@harmonizer/core";
+import { createApp, syncConfigWithLocationHash } from "@harmonizer/core";
+import { WebAppActions } from "src/components/WebAppActions";
 
 createApp(
   document.querySelector("#root"),
   {
-    config: defaultConfig,
+    config: syncConfigWithLocationHash(),
     lockColorSpace: false,
+    actions: <WebAppActions />,
   },
   { precalculateColors: true },
 );

@@ -9,6 +9,7 @@ import { MCheck } from "@core/components/Icon/MCheck";
 import { MTriangleDown } from "@core/components/Icon/MTriangleDown";
 import { List } from "@core/components/List/List";
 import { ListItem } from "@core/components/List/ListItem";
+import { ListItemContent } from "@core/components/List/ListItemContent";
 import { mergeProps } from "@core/utils/react/mergeProps";
 
 import styles from "./Select.module.css";
@@ -39,6 +40,7 @@ export function Select({
     id: useId(),
     collection,
     multiple,
+    loopFocus: true,
     defaultValue: multiple ? value : [value],
     positioning: { offset: { mainAxis: 2, crossAxis: 0 } },
   });
@@ -64,16 +66,13 @@ export function Select({
         <div {...api.getPositionerProps()}>
           <List {...mergeProps(api.getContentProps(), { className: styles.dropdown })}>
             {options.map((item) => (
-              <ListItem
-                {...mergeProps(api.getItemProps({ item }), {
-                  className: styles.item,
-                })}
-                key={item.value}
-              >
-                {item.label}
-                <span {...api.getItemIndicatorProps({ item })}>
-                  <MCheck className={styles.checkIcon} />
-                </span>
+              <ListItem {...api.getItemProps({ item })} key={item.value}>
+                <ListItemContent className={styles.content}>
+                  {item.label}
+                  <span {...api.getItemIndicatorProps({ item })}>
+                    <MCheck className={styles.checkIcon} />
+                  </span>
+                </ListItemContent>
               </ListItem>
             ))}
           </List>

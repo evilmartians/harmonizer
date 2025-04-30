@@ -201,10 +201,6 @@ export const requestColorsRecalculationWithLevelsAccumulation = (recalcOnlyLevel
   );
 };
 
-export const recalculateColorsWithBigDebounce = debounce((recalcOnlyLevels?: LevelId[]) => {
-  workerChannel.emit("generate:colors", collectColorCalculationData(recalcOnlyLevels));
-}, 300);
-
 export function getColor$(levelId: LevelId, hueId: HueId) {
   const color$ = colorsMap.get(getColorIdentifier(levelId, hueId));
 

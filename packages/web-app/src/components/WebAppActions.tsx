@@ -1,37 +1,41 @@
-import { useSubscribe } from "@spred/react";
-import { pluginChannel } from "@ui/pluginChannel";
+import { useCallback, useState } from "react";
 
 import { Button } from "@core/components/Button/Button";
 import { ExportImportMenu } from "@core/components/ExportImportMenu/ExportImportMenu";
 import { ExportConfigsList } from "@core/components/ExportImportMenu/items/ExportConfigsList";
-import { OpenInWebApp } from "@core/components/ExportImportMenu/items/OpenInWebApp";
 import { PasteWebAppUrl } from "@core/components/ExportImportMenu/items/PasteWebAppUrl";
 import { UploadConfig } from "@core/components/ExportImportMenu/items/UploadConfig";
-import { MFourSquares } from "@core/components/Icon/MFourSquares";
+import { MCheck } from "@core/components/Icon/MCheck";
+import { MLink } from "@core/components/Icon/MLink";
 import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
 import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
-import { $isExportConfigValid, getExportConfigWithColors } from "@core/stores/config";
 
-function upsertPalette() {
-  pluginChannel.emit("palette:generate", getExportConfigWithColors());
-}
+const TIMEOUT = 2000;
+export function CopyPermantentUrlButton() {
+  const [isCopied, setIsCopied] = useState(false);
 
-export type FigmaPluginActionsProps = { hasPalette: boolean };
-
-export function FigmaPluginActions({ hasPalette }: FigmaPluginActionsProps) {
-  const isValid = useSubscribe($isExportConfigValid);
+  const handleCopy = useCallback(async () => {
+    const url = globalThis.location.href;
+    await navigator.clipboard.writeText(url);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), TIMEOUT);
+  }, []);
 
   return (
+    <Button
+      kind="floating"
+      size="m"
+      icon={isCopied ? <MCheck /> : <MLink />}
+      aria-label="Copy URL"
+      onClick={handleCopy}
+    />
+  );
+}
+
+export function WebAppActions() {
+  return (
     <>
-      <Button
-        kind="floating"
-        size="m"
-        onClick={upsertPalette}
-        iconStart={<MFourSquares />}
-        disabled={!isValid}
-      >
-        {hasPalette ? "Update palette" : "Create palette"}
-      </Button>
+      <CopyPermantentUrlButton />
       <ExportImportMenu>
         <MenuItemGroup id="menu-group-upload" label="Import">
           <PasteWebAppUrl value="paste-url" />
@@ -39,7 +43,6 @@ export function FigmaPluginActions({ hasPalette }: FigmaPluginActionsProps) {
         </MenuItemGroup>
         <MenuItemSeparator />
         <MenuItemGroup id="menu-group-export" label="Export">
-          <OpenInWebApp />
           <ExportConfigsList />
         </MenuItemGroup>
       </ExportImportMenu>

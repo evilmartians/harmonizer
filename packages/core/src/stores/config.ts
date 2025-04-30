@@ -1,11 +1,19 @@
 import { batch, signal } from "@spred/core";
 
-import { parseExportConfig } from "@core/schemas/exportConfig";
+import { defaultConfig } from "@core/defaultConfig";
+import {
+  parseCompactExportConfig,
+  parseExportConfig,
+  toCompactExportConfig,
+  toExportConfig,
+} from "@core/schemas/exportConfig";
 import type { ExportConfig, ExportConfigWithColors } from "@core/types";
 import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
 import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
 import { getTailwindConfig } from "@core/utils/config/getTailwindConfig";
 import { downloadTextFile } from "@core/utils/file/downloadTextFile";
+import { urlSafeAtob } from "@core/utils/url/urlSafeAtob";
+import { urlSafeBtoa } from "@core/utils/url/urlSafeBtoa";
 
 import {
   $areHuesValid,
@@ -32,29 +40,80 @@ import {
 } from "./settings";
 import { getHueStore, getLevelStore } from "./utils";
 
+export const $exportConfig = signal<ExportConfig>((get) => {
+  return {
+    levels: get($levelIds).map((levelId) => {
+      const level = getLevel(levelId);
+
+      return {
+        name: get(level.name.$lastValidValue),
+        contrast: get(level.contrast.$lastValidValue),
+        chroma: get(level.chroma.$lastValidValue),
+      };
+    }),
+    hues: get($hueIds).map((hueId) => {
+      const hue = getHue(hueId);
+
+      return { name: get(hue.name.$lastValidValue), angle: get(hue.angle.$lastValidValue) };
+    }),
+    settings: {
+      contrastModel: get(contrastModelStore.$lastValidValue),
+      directionMode: get(directionModeStore.$lastValidValue),
+      chromaMode: get(chromaModeStore.$lastValidValue),
+      bgColorLight: get(bgColorLightStore.$lastValidValue),
+      bgColorDark: get(bgColorDarkStore.$lastValidValue),
+      bgLightStart: get($bgLightStart),
+      colorSpace: get(colorSpaceStore.$lastValidValue),
+    },
+  };
+});
+export const $compactExportConfigHash = signal((get) => {
+  const compactExportConfig = toCompactExportConfig(get($exportConfig));
+
+  return `#${urlSafeBtoa(JSON.stringify(compactExportConfig))}`;
+});
 export const $isExportConfigValid = signal((get) => get($areLevelsValid) && get($areHuesValid));
 
 export function getConfig(): ExportConfig {
-  return {
-    levels: $levelIds.value.map((levelId) => ({
-      name: getLevel(levelId).name.$lastValidValue.value,
-      contrast: getLevel(levelId).contrast.$lastValidValue.value,
-      chroma: getLevel(levelId).chroma.$lastValidValue.value,
-    })),
-    hues: $hueIds.value.map((hueId) => ({
-      name: getHue(hueId).name.$lastValidValue.value,
-      angle: getHue(hueId).angle.$lastValidValue.value,
-    })),
-    settings: {
-      contrastModel: contrastModelStore.$lastValidValue.value,
-      directionMode: directionModeStore.$lastValidValue.value,
-      chromaMode: chromaModeStore.$lastValidValue.value,
-      bgColorLight: bgColorLightStore.$lastValidValue.value,
-      bgColorDark: bgColorDarkStore.$lastValidValue.value,
-      bgLightStart: $bgLightStart.value,
-      colorSpace: colorSpaceStore.$lastValidValue.value,
-    },
-  };
+  return $exportConfig.value;
+}
+
+function parseConfigFromHash(hash: string) {
+  try {
+    const hashData = hash.replaceAll(/^#/g, "");
+    const parsedHash = urlSafeAtob(hashData);
+    const compactConfig = parseCompactExportConfig(JSON.parse(parsedHash));
+
+    return toExportConfig(compactConfig);
+  } catch {
+    return null;
+  }
+}
+
+export function parseConfigFromHashAndUpdate(hash: string) {
+  const config = parseConfigFromHash(hash);
+
+  if (config) {
+    updateConfig(config);
+    return true;
+  }
+
+  return false;
+}
+
+export function syncConfigWithLocationHash() {
+  $compactExportConfigHash.subscribe((newHash) => {
+    if (newHash !== globalThis.location.hash) {
+      globalThis.history.replaceState(null, "", newHash);
+    }
+  }, false);
+  globalThis.addEventListener(
+    "hashchange",
+    () => parseConfigFromHashAndUpdate(globalThis.location.hash),
+    { passive: true },
+  );
+
+  return parseConfigFromHash(globalThis.location.hash) ?? defaultConfig;
 }
 
 export function getExportConfigWithColors(): ExportConfigWithColors {

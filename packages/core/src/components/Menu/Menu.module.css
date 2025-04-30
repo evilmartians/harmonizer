@@ -3,7 +3,3 @@
   border-radius: var(--radius-sm);
   background-color: var(--color-universal-elevation);
 }
-
-.item {
-  text-align: left;
-}

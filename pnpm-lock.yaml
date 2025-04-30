@@ -177,6 +177,9 @@ importers:
       '@types/react-dom':
         specifier: 'catalog:'
         version: 19.0.4(@types/react@19.0.12)
+      vite:
+        specifier: 'catalog:'
+        version: 6.2.2(@types/node@22.13.10)(jiti@2.4.2)(lightningcss@1.29.3)
 
   packages/figma-plugin:
     dependencies:

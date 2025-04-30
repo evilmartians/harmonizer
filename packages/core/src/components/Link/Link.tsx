@@ -3,8 +3,8 @@ import { mergeProps } from "@core/utils/react/mergeProps";
 
 import styles from "./Link.module.css";
 
-export type LinkProps = Omit<TextProps<"a">, "as" | "kind">;
+export type LinkProps = Omit<TextProps<"a">, "as">;
 
-export function Link(props: LinkProps) {
-  return <Text as="a" kind="secondary" {...mergeProps(props, { className: styles.link })} />;
+export function Link({ kind = "secondary", ...restProps }: LinkProps) {
+  return <Text as="a" kind={kind} {...mergeProps(restProps, { className: styles.link })} />;
 }

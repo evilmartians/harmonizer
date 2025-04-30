@@ -1,11 +1,23 @@
-import type { ComponentProps } from "react";
+import type { ElementType } from "react";
 
-import { mergeProps } from "@core/utils/react/mergeProps";
+import clsx from "clsx";
+
+import type { PolymorphicComponentPropsWithRef } from "@core/utils/react/polymorphic";
 
 import styles from "./List.module.css";
 
-export type ListItemSeparatorProps = ComponentProps<"li">;
+export type ListItemSeparatorProps<E extends ElementType> = PolymorphicComponentPropsWithRef<E> & {
+  className?: string;
+};
 
-export function ListItemSeparator(props: ListItemSeparatorProps) {
-  return <li {...mergeProps(props, { className: styles.separator })} role="separator" />;
+export function ListItemSeparator<E extends ElementType>({
+  as,
+  className,
+  ...restProps
+}: ListItemSeparatorProps<E>) {
+  const Component: ElementType = as ?? "li";
+
+  return (
+    <Component className={clsx(styles.separator, className)} role="separator" {...restProps} />
+  );
 }

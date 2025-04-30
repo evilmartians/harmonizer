@@ -44,6 +44,7 @@
   --color-universal-elevation-hover: oklch(40% 0 0deg);
   --color-universal-focus: oklch(70% 0.1661 242.68deg / 90%);
   --color-universal-error: oklch(79.41% 0.0931 20.98deg / 50%);
+  --color-universal-error-background: oklch(79.41% 0.0931 20.98deg / 20%);
   --color-highlight: oklch(72.27% 0.192 149.58deg);
   --text-xs: 7.5px;
   --text-xs--line-height: 10px;
