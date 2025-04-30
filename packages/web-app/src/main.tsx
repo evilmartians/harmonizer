@@ -6,7 +6,11 @@ createApp(
   {
     config: syncConfigWithLocationHash(),
     lockColorSpace: false,
-    actions: <WebAppActions />,
   },
-  { precalculateColors: true },
+  {
+    precalculateColors: true,
+    customUI: {
+      actions: <WebAppActions />,
+    },
+  },
 );

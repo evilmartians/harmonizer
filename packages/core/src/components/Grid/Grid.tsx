@@ -1,6 +1,7 @@
-import { Fragment, memo, useMemo, useRef, type PropsWithChildren } from "react";
+import { Fragment, memo, type ReactNode, useMemo, useRef, type PropsWithChildren } from "react";
 
 import { useSubscribe } from "@spred/react";
+import clsx from "clsx";
 
 import { useDragScrollByMiddleClick } from "@core/hooks/useDragScrollByMiddleClick";
 import { $hueIds, $levelIds } from "@core/stores/colors";
@@ -25,11 +26,13 @@ import { GridCellLevelHeader } from "./GridCellLevelHeader";
 import { GridCellLevelRemove } from "./GridCellLevelRemove";
 import { GridLeftTopCell } from "./GridLeftTopCell";
 import { GridRowBackground } from "./GridRowBackground";
-import { GridStylesBg } from "./GridStylesBg";
 import { GridStylesHueHover } from "./GridStylesHueHover";
 import { GridStylesLevelHover } from "./GridStylesLevelHover";
 
-const GridContainer = memo(function GridContainer({ children }: PropsWithChildren) {
+const GridContainer = memo(function GridContainer({
+  className,
+  children,
+}: PropsWithChildren<{ className?: string }>) {
   const gridRef = useRef<HTMLDivElement>(null);
   const hasHorizontalScrollbar = useSubscribe($gridHasHorizontalScrollbar);
   const isHorizontallyScrolled = useSubscribe($gridHorizontallyScrolled);
@@ -58,7 +61,7 @@ const GridContainer = memo(function GridContainer({ children }: PropsWithChildre
   useDragScrollByMiddleClick(gridRef);
 
   return (
-    <div className={styles.grid} ref={gridRefCallback} {...attrs}>
+    <div className={clsx(styles.grid, className)} ref={gridRefCallback} {...attrs}>
       {children}
     </div>
   );
@@ -74,17 +77,21 @@ const GridCellLight = memo(function GridCellLight({ className }: GridCellLightPr
   return <GridCell bgMode={bgMode} className={className} />;
 });
 
-export function Grid() {
+type GridProps = {
+  banner?: ReactNode;
+};
+
+export function Grid({ banner }: GridProps) {
   const levels = useSubscribe($levelIds);
   const hues = useSubscribe($hueIds);
 
   return (
     <>
       {/* Dynamic styles */}
-      <GridStylesBg />
       <GridStylesLevelHover />
       <GridStylesHueHover />
-      <GridContainer>
+      <GridContainer className={clsx(banner && styles.hasBanner)}>
+        {banner}
         {/* Header */}
         <GridLeftTopCell />
         {levels.map((levelId) => (

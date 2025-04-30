@@ -14,7 +14,11 @@ import { $isColorSpaceLocked } from "./stores/settings";
 import { invariant } from "./utils/assertions/invariant";
 
 type AppOptions = {
-  customUI?: ReactNode;
+  customUI?: {
+    gridBanner?: ReactNode;
+    actions?: ReactNode;
+    afterGridContent?: ReactNode;
+  };
   precalculateColors?: boolean;
 };
 
@@ -42,9 +46,9 @@ export function createApp(
     <StrictMode>
       <DependenciesContext.Provider value={dependencies}>
         <MainContainer>
-          <Grid />
-          <FloatingActions />
-          {customUI}
+          <Grid banner={customUI?.gridBanner} />
+          {customUI?.actions && <FloatingActions>{customUI.actions}</FloatingActions>}
+          {customUI?.afterGridContent}
         </MainContainer>
       </DependenciesContext.Provider>
     </StrictMode>,
