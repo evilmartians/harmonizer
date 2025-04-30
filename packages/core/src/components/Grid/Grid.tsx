@@ -1,6 +1,7 @@
 import { Fragment, memo, type ReactNode, useMemo, useRef, type PropsWithChildren } from "react";
 
-import { useSubscribe } from "@spred/react";
+import type { Signal } from "@spred/core";
+import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
 
 import { useDragScrollByMiddleClick } from "@core/hooks/useDragScrollByMiddleClick";
@@ -77,21 +78,34 @@ const GridCellLight = memo(function GridCellLight({ className }: GridCellLightPr
   return <GridCell bgMode={bgMode} className={className} />;
 });
 
+export type GridBanner = {
+  $isClosed: Signal<boolean>;
+  component: ReactNode;
+};
+
 type GridProps = {
-  banner?: ReactNode;
+  banner?: GridBanner;
 };
 
 export function Grid({ banner }: GridProps) {
   const levels = useSubscribe($levelIds);
   const hues = useSubscribe($hueIds);
+  const $isBannerVisible = useSignal((get) => {
+    if (!banner) {
+      return false;
+    }
+
+    return !get(banner.$isClosed);
+  });
+  const isBannerVisible = useSubscribe($isBannerVisible);
 
   return (
     <>
       {/* Dynamic styles */}
       <GridStylesLevelHover />
       <GridStylesHueHover />
-      <GridContainer className={clsx(banner && styles.hasBanner)}>
-        {banner}
+      <GridContainer className={clsx(isBannerVisible && styles.hasBanner)}>
+        {isBannerVisible && banner?.component}
         {/* Header */}
         <GridLeftTopCell />
         {levels.map((levelId) => (

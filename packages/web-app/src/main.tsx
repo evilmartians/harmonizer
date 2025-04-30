@@ -1,5 +1,9 @@
 import { createApp, syncConfigWithLocationHash } from "@harmonizer/core";
-import { WebAppActions } from "src/components/WebAppActions";
+import {
+  $isBannerClosed,
+  FigmaPluginBanner,
+} from "src/components/FigmaPluginBanner/FigmaPluginBanner";
+import { WebAppActions } from "src/components/WebAppActions/WebAppActions";
 
 createApp(
   document.querySelector("#root"),
@@ -10,6 +14,10 @@ createApp(
   {
     precalculateColors: true,
     customUI: {
+      gridBanner: {
+        $isClosed: $isBannerClosed,
+        component: <FigmaPluginBanner />,
+      },
       actions: <WebAppActions />,
     },
   },
