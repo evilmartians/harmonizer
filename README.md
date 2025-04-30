@@ -1,6 +1,6 @@
-<img width="830" alt="Frame 9" src="https://github.com/user-attachments/assets/a179dff7-f8b4-42c7-b099-a7e76f8f2a47" />
+<img width="830" alt="Cover image of Harmonizer repo" src="https://github.com/user-attachments/assets/add68fe5-f4f9-4142-a0a1-7ad134674575" />
 
-Harmonizer is a tool for generating accessible, consistent color palettes for user interfaces. It’s currently available as a Figma plugin (a web version is coming soon). Using the OKLCH color model and APCA contrast formula, Harmonizer helps you create color palettes with consistent chroma and contrast across all levels and hues.
+Harmonizer is a tool for generating accessible, consistent color palettes for user interfaces. It’s available as both a [Figma plugin](https://www.figma.com/community/plugin/1483474069475958506/harmonizer) and a [web application](https://harmonizer.evilmartians.com/). Using the OKLCH color model and APCA contrast formula, Harmonizer helps you create color palettes with consistent chroma and contrast across all levels and hues.
 
 Try the [Harmony Palette](https://www.figma.com/community/file/1287828769207775946) we generated with Harmonizer.
 
