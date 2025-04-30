@@ -1,4 +1,4 @@
-export function getScrollbarWidth() {
+export function getScrollbarSize() {
   const outer = document.createElement("div");
   outer.style.visibility = "hidden";
   outer.style.overflow = "scroll";
@@ -7,8 +7,8 @@ export function getScrollbarWidth() {
   outer.appendChild(inner);
 
   document.body.appendChild(outer);
-  const scrollbarWidth = outer.offsetWidth - inner.offsetWidth;
+  const scrollbarSize = outer.offsetWidth - inner.offsetWidth;
   outer.remove();
 
-  return scrollbarWidth;
+  return scrollbarSize;
 }
