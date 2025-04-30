@@ -27,15 +27,13 @@ export function Menu({ renderTrigger, children }: MenuProps) {
   return (
     <MenuContext.Provider value={{ api }}>
       {renderTrigger(api.getTriggerProps(), api.getIndicatorProps())}
-      {api.open && (
-        <Portal>
-          <div {...api.getPositionerProps()} className={styles.dropdown}>
-            <List as="div" {...api.getContentProps()}>
-              {children}
-            </List>
-          </div>
-        </Portal>
-      )}
+      <Portal>
+        <div {...api.getPositionerProps()} className={styles.dropdown}>
+          <List as="div" {...api.getContentProps()}>
+            {children}
+          </List>
+        </div>
+      </Portal>
     </MenuContext.Provider>
   );
 }
