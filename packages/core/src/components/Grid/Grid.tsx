@@ -64,10 +64,14 @@ const GridContainer = memo(function GridContainer({ children }: PropsWithChildre
   );
 });
 
-const GridCellLight = memo(function GridCellLight() {
+type GridCellLightProps = {
+  className?: string;
+};
+
+const GridCellLight = memo(function GridCellLight({ className }: GridCellLightProps) {
   const bgMode = useSubscribe($bgColorLightBgMode);
 
-  return <GridCell bgMode={bgMode} />;
+  return <GridCell bgMode={bgMode} className={className} />;
 });
 
 export function Grid() {
@@ -87,7 +91,7 @@ export function Grid() {
           <GridCellLevelHeader key={levelId} levelId={levelId} />
         ))}
         <GridCellLevelAdd />
-        <GridCellLight />
+        <GridCellLight className={styles.gridColumnHeader} />
 
         {/* Hues rows */}
         {hues.map((hueId) => (

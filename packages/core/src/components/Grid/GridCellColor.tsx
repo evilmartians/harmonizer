@@ -63,6 +63,7 @@ export const GridCellColor = memo(function GridCellColor({
       href={buildOklchUrl(color)}
       className={clsx(styles.cell, className)}
       bgMode={bgMode === "light" ? "dark" : "light"}
+      bgStyle={bgMode}
       {...{ [DATA_ATTR_CELL_HUE_ID]: hueId, [DATA_ATTR_CELL_LEVEL_ID]: levelId }}
     >
       <div
