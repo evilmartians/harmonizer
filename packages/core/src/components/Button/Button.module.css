@@ -9,8 +9,8 @@
   white-space: nowrap;
 
   transition:
-    color 0.2s,
-    background-color 0.2s;
+    color 0.15s,
+    background-color 0.15s ease-out;
 
   &:hover {
     background-color: var(--color-button-hover);
@@ -32,7 +32,7 @@
 }
 
 .kind_primary {
-  background-color: var(--color-button-hover);
+  background-color: var(--color-button);
 }
 
 .kind_bordered {
