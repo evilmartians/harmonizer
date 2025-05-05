@@ -1,0 +1,63 @@
+@import "@harmonizer/core/media.css";
+
+.container {
+  position: relative;
+  grid-column: 1 / -1;
+}
+
+.innerContainer {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+
+  display: flex;
+  gap: calc(var(--spacing) * 2);
+  align-items: center;
+  justify-content: space-between;
+
+  block-size: var(--grid-banner-height);
+  padding-inline: calc(var(--spacing) * 3);
+
+  background: var(--color-primary-light) url("./bg.webp") no-repeat center;
+  background-size: cover;
+
+  transition: filter 0.15s ease-out;
+
+  [data-with-vertical-scrollbar] & {
+    inset-inline-end: var(--scrollbar-size);
+  }
+
+  &:hover:not(:has(.closeButton:hover)) {
+    filter: brightness(1.2);
+  }
+}
+
+.link {
+  display: flex;
+  gap: calc(var(--spacing) * 2);
+  align-items: center;
+  justify-content: center;
+
+  &:focus-visible {
+    outline-offset: -2px;
+  }
+
+  @media (--tablets-only) {
+    position: absolute;
+    inset: 0;
+    padding-inline: calc(var(--spacing) * 12);
+  }
+}
+
+.logo {
+  inline-size: calc(var(--spacing) * 6);
+  block-size: calc(var(--spacing) * 6);
+}
+
+.closeButton {
+  @media (--tablets-only) {
+    position: absolute;
+    inset-block: calc(var(--spacing) * 2 + 1);
+    inset-inline-end: calc(var(--spacing) * 2);
+  }
+}

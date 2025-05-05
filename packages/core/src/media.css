@@ -1,0 +1,5 @@
+@custom-media --mobiles-only (width <= 440px);
+@custom-media --tablets-only (width > 440px);
+@custom-media --theme-dark (prefers-color-scheme: dark);
+@custom-media --theme-light (prefers-color-scheme: light);
+@custom-media --has-cursor (hover: hover);

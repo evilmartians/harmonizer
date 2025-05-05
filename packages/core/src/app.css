@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "./media.css";
 
 @source "./**/*.module.css";
 @source "./**/*.tsx";
@@ -30,12 +31,12 @@
   --color-primary-dark: oklch(100% 0 0deg);
   --color-secondary-light: oklch(0% 0 0deg / 58.82%);
   --color-secondary-dark: oklch(100% 0 0deg / 58.82%);
-  --color-button-light: oklch(0% 0 0deg / 12.55%);
-  --color-button-dark: oklch(100% 0 0deg / 12.55%);
+  --color-button-light: oklch(0% 0 0deg / 25.1%);
+  --color-button-dark: oklch(100% 0 0deg / 25.1%);
   --color-button-disabled-light: oklch(0% 0 0deg / 12.55%);
   --color-button-disabled-dark: oklch(100% 0 0deg / 12.55%);
-  --color-button-hover-light: oklch(0% 0 0deg / 25.1%);
-  --color-button-hover-dark: oklch(100% 0 0deg / 25.1%);
+  --color-button-hover-light: oklch(0% 0 0deg / 30%);
+  --color-button-hover-dark: oklch(100% 0 0deg / 30%);
   --color-border-light: oklch(0% 0 0deg / 25.1%);
   --color-border-dark: oklch(100% 0 0deg / 25.1%);
   --color-border-solid-light: oklch(92.8% 0.006 264.531deg);
@@ -101,7 +102,7 @@
     --color-border-solid: var(--color-border-solid-dark);
   }
 
-  @media (prefers-color-scheme: dark) {
+  @media (--theme-dark) {
     color-scheme: dark;
   }
 }
@@ -129,11 +130,11 @@ html,
 
   font-family: var(--font-sans);
 
-  @media (prefers-color-scheme: dark) {
+  @media (--theme-dark) {
     background-color: var(--color-primary-light);
   }
 
-  @media (prefers-color-scheme: light) {
+  @media (--theme-light) {
     background-color: var(--color-primary-dark);
   }
 }
@@ -143,7 +144,7 @@ select,
 textarea {
   --min-font-size: 0px;
 
-  @media (width <= 440px) {
+  @media (--mobiles-only) {
     --min-font-size: 16px; /* Prevent zoom on iOS */
   }
 }

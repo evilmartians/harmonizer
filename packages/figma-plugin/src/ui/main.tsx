@@ -25,12 +25,14 @@ pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
     {
       config: appConfig,
       lockColorSpace: true,
-      actions: <FigmaPluginActions hasPalette={hasPalette} />,
     },
     {
-      customUI: (
-        <ResizeWindowHandle onResize={(size) => pluginChannel.emit("window:resize", size)} />
-      ),
+      customUI: {
+        actions: <FigmaPluginActions hasPalette={hasPalette} />,
+        afterGridContent: (
+          <ResizeWindowHandle onResize={(size) => pluginChannel.emit("window:resize", size)} />
+        ),
+      },
     },
   );
 });

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none">
+  <g opacity=".8">
+    <rect width="24" height="24" fill="#000" rx="4" style="fill:#000;fill-opacity:1"/>
+    <g clip-path="url(#a)">
+      <foreignObject width="6000" height="6000" x="-3000" y="-3000" transform="matrix(0 .002 -.002 0 16 9)">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,#09b1bc 0deg,#09b1bc 25.9615deg,#a18ffe 89.6131deg,#6f9dfe 180.715deg,#03a9ef 270deg,#09b1bc 360deg);height:100%;width:100%;opacity:1"/>
+      </foreignObject>
+    </g>
+    <path d="M17 10V9a1 1 0 1 0-2 0h-2a3 3 0 1 1 6 0v1a3 3 0 0 1-3 3h-1v-2h1a1 1 0 0 0 1-1Z"/>
+    <path fill="url(#b)" d="M13 17V9h2v8a1 1 0 1 1-2 0Z"/>
+    <path fill="url(#c)" d="M15 11v2h-4v-2h4Z"/>
+    <g clip-path="url(#d)">
+      <foreignObject width="6000" height="6000" x="-3000" y="-3000" transform="matrix(.002 0 0 .002 8 15)">
+        <div xmlns="http://www.w3.org/1999/xhtml" style="background:conic-gradient(from 90deg,#cd9502 0deg,#a6a503 90deg,#51b704 180deg,#03b689 270deg,#999 360deg);height:100%;width:100%;opacity:1"/>
+      </foreignObject>
+    </g>
+    <path d="M5 15v-1a3 3 0 0 1 3-3h1v2H8a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0h2a3 3 0 1 1-6 0Z"/>
+    <path fill="url(#e)" d="M9 7a1 1 0 0 1 2 0v8H9V7Z"/>
+  </g>
+  <defs>
+    <linearGradient id="b" x1="14.5" x2="14.5" y1="13" y2="17" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A18FFF" style="stop-color:#a18fff;stop-color:color(display-p3 .6315 .5615 .9988);stop-opacity:1"/>
+      <stop offset="1" stop-color="#FF5DBC" style="stop-color:#ff5dbc;stop-color:color(display-p3 1 .3637 .7359);stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="c" x1="11" x2="15" y1="12.5" y2="12.5" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#04B78A" style="stop-color:#04b78a;stop-color:color(display-p3 .0152 .7158 .5395);stop-opacity:1"/>
+      <stop offset="1" stop-color="#09B1BD" style="stop-color:#09b1bd;stop-color:color(display-p3 .0367 .6958 .7408);stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="e" x1="10.5" x2="10.5" y1="7" y2="15" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF6C72" style="stop-color:#ff6c72;stop-color:color(display-p3 .9989 .4252 .4464);stop-opacity:1"/>
+      <stop offset="1" stop-color="#CE9503" style="stop-color:#ce9503;stop-color:color(display-p3 .8059 .5861 .0113);stop-opacity:1"/>
+    </linearGradient>
+    <clipPath id="a">
+      <path d="M17 10V9a1 1 0 1 0-2 0h-2a3 3 0 1 1 6 0v1a3 3 0 0 1-3 3h-1v-2h1a1 1 0 0 0 1-1Z"/>
+    </clipPath>
+    <clipPath id="d">
+      <path d="M5 15v-1a3 3 0 0 1 3-3h1v2H8a1 1 0 0 0-1 1v1a1 1 0 1 0 2 0h2a3 3 0 1 1-6 0Z"/>
+    </clipPath>
+  </defs>
+</svg>

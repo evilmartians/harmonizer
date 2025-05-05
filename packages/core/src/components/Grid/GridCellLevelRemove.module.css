@@ -1,5 +1,7 @@
+@import "../../media.css";
+
 .button {
-  @media (hover: hover) {
+  @media (--has-cursor) {
     opacity: 0;
   }
 }

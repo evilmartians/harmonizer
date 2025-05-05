@@ -1,6 +1,7 @@
 .grid {
   --grid-column-inline-size: calc(var(--spacing) * 24);
   --grid-row-block-size: calc(var(--spacing) * 22);
+  --grid-banner-height: calc(var(--spacing) * 12);
 
   overflow: auto;
   display: grid;
@@ -14,6 +15,14 @@
 
   inline-size: 100%;
   block-size: 100vh;
+
+  &.hasBanner {
+    grid-template-rows:
+      var(--grid-banner-height)
+      calc(var(--spacing) * 49)
+      repeat(calc(var(--grid-hues) + 1), var(--grid-row-block-size))
+      1fr;
+  }
 }
 
 .gridTopLeftCell {

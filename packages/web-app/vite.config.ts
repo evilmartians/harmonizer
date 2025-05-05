@@ -22,6 +22,9 @@ export default defineConfig({
             ? "[local]_[content-hash]"
             : "[name]_[local]_[content-hash]",
       },
+      drafts: {
+        customMedia: true,
+      },
     },
   },
   worker: {

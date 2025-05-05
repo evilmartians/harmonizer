@@ -1,11 +1,10 @@
-import { createContext, type ReactNode, use } from "react";
+import { createContext, use } from "react";
 
 import { invariant } from "./utils/assertions/invariant";
 
 export type AppDependencies = {
   config: string | Record<string, unknown>;
   lockColorSpace: boolean;
-  actions?: ReactNode;
 };
 
 export const DependenciesContext = createContext<AppDependencies | null>(null);
