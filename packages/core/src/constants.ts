@@ -1,7 +1,7 @@
 export const HARMONIZER_WEB_APP_URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:5173"
-    : "https://harmonizer-web.web.app";
+    : "https://harmonizer.evilmartians.com";
 export const HARMONIZER_FIGMA_PLUGIN_URL =
   "https://www.figma.com/community/plugin/1483474069475958506";
 export const OKLCH_WEB_URL = "https://oklch.com";
