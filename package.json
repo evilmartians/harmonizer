@@ -22,23 +22,23 @@
     "node": ">=22.x"
   },
   "devDependencies": {
-    "@eslint/compat": "^1.2.7",
+    "@eslint/compat": "^1.2.9",
     "@figma/eslint-plugin-figma-plugins": "^0.16.1",
     "@hideoo/eslint-config": "^4.0.0",
-    "eslint": "^9.22.0",
-    "globals": "^15.15.0",
+    "eslint": "^9.26.0",
+    "globals": "^16.0.0",
     "nano-staged": "^0.8.0",
     "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "simple-git-hooks": "^2.11.1",
+    "simple-git-hooks": "^2.13.0",
     "stylelint": "^16.16.0",
     "stylelint-config-clean-order": "^7.0.0",
     "stylelint-config-css-modules": "^4.4.0",
     "stylelint-config-html": "^1.1.0",
-    "stylelint-config-standard": "^37.0.0",
-    "stylelint-order": "^6.0.4",
+    "stylelint-config-standard": "^38.0.0",
+    "stylelint-order": "^7.0.0",
     "typescript": "^5.8.2",
-    "typescript-eslint": "^8.26.1"
+    "typescript-eslint": "^8.31.1"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged",
@@ -63,9 +63,9 @@
     }
   },
   "dependencies": {
-    "@zag-js/menu": "^1.9.0",
-    "@zag-js/react": "^1.9.0",
-    "@zag-js/select": "^1.9.0"
+    "@zag-js/menu": "^1.12.0",
+    "@zag-js/react": "^1.12.0",
+    "@zag-js/select": "^1.12.0"
   },
-  "packageManager": "pnpm@10.8.1+sha512.c50088ba998c67b8ca8c99df8a5e02fd2ae2e2b29aaf238feaa9e124248d3f48f9fb6db2424949ff901cffbb5e0f0cc1ad6aedb602cd29450751d11c35023677"
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
 }
