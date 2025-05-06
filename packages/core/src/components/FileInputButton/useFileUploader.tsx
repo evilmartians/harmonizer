@@ -20,6 +20,7 @@ const HiddenFileInput = memo(function HiddenFileInput({
       accept={accept}
       multiple={multiple}
       onChange={onFilesChange}
+      onClick={(e) => e.stopPropagation()}
       className="sr-only"
       type="file"
       aria-hidden="true"

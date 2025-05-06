@@ -19,9 +19,10 @@ import styles from "./PasteWebAppUrl.module.css";
 
 export type ActionPasteUrlProps = Omit<ListItemProps<"button">, "as"> & {
   value: string;
+  onPaste?: (data: string) => void;
 };
 
-export function PasteWebAppUrl({ value, ...restProps }: ActionPasteUrlProps) {
+export function PasteWebAppUrl({ value, onPaste, ...restProps }: ActionPasteUrlProps) {
   const api = useMenuApi();
   const inputRef = useRef<HTMLInputElement>(null);
   const [isPasting, setIsPasting] = useState(false);
@@ -47,6 +48,7 @@ export function PasteWebAppUrl({ value, ...restProps }: ActionPasteUrlProps) {
       setHasError(!updated);
       if (updated) {
         api.setOpen(false);
+        onPaste?.(pastedData);
       }
     },
     [isPasting],

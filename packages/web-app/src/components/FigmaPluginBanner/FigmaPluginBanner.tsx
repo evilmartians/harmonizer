@@ -1,3 +1,5 @@
+import { trackEvent } from "@web-app/plausible";
+
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
 import { MCross } from "@core/components/Icon/MCross";
@@ -20,6 +22,7 @@ export function FigmaPluginBanner() {
           kind="primary"
           href={HARMONIZER_FIGMA_PLUGIN_URL}
           target="_blank"
+          onClick={() => trackEvent("Figma Banner: Follow")}
         >
           <img src={logoImage} alt="Harmonizer Logo" className={styles.logo} />
           Check out Harmonizer Figma Plugin
@@ -31,6 +34,7 @@ export function FigmaPluginBanner() {
           icon={<MCross />}
           aria-label="Close banner"
           onClick={() => $isBannerClosed.set(true)}
+          onClickCapture={() => trackEvent("Figma Banner: Close")}
         />
       </div>
     </BgMode>
