@@ -11,11 +11,15 @@ export type GridCellProps<E extends ElementType> = BgModeProps<E> & {
   bgStyle?: BgModeType;
 };
 
-export const GridCell = function GridCell<E extends ElementType>(props: GridCellProps<E>) {
+export const GridCell = function GridCell<E extends ElementType>({
+  className,
+  bgStyle,
+  ...restProps
+}: GridCellProps<E>) {
   return (
     <BgMode
-      {...props}
-      className={clsx(styles.cell, styles[props.bgStyle ?? props.bgMode], props.className)}
+      {...(restProps as BgModeProps<E>)}
+      className={clsx(styles.cell, styles[bgStyle ?? restProps.bgMode], className)}
     />
   );
 };
