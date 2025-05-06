@@ -10,18 +10,19 @@
     "typecheck": "pnpm tsc --build"
   },
   "dependencies": {
-    "@spred/react": "catalog:",
     "@harmonizer/core": "workspace:^",
+    "@spred/react": "catalog:",
+    "plausible-tracker": "^0.3.9",
     "react": "catalog:",
     "react-dom": "catalog:"
   },
   "devDependencies": {
-    "browserslist": "catalog:",
-    "browserslist-to-esbuild": "catalog:",
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "browserslist": "catalog:",
+    "browserslist-to-esbuild": "catalog:",
     "lightningcss": "catalog:",
     "vite": "catalog:",
     "vite-css-modules": "catalog:",
