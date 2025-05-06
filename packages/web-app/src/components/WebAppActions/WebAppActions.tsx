@@ -1,5 +1,7 @@
 import { useCallback, useState } from "react";
 
+import { trackEvent } from "@web-app/plausible";
+
 import { Button } from "@core/components/Button/Button";
 import { ExportImportMenu } from "@core/components/ExportImportMenu/ExportImportMenu";
 import { ExportConfigsList } from "@core/components/ExportImportMenu/items/ExportConfigsList";
@@ -38,12 +40,14 @@ export function WebAppActions() {
       <CopyPermantentUrlButton />
       <ExportImportMenu>
         <MenuItemGroup id="menu-group-upload" label="Import">
-          <PasteWebAppUrl value="paste-url" />
-          <UploadConfig />
+          <PasteWebAppUrl value="paste-url" onPaste={() => trackEvent("Imported: URL Pasted")} />
+          <UploadConfig onClick={() => trackEvent("Imported: Config uploaded")} />
         </MenuItemGroup>
         <MenuItemSeparator />
         <MenuItemGroup id="menu-group-export" label="Export">
-          <ExportConfigsList />
+          <ExportConfigsList
+            onClick={(exportTarget) => trackEvent("Exported", { props: { exportTarget } })}
+          />
         </MenuItemGroup>
       </ExportImportMenu>
     </>

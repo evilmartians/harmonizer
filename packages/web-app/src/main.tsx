@@ -5,6 +5,8 @@ import {
 } from "src/components/FigmaPluginBanner/FigmaPluginBanner";
 import { WebAppActions } from "src/components/WebAppActions/WebAppActions";
 
+import "./plausible";
+
 createApp(
   document.querySelector("#root"),
   {

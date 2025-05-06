@@ -23,7 +23,11 @@ export async function handleFileUpload(e: ChangeEvent<HTMLInputElement>) {
   }
 }
 
-export function UploadConfig() {
+type UploadConfigProps = {
+  onClick?: VoidFunction;
+};
+
+export function UploadConfig({ onClick }: UploadConfigProps) {
   const api = useMenuApi();
   const { fileInput, triggerUpload } = useFileUploader({
     accept: ".json",
@@ -32,9 +36,13 @@ export function UploadConfig() {
   return (
     <ListItem
       as="button"
-      {...mergeProps(api.getItemProps({ value: "upload-harmonizer-config" }), {
-        onClick: triggerUpload,
-      })}
+      {...mergeProps(
+        api.getItemProps({ value: "upload-harmonizer-config" }),
+        {
+          onClick: triggerUpload,
+        },
+        { onClick },
+      )}
     >
       {fileInput}
       <ListItemContent>Upload Harmonizer config</ListItemContent>
