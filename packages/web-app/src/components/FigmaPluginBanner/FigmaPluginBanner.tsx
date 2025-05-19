@@ -25,7 +25,7 @@ export function FigmaPluginBanner() {
           onClick={() => trackEvent("Figma Banner: Follow")}
         >
           <img src={logoImage} alt="Harmonizer Logo" className={styles.logo} />
-          Check out Harmonizer Figma Plugin
+          Check out the Harmonizer Figma plugin
         </Link>
         <Button
           className={styles.closeButton}
