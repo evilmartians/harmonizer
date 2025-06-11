@@ -4,6 +4,15 @@ Harmonizer is a tool for generating accessible, consistent color palettes for us
 
 Try the [Harmony Palette](https://www.figma.com/community/file/1287828769207775946) we generated with Harmonizer.
 
+---
+
+<img src="https://cdn.evilmartians.com/badges/logo-no-label.svg" alt="" width="22" height="16" />  Made
+by
+<b><a href="https://evilmartians.com/devtools?utm_source=harmonizer&utm_campaign=devtools-button&utm_medium=github">Evil
+Martians</a></b>, product consulting for <b>developer tools</b>.
+
+---
+
 ## Why Harmonizer?
 
 There are many great color palettes out there—from design systems to brand colors provided by agencies. But these palettes often aren’t made with UI design in mind:
