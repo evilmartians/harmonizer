@@ -11,5 +11,5 @@ export function getCssVariablesConfig(config: ExportConfigWithColors): string {
 
   return `:root {
   ${colors.join("\n  ")}
-};`;
+}`;
 }
