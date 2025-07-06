@@ -169,13 +169,15 @@ export const ExportTargets = {
     name: "Tailwind v3",
     filename: "tailwind.config.js",
     mimetype: "application/javascript",
-    getFileData: () => getTailwindConfig(getExportConfigWithColors()),
+    getFileData: () =>
+      getTailwindConfig(getExportConfigWithColors(), $compactExportConfigHash.value),
   },
   "css-variables": {
     name: "CSS variables",
     filename: "harmonized-palette.css",
     mimetype: "application/javascript",
-    getFileData: () => getCssVariablesConfig(getExportConfigWithColors()),
+    getFileData: () =>
+      getCssVariablesConfig(getExportConfigWithColors(), $compactExportConfigHash.value),
   },
   json: {
     name: "JSON Config",
