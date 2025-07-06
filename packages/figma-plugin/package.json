@@ -16,24 +16,24 @@
     "typecheck:plugin": "pnpm tsc --build tsconfig.plugin.json"
   },
   "dependencies": {
-    "@spred/react": "catalog:",
     "@harmonizer/core": "workspace:^",
+    "@spred/react": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "typed-channel": "catalog:"
   },
   "devDependencies": {
-    "browserslist": "catalog:",
-    "browserslist-to-esbuild": "catalog:",
     "@figma/plugin-typings": "^1.108.0",
     "@tailwindcss/vite": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
+    "browserslist": "catalog:",
+    "browserslist-to-esbuild": "catalog:",
     "lightningcss": "catalog:",
     "vite": "catalog:",
     "vite-css-modules": "catalog:",
-    "vite-plugin-generate-file": "^0.2.0",
+    "vite-plugin-generate-file": "^0.3.1",
     "vite-plugin-singlefile": "^2.2.0",
     "vite-tsconfig-paths": "catalog:"
   }
