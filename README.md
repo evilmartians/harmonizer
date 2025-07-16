@@ -28,7 +28,7 @@ Harmonizer solves this by generating color with perceptually consistent lightnes
 - Adjust contrast per level (calculated against your background).
 - Add hues and name them (e.g., "Brand Blue," "Error Red").
 - Set background context (default: white/black; customizable).
-- Create Palette > ganarates the color preview and variables in Figma file.
+- Create Palette > generates the color preview and variables in Figma file.
 
 ## Key Features
 
