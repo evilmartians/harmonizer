@@ -13,7 +13,7 @@ import {
   levelNameSchema,
 } from "./color";
 import {
-  bgLightStartSchema,
+  bgRightStartSchema,
   chromaModeSchema,
   colorSpaceSchema,
   contrastModelSchema,
@@ -30,7 +30,7 @@ export const exportConfigSchema = v.pipe(
       contrastModel: contrastModelSchema,
       directionMode: directionModeSchema,
       chromaMode: chromaModeSchema,
-      bgLightStart: bgLightStartSchema,
+      bgLightStart: bgRightStartSchema,
       bgColorLight: colorStringSchema,
       bgColorDark: colorStringSchema,
       colorSpace: colorSpaceSchema,
@@ -78,7 +78,7 @@ export const compactExportConfigSchema = v.pipe(
         chromaModeSchema,
         colorStringSchema,
         colorStringSchema,
-        bgLightStartSchema,
+        bgRightStartSchema,
         colorSpaceSchema,
       ]),
       v.description("Settings as a plain array"),

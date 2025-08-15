@@ -20,11 +20,11 @@ import {
   updateLevelContrast,
   updateLevelName,
 } from "@core/stores/colors";
-import { useLevelBgMode } from "@core/stores/hooks";
+import { useLevelBgColor, useLevelBgMode } from "@core/stores/hooks";
 import {
-  $bgLightStart,
-  bgColorDarkStore,
-  bgColorLightStore,
+  $bgRightStart,
+  bgColorLeftStore,
+  bgColorRightStore,
   chromaModeStore,
   contrastModelStore,
   directionModeStore,
@@ -55,8 +55,8 @@ const InsertBeforeArea = memo(function InsertBeforeArea({ levelId }: LevelCompon
   const name = useSubscribe(getLevel(levelId).name.$raw);
   const $isOnBgEdge = useSignal((get) => {
     const levelIds = get($levelIds);
-    const bgLightStart = get($bgLightStart);
-    return levelIds[bgLightStart] === levelId && bgLightStart > 0;
+    const bgRightStart = get($bgRightStart);
+    return levelIds[bgRightStart] === levelId && bgRightStart > 0;
   });
   const isOnBgEdge = useSubscribe($isOnBgEdge);
   const handleInsert = useCallback(() => insertLevel(levelId), [levelId]);
@@ -112,15 +112,15 @@ const ContrastInput = memo(function ContrastInput({
   bgMode,
 }: LevelComponentProps<{ bgMode: BgModeType }>) {
   const level = getLevel(levelId);
-  const bgColorLight = useSubscribe(bgColorLightStore.$raw);
-  const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
+  const bgColorRight = useSubscribe(bgColorRightStore.$raw);
+  const bgColorLeft = useSubscribe(bgColorLeftStore.$raw);
   const contrast = useSubscribe(level.contrast.$raw);
   const error = useSubscribe(level.contrast.$validationError);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
 
   const tintColor = useSubscribe(level.$tintColor);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
-  const currentBgColor = bgMode === "dark" ? bgColorDark : bgColorLight;
+  const currentBgColor = bgMode === "dark" ? bgColorLeft : bgColorRight;
 
   return (
     <LevelContrastInput
@@ -197,10 +197,16 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 export const GridCellLevelHeader = memo(function GridCellLevelHeader({
   levelId,
 }: LevelComponentProps) {
+  const bgColor = useLevelBgColor(levelId);
   const bgMode = useLevelBgMode(levelId);
 
   return (
-    <GridCell bgMode={bgMode} className={styles.cell} {...{ [DATA_ATTR_CELL_LEVEL_ID]: levelId }}>
+    <GridCell
+      bgColor={bgColor}
+      bgMode={bgMode}
+      className={styles.cell}
+      {...{ [DATA_ATTR_CELL_LEVEL_ID]: levelId }}
+    >
       <InsertBeforeArea levelId={levelId} />
       <NameInput levelId={levelId} />
       <ContrastInput levelId={levelId} bgMode={bgMode} />

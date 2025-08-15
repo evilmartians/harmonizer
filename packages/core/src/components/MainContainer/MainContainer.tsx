@@ -4,7 +4,7 @@ import { useSubscribe } from "@spred/react";
 
 import { useScrollbarSize } from "@core/hooks/useScrollbarSize";
 import { $hueIds, $levelIds } from "@core/stores/colors";
-import { $bgColorDark, $bgColorLight, $bgLightStart } from "@core/stores/settings";
+import { $bgColorLeft, $bgColorRight, $bgRightStart } from "@core/stores/settings";
 
 import styles from "./MainContainer.module.css";
 
@@ -13,9 +13,9 @@ type MainContainerProps = PropsWithChildren;
 export function MainContainer({ children }: MainContainerProps) {
   const levels = useSubscribe($levelIds);
   const hues = useSubscribe($hueIds);
-  const bgDark = useSubscribe($bgColorDark);
-  const bgLight = useSubscribe($bgColorLight);
-  const bgLightStart = useSubscribe($bgLightStart);
+  const bgLeft = useSubscribe($bgColorLeft);
+  const bgRight = useSubscribe($bgColorRight);
+  const bgRightStart = useSubscribe($bgRightStart);
   const scrollbarSize = useScrollbarSize();
 
   return (
@@ -23,9 +23,9 @@ export function MainContainer({ children }: MainContainerProps) {
       className={styles.container}
       style={
         {
-          "--bg-dark": bgDark,
-          "--bg-light": bgLight,
-          "--bg-light-started-at": bgLightStart,
+          "--bg-left": bgLeft,
+          "--bg-right": bgRight,
+          "--bg-right-started-at": bgRightStart,
           "--grid-levels": levels.length,
           "--grid-hues": hues.length,
           "--scrollbar-size": `${scrollbarSize}px`,

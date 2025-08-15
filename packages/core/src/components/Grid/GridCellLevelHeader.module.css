@@ -53,7 +53,7 @@
   opacity: 0;
 
   &.edgeIcon {
-    background-color: var(--bg-light);
+    background-color: var(--bg-right);
   }
 
   .insertBeforeContainer:hover &,

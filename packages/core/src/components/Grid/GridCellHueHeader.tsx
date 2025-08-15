@@ -17,7 +17,7 @@ import {
   updateHueAngle,
   updateHueName,
 } from "@core/stores/colors";
-import { $bgColorDarkBgMode } from "@core/stores/settings";
+import { $bgColorModeLeft } from "@core/stores/settings";
 import { HueAngle, HueName, type HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
 
@@ -133,10 +133,15 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
 });
 
 export const GridCellHueHeader = memo(function GridCellHueHeader({ hueId }: HueComponentProps) {
-  const bgMode = useSubscribe($bgColorDarkBgMode);
+  const bgMode = useSubscribe($bgColorModeLeft);
 
   return (
-    <GridCell bgMode={bgMode} className={styles.cell} {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}>
+    <GridCell
+      bgColor="left"
+      bgMode={bgMode}
+      className={styles.cell}
+      {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}
+    >
       <InsertBeforeArea hueId={hueId} />
       <NameInput hueId={hueId} />
       <AngleInput hueId={hueId} />

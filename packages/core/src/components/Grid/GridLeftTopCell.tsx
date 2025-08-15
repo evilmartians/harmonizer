@@ -17,7 +17,7 @@ import {
   toggleContrastModel,
   toggleDirectionMode,
   updateChromaMode,
-  $bgColorDarkBgMode,
+  $bgColorModeLeft,
 } from "@core/stores/settings";
 
 import { GridCell } from "./GridCell";
@@ -37,7 +37,7 @@ const CHROMA_OPTIONS = [
 const HINT_LOCKED_COLOR_SPACE = "To change color profile, adjust it in the Figma file settings";
 
 export const GridLeftTopCell = memo(function GridLeftTopCell() {
-  const bgMode = useSubscribe($bgColorDarkBgMode);
+  const bgMode = useSubscribe($bgColorModeLeft);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
   const chromaModeValue = useSubscribe(chromaModeStore.$lastValidValue);
@@ -45,7 +45,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
 
   return (
-    <GridCell bgMode={bgMode} className={styles.cell}>
+    <GridCell bgColor="left" bgMode={bgMode} className={styles.cell}>
       <Text size="s" kind="secondary" className={styles.levelLabel}>
         {LABEL_LEVEL}
       </Text>

@@ -1,17 +1,17 @@
-import type { BgLightStart } from "@core/types";
+import type { BgRightStart } from "@core/types";
 
-export function isSingleDarkBg(bgLightStart: BgLightStart, levelsCount: number) {
-  return bgLightStart === levelsCount && levelsCount > 0;
+export function isSingleBgLeft(bgRightStart: BgRightStart, levelsCount: number) {
+  return bgRightStart === levelsCount && levelsCount > 0;
 }
 
-export function isSingleLightBg(bgLightStart: BgLightStart) {
-  return bgLightStart === 0;
+export function isSingleBgRight(bgRightStart: BgRightStart) {
+  return bgRightStart === 0;
 }
 
-export function getBgDarkValue<V>(isSingleLight: boolean, darkValue: V, lightValue: V): V {
-  return isSingleLight ? lightValue : darkValue;
+export function getBgValueLeft<V>(isSingleRight: boolean, leftValue: V, rightValue: V): V {
+  return isSingleRight ? rightValue : leftValue;
 }
 
-export function getBgLightValue<V>(isSingleDark: boolean, darkValue: V, lightValue: V): V {
-  return isSingleDark ? darkValue : lightValue;
+export function getBgValueRight<V>(isSingleLeft: boolean, leftValue: V, rightValue: V): V {
+  return isSingleLeft ? leftValue : rightValue;
 }

@@ -19,9 +19,9 @@
 
   padding: calc(var(--spacing) * 4);
 
-  &.dark {
+  &.left {
     position: relative;
-    grid-column-end: span max(1, var(--bg-light-started-at));
+    grid-column-end: span max(1, var(--bg-right-started-at));
     justify-content: flex-end;
   }
 
@@ -30,13 +30,13 @@
     justify-content: center;
 
     [bg-mode="dark"] & {
-      background-color: var(--bg-dark);
+      background-color: var(--bg-left);
     }
   }
 
-  &.light {
+  &.right {
     z-index: 1;
-    grid-column: calc(var(--bg-light-started-at) + 2) / -1;
+    grid-column: calc(var(--bg-right-started-at) + 2) / -1;
 
     [data-horizontally-scrolled] & {
       z-index: 0;
@@ -56,7 +56,7 @@
   align-items: center;
   justify-content: flex-end;
 
-  .light & {
+  .right & {
     flex-direction: row-reverse;
   }
 
@@ -132,8 +132,8 @@
   }
 
   &:focus-visible,
-  .light:hover &,
-  :is(.rowHeader, .dark):hover ~ .light & {
+  .right:hover &,
+  :is(.rowHeader, .left):hover ~ .right & {
     opacity: 1;
   }
 

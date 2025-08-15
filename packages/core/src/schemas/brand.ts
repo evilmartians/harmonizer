@@ -49,8 +49,8 @@ export const COLOR_SPACES = ["srgb", "p3"] as const;
 export const ColorSpace = createBrand<(typeof COLOR_SPACES)[number], "ColorSpace">;
 export type ColorSpace = Brand<typeof ColorSpace>;
 
-export const BgLightStart = createBrand<number, "BgLightStart">;
-export type BgLightStart = Brand<typeof BgLightStart>;
+export const BgRightStart = createBrand<number, "BgRightStart">;
+export type BgRightStart = Brand<typeof BgRightStart>;
 
 export const CONTRAST_MODELS = ["apca", "wcag"] as const;
 export const ContrastModel = createBrand<(typeof CONTRAST_MODELS)[number], "ContrastModel">;

@@ -16,21 +16,22 @@ import { Text } from "@core/components/Text/Text";
 import { EVIL_MARTIANS_URL, YOUTUBE_TUTORIAL_URL } from "@core/constants";
 import { $levelsCount } from "@core/stores/colors";
 import {
-  $bgColorDarkBgMode,
-  $bgColorLightBgMode,
+  $bgColorModeLeft,
+  $bgColorModeRight,
+  $bgColorSingleBgColor,
   $bgColorSingleBgMode,
   $bgColorSingleStore,
-  $bgLightStart,
-  $isSingleDarkBg,
-  $isSingleLightBg,
-  bgColorDarkStore,
-  bgColorLightStore,
+  $bgRightStart,
+  $isSingleBgLeft,
+  $isSingleBgRight,
+  bgColorLeftStore,
+  bgColorRightStore,
   directionModeStore,
   enableDualBg,
-  updateBgColorDark,
-  updateBgColorLight,
+  updateBgColorLeft,
+  updateBgColorRight,
   updateBgColorSingle,
-  updateBgLightStartByOffset,
+  updateBgRightStartByOffset,
 } from "@core/stores/settings";
 import {
   $isChangingBgBoundary,
@@ -79,10 +80,10 @@ const BgLabel = memo(function BgLabel({ bgLabelParts, isSingleBg }: BgLabelProps
 const BgColorInput = withValidation(withAutosize(Input));
 
 const RowHeaderCell = memo(function SpacerCell() {
-  const bgMode = useSubscribe($bgColorDarkBgMode);
+  const bgMode = useSubscribe($bgColorModeLeft);
 
   return (
-    <GridCell bgMode={bgMode} className={styles.rowHeader}>
+    <GridCell bgColor="left" bgMode={bgMode} className={styles.rowHeader}>
       <Link size="s" href={EVIL_MARTIANS_URL} target="_blank">
         Harmonizer
         <br />
@@ -101,16 +102,16 @@ const YoutubeLink = memo(function YoutubeLink() {
   );
 });
 
-const BgDarkSpan = memo(function BgDarkSpan() {
-  const bgColorDark = useSubscribe(bgColorDarkStore.$raw);
-  const bgMode = useSubscribe($bgColorDarkBgMode);
-  const bgLightStart = useSubscribe($bgLightStart);
-  const error = useSubscribe(bgColorDarkStore.$validationError);
+const BgSpanLeft = memo(function BgDarkSpan() {
+  const bgColorLeft = useSubscribe(bgColorLeftStore.$raw);
+  const bgMode = useSubscribe($bgColorModeLeft);
+  const bgRightStart = useSubscribe($bgRightStart);
+  const error = useSubscribe(bgColorLeftStore.$validationError);
   const { text: label, parts: bgLabelParts } = useBgLabel("dark");
 
   return (
-    <GridCell bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
-      {bgLightStart > 1 && <YoutubeLink />}
+    <GridCell bgColor="left" bgMode={bgMode} className={clsx(styles.bgSpan, styles.left)}>
+      {bgRightStart > 1 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} />
         <BgColorInput
@@ -118,17 +119,18 @@ const BgDarkSpan = memo(function BgDarkSpan() {
           size="m"
           label={label}
           placeholder="#000"
-          value={bgColorDark}
+          value={bgColorLeft}
           error={error}
-          onChange={(e) => updateBgColorDark(ColorString(e.target.value))}
+          onChange={(e) => updateBgColorLeft(ColorString(e.target.value))}
         />
       </div>
     </GridCell>
   );
 });
 
-const BgSingleSpan = memo(function BgSingleSpan() {
+const BgSpanSingle = memo(function BgSingleSpan() {
   const bgColorSingleStore = useSubscribe($bgColorSingleStore);
+  const singleBgColor = useSubscribe($bgColorSingleBgColor);
   const levelsCount = useSubscribe($levelsCount);
   const bgColor = useSubscribe(bgColorSingleStore.$raw);
   const bgMode = useSubscribe($bgColorSingleBgMode);
@@ -136,7 +138,11 @@ const BgSingleSpan = memo(function BgSingleSpan() {
   const { text: label, parts: bgLabelParts } = useBgLabel("single");
 
   return (
-    <GridCell bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
+    <GridCell
+      bgColor={singleBgColor}
+      bgMode={bgMode}
+      className={clsx(styles.bgSpan, styles.single)}
+    >
       {levelsCount > 2 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} isSingleBg />
@@ -165,11 +171,11 @@ const BgSingleSpan = memo(function BgSingleSpan() {
 });
 
 const DRAG_THRESHOLD = 0.75;
-const BgLightSpan = memo(function BgLightSpan() {
+const BgSpanRight = memo(function BgLightSpan() {
   const dragButtonRef = useRef<HTMLButtonElement | null>(null);
-  const bgColorLight = useSubscribe(bgColorLightStore.$raw);
-  const bgMode = useSubscribe($bgColorLightBgMode);
-  const error = useSubscribe(bgColorLightStore.$validationError);
+  const bgColorRight = useSubscribe(bgColorRightStore.$raw);
+  const bgMode = useSubscribe($bgColorModeRight);
+  const error = useSubscribe(bgColorRightStore.$validationError);
   const { text: label, parts: bgLabelParts } = useBgLabel("light");
 
   useEffect(() => {
@@ -185,14 +191,14 @@ const BgLightSpan = memo(function BgLightSpan() {
       element: dragButtonRef.current,
       snapWidth,
       threshold: DRAG_THRESHOLD,
-      onChange: updateBgLightStartByOffset,
+      onChange: updateBgRightStartByOffset,
       onStart: startChangingBgBoundary,
       onEnd: stopChangingBgBoundary,
     });
   }, []);
 
   return (
-    <GridCell bgMode={bgMode} className={clsx(styles.bgSpan, styles.light)}>
+    <GridCell bgColor="right" bgMode={bgMode} className={clsx(styles.bgSpan, styles.right)}>
       <div className={styles.dragContainer}>
         <Button
           className={styles.dragButton}
@@ -212,9 +218,9 @@ const BgLightSpan = memo(function BgLightSpan() {
           size="m"
           label={label}
           placeholder="#fff"
-          value={bgColorLight}
+          value={bgColorRight}
           error={error}
-          onChange={(e) => updateBgColorLight(ColorString(e.target.value))}
+          onChange={(e) => updateBgColorRight(ColorString(e.target.value))}
         />
       </div>
     </GridCell>
@@ -222,24 +228,24 @@ const BgLightSpan = memo(function BgLightSpan() {
 });
 
 export function EndSpacerCell() {
-  const bgMode = useSubscribe($bgColorLightBgMode);
+  const bgMode = useSubscribe($bgColorModeRight);
 
-  return <GridCell bgMode={bgMode} className={styles.endSpacerCell} />;
+  return <GridCell bgColor="right" bgMode={bgMode} className={styles.endSpacerCell} />;
 }
 
 export const GridRowBackground = memo(function GridRowBackground() {
-  const isSingleDarkBg = useSubscribe($isSingleDarkBg);
-  const isSingleLightBg = useSubscribe($isSingleLightBg);
-  const isSingleBg = isSingleDarkBg || isSingleLightBg;
-  const bgLightStart = useSubscribe($bgLightStart);
+  const isSingleBgLeft = useSubscribe($isSingleBgLeft);
+  const isSingleBgRight = useSubscribe($isSingleBgRight);
+  const isSingleBg = isSingleBgLeft || isSingleBgRight;
+  const bgRightStart = useSubscribe($bgRightStart);
   const isChangingBgBoundary = useSubscribe($isChangingBgBoundary);
 
   return (
     <>
       <RowHeaderCell />
-      {(!isSingleBg || (isChangingBgBoundary && bgLightStart !== 0)) && <BgDarkSpan />}
-      {isSingleBg && !isChangingBgBoundary && <BgSingleSpan />}
-      {(!isSingleBg || isChangingBgBoundary) && <BgLightSpan />}
+      {(!isSingleBg || (isChangingBgBoundary && bgRightStart !== 0)) && <BgSpanLeft />}
+      {isSingleBg && !isChangingBgBoundary && <BgSpanSingle />}
+      {(!isSingleBg || isChangingBgBoundary) && <BgSpanRight />}
       {isSingleBg && <EndSpacerCell />}
     </>
   );

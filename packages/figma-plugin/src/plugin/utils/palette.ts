@@ -3,10 +3,10 @@ import type { PaletteVariablesCollection } from "@plugin/types";
 import { getReferencedSolidPaint, getVariableColorName, isDocumentInP3 } from "@plugin/utils/color";
 
 import {
-  getBgDarkValue,
-  getBgLightValue,
-  isSingleDarkBg,
-  isSingleLightBg,
+  getBgValueLeft,
+  getBgValueRight,
+  isSingleBgLeft,
+  isSingleBgRight,
 } from "@core/stores/utils/bg";
 import { HueIndex, LevelIndex } from "@core/types";
 import type { ExportConfigWithColors } from "@core/types";
@@ -125,14 +125,14 @@ function createHueHeader(frame: FrameNode, config: ExportConfigWithColors, hueIn
 }
 
 function createColorCell(
-  groups: { dark: GroupNode; light: GroupNode },
+  groups: { left: GroupNode; right: GroupNode },
   config: ExportConfigWithColors,
   levelIndex: LevelIndex,
   hueIndex: HueIndex,
   paint: SolidPaint,
 ) {
   const node = figma.createRectangle();
-  const isDark = levelIndex < config.settings.bgLightStart;
+  const isBgLeft = levelIndex < config.settings.bgLightStart;
   const levelName = config.levels[levelIndex]?.name;
   const hueName = config.hues[hueIndex]?.name;
 
@@ -144,20 +144,20 @@ function createColorCell(
   node.x = PALETTE.PADDING + PALETTE.HUE_HEADER_WIDTH + PALETTE.CELL_WIDTH * levelIndex;
   node.y = PALETTE.PADDING + PALETTE.LEVEL_HEADER_HEIGHT + PALETTE.CELL_HEIGHT * hueIndex;
   node.fills = [paint];
-  (isDark ? groups.dark : groups.light).appendChild(node);
+  (isBgLeft ? groups.left : groups.right).appendChild(node);
 }
 
-function getBgColorDark(config: ExportConfigWithColors) {
-  return getBgDarkValue(
-    isSingleLightBg(config.settings.bgLightStart),
+function getBgColorLeft(config: ExportConfigWithColors) {
+  return getBgValueLeft(
+    isSingleBgRight(config.settings.bgLightStart),
     config.settings.bgColorDark,
     config.settings.bgColorLight,
   );
 }
 
-function getBgColorLight(config: ExportConfigWithColors) {
-  return getBgLightValue(
-    isSingleDarkBg(config.settings.bgLightStart, config.levels.length),
+function getBgColorRight(config: ExportConfigWithColors) {
+  return getBgValueRight(
+    isSingleBgLeft(config.settings.bgLightStart, config.levels.length),
     config.settings.bgColorDark,
     config.settings.bgColorLight,
   );
@@ -175,25 +175,25 @@ export async function drawPalette(
   const frame = createPaletteFrame(config, existingFrame ?? getViewportCenter());
 
   // Color samples
-  const darkBgWidth =
+  const BgWidthLeft =
     PALETTE.PADDING + PALETTE.HUE_HEADER_WIDTH + PALETTE.CELL_WIDTH * config.settings.bgLightStart;
-  const lightBgWidth = frame.width - darkBgWidth;
-  const darkBg = figma.createRectangle();
-  darkBg.resize(darkBgWidth, frame.height);
-  darkBg.fills = [getReferencedSolidPaint(getBgColorDark(config), undefined, isDocumentInP3())];
-  frame.appendChild(darkBg);
+  const BgWidthRight = frame.width - BgWidthLeft;
+  const bgLeft = figma.createRectangle();
+  bgLeft.resize(BgWidthLeft, frame.height);
+  bgLeft.fills = [getReferencedSolidPaint(getBgColorLeft(config), undefined, isDocumentInP3())];
+  frame.appendChild(bgLeft);
 
-  const lightBg = figma.createRectangle();
-  lightBg.resize(lightBgWidth, frame.height);
-  lightBg.x = darkBgWidth;
-  lightBg.fills = [getReferencedSolidPaint(getBgColorLight(config), undefined, isDocumentInP3())];
-  frame.appendChild(lightBg);
+  const bgRight = figma.createRectangle();
+  bgRight.resize(BgWidthRight, frame.height);
+  bgRight.x = BgWidthLeft;
+  bgRight.fills = [getReferencedSolidPaint(getBgColorRight(config), undefined, isDocumentInP3())];
+  frame.appendChild(bgRight);
 
-  const darkGroup = figma.group([darkBg], frame);
-  darkGroup.name = LABELS.MODE_DARK;
+  const groupLeft = figma.group([bgLeft], frame);
+  groupLeft.name = LABELS.MODE_DARK;
 
-  const lightGroup = figma.group([lightBg], frame);
-  lightGroup.name = LABELS.MODE_LIGHT;
+  const groupRight = figma.group([bgRight], frame);
+  groupRight.name = LABELS.MODE_LIGHT;
 
   const levelHeaderGroups = [];
   const hueHeaderGroups = [];
@@ -214,7 +214,7 @@ export async function drawPalette(
       }
 
       createColorCell(
-        { dark: darkGroup, light: lightGroup },
+        { left: groupLeft, right: groupRight },
         config,
         levelIndex,
         hueIndex,

@@ -1,7 +1,7 @@
 import * as v from "valibot";
 
 import {
-  BgLightStart,
+  BgRightStart,
   CHROMA_MODES,
   ChromaMode,
   COLOR_SPACES,
@@ -26,7 +26,7 @@ export const colorSpaceSchema = v.pipe(
 );
 export const parseColorSpace = (value: string) => v.parse(colorSpaceSchema, value);
 
-export const bgLightStartSchema = v.pipe(v.number(), v.transform(BgLightStart));
+export const bgRightStartSchema = v.pipe(v.number(), v.transform(BgRightStart));
 export const contrastModelSchema = v.pipe(
   v.string(),
   v.picklist(CONTRAST_MODELS),
