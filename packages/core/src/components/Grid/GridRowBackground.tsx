@@ -4,7 +4,6 @@ import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 import { upperFirst } from "es-toolkit";
 
-import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
 import { LPlus } from "@core/components/Icon/LPlus";
 import { LYoutube } from "@core/components/Icon/LYoutube";
@@ -110,7 +109,7 @@ const BgDarkSpan = memo(function BgDarkSpan() {
   const { text: label, parts: bgLabelParts } = useBgLabel("dark");
 
   return (
-    <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
+    <GridCell bgMode={bgMode} className={clsx(styles.bgSpan, styles.dark)}>
       {bgLightStart > 1 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} />
@@ -124,7 +123,7 @@ const BgDarkSpan = memo(function BgDarkSpan() {
           onChange={(e) => updateBgColorDark(ColorString(e.target.value))}
         />
       </div>
-    </BgMode>
+    </GridCell>
   );
 });
 
@@ -137,7 +136,7 @@ const BgSingleSpan = memo(function BgSingleSpan() {
   const { text: label, parts: bgLabelParts } = useBgLabel("single");
 
   return (
-    <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
+    <GridCell bgMode={bgMode} className={clsx(styles.bgSpan, styles.single)}>
       {levelsCount > 2 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} isSingleBg />
@@ -161,7 +160,7 @@ const BgSingleSpan = memo(function BgSingleSpan() {
           />
         )}
       </div>
-    </BgMode>
+    </GridCell>
   );
 });
 
@@ -193,7 +192,7 @@ const BgLightSpan = memo(function BgLightSpan() {
   }, []);
 
   return (
-    <BgMode bgMode={bgMode} className={clsx(styles.bgSpan, styles.light)}>
+    <GridCell bgMode={bgMode} className={clsx(styles.bgSpan, styles.light)}>
       <div className={styles.dragContainer}>
         <Button
           className={styles.dragButton}
@@ -218,7 +217,7 @@ const BgLightSpan = memo(function BgLightSpan() {
           onChange={(e) => updateBgColorLight(ColorString(e.target.value))}
         />
       </div>
-    </BgMode>
+    </GridCell>
   );
 });
 
