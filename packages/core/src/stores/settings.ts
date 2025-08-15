@@ -51,15 +51,15 @@ export const colorSpaceStore = validationStore(
 export const $isColorSpaceLocked = signal<boolean>(false);
 
 export const bgColorLeftStore = validationStore(
-  ColorString(defaultConfig.settings.bgColorDark),
+  ColorString(defaultConfig.settings.bgColorLeft),
   colorStringSchema,
 );
 export const bgColorRightStore = validationStore(
-  ColorString(defaultConfig.settings.bgColorLight),
+  ColorString(defaultConfig.settings.bgColorRight),
   colorStringSchema,
 );
 
-export const $bgRightStart = signal(BgRightStart(defaultConfig.settings.bgLightStart));
+export const $bgRightStart = signal(BgRightStart(defaultConfig.settings.bgRightStart));
 export const $isSingleBgLeft = signal((get) =>
   isSingleBgLeft(get($bgRightStart), get($levelsCount)),
 );

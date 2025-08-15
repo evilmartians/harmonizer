@@ -1,6 +1,7 @@
 import * as v from "valibot";
 
 import { formatValidationError, safeParse } from "@core/schemas";
+import { ensureNonNullable } from "@core/utils/assertions/ensureNonNullable";
 import { ValidationError } from "@core/utils/errors/ValidationError";
 
 import {
@@ -26,15 +27,41 @@ export const exportConfigSchema = v.pipe(
       v.object({ name: levelNameSchema, contrast: baseContrastSchema, chroma: levelChromaSchema }),
     ),
     hues: v.array(v.object({ name: hueNameSchema, angle: hueAngleSchema })),
-    settings: v.object({
-      contrastModel: contrastModelSchema,
-      directionMode: directionModeSchema,
-      chromaMode: chromaModeSchema,
-      bgLightStart: bgRightStartSchema,
-      bgColorLight: colorStringSchema,
-      bgColorDark: colorStringSchema,
-      colorSpace: colorSpaceSchema,
-    }),
+    settings: v.pipe(
+      v.object({
+        contrastModel: contrastModelSchema,
+        directionMode: directionModeSchema,
+        chromaMode: chromaModeSchema,
+        bgRightStart: v.optional(bgRightStartSchema),
+        bgColorRight: v.optional(colorStringSchema),
+        bgColorLeft: v.optional(colorStringSchema),
+        colorSpace: colorSpaceSchema,
+        // Migration for old properties
+        bgLightStart: v.optional(bgRightStartSchema),
+        bgColorDark: v.optional(colorStringSchema),
+        bgColorLight: v.optional(colorStringSchema),
+      }),
+      v.transform((parsed) => {
+        return {
+          contrastModel: parsed.contrastModel,
+          directionMode: parsed.directionMode,
+          chromaMode: parsed.chromaMode,
+          bgRightStart: ensureNonNullable(
+            parsed.bgRightStart ?? parsed.bgLightStart,
+            "At least one of properties must present in the config: 'bgRightStart' or 'bgLightStart'",
+          ),
+          bgColorRight: ensureNonNullable(
+            parsed.bgColorRight ?? parsed.bgColorLight,
+            "At least one of properties must present in the config: 'bgColorRight' or 'bgColorLight'",
+          ),
+          bgColorLeft: ensureNonNullable(
+            parsed.bgColorLeft ?? parsed.bgColorDark,
+            "At least one of properties must present in the config: 'bgColorLeft' or 'bgColorDark'",
+          ),
+          colorSpace: parsed.colorSpace,
+        };
+      }),
+    ),
   }),
   v.check(({ levels, settings }) => {
     return levels.every(
@@ -100,9 +127,9 @@ export function toCompactExportConfig(config: ExportConfig): CompactExportConfig
       config.settings.contrastModel,
       config.settings.directionMode,
       config.settings.chromaMode,
-      config.settings.bgColorLight,
-      config.settings.bgColorDark,
-      config.settings.bgLightStart,
+      config.settings.bgColorRight,
+      config.settings.bgColorLeft,
+      config.settings.bgRightStart,
       config.settings.colorSpace,
     ],
   ];
@@ -135,9 +162,9 @@ export function toExportConfig(compactConfig: CompactExportConfig): ExportConfig
       contrastModel,
       directionMode: compactConfig[2][1],
       chromaMode: compactConfig[2][2],
-      bgColorLight: compactConfig[2][3],
-      bgColorDark: compactConfig[2][4],
-      bgLightStart: compactConfig[2][5],
+      bgColorRight: compactConfig[2][3],
+      bgColorLeft: compactConfig[2][4],
+      bgRightStart: compactConfig[2][5],
       colorSpace: compactConfig[2][6],
     },
   };

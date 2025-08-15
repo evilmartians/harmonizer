@@ -132,7 +132,7 @@ function createColorCell(
   paint: SolidPaint,
 ) {
   const node = figma.createRectangle();
-  const isBgLeft = levelIndex < config.settings.bgLightStart;
+  const isBgLeft = levelIndex < config.settings.bgRightStart;
   const levelName = config.levels[levelIndex]?.name;
   const hueName = config.hues[hueIndex]?.name;
 
@@ -149,17 +149,17 @@ function createColorCell(
 
 function getBgColorLeft(config: ExportConfigWithColors) {
   return getBgValueLeft(
-    isSingleBgRight(config.settings.bgLightStart),
-    config.settings.bgColorDark,
-    config.settings.bgColorLight,
+    isSingleBgRight(config.settings.bgRightStart),
+    config.settings.bgColorLeft,
+    config.settings.bgColorRight,
   );
 }
 
 function getBgColorRight(config: ExportConfigWithColors) {
   return getBgValueRight(
-    isSingleBgLeft(config.settings.bgLightStart, config.levels.length),
-    config.settings.bgColorDark,
-    config.settings.bgColorLight,
+    isSingleBgLeft(config.settings.bgRightStart, config.levels.length),
+    config.settings.bgColorLeft,
+    config.settings.bgColorRight,
   );
 }
 
@@ -176,7 +176,7 @@ export async function drawPalette(
 
   // Color samples
   const BgWidthLeft =
-    PALETTE.PADDING + PALETTE.HUE_HEADER_WIDTH + PALETTE.CELL_WIDTH * config.settings.bgLightStart;
+    PALETTE.PADDING + PALETTE.HUE_HEADER_WIDTH + PALETTE.CELL_WIDTH * config.settings.bgRightStart;
   const BgWidthRight = frame.width - BgWidthLeft;
   const bgLeft = figma.createRectangle();
   bgLeft.resize(BgWidthLeft, frame.height);

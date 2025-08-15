@@ -23,9 +23,9 @@ export const defaultConfig = {
     directionMode: "fgToBg",
     chromaMode: "even",
     colorSpace: "p3",
-    bgColorLight: "#fff",
-    bgColorDark: "#000",
-    bgLightStart: 5,
+    bgColorLeft: "#000",
+    bgColorRight: "#fff",
+    bgRightStart: 5,
   },
 } as const;
 
