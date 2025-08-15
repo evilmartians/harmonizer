@@ -12,25 +12,25 @@
     "typecheck": "pnpm tsc --build"
   },
   "dependencies": {
-    "@spred/core": "catalog:",
-    "@spred/react": "catalog:",
+    "@spred/core": "^0.41.4",
+    "@spred/react": "^0.4.2",
     "apcach": "^0.6.4",
     "clsx": "^2.1.1",
     "culori": "^4.0.2",
     "es-toolkit": "^1.39.6",
     "fast-equals": "^5.2.2",
     "nanoid": "^5.1.5",
-    "react": "catalog:",
-    "react-dom": "catalog:",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "tailwindcss": "^4.1.11",
-    "typed-channel": "catalog:",
+    "typed-channel": "^0.9.5",
     "valibot": "^1.0.0"
   },
   "devDependencies": {
     "@types/culori": "^4.0.0",
     "@types/node": "^22.13.10",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "vite": "catalog:"
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "vite": "^7.1.2"
   }
 }
