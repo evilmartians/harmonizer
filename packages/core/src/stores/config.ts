@@ -60,9 +60,9 @@ export const $exportConfig = signal<ExportConfig>((get) => {
       contrastModel: get(contrastModelStore.$lastValidValue),
       directionMode: get(directionModeStore.$lastValidValue),
       chromaMode: get(chromaModeStore.$lastValidValue),
-      bgColorRight: get(bgColorRightStore.$lastValidValue),
-      bgColorLeft: get(bgColorLeftStore.$lastValidValue),
-      bgRightStart: get($bgRightStart),
+      bgColorLight: get(bgColorRightStore.$lastValidValue),
+      bgColorDark: get(bgColorLeftStore.$lastValidValue),
+      bgLightStart: get($bgRightStart),
       colorSpace: get(colorSpaceStore.$lastValidValue),
     },
   };
@@ -134,9 +134,9 @@ export function updateConfig(config: ExportConfig) {
     contrastModelStore.$raw.set(config.settings.contrastModel);
     directionModeStore.$raw.set(config.settings.directionMode);
     chromaModeStore.$raw.set(config.settings.chromaMode);
-    bgColorRightStore.$raw.set(config.settings.bgColorRight);
-    bgColorLeftStore.$raw.set(config.settings.bgColorLeft);
-    $bgRightStart.set(config.settings.bgRightStart);
+    bgColorRightStore.$raw.set(config.settings.bgColorLight);
+    bgColorLeftStore.$raw.set(config.settings.bgColorDark);
+    $bgRightStart.set(config.settings.bgLightStart);
     if (!isDifferentFromLockedColorSpace) {
       colorSpaceStore.$raw.set(config.settings.colorSpace);
     }

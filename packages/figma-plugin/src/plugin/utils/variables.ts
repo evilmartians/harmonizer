@@ -84,26 +84,26 @@ export async function upsertPaletteVariablesCollection(
 
 // upsertPaletteVariablesCollection({ config: ExportConfigWithColors }) {
 // if (canCreateVariableModes()) {
-//   const leftModeId = getDarkModeId(collection);
-//   const rightModeId = getLightModeId(collection);
+//   const darkModeId = getDarkModeId(collection);
+//   const lightModeId = getLightModeId(collection);
 //   variables[LABELS.BACKGROUND] = updateVariable(
 //     collection,
 //     variables,
-//     leftModeId,
+//     darkModeId,
 //     LABELS.BACKGROUND,
-//     config.settings.bgColorLeft,
+//     config.settings.bgColorDark,
 //   );
 //   variables[LABELS.BACKGROUND] = updateVariable(
 //     collection,
 //     variables,
-//     rightModeId,
+//     lightModeId,
 //     LABELS.BACKGROUND,
-//     config.settings.bgColorRight,
+//     config.settings.bgColorLight,
 //   );
 
 //   for (const [hueKey, hue] of config.hues.entries()) {
 //     for (const [levelKey, level] of config.levels.entries()) {
-//       const isDark = levelKey < config.settings.bgRightStart;
+//       const isDark = levelKey < config.settings.bgLightStart;
 //       const variableName = getVariableColorName(level.name, hue.name);
 //       const color = config.colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
 
@@ -111,7 +111,7 @@ export async function upsertPaletteVariablesCollection(
 //       variables[variableName] = updateVariable(
 //         collection,
 //         variables,
-//         isDark ? leftModeId : rightModeId,
+//         isDark ? darkModeId : lightModeId,
 //         variableName,
 //         color,
 //       );
