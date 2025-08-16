@@ -17,24 +17,24 @@
   },
   "dependencies": {
     "@harmonizer/core": "workspace:^",
-    "@spred/react": "catalog:",
-    "react": "catalog:",
-    "react-dom": "catalog:",
-    "typed-channel": "catalog:"
+    "@spred/react": "^0.4.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "typed-channel": "^0.9.5"
   },
   "devDependencies": {
-    "@figma/plugin-typings": "^1.108.0",
-    "@tailwindcss/vite": "catalog:",
-    "@types/react": "catalog:",
-    "@types/react-dom": "catalog:",
-    "@vitejs/plugin-react": "catalog:",
-    "browserslist": "catalog:",
-    "browserslist-to-esbuild": "catalog:",
-    "lightningcss": "catalog:",
-    "vite": "catalog:",
-    "vite-css-modules": "catalog:",
+    "@figma/plugin-typings": "^1.117.0",
+    "@tailwindcss/vite": "^4.1.12",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "browserslist": "^4.25.2",
+    "browserslist-to-esbuild": "^2.1.1",
+    "lightningcss": "^1.30.1",
+    "vite": "^7.1.2",
+    "vite-css-modules": "^1.10.0",
     "vite-plugin-generate-file": "^0.3.1",
     "vite-plugin-singlefile": "^2.2.0",
-    "vite-tsconfig-paths": "catalog:"
+    "vite-tsconfig-paths": "^5.1.4"
   }
 }
