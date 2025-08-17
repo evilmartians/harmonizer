@@ -38,6 +38,7 @@ export type LevelData = {
   name: LevelName;
   contrast: LevelContrast;
   chroma: LevelChroma;
+  chromaCap?: LevelChroma | null; // Before we hadn't this field, so for back compatibility it's optional
   tintColor: ColorLevelTintData;
 };
 export type Level = { id: LevelId } & LevelData;

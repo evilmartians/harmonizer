@@ -66,13 +66,6 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
       </div>
 
       <div className={clsx(styles.container, styles.bottom)}>
-        <Select
-          size="xs"
-          value={chromaModeValue}
-          options={CHROMA_OPTIONS}
-          onChange={(e) => updateChromaMode(parseChromaMode(e.target.value))}
-          title={LABEL_CHROMA_MODE}
-        />
         <div className={clsx(styles.container, styles.colorModePicker)}>
           <Button
             size="xs"
@@ -86,6 +79,13 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
             colors
           </Text>
         </div>
+        <Select
+          size="xs"
+          value={chromaModeValue}
+          options={CHROMA_OPTIONS}
+          onChange={(e) => updateChromaMode(parseChromaMode(e.target.value))}
+          title={LABEL_CHROMA_MODE}
+        />
       </div>
     </GridCell>
   );

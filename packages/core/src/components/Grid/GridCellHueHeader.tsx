@@ -120,6 +120,7 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
       kind="ghost"
       label={LABEL_HUE}
       placeholder={PLACEHOLDER_HUE}
+      inputMode="numeric"
       min={HUE_MIN_ANGLE}
       max={HUE_MAX_ANGLE}
       value={angle}

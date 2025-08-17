@@ -93,6 +93,14 @@ export const $areHuesValid = signal((get) => {
   });
 });
 
+export const $isAnyChromaCapSet = signal((get) => {
+  return get($levelIds).some((levelId) => {
+    const level = getLevel(levelId);
+
+    return get(level.chromaCap.$raw) !== null;
+  });
+});
+
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 
 workerChannel.on("generated:color", handleGeneratedColor);
@@ -152,10 +160,15 @@ function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColo
   return {
     directionMode: directionModeStore.$lastValidValue.value,
     contrastModel: contrastModelStore.$lastValidValue.value,
-    levels: $levelIds.value.map((id) => ({
-      id,
-      contrast: getLevel(id).contrast.$lastValidValue.value,
-    })),
+    levels: $levelIds.value.map((id) => {
+      const level = getLevel(id);
+
+      return {
+        id,
+        contrast: level.contrast.$lastValidValue.value,
+        chromaCap: level.chromaCap.$lastValidValue.value,
+      };
+    }),
     recalcOnlyLevels,
     hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).angle.$lastValidValue.value })),
     bgColorRight: bgColorRightStore.$lastValidValue.value,
@@ -249,9 +262,19 @@ export function updateLevelContrast(id: LevelId, contrast: string | number) {
   requestColorsRecalculation([id]);
 }
 
-export function updateLevelChroma(id: LevelId, chroma: string | number) {
-  getLevel(id).chroma.$raw.set(chroma);
+export function updateLevelchromaCap(id: LevelId, chroma: string | number) {
+  getLevel(id).chromaCap.$raw.set(chroma);
   requestColorsRecalculation([id]);
+}
+
+export function resetAllChroma() {
+  batch(() => {
+    for (const levelId of $levelIds.value) {
+      const level = getLevel(levelId);
+      level.chromaCap.$raw.set(null);
+    }
+  });
+  requestColorsRecalculation();
 }
 
 // Hue methods

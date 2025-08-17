@@ -68,12 +68,16 @@ export const getLevelContrastModel = (contrastModel: ContrastModel) => {
   }
 };
 
+export const CHROMA_MIN = 0;
+export const CHROMA_MAX = 0.4;
+
 export const levelChromaSchema = v.pipe(
   numberOrStringInputSchema,
-  v.minValue(0),
-  v.maxValue(0.38),
+  v.minValue(CHROMA_MIN),
+  v.maxValue(CHROMA_MAX),
   v.transform(LevelChroma),
 );
+export const levelChromaCapSchema = v.union([v.null(), levelChromaSchema]);
 export const hueIdSchema = v.pipe(v.string(), v.transform(HueId));
 export const hueIndexSchema = v.pipe(v.number(), v.transform(HueIndex));
 export const hueNameSchema = v.pipe(

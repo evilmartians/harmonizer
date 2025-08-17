@@ -1,9 +1,15 @@
 .cell {
   composes: gridColumnHeader from "./Grid.module.css";
   align-items: flex-start;
+  justify-content: flex-start;
 }
 
-.button {
+.addLevel {
   inline-size: 100%;
-  padding: calc(var(--spacing) * 4.5) calc(var(--spacing) * 2);
+  margin-block-start: calc(var(--spacing) * 9);
+  padding: calc(var(--spacing) * 4.75) calc(var(--spacing) * 2);
+}
+
+.removeCaps {
+  margin-block-start: calc(var(--spacing) * 6.75);
 }

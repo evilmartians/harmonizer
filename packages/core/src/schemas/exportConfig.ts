@@ -3,12 +3,14 @@ import * as v from "valibot";
 import { formatValidationError, safeParse } from "@core/schemas";
 import { ValidationError } from "@core/utils/errors/ValidationError";
 
+import { LevelChroma } from "./brand";
 import {
   baseContrastSchema,
   colorStringSchema,
   getLevelContrastModel,
   hueAngleSchema,
   hueNameSchema,
+  levelChromaCapSchema,
   levelChromaSchema,
   levelNameSchema,
 } from "./color";
@@ -23,7 +25,12 @@ import {
 export const exportConfigSchema = v.pipe(
   v.object({
     levels: v.array(
-      v.object({ name: levelNameSchema, contrast: baseContrastSchema, chroma: levelChromaSchema }),
+      v.object({
+        name: levelNameSchema,
+        contrast: baseContrastSchema,
+        chroma: levelChromaSchema,
+        chromaCap: v.optional(levelChromaCapSchema),
+      }),
     ),
     hues: v.array(v.object({ name: hueNameSchema, angle: hueAngleSchema })),
     settings: v.object({
@@ -64,8 +71,8 @@ export function parseExportConfig(configString: string | Record<string, unknown>
 export const compactExportConfigSchema = v.pipe(
   v.tuple([
     v.pipe(
-      v.array(v.union([v.string(), v.number()])),
-      v.description("Level name, contrast and chroma as a plain array"),
+      v.array(v.union([v.string(), v.number(), v.null()])),
+      v.description("Level name, contrast and chroma cap as a plain array"),
     ),
     v.pipe(
       v.array(v.union([v.string(), v.number()])),
@@ -94,7 +101,11 @@ export function parseCompactExportConfig(value: unknown): CompactExportConfig {
 
 export function toCompactExportConfig(config: ExportConfig): CompactExportConfig {
   return [
-    config.levels.flatMap((level) => [level.name, level.contrast, level.chroma]),
+    config.levels.flatMap<string | number | null>((level) => [
+      level.name,
+      level.contrast,
+      level.chromaCap ?? null,
+    ]),
     config.hues.flatMap((hue) => [hue.name, hue.angle]),
     [
       config.settings.contrastModel,
@@ -116,9 +127,9 @@ export function toExportConfig(compactConfig: CompactExportConfig): ExportConfig
   for (let i = 0; i < compactConfig[0].length; i += 3) {
     const name = v.parse(levelNameSchema, compactConfig[0][i]);
     const contrast = v.parse(getLevelContrastModel(contrastModel), compactConfig[0][i + 1]);
-    const chroma = v.parse(levelChromaSchema, compactConfig[0][i + 2]);
+    const chromaCap = v.parse(levelChromaCapSchema, compactConfig[0][i + 2]);
 
-    levels.push({ name: name, contrast, chroma });
+    levels.push({ name, contrast, chroma: LevelChroma(0), chromaCap });
   }
 
   for (let i = 0; i < compactConfig[1].length; i += 2) {

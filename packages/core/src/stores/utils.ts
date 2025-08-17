@@ -13,6 +13,7 @@ import {
   hueAngleSchema,
   hueNameSchema,
   levelChromaSchema,
+  levelChromaCapSchema,
   levelNameSchema,
 } from "@core/schemas/color";
 import {
@@ -231,6 +232,7 @@ export type LevelStore = {
   name: ValidationStore<string, LevelName>;
   contrast: ValidationStore<string | number, LevelContrast>;
   chroma: ValidationStore<string | number, LevelChroma>;
+  chromaCap: ValidationStore<string | number | null, LevelChroma | null>;
   $tintColor: WritableSignal<ColorLevelTintData>;
 };
 
@@ -248,6 +250,7 @@ export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
   const name = validationStore(data.name, $levelNameUniqueSchema);
   const contrast = validationStore(data.contrast, $levelConstrastSchema);
   const chroma = validationStore(data.chroma, levelChromaSchema);
+  const chromaCap = validationStore(data.chromaCap ?? null, levelChromaCapSchema);
   const $tintColor = signal(data.tintColor ?? FALLBACK_LEVEL_TINT_COLOR);
 
   return {
@@ -255,6 +258,7 @@ export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
     name,
     contrast,
     chroma,
+    chromaCap,
     $tintColor,
   };
 }

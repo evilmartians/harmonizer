@@ -1,6 +1,6 @@
 .cell {
   composes: gridTopLeftCell from "./Grid.module.css";
-  gap: calc(var(--spacing) * 4.5);
+  gap: calc(var(--spacing) * 3.75);
   align-items: flex-start;
   justify-content: flex-start;
 }
@@ -18,7 +18,6 @@
 
 .bottom {
   translate: 0 -1px;
-  margin-top: auto;
 }
 
 .contrastModelButton {

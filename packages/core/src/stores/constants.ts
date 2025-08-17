@@ -23,7 +23,7 @@ export const FALLBACK_CELL_COLOR = {
 export const FALLBACK_LEVEL_DATA = {
   name: "",
   contrast: 50,
-  chroma: 0.2,
+  chroma: 0,
   tintColor: FALLBACK_LEVEL_TINT_COLOR,
 } as LevelData;
 

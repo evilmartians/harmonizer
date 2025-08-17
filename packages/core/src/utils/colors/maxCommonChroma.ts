@@ -9,16 +9,16 @@ export type MaxCommonChromaOptions = Omit<ColorCalculationOptions, "hueAngle" | 
   hueAngles: HueAngle[];
 };
 
-export function maxCommonChroma({
-  hueAngles,
-  ...restOptions
-}: MaxCommonChromaOptions): LevelChroma {
+export function maxCommonChroma(
+  { hueAngles, ...restOptions }: MaxCommonChromaOptions,
+  chromaCap?: number,
+): LevelChroma {
   let maxCommonChroma = 100;
 
   for (const hueAngle of hueAngles) {
     const apcachColor = calculateApcach({
       ...restOptions,
-      chroma: maxChroma(),
+      chroma: maxChroma(chromaCap),
       hueAngle: hueAngle,
     });
 
