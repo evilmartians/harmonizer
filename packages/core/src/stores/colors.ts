@@ -6,16 +6,11 @@ import {
   BgRightStart,
   type ColorCellData,
   type ColorIdentifier,
-  type HueAngle,
   type HueId,
   HueIndex,
-  type HueName,
   type LchColor,
-  type LevelChroma,
-  type LevelContrast,
   type LevelId,
   LevelIndex,
-  type LevelName,
 } from "@core/types";
 import { assertUnreachable } from "@core/utils/assertions/assertUnreachable";
 import { invariant } from "@core/utils/assertions/invariant";
@@ -245,16 +240,16 @@ export function removeLevel(levelId: LevelId) {
   });
 }
 
-export function updateLevelName(id: LevelId, name: LevelName) {
+export function updateLevelName(id: LevelId, name: string) {
   getLevel(id).name.$raw.set(name);
 }
 
-export function updateLevelContrast(id: LevelId, contrast: LevelContrast) {
+export function updateLevelContrast(id: LevelId, contrast: string | number) {
   getLevel(id).contrast.$raw.set(contrast);
   requestColorsRecalculation([id]);
 }
 
-export function updateLevelChroma(id: LevelId, chroma: LevelChroma) {
+export function updateLevelChroma(id: LevelId, chroma: string | number) {
   getLevel(id).chroma.$raw.set(chroma);
   requestColorsRecalculation([id]);
 }
@@ -285,7 +280,7 @@ export function removeHue(hueId: HueId) {
   requestColorsRecalculation();
 }
 
-export function updateHueName(id: HueId, name: HueName) {
+export function updateHueName(id: HueId, name: string) {
   getHue(id).name.$raw.set(name);
 }
 
@@ -296,7 +291,7 @@ export function resetHueName(id: HueId) {
   hue.name.$raw.set(closestColorName);
 }
 
-export function updateHueAngle(id: HueId, angle: HueAngle) {
+export function updateHueAngle(id: HueId, angle: string | number) {
   getHue(id).angle.$raw.set(angle);
   requestColorsRecalculation();
 }

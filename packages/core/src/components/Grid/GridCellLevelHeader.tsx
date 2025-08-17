@@ -29,7 +29,7 @@ import {
   contrastModelStore,
   directionModeStore,
 } from "@core/stores/settings";
-import { LevelChroma, LevelContrast, LevelName, type LevelId } from "@core/types";
+import type { LevelId } from "@core/types";
 import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
 
@@ -101,7 +101,7 @@ const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
       value={name}
       title={HINT_LEVEL}
       error={error}
-      onChange={(e) => updateLevelName(levelId, LevelName(e.target.value))}
+      onChange={(e) => updateLevelName(levelId, e.target.value)}
     />
   );
 });
@@ -148,13 +148,7 @@ const ContrastInput = memo(function ContrastInput({
       value={contrast}
       title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
       error={error}
-      onChange={(e) => {
-        let newValue = Number.parseFloat(e.target.value);
-        if (Number.isNaN(newValue)) {
-          newValue = 0;
-        }
-        updateLevelContrast(levelId, LevelContrast(newValue));
-      }}
+      onChange={(e) => updateLevelContrast(levelId, e.target.value)}
     />
   );
 });
@@ -183,13 +177,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       title={HINT_CHROMA}
       error={error}
       disabled
-      onChange={(e) => {
-        let newValue = Number.parseFloat(e.target.value);
-        if (Number.isNaN(newValue)) {
-          newValue = 0;
-        }
-        updateLevelChroma(levelId, LevelChroma(newValue));
-      }}
+      onChange={(e) => updateLevelChroma(levelId, e.target.value)}
     />
   );
 });

@@ -14,7 +14,7 @@ export type StoreReactivePaths<T extends AnyStore> = {
     ? Key extends SignalKey<infer SK>
       ? SK
       : never
-    : T[Key] extends ValidationStore<unknown>
+    : T[Key] extends ValidationStore
       ? Key
       : never;
 }[keyof T] &
@@ -23,7 +23,7 @@ export type StoreReactivePaths<T extends AnyStore> = {
 export type StoreReactiveValue<T extends AnyStore, Key extends keyof T> =
   T[Key] extends Signal<infer Value>
     ? Value
-    : T[Key] extends ValidationStore<infer Value>
+    : T[Key] extends ValidationStore<unknown, infer Value>
       ? Value
       : never;
 

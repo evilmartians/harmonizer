@@ -1,6 +1,6 @@
 import type { ValidationStore } from "./validationStore";
 
-export function isValidationStore(store: unknown): store is ValidationStore<unknown> {
+export function isValidationStore(store: unknown): store is ValidationStore {
   if (typeof store !== "object" || store === null) {
     return false;
   }
