@@ -1,6 +1,7 @@
 import {
   type ChangeEvent,
   type ComponentType,
+  type FocusEvent,
   useCallback,
   useEffect,
   useMemo,
@@ -16,9 +17,30 @@ type WithNumericIncrementControlsProps = {
   step?: number;
 };
 
-function formatWithFractional(value: string, fractionalLength: number): string {
+function formatWithFractional(value: string | number, fractionalLength: number): string {
   const number = Number(value);
-  return Number.isNaN(number) || fractionalLength === 0 ? value : number.toFixed(fractionalLength);
+  return (Number.isNaN(number) ? 0 : number).toFixed(fractionalLength);
+}
+
+const NUMERIC_REGEX = /^\d*$/;
+const DECIMAL_REGEX = /^\d*(?:[.,])?\d*$/;
+
+function replaceDecimalDelimiter(value: string): string {
+  return value.replace(",", ".");
+}
+
+function isInputValid(inputMode: string | undefined, value: string) {
+  switch (inputMode) {
+    case "numeric": {
+      return NUMERIC_REGEX.test(value);
+    }
+    case "decimal": {
+      return DECIMAL_REGEX.test(value);
+    }
+    default: {
+      return true;
+    }
+  }
 }
 
 export function withNumericIncrementControls<P extends InputProps>(
@@ -28,12 +50,11 @@ export function withNumericIncrementControls<P extends InputProps>(
     step = 1,
     value,
     ...props
-  }: P & WithNumericIncrementControlsProps) => {
-    const { onChange } = props;
+  }: WithNumericIncrementControlsProps & P) => {
+    const { onChange, onBlur } = props;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const labelRef = useRef<HTMLLabelElement>(null);
     const fractionalLength = -Math.log10(step);
-    const formattedValue = formatWithFractional(String(value), fractionalLength);
     const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
     const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), []);
 
@@ -66,7 +87,7 @@ export function withNumericIncrementControls<P extends InputProps>(
           return;
         }
 
-        input.value = Number(newValue.toFixed(fractionalLength)).toString();
+        input.value = formatWithFractional(newValue, fractionalLength);
 
         if (onChange) {
           const nativeEvent = new Event("change", { bubbles: true });
@@ -132,15 +153,47 @@ export function withNumericIncrementControls<P extends InputProps>(
       return () => label.removeEventListener("wheel", handleWheel);
     }, [step, updateValue]);
 
+    const handleOnChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const input = inputRef.current;
+
+        if (!input) return;
+
+        if (isInputValid(input.inputMode, input.value)) {
+          e.target.value = replaceDecimalDelimiter(e.target.value);
+          onChange?.(e);
+        }
+      },
+      [onChange],
+    );
+
+    const handleBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        const input = inputRef.current;
+
+        if (!input?.value) return;
+
+        const formattedValue = formatWithFractional(input.value, fractionalLength);
+        if (input.value !== formattedValue) {
+          input.value = formattedValue;
+        }
+
+        onBlur?.(e);
+      },
+      [onBlur],
+    );
+
     return (
       <WrappedComponent
         {...(props as P)}
         role="spinbutton"
         step={step}
-        aria-valuenow={formattedValue}
+        aria-valuenow={value}
         aria-valuemin={props.min}
         aria-valuemax={props.max}
-        value={formattedValue}
+        value={value}
+        onChange={handleOnChange}
+        onBlur={handleBlur}
         ref={refCallback}
         labelRef={labelRefCallback}
       />

@@ -30,5 +30,5 @@ export function withValidation<P extends InputProps>(WrappedComponent: Component
     );
   };
 
-  return ValidationInput as React.ComponentType<P & ValidationProps>;
+  return ValidationInput as ComponentType<P & ValidationProps>;
 }
