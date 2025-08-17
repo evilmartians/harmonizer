@@ -8,10 +8,14 @@ import {
   useRef,
 } from "react";
 
+import clsx from "clsx";
+
 import { isNumber } from "@core/utils/number/isNumber";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 
 import type { InputProps } from "../Input";
+
+import styles from "./enhancers.module.css";
 
 type WithNumericIncrementControlsProps = {
   step?: number;
@@ -196,6 +200,7 @@ export function withNumericIncrementControls<P extends InputProps>(
         onBlur={handleBlur}
         ref={refCallback}
         labelRef={labelRefCallback}
+        className={clsx(props.className, styles.numericIncrement)}
       />
     );
   };

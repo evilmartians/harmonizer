@@ -11,6 +11,7 @@ export type InputSize = "m" | "xl";
 export type InputProps = Omit<ComponentPropsWithRef<"input">, "size"> & {
   size: InputSize;
   label?: string;
+  showLabel?: "always" | "hover";
   labelRef?: RefObject<HTMLLabelElement>;
   kind?: InputKind;
   fitContent?: boolean;
@@ -29,6 +30,7 @@ export function Input({
   kind = "bordered",
   size = "m",
   label,
+  showLabel,
   labelRef,
   title,
   value,
@@ -49,17 +51,21 @@ export function Input({
       htmlFor={id}
     >
       {label && (
-        <span id={labelId} className={clsx(styles.label, size === "m" && "sr-only")}>
+        <span
+          id={labelId}
+          className={clsx(styles.label, !showLabel && "sr-only")}
+          data-visible={restProps.disabled && showLabel !== "always" ? undefined : showLabel}
+        >
           {label}
         </span>
       )}
       <div className={styles.inputContainer}>
         {slotStart && <div className={clsx(styles.slot, styles.slotStart)}>{slotStart}</div>}
         <input
-          {...(label ? { "aria-labelledby": labelId } : undefined)}
+          {...(label && !restProps["aria-label"] ? { "aria-labelledby": labelId } : undefined)}
           {...restProps}
           value={value}
-          className={styles.input}
+          className={clsx(styles.input, showLabel && styles.fullWidth)}
           id={id}
         />
         {slotEnd && <div className={clsx(styles.slot, styles.slotEnd)}>{slotEnd}</div>}
