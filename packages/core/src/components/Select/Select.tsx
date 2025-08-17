@@ -55,7 +55,7 @@ export function Select({
           </option>
         ))}
       </select>
-      <div {...api.getControlProps()}>
+      <div {...api.getControlProps()} className={styles.control}>
         <Button {...mergeProps(api.getTriggerProps(), { size, kind, className: styles.button })}>
           {api.valueAsString || placeholder}
           <MTriangleDown className={clsx(styles.icon, styles[`size_${size}`])} />
