@@ -60,6 +60,52 @@ function createChangeEvent(input: HTMLInputElement) {
   } as unknown as ChangeEvent<HTMLInputElement>;
 }
 
+function calculateNewInputValue(
+  input: HTMLInputElement,
+  options: {
+    step: number;
+    baseValue?: number | string;
+    precision?: number;
+    loopControls?: boolean;
+  },
+  modifiers:
+    | { multiplier: number; direction: -1 | 1; min?: number; max?: number }
+    | { value: number },
+) {
+  if ("value" in modifiers) {
+    return modifiers.value;
+  }
+
+  const currentValue = Number.parseFloat(
+    input.value || (options.baseValue ? String(options.baseValue) : ""),
+  );
+
+  if (Number.isNaN(currentValue)) {
+    return;
+  }
+
+  const updatedValue = currentValue + options.step * modifiers.multiplier * modifiers.direction;
+
+  if (isNumber(modifiers.min) && isNumber(modifiers.max) && options.loopControls) {
+    if (updatedValue < modifiers.min) {
+      return modifiers.max;
+    }
+    if (updatedValue > modifiers.max) {
+      return modifiers.min;
+    }
+  }
+
+  if (isNumber(modifiers.min) && updatedValue < modifiers.min) {
+    return Math.max(updatedValue, modifiers.min);
+  }
+
+  if (isNumber(modifiers.max) && updatedValue > modifiers.max) {
+    return Math.min(updatedValue, modifiers.max);
+  }
+
+  return updatedValue;
+}
+
 export function withNumericIncrementControls<P extends InputProps>(
   WrappedComponent: ComponentType<P>,
 ) {
@@ -84,40 +130,16 @@ export function withNumericIncrementControls<P extends InputProps>(
           | { multiplier: number; direction: -1 | 1; min?: number; max?: number }
           | { value: number },
       ) => {
-        const newValue = (() => {
-          if ("value" in options) {
-            return options.value;
-          }
-
-          const currentValue = Number.parseFloat(
-            input.value || (baseValue ? String(baseValue) : ""),
-          );
-
-          if (Number.isNaN(currentValue)) {
-            return;
-          }
-
-          const updatedValue = currentValue + step * options.multiplier * options.direction;
-
-          if (isNumber(options.min) && isNumber(options.max) && loopControls) {
-            if (updatedValue < options.min) {
-              return options.max;
-            }
-            if (updatedValue > options.max) {
-              return options.min;
-            }
-          }
-
-          if (isNumber(options.min) && updatedValue < options.min) {
-            return Math.max(updatedValue, options.min);
-          }
-
-          if (isNumber(options.max) && updatedValue > options.max) {
-            return Math.min(updatedValue, options.max);
-          }
-
-          return updatedValue;
-        })();
+        const newValue = calculateNewInputValue(
+          input,
+          {
+            step,
+            baseValue,
+            precision,
+            loopControls,
+          },
+          options,
+        );
 
         if (newValue === undefined) {
           return;
