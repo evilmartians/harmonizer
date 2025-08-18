@@ -41,25 +41,23 @@ function formatWithPrecision(value: string | number, precision: number): string 
   return (Number.isNaN(number) ? 0 : number).toFixed(precision);
 }
 
-const NUMERIC_REGEX = /^\d*$/;
-const DECIMAL_REGEX = /^\d*(?:[.,])?\d*$/;
+function isNumericInputMode(inputMode: string) {
+  return inputMode === "numeric" || inputMode === "decimal";
+}
 
 function replaceDecimalDelimiter(value: string): string {
   return value.replace(",", ".");
 }
 
-function isInputValid(inputMode: string | undefined, value: string) {
-  switch (inputMode) {
-    case "numeric": {
-      return NUMERIC_REGEX.test(value);
-    }
-    case "decimal": {
-      return DECIMAL_REGEX.test(value);
-    }
-    default: {
-      return true;
-    }
-  }
+function createChangeEvent(input: HTMLInputElement) {
+  const nativeEvent = new Event("change", { bubbles: true });
+  Object.defineProperty(nativeEvent, "target", { value: input });
+
+  return {
+    ...nativeEvent,
+    target: input,
+    currentTarget: input,
+  } as unknown as ChangeEvent<HTMLInputElement>;
 }
 
 export function withNumericIncrementControls<P extends InputProps>(
@@ -126,17 +124,7 @@ export function withNumericIncrementControls<P extends InputProps>(
         }
 
         input.value = formatWithPrecision(newValue, precision);
-
-        if (onChange) {
-          const nativeEvent = new Event("change", { bubbles: true });
-          Object.defineProperty(nativeEvent, "target", { value: input });
-
-          onChange({
-            ...nativeEvent,
-            target: input,
-            currentTarget: input,
-          } as unknown as ChangeEvent<HTMLInputElement>);
-        }
+        onChange?.(createChangeEvent(input));
       },
       [onChange, precision, loopControls, baseValue, step],
     );
@@ -201,10 +189,11 @@ export function withNumericIncrementControls<P extends InputProps>(
 
         if (!input) return;
 
-        if (isInputValid(input.inputMode, input.value)) {
+        if (props.inputMode && isNumericInputMode(props.inputMode)) {
           e.target.value = replaceDecimalDelimiter(e.target.value);
-          onChange?.(e);
         }
+
+        onChange?.(e);
       },
       [onChange],
     );
@@ -218,11 +207,12 @@ export function withNumericIncrementControls<P extends InputProps>(
         const formattedValue = formatWithPrecision(input.value, precision);
         if (input.value !== formattedValue) {
           input.value = formattedValue;
+          onChange?.(createChangeEvent(input));
         }
 
         onBlur?.(e);
       },
-      [onBlur],
+      [onBlur, onChange],
     );
 
     return (
