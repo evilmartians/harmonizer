@@ -74,17 +74,13 @@ export function withNumericIncrementControls<P extends InputProps>(
     const updateValue = useCallback(
       (
         input: HTMLInputElement,
-        {
-          multiplier,
-          direction,
-          value,
-        }:
-          | { multiplier: number; direction: -1 | 1; value?: undefined }
-          | { value: number; multiplier?: undefined; direction?: undefined },
+        options:
+          | { multiplier: number; direction: -1 | 1; min?: number; max?: number }
+          | { value: number },
       ) => {
         const newValue = (() => {
-          if (value !== undefined) {
-            return value;
+          if ("value" in options) {
+            return options.value;
           }
 
           const currentValue = Number.parseFloat(
@@ -95,7 +91,17 @@ export function withNumericIncrementControls<P extends InputProps>(
             return;
           }
 
-          return Number(currentValue + step * multiplier * direction);
+          const updatedValue = currentValue + step * options.multiplier * options.direction;
+
+          if (isNumber(options.min) && updatedValue < options.min) {
+            return Math.max(updatedValue, options.min);
+          }
+
+          if (isNumber(options.max) && updatedValue > options.max) {
+            return Math.min(updatedValue, options.max);
+          }
+
+          return updatedValue;
         })();
 
         if (newValue === undefined) {
@@ -132,6 +138,8 @@ export function withNumericIncrementControls<P extends InputProps>(
           updateValue(input, {
             multiplier: e.shiftKey || isPageUpOrDown ? 10 : 1,
             direction: e.key === "ArrowUp" || e.key === "PageUp" ? 1 : -1,
+            min: isNumber(props.min) ? props.min : undefined,
+            max: isNumber(props.max) ? props.max : undefined,
           });
         } else if (e.key === "Home" && isNumber(props.min)) {
           e.preventDefault();
@@ -160,6 +168,8 @@ export function withNumericIncrementControls<P extends InputProps>(
         updateValue(input, {
           multiplier: e.shiftKey ? 10 : 1,
           direction: e[e.shiftKey ? "deltaX" : "deltaY"] < 0 ? 1 : -1,
+          min: isNumber(props.min) ? props.min : undefined,
+          max: isNumber(props.max) ? props.max : undefined,
         });
       };
 
