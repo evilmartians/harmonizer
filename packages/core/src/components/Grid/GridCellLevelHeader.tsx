@@ -161,6 +161,7 @@ const ContrastInput = memo(function ContrastInput({
   );
 });
 
+const CHROMA_INPUT_PRECISION = 3;
 const LevelChromaInput = withValidation(withNumericIncrementControls(Input));
 const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) {
   const level = getLevel(levelId);
@@ -169,7 +170,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
   const error = useSubscribe(level.chromaCap.$validationError);
   const $chromaPlaceholder = useSignal((get) => {
     return get(chromaModeStore.$lastValidValue) === "even"
-      ? get(level.chroma.$lastValidValue).toFixed(2)
+      ? get(level.chroma.$lastValidValue).toFixed(CHROMA_INPUT_PRECISION)
       : "max";
   });
   const $chromaLabel = useSignal((get) => {
@@ -195,8 +196,9 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       }
       min={CHROMA_MIN}
       max={CHROMA_MAX}
+      precision={CHROMA_INPUT_PRECISION}
       baseValue={chroma}
-      step={0.01}
+      step={0.001}
       label={chromaLabel}
       aria-label={LABEL_CHROMA}
       showLabel={chromaCap ? "always" : "hover"}

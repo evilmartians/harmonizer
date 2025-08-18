@@ -22,12 +22,16 @@ type WithNumericIncrementControlsProps = {
    * The base value for arrows & wheel value manipulations. Will be used only when value isn't defined.
    */
   baseValue?: number | string;
+  /**
+   * How many decimal places to display.
+   */
+  precision?: number;
   step?: number;
 };
 
-function formatWithFractional(value: string | number, fractionalLength: number): string {
+function formatWithPrecision(value: string | number, precision: number): string {
   const number = Number(value);
-  return (Number.isNaN(number) ? 0 : number).toFixed(fractionalLength);
+  return (Number.isNaN(number) ? 0 : number).toFixed(precision);
 }
 
 const NUMERIC_REGEX = /^\d*$/;
@@ -58,12 +62,12 @@ export function withNumericIncrementControls<P extends InputProps>(
     step = 1,
     value,
     baseValue,
+    precision = -Math.log10(step),
     ...props
   }: WithNumericIncrementControlsProps & P) => {
     const { onChange, onBlur } = props;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const labelRef = useRef<HTMLLabelElement>(null);
-    const fractionalLength = -Math.log10(step);
     const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
     const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), []);
 
@@ -98,7 +102,7 @@ export function withNumericIncrementControls<P extends InputProps>(
           return;
         }
 
-        input.value = formatWithFractional(newValue, fractionalLength);
+        input.value = formatWithPrecision(newValue, precision);
 
         if (onChange) {
           const nativeEvent = new Event("change", { bubbles: true });
@@ -111,7 +115,7 @@ export function withNumericIncrementControls<P extends InputProps>(
           } as unknown as ChangeEvent<HTMLInputElement>);
         }
       },
-      [onChange, fractionalLength],
+      [onChange, precision],
     );
 
     useEffect(() => {
@@ -184,7 +188,7 @@ export function withNumericIncrementControls<P extends InputProps>(
 
         if (!input?.value) return;
 
-        const formattedValue = formatWithFractional(input.value, fractionalLength);
+        const formattedValue = formatWithPrecision(input.value, precision);
         if (input.value !== formattedValue) {
           input.value = formattedValue;
         }
