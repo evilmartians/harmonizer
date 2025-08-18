@@ -1,7 +1,7 @@
 .container {
   display: inline-flex;
   flex-direction: column;
-  gap: calc(var(--spacing) / 2);
+  gap: var(--spacing);
 
   inline-size: 100%;
   max-inline-size: 100%;
@@ -60,20 +60,28 @@
 .label {
   cursor: text;
 
+  font-family: var(--font-sans);
   font-size: var(--text-ui-s);
-  font-weight: 500;
+  font-weight: var(--input-label-fw, 500);
   line-height: var(--text-ui-s--line-height);
+  color: var(--input-label-color, var(--input-color));
   text-align: center;
+
+  .kind_ghost & {
+    visibility: hidden;
+  }
+
+  .kind_ghost:focus-within &[data-visible],
+  .kind_ghost:hover &[data-visible],
+  .kind_ghost &[data-visible="always"] {
+    visibility: visible;
+  }
 }
 
 .inputContainer {
   display: flex;
   gap: var(--spacing);
   align-items: center;
-
-  :where(.size_xl) & {
-    inline-size: 100%;
-  }
 }
 
 .slot {
@@ -84,13 +92,19 @@
 .input {
   inline-size: 100%;
   max-inline-size: var(--input-max-inline-size, 100%);
+
   font-size: max(var(--min-font-size), var(--text-m));
+  font-weight: 500;
   line-height: max(var(--min-font-size), 1.25rem);
 
   :where(.size_xl) & {
     inline-size: 100%;
     font-size: var(--text-ui-l);
     line-height: var(--text-ui-l--line-height);
+  }
+
+  &.fullWidth {
+    inline-size: 100%;
     text-align: center;
   }
 

@@ -4,13 +4,13 @@ import * as v from "valibot";
 
 import { toSignal } from "@core/utils/spred/toSignal";
 
-export type ValidationStore<Output> = {
-  $raw: WritableSignal<Output>;
+export type ValidationStore<Input = unknown, Output = unknown> = {
+  $raw: WritableSignal<Input>;
   $lastValidValue: Signal<Output>;
   $validationError: Signal<string | null>;
 };
 
-export function isValidationStore(store: unknown): store is ValidationStore<unknown> {
+export function isValidationStore(store: unknown): store is ValidationStore {
   if (typeof store !== "object" || store === null) {
     return false;
   }
@@ -20,14 +20,16 @@ export function isValidationStore(store: unknown): store is ValidationStore<unkn
 
 export function validationStore<Input, Output>(
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  initialValue: Exclude<Output, Function>,
+  initialValue: Exclude<Input, Function>,
   validationSchema:
     | BaseSchema<Input, Output, BaseIssue<unknown>>
     | Signal<BaseSchema<Input, Output, BaseIssue<unknown>>>,
-): ValidationStore<Output> {
+): ValidationStore<Input, Output> {
   const $raw = signal(initialValue);
-  const $lastValidValue = signal(initialValue);
   const $validationSchema = toSignal(validationSchema);
+  const initialValueValue = v.safeParse($validationSchema.value, initialValue);
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  const $lastValidValue = signal(initialValueValue.success as Exclude<Output, Function>);
   const $validationError = signal<string | null>(null);
 
   effect((get) => {

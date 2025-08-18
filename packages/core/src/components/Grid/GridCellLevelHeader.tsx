@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from "react";
+import { type CSSProperties, memo, useCallback, useRef } from "react";
 
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
@@ -11,12 +11,18 @@ import { withNumericIncrementControls } from "@core/components/Input/enhancers/w
 import { withValidation } from "@core/components/Input/enhancers/withValidation";
 import { Input } from "@core/components/Input/Input";
 import { useAppEvent } from "@core/hooks/useFocusRefOnEvent";
-import { CONTRAST_MIN, getContrastMaxLevel, getContrastStep } from "@core/schemas/color";
+import {
+  CHROMA_MAX,
+  CHROMA_MIN,
+  CONTRAST_MIN,
+  getContrastMaxLevel,
+  getContrastStep,
+} from "@core/schemas/color";
 import {
   $levelIds,
   getLevel,
   insertLevel,
-  updateLevelChroma,
+  updateLevelchromaCap,
   updateLevelContrast,
   updateLevelName,
 } from "@core/stores/colors";
@@ -29,7 +35,7 @@ import {
   contrastModelStore,
   directionModeStore,
 } from "@core/stores/settings";
-import { LevelChroma, LevelContrast, LevelName, type LevelId } from "@core/types";
+import type { LevelId } from "@core/types";
 import { formatOklch } from "@core/utils/colors/formatOklch";
 import type { AnyProps } from "@core/utils/react/types";
 
@@ -41,10 +47,11 @@ import styles from "./GridCellLevelHeader.module.css";
 type LevelComponentProps<P extends AnyProps = {}> = { levelId: LevelId } & P;
 
 const LABEL_NAME = "Level name";
+const LABEL_CHROMA_CAP_SET = "Set cap";
+const LABEL_CHROMA_CAP_DEFINED = "Cap";
 const LABEL_CHROMA = "Level chroma";
 const PLACEHOLDER_LEVEL = "Level";
 const PLACEHOLDER_CONTRAST = "CR";
-const PLACEHOLDER_CHROMA = "Chroma";
 
 const HINT_LEVEL = "Color level name";
 const HINT_FG_TO_BG_CONTRAST = "Contrast of text color to the background";
@@ -101,7 +108,7 @@ const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
       value={name}
       title={HINT_LEVEL}
       error={error}
-      onChange={(e) => updateLevelName(levelId, LevelName(e.target.value))}
+      onChange={(e) => updateLevelName(levelId, e.target.value)}
     />
   );
 });
@@ -125,7 +132,6 @@ const ContrastInput = memo(function ContrastInput({
   return (
     <LevelContrastInput
       id={`level-contrast-${levelId}`}
-      className={styles.inputPrimary}
       size="xl"
       kind="bordered"
       customization={
@@ -140,35 +146,40 @@ const ContrastInput = memo(function ContrastInput({
               "--input-bg-color": tintColor.css,
             }
       }
+      inputMode={contrastModel === "apca" ? "numeric" : "decimal"}
       min={CONTRAST_MIN}
       max={getContrastMaxLevel(contrastModel)}
       step={getContrastStep(contrastModel)}
       label={contrastModel.toUpperCase()}
+      showLabel="always"
       placeholder={PLACEHOLDER_CONTRAST}
       value={contrast}
       title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
       error={error}
-      onChange={(e) => {
-        let newValue = Number.parseFloat(e.target.value);
-        if (Number.isNaN(newValue)) {
-          newValue = 0;
-        }
-        updateLevelContrast(levelId, LevelContrast(newValue));
-      }}
+      onChange={(e) => updateLevelContrast(levelId, e.target.value)}
     />
   );
 });
 
-const LevelChromaInput = withValidation(withNumericIncrementControls(withAutosize(Input)));
+const CHROMA_INPUT_PRECISION = 3;
+const LevelChromaInput = withValidation(withNumericIncrementControls(Input));
 const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) {
   const level = getLevel(levelId);
-  const $chroma = useSignal((get) => {
+  const chroma = useSubscribe(level.chroma.$raw);
+  const chromaCap = useSubscribe(level.chromaCap.$raw);
+  const error = useSubscribe(level.chromaCap.$validationError);
+  const $chromaPlaceholder = useSignal((get) => {
     return get(chromaModeStore.$lastValidValue) === "even"
-      ? get(level.$tintColor).referencedC.toFixed(2)
+      ? get(level.chroma.$lastValidValue).toFixed(CHROMA_INPUT_PRECISION)
       : "max";
   });
-  const chroma = useSubscribe($chroma);
-  const error = useSubscribe(level.chroma.$validationError);
+  const $chromaLabel = useSignal((get) => {
+    const chromaCap = get(level.chromaCap.$raw);
+
+    return chromaCap ? LABEL_CHROMA_CAP_DEFINED : LABEL_CHROMA_CAP_SET;
+  });
+  const chromaLabel = useSubscribe($chromaLabel);
+  const chromaPlaceholder = useSubscribe($chromaPlaceholder);
 
   return (
     <LevelChromaInput
@@ -176,20 +187,26 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       className={styles.inputSecondary}
       size="m"
       kind="ghost"
-      label={LABEL_CHROMA}
-      placeholder={PLACEHOLDER_CHROMA}
       inputMode="decimal"
-      value={chroma}
+      style={
+        {
+          "--input-label-color": "var(--color-secondary)",
+          "--input-label-fw": 400,
+        } as CSSProperties
+      }
+      min={CHROMA_MIN}
+      max={CHROMA_MAX}
+      precision={CHROMA_INPUT_PRECISION}
+      baseValue={chroma}
+      step={0.001}
+      label={chromaLabel}
+      aria-label={LABEL_CHROMA}
+      showLabel={chromaCap ? "always" : "hover"}
+      placeholder={chromaPlaceholder}
+      value={chromaCap ?? ""}
       title={HINT_CHROMA}
       error={error}
-      disabled
-      onChange={(e) => {
-        let newValue = Number.parseFloat(e.target.value);
-        if (Number.isNaN(newValue)) {
-          newValue = 0;
-        }
-        updateLevelChroma(levelId, LevelChroma(newValue));
-      }}
+      onChange={(e) => updateLevelchromaCap(levelId, e.target.value)}
     />
   );
 });

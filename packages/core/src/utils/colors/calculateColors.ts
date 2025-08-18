@@ -22,7 +22,7 @@ import { getBgMode } from "./getBgMode";
 import { maxCommonChroma } from "./maxCommonChroma";
 
 export type GenerateColorsPayload = {
-  levels: { id: LevelId; contrast: LevelContrast }[];
+  levels: { id: LevelId; contrast: LevelContrast; chromaCap: LevelChroma | null }[];
   recalcOnlyLevels: LevelId[] | undefined;
   hues: { id: HueId; angle: HueAngle }[];
   bgColorLeft: ColorString;
@@ -81,14 +81,18 @@ export function calculateColors(
       contrastModel,
     } as const;
 
+    const chromaCap = level.chromaCap ?? undefined;
     const chroma =
       chromaMode === "even"
-        ? maxCommonChroma({
-            ...commonApcacheOptions,
-            contrastLevel: level.contrast,
-            hueAngles: hues.map((hue) => hue.angle),
-          })
-        : maxChroma();
+        ? maxCommonChroma(
+            {
+              ...commonApcacheOptions,
+              contrastLevel: level.contrast,
+              hueAngles: hues.map((hue) => hue.angle),
+            },
+            chromaCap,
+          )
+        : maxChroma(chromaCap);
 
     // Calculate hue tint based only on the 0 index level
     if (levelIndex === 0) {
@@ -120,7 +124,6 @@ export function calculateColors(
             contrastLevel: MIN_LEVEL_TINT_CR,
             chroma: LevelChroma(0),
           }),
-          referencedC: LevelChroma(0),
         },
         cells: {},
       });
@@ -140,14 +143,14 @@ export function calculateColors(
         ...commonApcacheOptions,
         hueAngle: hue.angle,
         contrastLevel: level.contrast,
-        chroma,
+        chroma: chroma,
       });
 
       cells[hue.id] = cellColor;
 
       // Calculate level tint based only on the first hue row
       if (hueIndex === 0) {
-        tint = { ...cellColor, referencedC: cellColor.c };
+        tint = cellColor;
 
         if (tint.cr < MIN_LEVEL_TINT_CR) {
           tint = {
@@ -155,9 +158,8 @@ export function calculateColors(
               ...commonApcacheOptions,
               hueAngle: hue.angle,
               contrastLevel: MIN_LEVEL_TINT_CR,
-              chroma,
+              chroma: chroma,
             }),
-            referencedC: cellColor.c,
           };
         }
       }

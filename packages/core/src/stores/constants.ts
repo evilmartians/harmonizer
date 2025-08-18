@@ -12,7 +12,6 @@ export const FALLBACK_HUE_TINT_COLOR = FALLBACK_COLOR_DATA;
 
 export const FALLBACK_LEVEL_TINT_COLOR = {
   ...FALLBACK_COLOR_DATA,
-  referencedC: 0,
 } as ColorLevelTintData;
 
 export const FALLBACK_CELL_COLOR = {
@@ -23,7 +22,7 @@ export const FALLBACK_CELL_COLOR = {
 export const FALLBACK_LEVEL_DATA = {
   name: "",
   contrast: 50,
-  chroma: 0.2,
+  chroma: 0,
   tintColor: FALLBACK_LEVEL_TINT_COLOR,
 } as LevelData;
 

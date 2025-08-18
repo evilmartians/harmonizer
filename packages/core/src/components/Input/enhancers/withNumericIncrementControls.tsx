@@ -1,24 +1,58 @@
 import {
   type ChangeEvent,
   type ComponentType,
+  type FocusEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef,
 } from "react";
 
+import clsx from "clsx";
+
 import { isNumber } from "@core/utils/number/isNumber";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 
 import type { InputProps } from "../Input";
 
+import styles from "./enhancers.module.css";
+
 type WithNumericIncrementControlsProps = {
+  /**
+   * The base value for arrows & wheel value manipulations. Will be used only when value isn't defined.
+   */
+  baseValue?: number | string;
+  /**
+   * How many decimal places to display.
+   */
+  precision?: number;
   step?: number;
 };
 
-function formatWithFractional(value: string, fractionalLength: number): string {
+function formatWithPrecision(value: string | number, precision: number): string {
   const number = Number(value);
-  return Number.isNaN(number) || fractionalLength === 0 ? value : number.toFixed(fractionalLength);
+  return (Number.isNaN(number) ? 0 : number).toFixed(precision);
+}
+
+const NUMERIC_REGEX = /^\d*$/;
+const DECIMAL_REGEX = /^\d*(?:[.,])?\d*$/;
+
+function replaceDecimalDelimiter(value: string): string {
+  return value.replace(",", ".");
+}
+
+function isInputValid(inputMode: string | undefined, value: string) {
+  switch (inputMode) {
+    case "numeric": {
+      return NUMERIC_REGEX.test(value);
+    }
+    case "decimal": {
+      return DECIMAL_REGEX.test(value);
+    }
+    default: {
+      return true;
+    }
+  }
 }
 
 export function withNumericIncrementControls<P extends InputProps>(
@@ -27,13 +61,13 @@ export function withNumericIncrementControls<P extends InputProps>(
   const NumberKeyboardInput = ({
     step = 1,
     value,
+    baseValue,
+    precision = -Math.log10(step),
     ...props
-  }: P & WithNumericIncrementControlsProps) => {
-    const { onChange } = props;
+  }: WithNumericIncrementControlsProps & P) => {
+    const { onChange, onBlur } = props;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const labelRef = useRef<HTMLLabelElement>(null);
-    const fractionalLength = -Math.log10(step);
-    const formattedValue = formatWithFractional(String(value), fractionalLength);
     const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
     const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), []);
 
@@ -53,7 +87,9 @@ export function withNumericIncrementControls<P extends InputProps>(
             return value;
           }
 
-          const currentValue = Number.parseFloat(input.value);
+          const currentValue = Number.parseFloat(
+            input.value || (baseValue ? String(baseValue) : ""),
+          );
 
           if (Number.isNaN(currentValue)) {
             return;
@@ -66,7 +102,7 @@ export function withNumericIncrementControls<P extends InputProps>(
           return;
         }
 
-        input.value = Number(newValue.toFixed(fractionalLength)).toString();
+        input.value = formatWithPrecision(newValue, precision);
 
         if (onChange) {
           const nativeEvent = new Event("change", { bubbles: true });
@@ -79,7 +115,7 @@ export function withNumericIncrementControls<P extends InputProps>(
           } as unknown as ChangeEvent<HTMLInputElement>);
         }
       },
-      [onChange, fractionalLength],
+      [onChange, precision],
     );
 
     useEffect(() => {
@@ -132,17 +168,50 @@ export function withNumericIncrementControls<P extends InputProps>(
       return () => label.removeEventListener("wheel", handleWheel);
     }, [step, updateValue]);
 
+    const handleOnChange = useCallback(
+      (e: ChangeEvent<HTMLInputElement>) => {
+        const input = inputRef.current;
+
+        if (!input) return;
+
+        if (isInputValid(input.inputMode, input.value)) {
+          e.target.value = replaceDecimalDelimiter(e.target.value);
+          onChange?.(e);
+        }
+      },
+      [onChange],
+    );
+
+    const handleBlur = useCallback(
+      (e: FocusEvent<HTMLInputElement>) => {
+        const input = inputRef.current;
+
+        if (!input?.value) return;
+
+        const formattedValue = formatWithPrecision(input.value, precision);
+        if (input.value !== formattedValue) {
+          input.value = formattedValue;
+        }
+
+        onBlur?.(e);
+      },
+      [onBlur],
+    );
+
     return (
       <WrappedComponent
         {...(props as P)}
         role="spinbutton"
         step={step}
-        aria-valuenow={formattedValue}
+        aria-valuenow={value}
         aria-valuemin={props.min}
         aria-valuemax={props.max}
-        value={formattedValue}
+        value={value}
+        onChange={handleOnChange}
+        onBlur={handleBlur}
         ref={refCallback}
         labelRef={labelRefCallback}
+        className={clsx(props.className, styles.numericIncrement)}
       />
     );
   };

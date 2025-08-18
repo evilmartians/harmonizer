@@ -13,6 +13,7 @@ import {
   hueAngleSchema,
   hueNameSchema,
   levelChromaSchema,
+  levelChromaCapSchema,
   levelNameSchema,
 } from "@core/schemas/color";
 import {
@@ -208,7 +209,7 @@ export function cleanupColors<Id extends AnyId>(
 export function getNameValidationSchemaSignal<
   Id extends AnyId,
   Name extends string,
-  Item extends { id: Id; name: ValidationStore<Name> },
+  Item extends { id: Id; name: ValidationStore<string, Name> },
 >(id: Id, nameSchema: BaseSchema<string, Name, BaseIssue<unknown>>, store: IndexedStore<Item>) {
   return signal((get) =>
     v.pipe(
@@ -228,9 +229,10 @@ export function getNameValidationSchemaSignal<
 
 export type LevelStore = {
   id: LevelId;
-  name: ValidationStore<LevelName>;
-  contrast: ValidationStore<LevelContrast>;
-  chroma: ValidationStore<LevelChroma>;
+  name: ValidationStore<string, LevelName>;
+  contrast: ValidationStore<string | number, LevelContrast>;
+  chroma: ValidationStore<string | number, LevelChroma>;
+  chromaCap: ValidationStore<string | number | null, LevelChroma | null>;
   $tintColor: WritableSignal<ColorLevelTintData>;
 };
 
@@ -248,6 +250,7 @@ export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
   const name = validationStore(data.name, $levelNameUniqueSchema);
   const contrast = validationStore(data.contrast, $levelConstrastSchema);
   const chroma = validationStore(data.chroma, levelChromaSchema);
+  const chromaCap = validationStore(data.chromaCap ?? null, levelChromaCapSchema);
   const $tintColor = signal(data.tintColor ?? FALLBACK_LEVEL_TINT_COLOR);
 
   return {
@@ -255,14 +258,15 @@ export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
     name,
     contrast,
     chroma,
+    chromaCap,
     $tintColor,
   };
 }
 
 export type HueStore = {
   id: HueId;
-  name: ValidationStore<HueName>;
-  angle: ValidationStore<HueAngle>;
+  name: ValidationStore<string, HueName>;
+  angle: ValidationStore<string | number, HueAngle>;
   $tintColor: WritableSignal<ColorHueTintData>;
   $closestColorName: Signal<HueName>;
 };

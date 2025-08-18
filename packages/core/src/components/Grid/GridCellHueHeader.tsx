@@ -18,7 +18,7 @@ import {
   updateHueName,
 } from "@core/stores/colors";
 import { $bgColorModeLeft } from "@core/stores/settings";
-import { HueAngle, HueName, type HueId } from "@core/types";
+import type { HueId } from "@core/types";
 import type { AnyProps } from "@core/utils/react/types";
 
 import { DATA_ATTR_CELL_HUE_ID } from "./constants";
@@ -101,7 +101,7 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
           />
         )
       }
-      onChange={(e) => updateHueName(hueId, HueName(e.target.value))}
+      onChange={(e) => updateHueName(hueId, e.target.value)}
     />
   );
 });
@@ -120,14 +120,13 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
       kind="ghost"
       label={LABEL_HUE}
       placeholder={PLACEHOLDER_HUE}
+      inputMode="numeric"
       min={HUE_MIN_ANGLE}
       max={HUE_MAX_ANGLE}
       value={angle}
       title={HINT_DEGREE}
       error={error}
-      onChange={(e) =>
-        updateHueAngle(hueId, HueAngle(e.target.value ? Number.parseFloat(e.target.value) : 0))
-      }
+      onChange={(e) => updateHueAngle(hueId, e.target.value)}
     />
   );
 });

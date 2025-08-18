@@ -6,16 +6,11 @@ import {
   BgRightStart,
   type ColorCellData,
   type ColorIdentifier,
-  type HueAngle,
   type HueId,
   HueIndex,
-  type HueName,
   type LchColor,
-  type LevelChroma,
-  type LevelContrast,
   type LevelId,
   LevelIndex,
-  type LevelName,
 } from "@core/types";
 import { assertUnreachable } from "@core/utils/assertions/assertUnreachable";
 import { invariant } from "@core/utils/assertions/invariant";
@@ -98,6 +93,14 @@ export const $areHuesValid = signal((get) => {
   });
 });
 
+export const $isAnyChromaCapSet = signal((get) => {
+  return get($levelIds).some((levelId) => {
+    const level = getLevel(levelId);
+
+    return get(level.chromaCap.$raw) !== null;
+  });
+});
+
 const colorsMap = new Map<ColorIdentifier, WritableSignal<ColorCellData>>();
 
 workerChannel.on("generated:color", handleGeneratedColor);
@@ -126,6 +129,7 @@ function handleGeneratedColor(payload: GeneratedColorPayload) {
 
         levelStore.$tintColor.set(payload.tint);
         for (const [hueId, color] of objectEntries(payload.cells)) {
+          levelStore.chroma.$raw.set(color.c);
           upsertColor(payload.levelId, hueId, color);
         }
       });
@@ -157,10 +161,15 @@ function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColo
   return {
     directionMode: directionModeStore.$lastValidValue.value,
     contrastModel: contrastModelStore.$lastValidValue.value,
-    levels: $levelIds.value.map((id) => ({
-      id,
-      contrast: getLevel(id).contrast.$lastValidValue.value,
-    })),
+    levels: $levelIds.value.map((id) => {
+      const level = getLevel(id);
+
+      return {
+        id,
+        contrast: level.contrast.$lastValidValue.value,
+        chromaCap: level.chromaCap.$lastValidValue.value,
+      };
+    }),
     recalcOnlyLevels,
     hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).angle.$lastValidValue.value })),
     bgColorRight: bgColorRightStore.$lastValidValue.value,
@@ -245,18 +254,28 @@ export function removeLevel(levelId: LevelId) {
   });
 }
 
-export function updateLevelName(id: LevelId, name: LevelName) {
+export function updateLevelName(id: LevelId, name: string) {
   getLevel(id).name.$raw.set(name);
 }
 
-export function updateLevelContrast(id: LevelId, contrast: LevelContrast) {
+export function updateLevelContrast(id: LevelId, contrast: string | number) {
   getLevel(id).contrast.$raw.set(contrast);
   requestColorsRecalculation([id]);
 }
 
-export function updateLevelChroma(id: LevelId, chroma: LevelChroma) {
-  getLevel(id).chroma.$raw.set(chroma);
+export function updateLevelchromaCap(id: LevelId, chroma: string | number) {
+  getLevel(id).chromaCap.$raw.set(chroma);
   requestColorsRecalculation([id]);
+}
+
+export function resetAllChroma() {
+  batch(() => {
+    for (const levelId of $levelIds.value) {
+      const level = getLevel(levelId);
+      level.chromaCap.$raw.set(null);
+    }
+  });
+  requestColorsRecalculation();
 }
 
 // Hue methods
@@ -285,7 +304,7 @@ export function removeHue(hueId: HueId) {
   requestColorsRecalculation();
 }
 
-export function updateHueName(id: HueId, name: HueName) {
+export function updateHueName(id: HueId, name: string) {
   getHue(id).name.$raw.set(name);
 }
 
@@ -296,7 +315,7 @@ export function resetHueName(id: HueId) {
   hue.name.$raw.set(closestColorName);
 }
 
-export function updateHueAngle(id: HueId, angle: HueAngle) {
+export function updateHueAngle(id: HueId, angle: string | number) {
   getHue(id).angle.$raw.set(angle);
   requestColorsRecalculation();
 }
