@@ -123,6 +123,7 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
       inputMode="numeric"
       min={HUE_MIN_ANGLE}
       max={HUE_MAX_ANGLE}
+      loopControls
       value={angle}
       title={HINT_DEGREE}
       error={error}

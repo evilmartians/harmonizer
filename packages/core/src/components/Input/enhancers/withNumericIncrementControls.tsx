@@ -26,7 +26,14 @@ type WithNumericIncrementControlsProps = {
    * How many decimal places to display.
    */
   precision?: number;
+  /**
+   * The step value for incrementing/decrementing the input value.
+   */
   step?: number;
+  /**
+   * Whether to loop the value when reaching the min/max bounds.
+   */
+  loopControls?: boolean;
 };
 
 function formatWithPrecision(value: string | number, precision: number): string {
@@ -63,6 +70,7 @@ export function withNumericIncrementControls<P extends InputProps>(
     value,
     baseValue,
     precision = -Math.log10(step),
+    loopControls,
     ...props
   }: WithNumericIncrementControlsProps & P) => {
     const { onChange, onBlur } = props;
@@ -93,6 +101,15 @@ export function withNumericIncrementControls<P extends InputProps>(
 
           const updatedValue = currentValue + step * options.multiplier * options.direction;
 
+          if (isNumber(options.min) && isNumber(options.max) && loopControls) {
+            if (updatedValue < options.min) {
+              return options.max;
+            }
+            if (updatedValue > options.max) {
+              return options.min;
+            }
+          }
+
           if (isNumber(options.min) && updatedValue < options.min) {
             return Math.max(updatedValue, options.min);
           }
@@ -121,7 +138,7 @@ export function withNumericIncrementControls<P extends InputProps>(
           } as unknown as ChangeEvent<HTMLInputElement>);
         }
       },
-      [onChange, precision],
+      [onChange, precision, loopControls, baseValue, step],
     );
 
     useEffect(() => {
