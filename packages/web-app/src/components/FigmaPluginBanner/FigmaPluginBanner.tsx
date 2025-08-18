@@ -14,7 +14,7 @@ export const $isBannerClosed = persistedSignal("harmonizer:figma-plugin-banner-c
 
 export function FigmaPluginBanner() {
   return (
-    <BgMode bgMode="dark" className={styles.container}>
+    <BgMode bgColor={null} bgMode="dark" className={styles.container}>
       <div className={styles.innerContainer}>
         <Link
           className={styles.link}

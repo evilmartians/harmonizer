@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useSubscribe } from "@spred/react";
 
 import { BgMode } from "@core/components/BgMode/BgMode";
-import { $bgColorLightBgMode } from "@core/stores/settings";
+import { $bgColorModeRight } from "@core/stores/settings";
 
 import styles from "./FloatingActions.module.css";
 
@@ -12,10 +12,10 @@ export type FloatingActionsProps = {
 };
 
 export function FloatingActions({ children }: FloatingActionsProps) {
-  const bgMode = useSubscribe($bgColorLightBgMode);
+  const bgMode = useSubscribe($bgColorModeRight);
 
   return (
-    <BgMode bgMode={bgMode} className={styles.container}>
+    <BgMode bgColor={null} bgMode={bgMode} className={styles.container}>
       {children}
     </BgMode>
   );

@@ -14,6 +14,12 @@ export function List<E extends ElementType>({ as, className, ...restProps }: Lis
   const Component: ElementType = as ?? "ul";
 
   return (
-    <BgMode as={Component} bgMode="dark" className={clsx(styles.list, className)} {...restProps} />
+    <BgMode
+      as={Component}
+      bgColor={null}
+      bgMode="dark"
+      className={clsx(styles.list, className)}
+      {...restProps}
+    />
   );
 }

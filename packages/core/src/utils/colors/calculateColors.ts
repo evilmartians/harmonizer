@@ -25,9 +25,9 @@ export type GenerateColorsPayload = {
   levels: { id: LevelId; contrast: LevelContrast }[];
   recalcOnlyLevels: LevelId[] | undefined;
   hues: { id: HueId; angle: HueAngle }[];
-  bgColorLight: ColorString;
-  bgColorDark: ColorString;
-  bgLightStart: number;
+  bgColorLeft: ColorString;
+  bgColorRight: ColorString;
+  bgRightStart: number;
   chromaMode: ChromaMode;
   colorSpace: ColorSpace;
   directionMode: DirectionMode;
@@ -57,9 +57,9 @@ export function calculateColors(
     levels,
     recalcOnlyLevels,
     hues,
-    bgColorLight,
-    bgColorDark,
-    bgLightStart,
+    bgColorRight,
+    bgColorLeft,
+    bgRightStart,
     chromaMode,
     colorSpace,
     directionMode,
@@ -68,9 +68,9 @@ export function calculateColors(
   onGeneratedColor: (payload: GeneratedColorPayload) => void,
 ) {
   for (const [levelIndex, level] of levels.entries()) {
-    const isBgDark = bgLightStart > levelIndex;
-    const toColor = isBgDark ? bgColorDark : bgColorLight;
-    const bgMode = isBgDark ? getBgMode(bgColorDark) : getBgMode(bgColorLight);
+    const isBgLeft = bgRightStart > levelIndex;
+    const toColor = isBgLeft ? bgColorLeft : bgColorRight;
+    const bgMode = isBgLeft ? getBgMode(bgColorLeft) : getBgMode(bgColorRight);
     const searchDirection = bgMode === "dark" ? "lighter" : "darker";
 
     const commonApcacheOptions = {
@@ -95,7 +95,7 @@ export function calculateColors(
       for (const hue of hues.values()) {
         const hueTintColor = calculateColorCell({
           ...commonApcacheOptions,
-          toColor: bgColorDark,
+          toColor: bgColorLeft,
           hueAngle: hue.angle,
           contrastLevel: HUE_TINT_CR,
           chroma: HUE_TINT_CHROMA,

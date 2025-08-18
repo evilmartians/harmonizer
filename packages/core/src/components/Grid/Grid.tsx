@@ -6,7 +6,7 @@ import clsx from "clsx";
 
 import { useDragScrollByMiddleClick } from "@core/hooks/useDragScrollByMiddleClick";
 import { $hueIds, $levelIds } from "@core/stores/colors";
-import { $bgColorLightBgMode } from "@core/stores/settings";
+import { $bgColorModeRight } from "@core/stores/settings";
 import {
   $gridHasHorizontalScrollbar,
   $gridHasVerticalScrollbar,
@@ -72,10 +72,10 @@ type GridCellLightProps = {
   className?: string;
 };
 
-const GridCellLight = memo(function GridCellLight({ className }: GridCellLightProps) {
-  const bgMode = useSubscribe($bgColorLightBgMode);
+const GridCellRight = memo(function GridCellLight({ className }: GridCellLightProps) {
+  const bgMode = useSubscribe($bgColorModeRight);
 
-  return <GridCell bgMode={bgMode} className={className} />;
+  return <GridCell bgColor="right" bgMode={bgMode} className={className} />;
 });
 
 export type GridBanner = {
@@ -112,7 +112,7 @@ export function Grid({ banner }: GridProps) {
           <GridCellLevelHeader key={levelId} levelId={levelId} />
         ))}
         <GridCellLevelAdd />
-        <GridCellLight className={styles.gridColumnHeader} />
+        <GridCellRight className={styles.gridColumnHeader} />
 
         {/* Hues rows */}
         {hues.map((hueId) => (
@@ -122,7 +122,7 @@ export function Grid({ banner }: GridProps) {
               <GridCellColor key={`${hueId}-${levelId}`} levelId={levelId} hueId={hueId} />
             ))}
             <GridCellHueRemove hueId={hueId} />
-            <GridCellLight />
+            <GridCellRight />
           </Fragment>
         ))}
 
@@ -131,8 +131,8 @@ export function Grid({ banner }: GridProps) {
         {levels.map((levelId) => (
           <GridCellLevelRemove key={levelId} levelId={levelId} />
         ))}
-        <GridCellLight />
-        <GridCellLight />
+        <GridCellRight />
+        <GridCellRight />
 
         {/* Background controls */}
         <GridRowBackground />

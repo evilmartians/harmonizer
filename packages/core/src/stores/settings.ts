@@ -9,7 +9,7 @@ import {
   directionModeSchema,
 } from "@core/schemas/settings";
 import {
-  BgLightStart,
+  BgRightStart,
   ChromaMode,
   ColorSpace,
   ColorString,
@@ -29,7 +29,7 @@ import {
   requestColorsRecalculation,
   requestColorsRecalculationWithLevelsAccumulation,
 } from "./colors";
-import { getBgDarkValue, getBgLightValue, isSingleDarkBg, isSingleLightBg } from "./utils/bg";
+import { getBgValueLeft, getBgValueRight, isSingleBgLeft, isSingleBgRight } from "./utils/bg";
 
 export const contrastModelStore = validationStore(
   ContrastModel(defaultConfig.settings.contrastModel),
@@ -50,40 +50,53 @@ export const colorSpaceStore = validationStore(
 );
 export const $isColorSpaceLocked = signal<boolean>(false);
 
-export const bgColorDarkStore = validationStore(
+export const bgColorLeftStore = validationStore(
   ColorString(defaultConfig.settings.bgColorDark),
   colorStringSchema,
 );
-export const bgColorLightStore = validationStore(
+export const bgColorRightStore = validationStore(
   ColorString(defaultConfig.settings.bgColorLight),
   colorStringSchema,
 );
 
-export const $bgLightStart = signal(BgLightStart(defaultConfig.settings.bgLightStart));
-export const $isSingleDarkBg = signal((get) =>
-  isSingleDarkBg(get($bgLightStart), get($levelsCount)),
+export const $bgRightStart = signal(BgRightStart(defaultConfig.settings.bgLightStart));
+export const $isSingleBgLeft = signal((get) =>
+  isSingleBgLeft(get($bgRightStart), get($levelsCount)),
 );
-export const $isSingleLightBg = signal((get) => isSingleLightBg(get($bgLightStart)));
+export const $isSingleBgRight = signal((get) => isSingleBgRight(get($bgRightStart)));
 
-export const $bgColorDark = signal((get) => {
-  const bgColorStore = getBgDarkValue(get($isSingleLightBg), bgColorDarkStore, bgColorLightStore);
+export const $bgColorLeft = signal((get) => {
+  const bgColorStore = getBgValueLeft(get($isSingleBgRight), bgColorLeftStore, bgColorRightStore);
   return get(bgColorStore.$lastValidValue);
 });
-export const $bgColorLight = signal((get) => {
-  const bgColorStore = getBgLightValue(get($isSingleDarkBg), bgColorDarkStore, bgColorLightStore);
+export const $bgColorRight = signal((get) => {
+  const bgColorStore = getBgValueRight(get($isSingleBgLeft), bgColorLeftStore, bgColorRightStore);
   return get(bgColorStore.$lastValidValue);
 });
 
-export const $bgColorDarkBgMode = signal((get) => getBgMode(get($bgColorDark)));
-export const $bgColorLightBgMode = signal((get) => getBgMode(get($bgColorLight)));
+export const $bgColorModeLeft = signal((get) => {
+  return getBgMode(get($bgColorLeft));
+});
+
+export const $bgColorModeRight = signal((get) => {
+  return getBgMode(get($bgColorRight));
+});
 
 export const $bgColorSingleStore = signal((get) =>
-  getBgDarkValue(get($isSingleLightBg), bgColorDarkStore, bgColorLightStore),
+  getBgValueLeft(get($isSingleBgRight), bgColorLeftStore, bgColorRightStore),
 );
 
 export const $bgColorSingleBgMode = signal((get) =>
   getBgMode(get(get($bgColorSingleStore).$lastValidValue)),
 );
+
+export const $bgColorSingleBgColor = signal((get) => {
+  if (get($isSingleBgRight)) {
+    return "right";
+  }
+
+  return "left";
+});
 
 export function updateContrastModel(model: ContrastModel) {
   batch(() => {
@@ -134,14 +147,14 @@ export function updateChromaMode(mode: ChromaMode) {
   requestColorsRecalculation();
 }
 
-export function updateBgColorLight(color: ColorString) {
-  bgColorLightStore.$raw.set(color);
-  requestColorsRecalculation($levelIds.value.slice($bgLightStart.value));
+export function updateBgColorLeft(color: ColorString) {
+  bgColorLeftStore.$raw.set(color);
+  requestColorsRecalculation($levelIds.value.slice(0, $bgRightStart.value));
 }
 
-export function updateBgColorDark(color: ColorString) {
-  bgColorDarkStore.$raw.set(color);
-  requestColorsRecalculation($levelIds.value.slice(0, $bgLightStart.value));
+export function updateBgColorRight(color: ColorString) {
+  bgColorRightStore.$raw.set(color);
+  requestColorsRecalculation($levelIds.value.slice($bgRightStart.value));
 }
 
 export function updateBgColorSingle(color: ColorString) {
@@ -150,11 +163,11 @@ export function updateBgColorSingle(color: ColorString) {
 }
 
 /**
- * Update the bg light start
+ * Update the bg dark start
  * @returns whether the value was updated
  */
-export function updateBgLightStart(start: BgLightStart): boolean {
-  const oldStart = $bgLightStart.value;
+export function updateBgRightStart(start: BgRightStart): boolean {
+  const oldStart = $bgRightStart.value;
   const newStart = Math.max(0, Math.min($levelIds.value.length, start));
 
   if (newStart === oldStart) {
@@ -164,21 +177,21 @@ export function updateBgLightStart(start: BgLightStart): boolean {
     Math.min(oldStart, newStart),
     Math.max(oldStart, newStart),
   );
-  $bgLightStart.set(BgLightStart(newStart));
+  $bgRightStart.set(BgRightStart(newStart));
   requestColorsRecalculationWithLevelsAccumulation(idsToUpdate);
   return true;
 }
 
 /**
- * Shift the bg light start by the given offset
+ * Shift the bg right start by the given offset
  * @returns whether the value was updated
  */
-export function updateBgLightStartByOffset(offset: number): boolean {
-  return updateBgLightStart(BgLightStart($bgLightStart.value + offset));
+export function updateBgRightStartByOffset(offset: number): boolean {
+  return updateBgRightStart(BgRightStart($bgRightStart.value + offset));
 }
 
 export function enableDualBg() {
   const levelsCount = $levelIds.value.length;
 
-  updateBgLightStart(BgLightStart(Math.floor(levelsCount / 2)));
+  updateBgRightStart(BgRightStart(Math.floor(levelsCount / 2)));
 }

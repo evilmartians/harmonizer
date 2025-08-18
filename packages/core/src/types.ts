@@ -16,7 +16,7 @@ import type { ExportConfig } from "./schemas/exportConfig";
 export type { ExportConfig } from "./schemas/exportConfig";
 
 export {
-  BgLightStart,
+  BgRightStart,
   ChromaMode,
   ColorSpace,
   ColorString,

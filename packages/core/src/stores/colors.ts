@@ -3,7 +3,7 @@ import { pick } from "es-toolkit";
 import { debounce } from "es-toolkit/compat";
 
 import {
-  BgLightStart,
+  BgRightStart,
   type ColorCellData,
   type ColorIdentifier,
   type HueAngle,
@@ -30,9 +30,9 @@ import { workerChannel } from "@core/worker/workerChannel";
 import { appEvents } from "./appEvents";
 import { FALLBACK_CELL_COLOR } from "./constants";
 import {
-  $bgLightStart,
-  bgColorDarkStore,
-  bgColorLightStore,
+  $bgRightStart,
+  bgColorLeftStore,
+  bgColorRightStore,
   chromaModeStore,
   colorSpaceStore,
   contrastModelStore,
@@ -163,9 +163,9 @@ function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColo
     })),
     recalcOnlyLevels,
     hues: $hueIds.value.map((id) => ({ id, angle: getHue(id).angle.$lastValidValue.value })),
-    bgColorLight: bgColorLightStore.$lastValidValue.value,
-    bgColorDark: bgColorDarkStore.$lastValidValue.value,
-    bgLightStart: $bgLightStart.value,
+    bgColorRight: bgColorRightStore.$lastValidValue.value,
+    bgColorLeft: bgColorLeftStore.$lastValidValue.value,
+    bgRightStart: $bgRightStart.value,
     colorSpace: colorSpaceStore.$lastValidValue.value,
     chromaMode: chromaModeStore.$lastValidValue.value,
   };
@@ -222,9 +222,9 @@ export const insertLevel = getInsertMethod({
     );
   },
   onFinish: (levelId) => {
-    // Compensate for the new level being inserted before the bgLightStart or in single light mode
-    if ($levelIds.value.indexOf(levelId) <= $bgLightStart.value && $bgLightStart.value > 0) {
-      $bgLightStart.set(BgLightStart($bgLightStart.value + 1));
+    // Compensate for the new level being inserted before the bgRightStart or in single light mode
+    if ($levelIds.value.indexOf(levelId) <= $bgRightStart.value && $bgRightStart.value > 0) {
+      $bgRightStart.set(BgRightStart($bgRightStart.value + 1));
     }
 
     requestAnimationFrame(() => appEvents.emit("levelAdded", levelId));
@@ -239,8 +239,8 @@ export function removeLevel(levelId: LevelId) {
     levelsStore.removeItem(levelId);
     cleanupColors(colorsMap, matchesLevelColorKey, levelId);
 
-    if (levelIndex < $bgLightStart.value) {
-      $bgLightStart.set(BgLightStart($bgLightStart.value - 1));
+    if (levelIndex < $bgRightStart.value) {
+      $bgRightStart.set(BgRightStart($bgRightStart.value - 1));
     }
   });
 }

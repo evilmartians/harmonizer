@@ -10,6 +10,14 @@
   &:focus {
     outline: none;
   }
+
+  &.left {
+    background-color: var(--bg-left);
+  }
+
+  &.right {
+    background-color: var(--bg-right);
+  }
 }
 
 .colorContainer {
