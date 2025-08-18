@@ -124,7 +124,6 @@ export function calculateColors(
             contrastLevel: MIN_LEVEL_TINT_CR,
             chroma: LevelChroma(0),
           }),
-          referencedC: LevelChroma(0),
         },
         cells: {},
       });
@@ -151,7 +150,7 @@ export function calculateColors(
 
       // Calculate level tint based only on the first hue row
       if (hueIndex === 0) {
-        tint = { ...cellColor, referencedC: cellColor.c };
+        tint = cellColor;
 
         if (tint.cr < MIN_LEVEL_TINT_CR) {
           tint = {
@@ -161,7 +160,6 @@ export function calculateColors(
               contrastLevel: MIN_LEVEL_TINT_CR,
               chroma: chroma,
             }),
-            referencedC: cellColor.c,
           };
         }
       }

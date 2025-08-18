@@ -129,6 +129,7 @@ function handleGeneratedColor(payload: GeneratedColorPayload) {
 
         levelStore.$tintColor.set(payload.tint);
         for (const [hueId, color] of objectEntries(payload.cells)) {
+          levelStore.chroma.$raw.set(color.c);
           upsertColor(payload.levelId, hueId, color);
         }
       });

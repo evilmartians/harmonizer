@@ -61,7 +61,7 @@ export type ColorData = LchColor & {
   css: ColorString;
 };
 export type ColorHueTintData = ColorData;
-export type ColorLevelTintData = ColorData & { referencedC: LevelChroma };
+export type ColorLevelTintData = ColorData;
 export type ColorCellData = ColorData & {
   p3: boolean;
 };

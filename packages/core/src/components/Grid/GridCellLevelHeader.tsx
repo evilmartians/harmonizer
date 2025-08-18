@@ -163,9 +163,13 @@ const ContrastInput = memo(function ContrastInput({
 
 const LevelChromaInput = withValidation(withNumericIncrementControls(Input));
 const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) {
+  const level = getLevel(levelId);
+  const chroma = useSubscribe(level.chroma.$raw);
+  const chromaCap = useSubscribe(level.chromaCap.$raw);
+  const error = useSubscribe(level.chromaCap.$validationError);
   const $chromaPlaceholder = useSignal((get) => {
     return get(chromaModeStore.$lastValidValue) === "even"
-      ? get(level.$tintColor).referencedC.toFixed(2)
+      ? get(level.chroma.$lastValidValue).toFixed(2)
       : "max";
   });
   const $chromaLabel = useSignal((get) => {
@@ -173,13 +177,8 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 
     return chromaCap ? LABEL_CHROMA_CAP_DEFINED : LABEL_CHROMA_CAP_SET;
   });
-
-  const level = getLevel(levelId);
-  const chroma = useSubscribe(level.chroma.$raw);
-  const chromaCap = useSubscribe(level.chromaCap.$raw);
   const chromaLabel = useSubscribe($chromaLabel);
   const chromaPlaceholder = useSubscribe($chromaPlaceholder);
-  const error = useSubscribe(level.chromaCap.$validationError);
 
   return (
     <LevelChromaInput
