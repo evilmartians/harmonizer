@@ -18,6 +18,10 @@ import type { InputProps } from "../Input";
 import styles from "./enhancers.module.css";
 
 type WithNumericIncrementControlsProps = {
+  /**
+   * The base value for arrows & wheel value manipulations. Will be used only when value isn't defined.
+   */
+  baseValue?: number | string;
   step?: number;
 };
 
@@ -53,6 +57,7 @@ export function withNumericIncrementControls<P extends InputProps>(
   const NumberKeyboardInput = ({
     step = 1,
     value,
+    baseValue,
     ...props
   }: WithNumericIncrementControlsProps & P) => {
     const { onChange, onBlur } = props;
@@ -78,7 +83,9 @@ export function withNumericIncrementControls<P extends InputProps>(
             return value;
           }
 
-          const currentValue = Number.parseFloat(input.value);
+          const currentValue = Number.parseFloat(
+            input.value || (baseValue ? String(baseValue) : ""),
+          );
 
           if (Number.isNaN(currentValue)) {
             return;

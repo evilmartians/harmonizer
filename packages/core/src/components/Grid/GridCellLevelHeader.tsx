@@ -175,6 +175,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
   });
 
   const level = getLevel(levelId);
+  const chroma = useSubscribe(level.chroma.$raw);
   const chromaCap = useSubscribe(level.chromaCap.$raw);
   const chromaLabel = useSubscribe($chromaLabel);
   const chromaPlaceholder = useSubscribe($chromaPlaceholder);
@@ -195,6 +196,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       }
       min={CHROMA_MIN}
       max={CHROMA_MAX}
+      baseValue={chroma}
       step={0.01}
       label={chromaLabel}
       aria-label={LABEL_CHROMA}
