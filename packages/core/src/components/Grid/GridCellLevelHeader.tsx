@@ -206,7 +206,7 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
       value={chromaCap ?? ""}
       title={HINT_CHROMA}
       error={error}
-      onChange={(e) => updateLevelchromaCap(levelId, e.target.value)}
+      onChange={(e) => updateLevelchromaCap(levelId, e.target.value || null)}
     />
   );
 });

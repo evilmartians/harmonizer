@@ -263,7 +263,7 @@ export function updateLevelContrast(id: LevelId, contrast: string | number) {
   requestColorsRecalculation([id]);
 }
 
-export function updateLevelchromaCap(id: LevelId, chroma: string | number) {
+export function updateLevelchromaCap(id: LevelId, chroma: string | number | null) {
   getLevel(id).chromaCap.$raw.set(chroma);
   requestColorsRecalculation([id]);
 }
