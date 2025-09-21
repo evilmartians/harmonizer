@@ -90,7 +90,7 @@ export const $bgColorSingleBgMode = signal((get) =>
   getBgMode(get(get($bgColorSingleStore).$lastValidValue)),
 );
 
-export const $bgColorSingleBgColor = signal((get) => {
+export const $bgColorSingleBgColorType = signal((get) => {
   if (get($isSingleBgRight)) {
     return "right";
   }

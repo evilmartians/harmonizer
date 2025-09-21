@@ -1,6 +1,7 @@
 import { useSubscribe } from "@spred/react";
 
 import type { BgColorType, BgModeType } from "@core/components/BgMode/types";
+import { ColorVariable } from "@core/schemas/brand";
 import { $levelIdsToIndex } from "@core/stores/colors";
 import type { LevelId } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
@@ -15,6 +16,12 @@ export function useLevelBgColorType(levelId: LevelId): BgColorType {
   invariant(levelIndex !== undefined, "Level not found for the given ID");
 
   return levelIndex < bgRightStart ? "left" : "right";
+}
+
+export function useLevelBgColorVariable(levelId: LevelId): ColorVariable {
+  const colorType = useLevelBgColorType(levelId);
+
+  return colorType === "left" ? ColorVariable("var(--bg-left)") : ColorVariable("var(--bg-right)");
 }
 
 export function useLevelBgMode(levelId: LevelId): BgModeType {

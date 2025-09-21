@@ -36,6 +36,9 @@ export type LightnessLevel = Brand<typeof LightnessLevel>;
 export const ColorString = createBrand<string, "ColorString">;
 export type ColorString = Brand<typeof ColorString>;
 
+export const ColorVariable = createBrand<`var(--${string})`, "ColorCssVariable">;
+export type ColorVariable = Brand<typeof ColorVariable>;
+
 /* Settings brand types */
 export const CHROMA_MODES = ["even", "max"] as const;
 export const ChromaMode = createBrand<(typeof CHROMA_MODES)[number], "ChromaMode">;
