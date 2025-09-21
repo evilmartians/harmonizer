@@ -1,13 +1,13 @@
 import { useSubscribe } from "@spred/react";
 
-import type { BgColor, BgModeType } from "@core/components/BgMode/types";
+import type { BgColorType, BgModeType } from "@core/components/BgMode/types";
 import { $levelIdsToIndex } from "@core/stores/colors";
 import type { LevelId } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 
 import { $bgColorModeLeft, $bgColorModeRight, $bgRightStart } from "./settings";
 
-export function useLevelBgColor(levelId: LevelId): BgColor {
+export function useLevelBgColorType(levelId: LevelId): BgColorType {
   const levelIdsToIndex = useSubscribe($levelIdsToIndex);
   const bgRightStart = useSubscribe($bgRightStart);
   const levelIndex = levelIdsToIndex[levelId];

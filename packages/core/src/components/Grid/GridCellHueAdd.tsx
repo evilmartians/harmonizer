@@ -15,7 +15,7 @@ export const GridCellHueAdd = memo(function GridCellHueAdd() {
   const handleClick = useCallback(() => insertHue(), []);
 
   return (
-    <GridCell bgColor="left" bgMode={bgMode} className={styles.cell}>
+    <GridCell bgColorType="left" bgMode={bgMode} className={styles.cell}>
       <Button
         className={styles.button}
         kind="ghost"

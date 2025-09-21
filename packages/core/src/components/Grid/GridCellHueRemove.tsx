@@ -23,7 +23,7 @@ export const GridCellHueRemove = memo(function GridCellHueRemove({
 
   return (
     <GridCellRemoveAxis
-      bgColor="right"
+      bgColorType="right"
       bgMode={bgMode}
       {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}
       onClick={handleClick}

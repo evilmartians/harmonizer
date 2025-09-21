@@ -15,7 +15,7 @@ export function FloatingActions({ children }: FloatingActionsProps) {
   const bgMode = useSubscribe($bgColorModeRight);
 
   return (
-    <BgMode bgColor={null} bgMode={bgMode} className={styles.container}>
+    <BgMode bgColorType={null} bgMode={bgMode} className={styles.container}>
       {children}
     </BgMode>
   );

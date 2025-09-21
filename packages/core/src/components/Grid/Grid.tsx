@@ -75,7 +75,7 @@ type GridCellLightProps = {
 const GridCellRight = memo(function GridCellLight({ className }: GridCellLightProps) {
   const bgMode = useSubscribe($bgColorModeRight);
 
-  return <GridCell bgColor="right" bgMode={bgMode} className={className} />;
+  return <GridCell bgColorType="right" bgMode={bgMode} className={className} />;
 });
 
 export type GridBanner = {

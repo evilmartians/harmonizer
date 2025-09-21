@@ -1,2 +1,2 @@
-export type BgColor = "left" | "right";
+export type BgColorType = "left" | "right";
 export type BgModeType = "light" | "dark";

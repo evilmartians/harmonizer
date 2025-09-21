@@ -2,7 +2,7 @@ import { type HTMLAttributes, memo } from "react";
 
 import clsx from "clsx";
 
-import type { BgColor, BgModeType } from "@core/components/BgMode/types";
+import type { BgColorType, BgModeType } from "@core/components/BgMode/types";
 import { Button } from "@core/components/Button/Button";
 import { MBin } from "@core/components/Icon/MBin";
 
@@ -11,7 +11,7 @@ import { GridCell } from "./GridCell";
 import styles from "./GridCellRemoveAxis.module.css";
 
 export type GridCellRemoveAxisProps = HTMLAttributes<HTMLDivElement> & {
-  bgColor: BgColor;
+  bgColorType: BgColorType;
   bgMode: BgModeType;
   "aria-label": string;
   onClick: VoidFunction;

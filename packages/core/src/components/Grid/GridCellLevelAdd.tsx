@@ -18,7 +18,7 @@ export const GridCellLevelAdd = memo(function GridCellLevelAdd() {
   const handleClick = useCallback(() => insertLevel(), []);
 
   return (
-    <GridCell bgColor="right" bgMode={bgMode} className={styles.cell}>
+    <GridCell bgColorType="right" bgMode={bgMode} className={styles.cell}>
       <Button
         className={styles.addLevel}
         kind="bordered"

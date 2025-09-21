@@ -45,7 +45,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
 
   return (
-    <GridCell bgColor="left" bgMode={bgMode} className={styles.cell}>
+    <GridCell bgColorType="left" bgMode={bgMode} className={styles.cell}>
       <Text size="s" kind="secondary" className={styles.levelLabel}>
         {LABEL_LEVEL}
       </Text>

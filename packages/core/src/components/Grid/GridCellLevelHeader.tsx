@@ -26,7 +26,7 @@ import {
   updateLevelContrast,
   updateLevelName,
 } from "@core/stores/colors";
-import { useLevelBgColor, useLevelBgMode } from "@core/stores/hooks";
+import { useLevelBgColorType, useLevelBgMode } from "@core/stores/hooks";
 import {
   $bgRightStart,
   bgColorLeftStore,
@@ -214,19 +214,19 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 export const GridCellLevelHeader = memo(function GridCellLevelHeader({
   levelId,
 }: LevelComponentProps) {
-  const bgColor = useLevelBgColor(levelId);
+  const bgColorType = useLevelBgColorType(levelId);
   const bgMode = useLevelBgMode(levelId);
 
   return (
     <GridCell
-      bgColor={bgColor}
+      bgColorType={bgColorType}
       bgMode={bgMode}
       className={styles.cell}
       {...{ [DATA_ATTR_CELL_LEVEL_ID]: levelId }}
     >
       <InsertBeforeArea levelId={levelId} />
       <NameInput levelId={levelId} />
-      <ContrastInput levelId={levelId} bgMode={bgMode} />
+      <ContrastInput levelId={levelId} />
       <ChromaInput levelId={levelId} />
     </GridCell>
   );
