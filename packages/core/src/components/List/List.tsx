@@ -16,7 +16,7 @@ export function List<E extends ElementType>({ as, className, ...restProps }: Lis
   return (
     <BgMode
       as={Component}
-      bgColor={null}
+      bgColorType={null}
       bgMode="dark"
       className={clsx(styles.list, className)}
       {...restProps}

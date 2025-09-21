@@ -3,7 +3,6 @@ import { type CSSProperties, memo, useCallback, useRef } from "react";
 import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
 
-import type { BgModeType } from "@core/components/BgMode/types";
 import { Button } from "@core/components/Button/Button";
 import { MPlus } from "@core/components/Icon/MPlus";
 import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
@@ -26,11 +25,9 @@ import {
   updateLevelContrast,
   updateLevelName,
 } from "@core/stores/colors";
-import { useLevelBgColor, useLevelBgMode } from "@core/stores/hooks";
+import { useLevelBgColorType, useLevelBgColorVariable, useLevelBgMode } from "@core/stores/hooks";
 import {
   $bgRightStart,
-  bgColorLeftStore,
-  bgColorRightStore,
   chromaModeStore,
   contrastModelStore,
   directionModeStore,
@@ -114,20 +111,15 @@ const NameInput = memo(function NameInput({ levelId }: LevelComponentProps) {
 });
 
 const LevelContrastInput = withValidation(withNumericIncrementControls(Input));
-const ContrastInput = memo(function ContrastInput({
-  levelId,
-  bgMode,
-}: LevelComponentProps<{ bgMode: BgModeType }>) {
+const ContrastInput = memo(function ContrastInput({ levelId }: LevelComponentProps) {
   const level = getLevel(levelId);
-  const bgColorRight = useSubscribe(bgColorRightStore.$raw);
-  const bgColorLeft = useSubscribe(bgColorLeftStore.$raw);
+  const bgColorVariable = useLevelBgColorVariable(levelId);
   const contrast = useSubscribe(level.contrast.$raw);
   const error = useSubscribe(level.contrast.$validationError);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
 
   const tintColor = useSubscribe(level.$tintColor);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
-  const currentBgColor = bgMode === "dark" ? bgColorLeft : bgColorRight;
 
   return (
     <LevelContrastInput
@@ -141,7 +133,7 @@ const ContrastInput = memo(function ContrastInput({
               "--input-border-color": formatOklch(tintColor, 0.2),
             }
           : {
-              "--input-color": currentBgColor,
+              "--input-color": bgColorVariable,
               "--input-border-color": tintColor.css,
               "--input-bg-color": tintColor.css,
             }
@@ -214,19 +206,19 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
 export const GridCellLevelHeader = memo(function GridCellLevelHeader({
   levelId,
 }: LevelComponentProps) {
-  const bgColor = useLevelBgColor(levelId);
+  const bgColorType = useLevelBgColorType(levelId);
   const bgMode = useLevelBgMode(levelId);
 
   return (
     <GridCell
-      bgColor={bgColor}
+      bgColorType={bgColorType}
       bgMode={bgMode}
       className={styles.cell}
       {...{ [DATA_ATTR_CELL_LEVEL_ID]: levelId }}
     >
       <InsertBeforeArea levelId={levelId} />
       <NameInput levelId={levelId} />
-      <ContrastInput levelId={levelId} bgMode={bgMode} />
+      <ContrastInput levelId={levelId} />
       <ChromaInput levelId={levelId} />
     </GridCell>
   );

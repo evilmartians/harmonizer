@@ -7,7 +7,7 @@ import { shallowEqual } from "fast-equals";
 import { Text } from "@core/components/Text/Text";
 import { OKLCH_WEB_URL } from "@core/constants";
 import { $hueIds, $levelIds, getColor$ } from "@core/stores/colors";
-import { useLevelBgColor, useLevelBgMode } from "@core/stores/hooks";
+import { useLevelBgColorType, useLevelBgMode } from "@core/stores/hooks";
 import type { ColorCellData, HueId, LevelId } from "@core/types";
 import { isLightColor } from "@core/utils/colors/isLightColor";
 
@@ -55,7 +55,7 @@ export const GridCellColor = memo(function GridCellColor({
 }: GridCellColorProps) {
   const color = useSubscribe(getColor$(levelId, hueId));
   const { isTl, isTr, isBl, isBr } = useColorCellModifiers(levelId, hueId);
-  const bgColor = useLevelBgColor(levelId);
+  const bgColorType = useLevelBgColorType(levelId);
   const bgStyle = useLevelBgMode(levelId);
   const bgMode = isLightColor(color.l) ? "dark" : "light";
 
@@ -67,7 +67,7 @@ export const GridCellColor = memo(function GridCellColor({
       className={clsx(styles.cell, className)}
       bgStyle={bgStyle}
       bgMode={bgMode === "light" ? "dark" : "light"}
-      bgColor={bgColor}
+      bgColorType={bgColorType}
       {...{ [DATA_ATTR_CELL_HUE_ID]: hueId, [DATA_ATTR_CELL_LEVEL_ID]: levelId }}
     >
       <div

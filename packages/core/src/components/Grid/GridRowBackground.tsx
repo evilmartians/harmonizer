@@ -18,7 +18,7 @@ import { $levelsCount } from "@core/stores/colors";
 import {
   $bgColorModeLeft,
   $bgColorModeRight,
-  $bgColorSingleBgColor,
+  $bgColorSingleBgColorType,
   $bgColorSingleBgMode,
   $bgColorSingleStore,
   $bgRightStart,
@@ -83,7 +83,7 @@ const RowHeaderCell = memo(function SpacerCell() {
   const bgMode = useSubscribe($bgColorModeLeft);
 
   return (
-    <GridCell bgColor="left" bgMode={bgMode} className={styles.rowHeader}>
+    <GridCell bgColorType="left" bgMode={bgMode} className={styles.rowHeader}>
       <Link size="s" href={EVIL_MARTIANS_URL} target="_blank">
         Harmonizer
         <br />
@@ -110,7 +110,7 @@ const BgSpanLeft = memo(function BgDarkSpan() {
   const { text: label, parts: bgLabelParts } = useBgLabel("dark");
 
   return (
-    <GridCell bgColor="left" bgMode={bgMode} className={clsx(styles.bgSpan, styles.left)}>
+    <GridCell bgColorType="left" bgMode={bgMode} className={clsx(styles.bgSpan, styles.left)}>
       {bgRightStart > 1 && <YoutubeLink />}
       <div className={styles.bgControlContainer}>
         <BgLabel bgLabelParts={bgLabelParts} />
@@ -130,7 +130,7 @@ const BgSpanLeft = memo(function BgDarkSpan() {
 
 const BgSpanSingle = memo(function BgSingleSpan() {
   const bgColorSingleStore = useSubscribe($bgColorSingleStore);
-  const singleBgColor = useSubscribe($bgColorSingleBgColor);
+  const singleBgColorType = useSubscribe($bgColorSingleBgColorType);
   const levelsCount = useSubscribe($levelsCount);
   const bgColor = useSubscribe(bgColorSingleStore.$raw);
   const bgMode = useSubscribe($bgColorSingleBgMode);
@@ -139,7 +139,7 @@ const BgSpanSingle = memo(function BgSingleSpan() {
 
   return (
     <GridCell
-      bgColor={singleBgColor}
+      bgColorType={singleBgColorType}
       bgMode={bgMode}
       className={clsx(styles.bgSpan, styles.single)}
     >
@@ -198,7 +198,7 @@ const BgSpanRight = memo(function BgLightSpan() {
   }, []);
 
   return (
-    <GridCell bgColor="right" bgMode={bgMode} className={clsx(styles.bgSpan, styles.right)}>
+    <GridCell bgColorType="right" bgMode={bgMode} className={clsx(styles.bgSpan, styles.right)}>
       <div className={styles.dragContainer}>
         <Button
           className={styles.dragButton}
@@ -230,7 +230,7 @@ const BgSpanRight = memo(function BgLightSpan() {
 export function EndSpacerCell() {
   const bgMode = useSubscribe($bgColorModeRight);
 
-  return <GridCell bgColor="right" bgMode={bgMode} className={styles.endSpacerCell} />;
+  return <GridCell bgColorType="right" bgMode={bgMode} className={styles.endSpacerCell} />;
 }
 
 export const GridRowBackground = memo(function GridRowBackground() {

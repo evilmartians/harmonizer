@@ -137,7 +137,7 @@ export const GridCellHueHeader = memo(function GridCellHueHeader({ hueId }: HueC
 
   return (
     <GridCell
-      bgColor="left"
+      bgColorType="left"
       bgMode={bgMode}
       className={styles.cell}
       {...{ [DATA_ATTR_CELL_HUE_ID]: hueId }}
