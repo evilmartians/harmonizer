@@ -4,9 +4,12 @@ import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 
 import { Button } from "@core/components/Button/Button";
-import { Select } from "@core/components/Select/Select";
+import { Menu } from "@core/components/Menu/Menu";
+import { MenuItemButton } from "@core/components/Menu/MenuItemButton";
+import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
 import { Text } from "@core/components/Text/Text";
-import { parseChromaMode } from "@core/schemas/settings";
+import { ChromaMode } from "@core/schemas/brand";
+import { $isAnyChromaCapSet, resetAllChroma } from "@core/stores/colors";
 import {
   chromaModeStore,
   colorSpaceStore,
@@ -43,6 +46,7 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
   const chromaModeValue = useSubscribe(chromaModeStore.$lastValidValue);
   const colorSpace = useSubscribe(colorSpaceStore.$lastValidValue);
   const isColorSpaceLocked = useSubscribe($isColorSpaceLocked);
+  const hasChromaCaps = useSubscribe($isAnyChromaCapSet);
 
   return (
     <GridCell bgColorType="left" bgMode={bgMode} className={styles.cell}>
@@ -79,13 +83,34 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
             colors
           </Text>
         </div>
-        <Select
-          size="xs"
-          value={chromaModeValue}
-          options={CHROMA_OPTIONS}
-          onChange={(e) => updateChromaMode(parseChromaMode(e.target.value))}
-          title={LABEL_CHROMA_MODE}
-        />
+        <Menu
+          renderTrigger={(triggerProps) => (
+            <Button size="xs" {...triggerProps} title={LABEL_CHROMA_MODE}>
+              {CHROMA_OPTIONS.find((opt) => opt.value === chromaModeValue)?.label}
+            </Button>
+          )}
+        >
+          <>
+            {CHROMA_OPTIONS.map((option) => (
+              <MenuItemButton
+                key={option.value}
+                value={option.value}
+                data-current={chromaModeValue === option.value ? "" : undefined}
+                onClick={() => updateChromaMode(ChromaMode(option.value as "even" | "max"))}
+              >
+                {option.label}
+              </MenuItemButton>
+            ))}
+            {hasChromaCaps && (
+              <>
+                <MenuItemSeparator />
+                <MenuItemButton value="reset-chroma" onClick={resetAllChroma}>
+                  Reset changes
+                </MenuItemButton>
+              </>
+            )}
+          </>
+        </Menu>
       </div>
     </GridCell>
   );

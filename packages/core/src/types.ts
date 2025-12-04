@@ -31,6 +31,7 @@ export {
   LevelId,
   LevelIndex,
   LevelName,
+  LevelStepsPreset,
   LightnessLevel,
 } from "@core/schemas/brand";
 

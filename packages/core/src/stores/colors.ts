@@ -158,16 +158,27 @@ function upsertColor(levelId: LevelId, hueId: HueId, color: ColorCellData) {
 }
 
 function collectColorCalculationData(recalcOnlyLevels?: LevelId[]): GenerateColorsPayload {
+  const previewSourceLevelId = $chromaPreviewSourceLevel.value;
+
   return {
     directionMode: directionModeStore.$lastValidValue.value,
     contrastModel: contrastModelStore.$lastValidValue.value,
     levels: $levelIds.value.map((id) => {
       const level = getLevel(id);
+      let chromaCap = level.chromaCap.$lastValidValue.value;
+
+      // Use preview chroma for all levels except the source level during preview
+      if (previewSourceLevelId && id !== previewSourceLevelId) {
+        const sourceLevel = getLevel(previewSourceLevelId);
+        const sourceChromaCap = sourceLevel.chromaCap.$lastValidValue.value;
+        const previewChromaValue = sourceChromaCap ?? sourceLevel.chroma.$lastValidValue.value;
+        chromaCap = previewChromaValue;
+      }
 
       return {
         id,
         contrast: level.contrast.$lastValidValue.value,
-        chromaCap: level.chromaCap.$lastValidValue.value,
+        chromaCap,
       };
     }),
     recalcOnlyLevels,
@@ -276,6 +287,64 @@ export function resetAllChroma() {
     }
   });
   requestColorsRecalculation();
+}
+
+export function copyChromaFromHue(hueId: HueId) {
+  const levelIds = $levelIds.value;
+
+  batch(() => {
+    for (const levelId of levelIds) {
+      const color = getColor$(levelId, hueId);
+      const chromaValue = color.value.c;
+      const level = getLevel(levelId);
+      level.chromaCap.$raw.set(chromaValue);
+    }
+  });
+  requestColorsRecalculation();
+}
+
+export function copyChromaCapToAllLevels(sourceLevelId: LevelId) {
+  const sourceLevel = getLevel(sourceLevelId);
+  const sourceChromaCap = sourceLevel.chromaCap.$raw.value;
+
+  // Use chromaCap if set, otherwise use the calculated chroma value
+  const chromaValue = sourceChromaCap ?? sourceLevel.chroma.$lastValidValue.value;
+
+  // Round to 3 decimal places to match the input precision
+  const roundedChromaValue = Number.parseFloat(Number(chromaValue).toFixed(3));
+
+  const levelIds = $levelIds.value;
+
+  batch(() => {
+    for (const levelId of levelIds) {
+      if (levelId === sourceLevelId) continue;
+      const level = getLevel(levelId);
+      level.chromaCap.$raw.set(roundedChromaValue);
+    }
+  });
+  requestColorsRecalculation();
+}
+
+// Preview chroma copy
+export const $chromaPreviewSourceLevel = signal<LevelId | null>(null);
+
+const executePreviewRecalculation = debounce(
+  () => {
+    requestColorsRecalculation.cancel();
+    workerChannel.emit("generate:colors", collectColorCalculationData());
+  },
+  50,
+  { leading: true, trailing: true },
+);
+
+export function startChromaCopyPreview(sourceLevelId: LevelId) {
+  $chromaPreviewSourceLevel.set(sourceLevelId);
+  executePreviewRecalculation();
+}
+
+export function stopChromaCopyPreview() {
+  $chromaPreviewSourceLevel.set(null);
+  executePreviewRecalculation();
 }
 
 // Hue methods

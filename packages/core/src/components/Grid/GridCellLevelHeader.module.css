@@ -61,3 +61,28 @@
     opacity: 1;
   }
 }
+
+.chromaSection {
+  margin-block-start: calc(var(--spacing) * 1.5);
+
+  &:has(.copyChromaButton:hover) .inputSecondary {
+    --input-color: var(--color-primary);
+  }
+}
+
+.copyChromaButton {
+  inline-size: 100%;
+  margin-block-start: calc(var(--spacing) * 0.5);
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  .cell:hover &,
+  .cell:has(:focus-visible) & {
+    opacity: 0.6;
+  }
+
+  .cell:hover &:hover,
+  .cell:has(:focus-visible) &:hover {
+    opacity: 1;
+  }
+}

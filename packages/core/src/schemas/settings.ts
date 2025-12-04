@@ -10,6 +10,8 @@ import {
   ContrastModel,
   DIRECTION_MODES,
   DirectionMode,
+  LEVEL_STEPS_PRESETS,
+  LevelStepsPreset,
 } from "./brand";
 
 export const chromaModeSchema = v.pipe(
@@ -40,3 +42,10 @@ export const directionModeSchema = v.pipe(
   v.transform(DirectionMode),
 );
 export const parseDirectionMode = (value: string) => v.parse(directionModeSchema, value);
+
+export const levelStepsPresetSchema = v.pipe(
+  v.string(),
+  v.picklist(LEVEL_STEPS_PRESETS),
+  v.transform(LevelStepsPreset),
+);
+export const parseLevelStepsPreset = (value: string) => v.parse(levelStepsPresetSchema, value);

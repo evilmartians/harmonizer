@@ -205,3 +205,16 @@ export function downloadConfigTarget(type: ExportTarget) {
     data: targetConfig.getFileData(),
   });
 }
+
+export function resetToInitialState() {
+  updateConfig(parseExportConfig(defaultConfig));
+}
+
+export function resetToEmptyState() {
+  const emptyConfigRaw = {
+    levels: [...defaultConfig.levels],
+    hues: [],
+    settings: { ...defaultConfig.settings },
+  };
+  updateConfig(parseExportConfig(emptyConfigRaw));
+}

@@ -19,8 +19,11 @@ import {
 } from "@core/schemas/color";
 import {
   $levelIds,
+  copyChromaCapToAllLevels,
   getLevel,
   insertLevel,
+  startChromaCopyPreview,
+  stopChromaCopyPreview,
   updateLevelchromaCap,
   updateLevelContrast,
   updateLevelName,
@@ -174,32 +177,47 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
   const chromaPlaceholder = useSubscribe($chromaPlaceholder);
 
   return (
-    <LevelChromaInput
-      id={`level-chroma-${levelId}`}
-      className={styles.inputSecondary}
-      size="m"
-      kind="ghost"
-      inputMode="decimal"
-      style={
-        {
-          "--input-label-color": "var(--color-secondary)",
-          "--input-label-fw": 400,
-        } as CSSProperties
-      }
-      min={CHROMA_MIN}
-      max={CHROMA_MAX}
-      precision={CHROMA_INPUT_PRECISION}
-      baseValue={chroma}
-      step={0.001}
-      label={chromaLabel}
-      aria-label={LABEL_CHROMA}
-      showLabel={chromaCap ? "always" : "hover"}
-      placeholder={chromaPlaceholder}
-      value={chromaCap ?? ""}
-      title={HINT_CHROMA}
-      error={error}
-      onChange={(e) => updateLevelchromaCap(levelId, e.target.value || null)}
-    />
+    <div className={styles.chromaSection}>
+      <LevelChromaInput
+        id={`level-chroma-${levelId}`}
+        className={styles.inputSecondary}
+        size="m"
+        kind="ghost"
+        inputMode="decimal"
+        style={
+          {
+            "--input-label-color": "var(--color-secondary)",
+            "--input-label-fw": 400,
+          } as CSSProperties
+        }
+        min={CHROMA_MIN}
+        max={CHROMA_MAX}
+        precision={CHROMA_INPUT_PRECISION}
+        baseValue={chroma}
+        step={0.001}
+        label={chromaLabel}
+        aria-label={LABEL_CHROMA}
+        showLabel={chromaCap ? "always" : "hover"}
+        placeholder={chromaPlaceholder}
+        value={chromaCap ?? ""}
+        title={HINT_CHROMA}
+        error={error}
+        onChange={(e) => updateLevelchromaCap(levelId, e.target.value || null)}
+      />
+      <Button
+        size="xs"
+        kind="ghost"
+        className={styles.copyChromaButton}
+        onClick={() => copyChromaCapToAllLevels(levelId)}
+        onMouseEnter={() => startChromaCopyPreview(levelId)}
+        onMouseLeave={stopChromaCopyPreview}
+        title={
+          chromaCap ? "Copy this cap to all other levels" : "Copy this chroma to all other levels"
+        }
+      >
+        Apply
+      </Button>
+    </div>
   );
 });
 

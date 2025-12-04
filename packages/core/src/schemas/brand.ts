@@ -58,3 +58,10 @@ export type BgRightStart = Brand<typeof BgRightStart>;
 export const CONTRAST_MODELS = ["apca", "wcag"] as const;
 export const ContrastModel = createBrand<(typeof CONTRAST_MODELS)[number], "ContrastModel">;
 export type ContrastModel = Brand<typeof ContrastModel>;
+
+export const LEVEL_STEPS_PRESETS = ["minimal", "compact", "default", "extended"] as const;
+export const LevelStepsPreset = createBrand<
+  (typeof LEVEL_STEPS_PRESETS)[number],
+  "LevelStepsPreset"
+>;
+export type LevelStepsPreset = Brand<typeof LevelStepsPreset>;
