@@ -279,6 +279,11 @@ export function updateLevelchromaCap(id: LevelId, chroma: string | number | null
   requestColorsRecalculation([id]);
 }
 
+export function toggleLevelLocked(id: LevelId) {
+  const level = getLevel(id);
+  level.$locked.set(!level.$locked.value);
+}
+
 export function resetAllChroma() {
   batch(() => {
     for (const levelId of $levelIds.value) {

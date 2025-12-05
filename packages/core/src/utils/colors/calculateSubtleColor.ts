@@ -10,7 +10,7 @@ import type {
   LevelContrast,
 } from "@core/types";
 
-const SUBTLE_CONTRAST_THRESHOLD = 8;
+export const SUBTLE_CONTRAST_THRESHOLD = 8;
 
 /**
  * Calculate subtle color variations for very low contrast values (< 8).

@@ -274,44 +274,77 @@ export function distributeContrastEvenly() {
   const levelIds = $levelIds.value;
   const levelCount = levelIds.length;
 
-  // Need at least 3 levels to distribute (keep first and last, distribute middle)
-  if (levelCount < 3) return;
+  // Need at least 2 levels to distribute
+  if (levelCount < 2) return;
 
   const contrastModel = contrastModelStore.$lastValidValue.value;
-  const firstLevelId = levelIds[0];
-  const lastLevelId = levelIds[levelCount - 1];
 
-  if (!firstLevelId || !lastLevelId) return;
+  // Find all anchor points (locked levels, first, and last)
+  const anchorIndices: number[] = [];
 
-  const firstLevel = levels.get(firstLevelId);
-  const lastLevel = levels.get(lastLevelId);
+  for (const [index, levelId] of levelIds.entries()) {
+    const level = levels.get(levelId);
+    if (!level) continue;
 
-  if (!firstLevel || !lastLevel) return;
+    // First and last are always anchors, plus any locked level
+    const isAnchor = index === 0 || index === levelCount - 1 || level.$locked.value;
 
-  // Get current contrast values from first and last levels
-  const minContrast = firstLevel.contrast.$lastValidValue.value;
-  const maxContrast = lastLevel.contrast.$lastValidValue.value;
+    if (isAnchor) {
+      anchorIndices.push(index);
+    }
+  }
 
-  // Distribute contrast linearly between first and last, keeping them unchanged
+  // Need at least 2 anchors to create segments
+  if (anchorIndices.length < 2) return;
+
+  // Distribute within each segment
   batch(() => {
-    for (const [index, levelId] of levelIds.entries()) {
-      // Skip first and last levels
-      if (index === 0 || index === levelCount - 1) continue;
+    for (let segmentIndex = 0; segmentIndex < anchorIndices.length - 1; segmentIndex++) {
+      const startIndex = anchorIndices[segmentIndex];
+      const endIndex = anchorIndices[segmentIndex + 1];
 
-      const level = levels.get(levelId);
-      if (!level) continue;
+      if (startIndex === undefined || endIndex === undefined) continue;
 
-      // Calculate position from 0 (first) to 1 (last)
-      const normalizedPosition = index / (levelCount - 1);
+      const startLevelId = levelIds[startIndex];
+      const endLevelId = levelIds[endIndex];
 
-      // Linear distribution from first to last contrast
-      const contrastValue = minContrast + normalizedPosition * (maxContrast - minContrast);
+      if (!startLevelId || !endLevelId) continue;
 
-      // Round APCA to whole numbers, WCAG to 1 decimal place
-      const roundedValue =
-        contrastModel === "apca" ? Math.round(contrastValue) : Math.round(contrastValue * 10) / 10;
+      const startLevel = levels.get(startLevelId);
+      const endLevel = levels.get(endLevelId);
 
-      level.contrast.$raw.set(LevelContrast(roundedValue));
+      if (!startLevel || !endLevel) continue;
+
+      const startContrast = startLevel.contrast.$lastValidValue.value;
+      const endContrast = endLevel.contrast.$lastValidValue.value;
+
+      const segmentLength = endIndex - startIndex;
+
+      // Distribute levels between anchors (excluding anchors themselves)
+      for (let i = startIndex + 1; i < endIndex; i++) {
+        const levelId = levelIds[i];
+        if (!levelId) continue;
+
+        const level = levels.get(levelId);
+        if (!level) continue;
+
+        // Skip if this level is locked (shouldn't happen since we're between anchors)
+        if (level.$locked.value) continue;
+
+        // Calculate position within this segment (0 to 1)
+        const normalizedPosition = (i - startIndex) / segmentLength;
+
+        // Linear distribution from start to end contrast
+        const contrastValue = startContrast + normalizedPosition * (endContrast - startContrast);
+
+        // Round APCA to whole numbers, WCAG to 1 decimal place
+        const roundedValue =
+          contrastModel === "apca"
+            ? Math.round(contrastValue)
+            : Math.round(contrastValue * 10) / 10;
+
+        level.contrast.$raw.set(LevelContrast(roundedValue));
+      }
     }
   });
 

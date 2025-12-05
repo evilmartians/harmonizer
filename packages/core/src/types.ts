@@ -40,6 +40,7 @@ export type LevelData = {
   contrast: LevelContrast;
   chroma: LevelChroma;
   chromaCap?: LevelChroma | null; // Before we hadn't this field, so for back compatibility it's optional
+  locked?: boolean; // Prevents automatic contrast changes (e.g., from distribute evenly)
   tintColor: ColorLevelTintData;
 };
 export type Level = { id: LevelId } & LevelData;

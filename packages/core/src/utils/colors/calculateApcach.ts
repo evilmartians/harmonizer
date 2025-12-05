@@ -1,9 +1,7 @@
 import { type Apcach, crToBg, crToFg, apcach } from "apcach";
 
-import { calculateSubtleColor } from "./calculateSubtleColor";
+import { calculateSubtleColor, SUBTLE_CONTRAST_THRESHOLD } from "./calculateSubtleColor";
 import type { ColorCalculationOptions } from "./types";
-
-const SUBTLE_CONTRAST_THRESHOLD = 8;
 
 export function calculateApcach({
   directionMode,

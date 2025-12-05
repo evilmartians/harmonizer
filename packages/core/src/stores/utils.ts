@@ -233,6 +233,7 @@ export type LevelStore = {
   contrast: ValidationStore<string | number, LevelContrast>;
   chroma: ValidationStore<string | number, LevelChroma>;
   chromaCap: ValidationStore<string | number | null, LevelChroma | null>;
+  $locked: WritableSignal<boolean>;
   $tintColor: WritableSignal<ColorLevelTintData>;
 };
 
@@ -251,6 +252,7 @@ export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
   const contrast = validationStore(data.contrast, $levelConstrastSchema);
   const chroma = validationStore(data.chroma, levelChromaSchema);
   const chromaCap = validationStore(data.chromaCap ?? null, levelChromaCapSchema);
+  const $locked = signal(data.locked ?? false);
   const $tintColor = signal(data.tintColor ?? FALLBACK_LEVEL_TINT_COLOR);
 
   return {
@@ -259,6 +261,7 @@ export function getLevelStore(data: PartialOptional<LevelData, "tintColor">) {
     contrast,
     chroma,
     chromaCap,
+    $locked,
     $tintColor,
   };
 }

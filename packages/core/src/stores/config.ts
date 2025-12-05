@@ -50,6 +50,7 @@ export const $exportConfig = signal<ExportConfig>((get) => {
         contrast: get(level.contrast.$lastValidValue),
         chroma: get(level.chroma.$lastValidValue),
         chromaCap: get(level.chromaCap.$lastValidValue),
+        locked: get(level.$locked),
       };
     }),
     hues: get($hueIds).map((hueId) => {
