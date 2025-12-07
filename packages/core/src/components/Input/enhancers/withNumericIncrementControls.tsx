@@ -52,12 +52,9 @@ function replaceDecimalDelimiter(value: string): string {
 function createChangeEvent(input: HTMLInputElement) {
   const nativeEvent = new Event("change", { bubbles: true });
   Object.defineProperty(nativeEvent, "target", { value: input });
+  Object.defineProperty(nativeEvent, "currentTarget", { writable: false, value: input });
 
-  return {
-    ...nativeEvent,
-    target: input,
-    currentTarget: input,
-  } as unknown as ChangeEvent<HTMLInputElement>;
+  return nativeEvent as unknown as ChangeEvent<HTMLInputElement>;
 }
 
 function calculateNewInputValue(
