@@ -23,7 +23,7 @@
     "typed-channel": "^0.9.5"
   },
   "devDependencies": {
-    "@figma/plugin-typings": "^1.117.0",
+    "@figma/plugin-typings": "^1.121.0",
     "@tailwindcss/vite": "^4.1.17",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
