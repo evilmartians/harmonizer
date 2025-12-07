@@ -22,7 +22,7 @@
     "nanoid": "^5.1.6",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
-    "tailwindcss": "^4.1.13",
+    "tailwindcss": "^4.1.17",
     "typed-channel": "^0.9.5",
     "valibot": "^1.0.0"
   },
