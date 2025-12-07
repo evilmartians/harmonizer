@@ -22,7 +22,7 @@ importers:
         version: 1.24.1
       '@zag-js/react':
         specifier: ^1.24.1
-        version: 1.24.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        version: 1.24.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
       '@zag-js/select':
         specifier: ^1.24.1
         version: 1.24.1
@@ -86,7 +86,7 @@ importers:
         version: 0.41.4
       '@spred/react':
         specifier: ^0.4.2
-        version: 0.4.2(@spred/core@0.41.4)(react@19.1.1)
+        version: 0.4.2(@spred/core@0.41.4)(react@19.2.1)
       apcach:
         specifier: ^0.6.4
         version: 0.6.4
@@ -106,11 +106,11 @@ importers:
         specifier: ^5.1.5
         version: 5.1.5
       react:
-        specifier: ^19.1.1
-        version: 19.1.1
+        specifier: ^19.2.1
+        version: 19.2.1
       react-dom:
-        specifier: ^19.1.1
-        version: 19.1.1(react@19.1.1)
+        specifier: ^19.2.1
+        version: 19.2.1(react@19.2.1)
       tailwindcss:
         specifier: ^4.1.13
         version: 4.1.13
@@ -128,11 +128,11 @@ importers:
         specifier: ^22.18.6
         version: 22.18.6
       '@types/react':
-        specifier: ^19.1.13
-        version: 19.1.13
+        specifier: ^19.2.7
+        version: 19.2.7
       '@types/react-dom':
-        specifier: ^19.1.9
-        version: 19.1.9(@types/react@19.1.13)
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.7)
       vite:
         specifier: ^7.2.6
         version: 7.2.6(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.2)
@@ -144,13 +144,13 @@ importers:
         version: link:../core
       '@spred/react':
         specifier: ^0.4.2
-        version: 0.4.2(@spred/core@0.41.4)(react@19.1.1)
+        version: 0.4.2(@spred/core@0.41.4)(react@19.2.1)
       react:
-        specifier: ^19.1.1
-        version: 19.1.1
+        specifier: ^19.2.1
+        version: 19.2.1
       react-dom:
-        specifier: ^19.1.1
-        version: 19.1.1(react@19.1.1)
+        specifier: ^19.2.1
+        version: 19.2.1(react@19.2.1)
       typed-channel:
         specifier: ^0.9.5
         version: 0.9.5
@@ -162,11 +162,11 @@ importers:
         specifier: ^4.1.17
         version: 4.1.17(vite@7.2.6(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.2))
       '@types/react':
-        specifier: ^19.1.13
-        version: 19.1.13
+        specifier: ^19.2.7
+        version: 19.2.7
       '@types/react-dom':
-        specifier: ^19.1.9
-        version: 19.1.9(@types/react@19.1.13)
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.7)
       '@vitejs/plugin-react':
         specifier: ^5.1.1
         version: 5.1.1(vite@7.2.6(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.2))
@@ -202,26 +202,26 @@ importers:
         version: link:../core
       '@spred/react':
         specifier: ^0.4.2
-        version: 0.4.2(@spred/core@0.41.4)(react@19.1.1)
+        version: 0.4.2(@spred/core@0.41.4)(react@19.2.1)
       plausible-tracker:
         specifier: ^0.3.9
         version: 0.3.9
       react:
-        specifier: ^19.1.1
-        version: 19.1.1
+        specifier: ^19.2.1
+        version: 19.2.1
       react-dom:
-        specifier: ^19.1.1
-        version: 19.1.1(react@19.1.1)
+        specifier: ^19.2.1
+        version: 19.2.1(react@19.2.1)
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.17
         version: 4.1.17(vite@7.2.6(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.2))
       '@types/react':
-        specifier: ^19.1.13
-        version: 19.1.13
+        specifier: ^19.2.7
+        version: 19.2.7
       '@types/react-dom':
-        specifier: ^19.1.9
-        version: 19.1.9(@types/react@19.1.13)
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.7)
       '@vitejs/plugin-react':
         specifier: ^5.1.1
         version: 5.1.1(vite@7.2.6(@types/node@22.18.6)(jiti@2.6.1)(lightningcss@1.30.2))
@@ -960,13 +960,13 @@ packages:
   '@types/node@22.18.6':
     resolution: {integrity: sha512-r8uszLPpeIWbNKtvWRt/DbVi5zbqZyj1PTmhRMqBMvDnaz1QpmSKujUtJLrqGZeoM8v72MfYggDceY4K1itzWQ==}
 
-  '@types/react-dom@19.1.9':
-    resolution: {integrity: sha512-qXRuZaOsAdXKFyOhRBg6Lqqc0yay13vN7KrIg4L7N4aaHN68ma9OK3NE1BoDFgFOTfM7zg+3/8+2n8rLUH3OKQ==}
+  '@types/react-dom@19.2.3':
+    resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
-      '@types/react': ^19.0.0
+      '@types/react': ^19.2.0
 
-  '@types/react@19.1.13':
-    resolution: {integrity: sha512-hHkbU/eoO3EG5/MZkuFSKmYqPbSVk5byPFa3e7y/8TybHiLMACgI8seVYlicwk7H5K/rI2px9xrQp/C+AUDTiQ==}
+  '@types/react@19.2.7':
+    resolution: {integrity: sha512-MWtvHrGZLFttgeEj28VXHxpmwYbor/ATPYbBfSFZEIRK0ecCFLl2Qo55z52Hss+UV9CRN7trSeq1zbgx7YDWWg==}
 
   '@types/semver@7.5.8':
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
@@ -1512,6 +1512,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  csstype@3.2.3:
+    resolution: {integrity: sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==}
 
   culori@3.3.0:
     resolution: {integrity: sha512-pHJg+jbuFsCjz9iclQBqyL3B2HLCBF71BwVNujUYEvCeQMvV97R59MNK3R2+jgJ3a1fcZgI9B3vYgz8lzr/BFQ==}
@@ -2732,10 +2735,10 @@ packages:
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
-  react-dom@19.1.1:
-    resolution: {integrity: sha512-Dlq/5LAZgF0Gaz6yiqZCf6VCcZs1ghAJyrsu84Q/GT0gV+mCxbfmKNoGRKBYMJ8IEdGPqu49YWXD02GCknEDkw==}
+  react-dom@19.2.1:
+    resolution: {integrity: sha512-ibrK8llX2a4eOskq1mXKu/TGZj9qzomO+sNfO98M6d9zIPOEhlBkMkBUBLd1vgS0gQsLDBzA+8jJBVXDnfHmJg==}
     peerDependencies:
-      react: ^19.1.1
+      react: ^19.2.1
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
@@ -2744,8 +2747,8 @@ packages:
     resolution: {integrity: sha512-QgT5//D3jfjJb6Gsjxv0Slpj23ip+HtOpnNgnb2S5zU3CB26G/IDPGoy4RJB42wzFE46DRsstbW6tKHoKbhAxw==}
     engines: {node: '>=0.10.0'}
 
-  react@19.1.1:
-    resolution: {integrity: sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==}
+  react@19.2.1:
+    resolution: {integrity: sha512-DGrYcCWK7tvYMnWh79yrPHt+vdx9tY+1gPZa7nJQtO/p8bLTDaHp4dzwEhQB7pZ4Xe3ok4XKuEPrVuc+wlpkmw==}
     engines: {node: '>=0.10.0'}
 
   reflect.getprototypeof@1.0.10:
@@ -2815,8 +2818,8 @@ packages:
     resolution: {integrity: sha512-x/+Cz4YrimQxQccJf5mKEbIa1NzeCRNI5Ecl/ekmlYaampdNLPalVyIcCZNNH3MvmqBugV5TMYZXv0ljslUlaw==}
     engines: {node: '>= 0.4'}
 
-  scheduler@0.26.0:
-    resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
@@ -3750,10 +3753,10 @@ snapshots:
 
   '@spred/core@0.41.4': {}
 
-  '@spred/react@0.4.2(@spred/core@0.41.4)(react@19.1.1)':
+  '@spred/react@0.4.2(@spred/core@0.41.4)(react@19.2.1)':
     dependencies:
       '@spred/core': 0.41.4
-      react: 19.1.1
+      react: 19.2.1
 
   '@tailwindcss/node@4.1.17':
     dependencies:
@@ -3859,13 +3862,13 @@ snapshots:
     dependencies:
       undici-types: 6.21.0
 
-  '@types/react-dom@19.1.9(@types/react@19.1.13)':
+  '@types/react-dom@19.2.3(@types/react@19.2.7)':
     dependencies:
-      '@types/react': 19.1.13
+      '@types/react': 19.2.7
 
-  '@types/react@19.1.13':
+  '@types/react@19.2.7':
     dependencies:
-      csstype: 3.1.3
+      csstype: 3.2.3
 
   '@types/semver@7.5.8': {}
 
@@ -4209,14 +4212,14 @@ snapshots:
       '@zag-js/dom-query': 1.24.1
       '@zag-js/utils': 1.24.1
 
-  '@zag-js/react@1.24.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
+  '@zag-js/react@1.24.1(react-dom@19.2.1(react@19.2.1))(react@19.2.1)':
     dependencies:
       '@zag-js/core': 1.24.1
       '@zag-js/store': 1.24.1
       '@zag-js/types': 1.24.1
       '@zag-js/utils': 1.24.1
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
+      react: 19.2.1
+      react-dom: 19.2.1(react@19.2.1)
 
   '@zag-js/rect-utils@1.24.1': {}
 
@@ -4505,6 +4508,8 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.1.3: {}
+
+  csstype@3.2.3: {}
 
   culori@3.3.0: {}
 
@@ -5764,16 +5769,16 @@ snapshots:
 
   queue-microtask@1.2.3: {}
 
-  react-dom@19.1.1(react@19.1.1):
+  react-dom@19.2.1(react@19.2.1):
     dependencies:
-      react: 19.1.1
-      scheduler: 0.26.0
+      react: 19.2.1
+      scheduler: 0.27.0
 
   react-is@16.13.1: {}
 
   react-refresh@0.18.0: {}
 
-  react@19.1.1: {}
+  react@19.2.1: {}
 
   reflect.getprototypeof@1.0.10:
     dependencies:
@@ -5879,7 +5884,7 @@ snapshots:
       es-errors: 1.3.0
       is-regex: 1.2.1
 
-  scheduler@0.26.0: {}
+  scheduler@0.27.0: {}
 
   semver@6.3.1: {}
 
