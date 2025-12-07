@@ -7,6 +7,7 @@
 @font-face {
   font-family: MGrotesk;
   font-weight: 300 500;
+
   font-display: swap;
   font-stretch: 75% 200%; /* Cn: 75%,  Nr: 87.5%,  Std: 100%,  sWd: 112.5%,  Wd: 125%,  xWd: 150%,  uWd: 200% */
   src: url("https://cdn.evilmartians.com/front/fonts/MartianGrotesk.woff2") format("woff2");
@@ -15,6 +16,7 @@
 @font-face {
   font-family: MMono;
   font-weight: 100 800; /* Th: 100, xLt: 200, Lt: 300, Rg: 400, Md: 500, (no 600), Bd: 700, xBd: 800 */
+
   font-display: swap;
   font-stretch: 100% 112.5%;
   src: url("https://cdn.evilmartians.com/front/fonts/MartianMono.woff2") format("woff2");
