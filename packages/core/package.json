@@ -24,7 +24,7 @@
     "react-dom": "^19.2.1",
     "tailwindcss": "^4.1.17",
     "typed-channel": "^0.9.5",
-    "valibot": "^1.0.0"
+    "valibot": "^1.2.0"
   },
   "devDependencies": {
     "@types/culori": "^4.0.1",
