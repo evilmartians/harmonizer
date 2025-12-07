@@ -18,7 +18,6 @@ import {
 import { ensureNonNullable } from "@core/utils/assertions/ensureNonNullable";
 
 import { calculateColorCell } from "./calculateColorCell";
-import { getBgMode } from "./getBgMode";
 import { maxCommonChroma } from "./maxCommonChroma";
 
 export type GenerateColorsPayload = {
@@ -70,8 +69,7 @@ export function calculateColors(
   for (const [levelIndex, level] of levels.entries()) {
     const isBgLeft = bgRightStart > levelIndex;
     const toColor = isBgLeft ? bgColorLeft : bgColorRight;
-    const bgMode = isBgLeft ? getBgMode(bgColorLeft) : getBgMode(bgColorRight);
-    const searchDirection = bgMode === "dark" ? "lighter" : "darker";
+    const searchDirection = "auto";
 
     const commonApcacheOptions = {
       colorSpace,

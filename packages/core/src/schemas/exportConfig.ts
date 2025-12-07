@@ -30,6 +30,7 @@ export const exportConfigSchema = v.pipe(
         contrast: baseContrastSchema,
         chroma: levelChromaSchema,
         chromaCap: v.optional(levelChromaCapSchema),
+        locked: v.optional(v.boolean()),
       }),
     ),
     hues: v.array(v.object({ name: hueNameSchema, angle: hueAngleSchema })),
@@ -71,8 +72,8 @@ export function parseExportConfig(configString: string | Record<string, unknown>
 export const compactExportConfigSchema = v.pipe(
   v.tuple([
     v.pipe(
-      v.array(v.union([v.string(), v.number(), v.null()])),
-      v.description("Level name, contrast and chroma cap as a plain array"),
+      v.array(v.union([v.string(), v.number(), v.null(), v.boolean()])),
+      v.description("Level name, contrast, chroma cap and locked as a plain array"),
     ),
     v.pipe(
       v.array(v.union([v.string(), v.number()])),
@@ -101,10 +102,11 @@ export function parseCompactExportConfig(value: unknown): CompactExportConfig {
 
 export function toCompactExportConfig(config: ExportConfig): CompactExportConfig {
   return [
-    config.levels.flatMap<string | number | null>((level) => [
+    config.levels.flatMap<string | number | null | boolean>((level) => [
       level.name,
       level.contrast,
       level.chromaCap ?? null,
+      level.locked ?? false,
     ]),
     config.hues.flatMap((hue) => [hue.name, hue.angle]),
     [
@@ -124,12 +126,19 @@ export function toExportConfig(compactConfig: CompactExportConfig): ExportConfig
   const levels: ExportConfig["levels"] = [];
   const hues: ExportConfig["hues"] = [];
 
-  for (let i = 0; i < compactConfig[0].length; i += 3) {
-    const name = v.parse(levelNameSchema, compactConfig[0][i]);
-    const contrast = v.parse(getLevelContrastModel(contrastModel), compactConfig[0][i + 1]);
-    const chromaCap = v.parse(levelChromaCapSchema, compactConfig[0][i + 2]);
+  // Determine step size for backward compatibility
+  // Old format: [name, contrast, chromaCap] = 3 items per level
+  // New format: [name, contrast, chromaCap, locked] = 4 items per level
+  const levelsData = compactConfig[0];
+  const stepSize = levelsData.length % 4 === 0 ? 4 : 3;
 
-    levels.push({ name, contrast, chroma: LevelChroma(0), chromaCap });
+  for (let i = 0; i < levelsData.length; i += stepSize) {
+    const name = v.parse(levelNameSchema, levelsData[i]);
+    const contrast = v.parse(getLevelContrastModel(contrastModel), levelsData[i + 1]);
+    const chromaCap = v.parse(levelChromaCapSchema, levelsData[i + 2]);
+    const locked = stepSize === 4 ? (levelsData[i + 3] as boolean) : undefined;
+
+    levels.push({ name, contrast, chroma: LevelChroma(0), chromaCap, locked });
   }
 
   for (let i = 0; i < compactConfig[1].length; i += 2) {

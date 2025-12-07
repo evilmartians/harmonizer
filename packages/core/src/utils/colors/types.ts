@@ -10,7 +10,7 @@ import type {
   ColorSpace,
 } from "@core/types";
 
-export type SearchDirection = "lighter" | "darker";
+export type SearchDirection = "lighter" | "darker" | "auto";
 export type ColorCalculationOptions = {
   directionMode: DirectionMode;
   contrastModel: ContrastModel;

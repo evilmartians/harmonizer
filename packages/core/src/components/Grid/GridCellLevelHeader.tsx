@@ -4,6 +4,7 @@ import { useSignal, useSubscribe } from "@spred/react";
 import clsx from "clsx";
 
 import { Button } from "@core/components/Button/Button";
+import { MLock } from "@core/components/Icon/MLock";
 import { MPlus } from "@core/components/Icon/MPlus";
 import { withAutosize } from "@core/components/Input/enhancers/withAutosize";
 import { withNumericIncrementControls } from "@core/components/Input/enhancers/withNumericIncrementControls";
@@ -19,8 +20,12 @@ import {
 } from "@core/schemas/color";
 import {
   $levelIds,
+  copyChromaCapToAllLevels,
   getLevel,
   insertLevel,
+  startChromaCopyPreview,
+  stopChromaCopyPreview,
+  toggleLevelLocked,
   updateLevelchromaCap,
   updateLevelContrast,
   updateLevelName,
@@ -117,39 +122,56 @@ const ContrastInput = memo(function ContrastInput({ levelId }: LevelComponentPro
   const contrast = useSubscribe(level.contrast.$raw);
   const error = useSubscribe(level.contrast.$validationError);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
+  const locked = useSubscribe(level.$locked);
 
   const tintColor = useSubscribe(level.$tintColor);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
 
   return (
-    <LevelContrastInput
-      id={`level-contrast-${levelId}`}
-      size="xl"
-      kind="bordered"
-      customization={
-        directionMode === "fgToBg"
-          ? {
-              "--input-color": tintColor.css,
-              "--input-border-color": formatOklch(tintColor, 0.2),
-            }
-          : {
-              "--input-color": bgColorVariable,
-              "--input-border-color": tintColor.css,
-              "--input-bg-color": tintColor.css,
-            }
-      }
-      inputMode={contrastModel === "apca" ? "numeric" : "decimal"}
-      min={CONTRAST_MIN}
-      max={getContrastMaxLevel(contrastModel)}
-      step={getContrastStep(contrastModel)}
-      label={contrastModel.toUpperCase()}
-      showLabel="always"
-      placeholder={PLACEHOLDER_CONTRAST}
-      value={contrast}
-      title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
-      error={error}
-      onChange={(e) => updateLevelContrast(levelId, e.target.value)}
-    />
+    <div className={styles.contrastSection}>
+      <LevelContrastInput
+        id={`level-contrast-${levelId}`}
+        size="xl"
+        kind="bordered"
+        customization={
+          directionMode === "fgToBg"
+            ? {
+                "--input-color": tintColor.css,
+                "--input-border-color": formatOklch(tintColor, 0.2),
+              }
+            : {
+                "--input-color": bgColorVariable,
+                "--input-border-color": tintColor.css,
+                "--input-bg-color": tintColor.css,
+              }
+        }
+        inputMode={contrastModel === "apca" ? "numeric" : "decimal"}
+        min={CONTRAST_MIN}
+        max={getContrastMaxLevel(contrastModel)}
+        step={getContrastStep(contrastModel)}
+        label={contrastModel.toUpperCase()}
+        showLabel="always"
+        placeholder={PLACEHOLDER_CONTRAST}
+        value={contrast}
+        title={directionMode === "fgToBg" ? HINT_FG_TO_BG_CONTRAST : HINT_BG_TO_FG_CONTRAST}
+        error={error}
+        onChange={(e) => updateLevelContrast(levelId, e.target.value)}
+      />
+      <Button
+        size="m"
+        kind="ghost"
+        rounded
+        className={clsx(styles.lockButton, locked && styles.locked)}
+        icon={<MLock />}
+        onClick={() => toggleLevelLocked(levelId)}
+        title={
+          locked
+            ? "Unlock contrast (allow automatic changes)"
+            : "Lock contrast (prevent automatic changes)"
+        }
+        aria-label={locked ? "Unlock contrast" : "Lock contrast"}
+      />
+    </div>
   );
 });
 
@@ -174,32 +196,47 @@ const ChromaInput = memo(function ChromaInput({ levelId }: LevelComponentProps) 
   const chromaPlaceholder = useSubscribe($chromaPlaceholder);
 
   return (
-    <LevelChromaInput
-      id={`level-chroma-${levelId}`}
-      className={styles.inputSecondary}
-      size="m"
-      kind="ghost"
-      inputMode="decimal"
-      style={
-        {
-          "--input-label-color": "var(--color-secondary)",
-          "--input-label-fw": 400,
-        } as CSSProperties
-      }
-      min={CHROMA_MIN}
-      max={CHROMA_MAX}
-      precision={CHROMA_INPUT_PRECISION}
-      baseValue={chroma}
-      step={0.001}
-      label={chromaLabel}
-      aria-label={LABEL_CHROMA}
-      showLabel={chromaCap ? "always" : "hover"}
-      placeholder={chromaPlaceholder}
-      value={chromaCap ?? ""}
-      title={HINT_CHROMA}
-      error={error}
-      onChange={(e) => updateLevelchromaCap(levelId, e.target.value || null)}
-    />
+    <div className={styles.chromaSection}>
+      <LevelChromaInput
+        id={`level-chroma-${levelId}`}
+        className={styles.inputSecondary}
+        size="m"
+        kind="ghost"
+        inputMode="decimal"
+        style={
+          {
+            "--input-label-color": "var(--color-secondary)",
+            "--input-label-fw": 400,
+          } as CSSProperties
+        }
+        min={CHROMA_MIN}
+        max={CHROMA_MAX}
+        precision={CHROMA_INPUT_PRECISION}
+        baseValue={chroma}
+        step={0.001}
+        label={chromaLabel}
+        aria-label={LABEL_CHROMA}
+        showLabel={chromaCap ? "always" : "hover"}
+        placeholder={chromaPlaceholder}
+        value={chromaCap ?? ""}
+        title={HINT_CHROMA}
+        error={error}
+        onChange={(e) => updateLevelchromaCap(levelId, e.target.value || null)}
+      />
+      <Button
+        size="xs"
+        kind="ghost"
+        className={styles.copyChromaButton}
+        onClick={() => copyChromaCapToAllLevels(levelId)}
+        onMouseEnter={() => startChromaCopyPreview(levelId)}
+        onMouseLeave={stopChromaCopyPreview}
+        title={
+          chromaCap ? "Copy this cap to all other levels" : "Copy this chroma to all other levels"
+        }
+      >
+        Apply
+      </Button>
+    </div>
   );
 });
 

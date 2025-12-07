@@ -1,12 +1,14 @@
 import { batch, signal } from "@spred/core";
 
 import { defaultConfig } from "@core/defaultConfig";
+import { levelStepsPresets } from "@core/levelStepsPresets";
 import { colorStringSchema } from "@core/schemas/color";
 import {
   chromaModeSchema,
   colorSpaceSchema,
   contrastModelSchema,
   directionModeSchema,
+  levelStepsPresetSchema,
 } from "@core/schemas/settings";
 import {
   BgRightStart,
@@ -15,7 +17,10 @@ import {
   ColorString,
   ContrastModel,
   DirectionMode,
+  LevelChroma,
   LevelContrast,
+  LevelName,
+  LevelStepsPreset,
 } from "@core/types";
 import { apcaToWcag } from "@core/utils/colors/apcaToWcag";
 import { getBgMode } from "@core/utils/colors/getBgMode";
@@ -23,12 +28,19 @@ import { wcagToApca } from "@core/utils/colors/wcagToApca";
 import { validationStore } from "@core/utils/stores/validationStore";
 
 import {
+  $hueIds,
   $levelIds,
   $levelsCount,
+  copyChromaFromHue,
+  getHue,
   levels,
+  overwriteLevels,
+  pregenerateFallbackColorsMap,
   requestColorsRecalculation,
   requestColorsRecalculationWithLevelsAccumulation,
+  resetAllChroma,
 } from "./colors";
+import { getLevelStore } from "./utils";
 import { getBgValueLeft, getBgValueRight, isSingleBgLeft, isSingleBgRight } from "./utils/bg";
 
 export const contrastModelStore = validationStore(
@@ -144,7 +156,7 @@ export function toggleColorSpace() {
 
 export function updateChromaMode(mode: ChromaMode) {
   chromaModeStore.$raw.set(mode);
-  requestColorsRecalculation();
+  resetAllChroma();
 }
 
 export function updateBgColorLeft(color: ColorString) {
@@ -195,3 +207,149 @@ export function enableDualBg() {
 
   updateBgRightStart(BgRightStart(Math.floor(levelsCount / 2)));
 }
+
+export const levelStepsPresetStore = validationStore(
+  LevelStepsPreset("default"),
+  levelStepsPresetSchema,
+);
+
+export function applyLevelStepsPreset(preset: LevelStepsPreset) {
+  const presetData = levelStepsPresets[preset as keyof typeof levelStepsPresets];
+  const oldLevelIds = $levelIds.value;
+  const oldLevelsCount = oldLevelIds.length;
+
+  // Capture existing contrast values by position
+  const existingContrasts = oldLevelIds.map((id) => {
+    const level = levels.get(id);
+    return level ? level.contrast.$lastValidValue.value : null;
+  });
+
+  const newLevels = presetData.steps.map(
+    (step: { name: string; contrast: number; chroma: number }, index: number) => {
+      // Try to preserve contrast value from the same relative position
+      // Map old positions to new positions proportionally
+      let preservedContrast: number | null = null;
+      if (oldLevelsCount > 0) {
+        const oldIndex =
+          oldLevelsCount === 1
+            ? 0
+            : Math.round((index / (presetData.steps.length - 1)) * (oldLevelsCount - 1));
+        preservedContrast = existingContrasts[oldIndex] ?? null;
+      }
+
+      return getLevelStore({
+        name: LevelName(step.name),
+        contrast: LevelContrast(preservedContrast ?? step.contrast),
+        chroma: LevelChroma(step.chroma),
+      });
+    },
+  );
+
+  const newLevelsCount = newLevels.length;
+  const oldBgRightStart = $bgRightStart.value;
+
+  // Calculate proportional bgRightStart for new levels count
+  const proportionalBgRightStart =
+    oldLevelsCount > 0
+      ? Math.round((oldBgRightStart / oldLevelsCount) * newLevelsCount)
+      : Math.floor(newLevelsCount / 2);
+  const newBgRightStart = BgRightStart(
+    Math.max(0, Math.min(newLevelsCount, proportionalBgRightStart)),
+  );
+
+  batch(() => {
+    levelStepsPresetStore.$raw.set(preset);
+    overwriteLevels(newLevels);
+    $bgRightStart.set(newBgRightStart);
+
+    // Clear and regenerate colors map with new level IDs
+    const newLevelIds = newLevels.map((level) => level.id);
+    pregenerateFallbackColorsMap(newLevelIds, $hueIds.value);
+  });
+
+  requestColorsRecalculation();
+}
+
+export function distributeContrastEvenly() {
+  const levelIds = $levelIds.value;
+  const levelCount = levelIds.length;
+
+  // Need at least 2 levels to distribute
+  if (levelCount < 2) return;
+
+  const contrastModel = contrastModelStore.$lastValidValue.value;
+
+  // Find all anchor points (locked levels, first, and last)
+  const anchorIndices: number[] = [];
+
+  for (const [index, levelId] of levelIds.entries()) {
+    const level = levels.get(levelId);
+    if (!level) continue;
+
+    // First and last are always anchors, plus any locked level
+    const isAnchor = index === 0 || index === levelCount - 1 || level.$locked.value;
+
+    if (isAnchor) {
+      anchorIndices.push(index);
+    }
+  }
+
+  // Need at least 2 anchors to create segments
+  if (anchorIndices.length < 2) return;
+
+  // Distribute within each segment
+  batch(() => {
+    for (let segmentIndex = 0; segmentIndex < anchorIndices.length - 1; segmentIndex++) {
+      const startIndex = anchorIndices[segmentIndex];
+      const endIndex = anchorIndices[segmentIndex + 1];
+
+      if (startIndex === undefined || endIndex === undefined) continue;
+
+      const startLevelId = levelIds[startIndex];
+      const endLevelId = levelIds[endIndex];
+
+      if (!startLevelId || !endLevelId) continue;
+
+      const startLevel = levels.get(startLevelId);
+      const endLevel = levels.get(endLevelId);
+
+      if (!startLevel || !endLevel) continue;
+
+      const startContrast = startLevel.contrast.$lastValidValue.value;
+      const endContrast = endLevel.contrast.$lastValidValue.value;
+
+      const segmentLength = endIndex - startIndex;
+
+      // Distribute levels between anchors (excluding anchors themselves)
+      for (let i = startIndex + 1; i < endIndex; i++) {
+        const levelId = levelIds[i];
+        if (!levelId) continue;
+
+        const level = levels.get(levelId);
+        if (!level) continue;
+
+        // Skip if this level is locked (shouldn't happen since we're between anchors)
+        if (level.$locked.value) continue;
+
+        // Calculate position within this segment (0 to 1)
+        const normalizedPosition = (i - startIndex) / segmentLength;
+
+        // Linear distribution from start to end contrast
+        const contrastValue = startContrast + normalizedPosition * (endContrast - startContrast);
+
+        // Round APCA to whole numbers, WCAG to 1 decimal place
+        const roundedValue =
+          contrastModel === "apca"
+            ? Math.round(contrastValue)
+            : Math.round(contrastValue * 10) / 10;
+
+        level.contrast.$raw.set(LevelContrast(roundedValue));
+      }
+    }
+  });
+
+  requestColorsRecalculation();
+}
+
+// Re-export chroma utilities
+export { copyChromaFromHue, $hueIds, getHue };

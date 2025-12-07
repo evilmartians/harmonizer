@@ -1,4 +1,4 @@
-import { memo, useCallback, useRef } from "react";
+import { type ClipboardEvent, memo, useCallback, useRef } from "react";
 
 import { useSubscribe } from "@spred/react";
 
@@ -19,6 +19,7 @@ import {
 } from "@core/stores/colors";
 import { $bgColorModeLeft } from "@core/stores/settings";
 import type { HueId } from "@core/types";
+import { hexToHueAngle } from "@core/utils/colors/hexToHueAngle";
 import type { AnyProps } from "@core/utils/react/types";
 
 import { DATA_ATTR_CELL_HUE_ID } from "./constants";
@@ -70,6 +71,20 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
     }
   });
 
+  const handlePaste = useCallback(
+    (e: ClipboardEvent<HTMLInputElement>) => {
+      const pastedText = e.clipboardData.getData("text");
+      const hueAngle = hexToHueAngle(pastedText);
+
+      if (hueAngle !== null) {
+        e.preventDefault();
+        updateHueAngle(hueId, String(Math.round(hueAngle)));
+        resetHueName(hueId);
+      }
+    },
+    [hueId],
+  );
+
   return (
     <HueNameInput
       ref={inputRef}
@@ -88,6 +103,7 @@ const NameInput = memo(function NameInput({ hueId }: HueComponentProps) {
           resetHueName(hueId);
         }
       }}
+      onPaste={handlePaste}
       slotEnd={
         showResetNameButton && (
           <Button

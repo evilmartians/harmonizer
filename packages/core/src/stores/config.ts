@@ -50,6 +50,7 @@ export const $exportConfig = signal<ExportConfig>((get) => {
         contrast: get(level.contrast.$lastValidValue),
         chroma: get(level.chroma.$lastValidValue),
         chromaCap: get(level.chromaCap.$lastValidValue),
+        locked: get(level.$locked),
       };
     }),
     hues: get($hueIds).map((hueId) => {
@@ -204,4 +205,17 @@ export function downloadConfigTarget(type: ExportTarget) {
     mimetype: targetConfig.mimetype,
     data: targetConfig.getFileData(),
   });
+}
+
+export function resetToInitialState() {
+  updateConfig(parseExportConfig(defaultConfig));
+}
+
+export function resetToEmptyState() {
+  const emptyConfigRaw = {
+    levels: [...defaultConfig.levels],
+    hues: [],
+    settings: { ...defaultConfig.settings },
+  };
+  updateConfig(parseExportConfig(emptyConfigRaw));
 }
