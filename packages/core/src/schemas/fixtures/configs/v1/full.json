@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "levels": [
+    { "name": "100", "contrast": 100, "chroma": 0 },
+    { "name": "200", "contrast": 90, "chroma": 0 },
+    { "name": "300", "contrast": 77, "chroma": 0 },
+    { "name": "400", "contrast": 65, "chroma": 0 },
+    { "name": "500", "contrast": 51, "chroma": 0 },
+    { "name": "600", "contrast": 65, "chroma": 0 },
+    { "name": "700", "contrast": 77, "chroma": 0 },
+    { "name": "800", "contrast": 90, "chroma": 0 },
+    { "name": "900", "contrast": 100, "chroma": 0 }
+  ],
+  "hues": [
+    { "name": "orange", "angle": 20 },
+    { "name": "green", "angle": 90 },
+    { "name": "cyan", "angle": 180 },
+    { "name": "blue", "angle": 250 },
+    { "name": "magenta", "angle": 320 }
+  ],
+  "settings": {
+    "contrastModel": "apca",
+    "directionMode": "fgToBg",
+    "chromaMode": "even",
+    "colorSpace": "p3",
+    "bgColorLight": "#fff",
+    "bgColorDark": "#000",
+    "bgLightStart": 5
+  }
+}
