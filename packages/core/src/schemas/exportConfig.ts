@@ -22,8 +22,15 @@ import {
   directionModeSchema,
 } from "./settings";
 
+/**
+ * Current version of the export config format
+ * Increment this when making breaking changes to the config schema
+ */
+export const CURRENT_CONFIG_VERSION = 1;
+
 export const exportConfigSchema = v.pipe(
   v.object({
+    version: v.optional(v.pipe(v.number(), v.minValue(1)), CURRENT_CONFIG_VERSION),
     levels: v.array(
       v.object({
         name: levelNameSchema,
@@ -140,6 +147,7 @@ export function toExportConfig(compactConfig: CompactExportConfig): ExportConfig
   }
 
   return {
+    version: CURRENT_CONFIG_VERSION,
     levels,
     hues,
     settings: {

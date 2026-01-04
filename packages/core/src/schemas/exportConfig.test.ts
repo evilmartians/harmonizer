@@ -42,6 +42,70 @@ describe(parseExportConfig, () => {
     expect(result).toBeDefined();
     expect(result.levels).toHaveLength(3);
     expect(result.hues).toHaveLength(2);
+    expect(result.version).toBe(1); // Defaults to 1
+  });
+
+  test("parses config with version: 1", () => {
+    const config = {
+      version: 1,
+      levels: [{ name: "500", contrast: 51, chroma: 0 }],
+      hues: [{ name: "blue", angle: 250 }],
+      settings: {
+        contrastModel: "apca",
+        directionMode: "fgToBg",
+        chromaMode: "even",
+        colorSpace: "p3",
+        bgColorLight: "#fff",
+        bgColorDark: "#000",
+        bgLightStart: 5,
+      },
+    };
+    const result = parseExportConfig(config);
+
+    expect(result.version).toBe(1);
+  });
+
+  test("parses config with future version (accepts unknown versions)", () => {
+    const config = {
+      version: 999,
+      levels: [{ name: "500", contrast: 51, chroma: 0 }],
+      hues: [{ name: "blue", angle: 250 }],
+      settings: {
+        contrastModel: "apca",
+        directionMode: "fgToBg",
+        chromaMode: "even",
+        colorSpace: "p3",
+        bgColorLight: "#fff",
+        bgColorDark: "#000",
+        bgLightStart: 5,
+      },
+    };
+    const result = parseExportConfig(config);
+
+    expect(result.version).toBe(999);
+  });
+
+  test("throws for invalid versions", () => {
+    const invalidVersions = [0, -1, "1", null];
+
+    for (const version of invalidVersions) {
+      const config = {
+        version,
+        levels: [{ name: "500", contrast: 51, chroma: 0 }],
+        hues: [{ name: "blue", angle: 250 }],
+        settings: {
+          contrastModel: "apca",
+          directionMode: "fgToBg",
+          chromaMode: "even",
+          colorSpace: "p3",
+          bgColorLight: "#fff",
+          bgColorDark: "#000",
+          bgLightStart: 5,
+        },
+      };
+
+      expect(() => parseExportConfig(config)).toThrow(ValidationError);
+    }
   });
 
   test("throws ValidationError for invalid JSON string", () => {

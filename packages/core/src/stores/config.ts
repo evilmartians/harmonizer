@@ -2,6 +2,7 @@ import { batch, signal } from "@spred/core";
 
 import { defaultConfig } from "@core/defaultConfig";
 import {
+  CURRENT_CONFIG_VERSION,
   parseCompactExportConfig,
   parseExportConfig,
   toCompactExportConfig,
@@ -42,6 +43,7 @@ import { getHueStore, getLevelStore } from "./utils";
 
 export const $exportConfig = signal<ExportConfig>((get) => {
   return {
+    version: CURRENT_CONFIG_VERSION,
     levels: get($levelIds).map((levelId) => {
       const level = getLevel(levelId);
 
