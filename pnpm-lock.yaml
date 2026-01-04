@@ -93,6 +93,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      core-js:
+        specifier: ^3.47.0
+        version: 3.47.0
       culori:
         specifier: ^4.0.2
         version: 4.0.2
@@ -1558,6 +1561,9 @@ packages:
 
   core-js-compat@3.47.0:
     resolution: {integrity: sha512-IGfuznZ/n7Kp9+nypamBhvwdwLsW6KC8IOaURw2doAK5e98AG3acVLdh0woOnEqCfUtS+Vu882JE4k/DAm3ItQ==}
+
+  core-js@3.47.0:
+    resolution: {integrity: sha512-c3Q2VVkGAUyupsjRnaNX6u8Dq2vAdzm9iuPj5FW0fRxzlxgq9Q39MDq10IvmQSpLgHQNyQzQmOo6bgGHmH3NNg==}
 
   cosmiconfig@9.0.0:
     resolution: {integrity: sha512-itvL5h8RETACmOTFc4UfIyB2RfEHi71Ax6E/PivVxq9NseKbOWpeyHEOIbmAw1rs8Ak0VursQNww7lf7YtUwzg==}
@@ -4738,6 +4744,8 @@ snapshots:
   core-js-compat@3.47.0:
     dependencies:
       browserslist: 4.28.1
+
+  core-js@3.47.0: {}
 
   cosmiconfig@9.0.0(typescript@5.9.3):
     dependencies:

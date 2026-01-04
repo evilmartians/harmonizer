@@ -11,5 +11,5 @@
       "@shared/*": ["src/shared/*"]
     }
   },
-  "include": ["src/plugin", "src/shared"]
+  "include": ["src/plugin", "src/shared", "../core/src/globals.d.ts"]
 }

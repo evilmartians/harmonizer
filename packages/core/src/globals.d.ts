@@ -41,19 +41,19 @@ declare module "apcach" {
 
   export type ColorSpace = "srgb" | "p3";
 
-  export type Apcach = {
+  export interface Apcach {
     alpha: number;
     chroma: number;
     colorSpace: string;
     hue: number;
     lightness: number;
-  };
+  }
 
-  export type ColorGeneratorOptions = {
+  export interface ColorGeneratorOptions {
     hue?: number;
     chroma?: number;
     lightness?: number;
-  };
+  }
 
   export type ColorGenerator = () => number;
 
@@ -67,4 +67,24 @@ declare module "apcach" {
     alpha: number,
     colorSpace: ColorSpace,
   ) => number;
+}
+
+// core-js polyfill module declarations
+declare module "core-js/actual/typed-array/to-base64" {}
+declare module "core-js/actual/typed-array/from-base64" {}
+
+// Type declarations for Uint8Array Base64 methods (ES2024)
+// Polyfilled by core-js when not natively available
+interface Uint8Array {
+  toBase64(options?: { alphabet?: "base64" | "base64url"; omitPadding?: boolean }): string;
+}
+
+interface Uint8ArrayConstructor {
+  fromBase64(
+    base64: string,
+    options?: {
+      alphabet?: "base64" | "base64url";
+      lastChunkHandling?: "loose" | "strict" | "stop-before-partial";
+    },
+  ): Uint8Array;
 }
