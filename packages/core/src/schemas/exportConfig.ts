@@ -61,6 +61,9 @@ export const exportConfigV1Schema = v.pipe(
         v.safeParse(getLevelContrastModel(settings.contrastModel), contrast).success,
     );
   }, "Contrast levels are out of selected contrast model bounds"),
+  v.check(({ levels, settings }) => {
+    return settings.bgLightStart >= 0 && settings.bgLightStart <= levels.length;
+  }, "bgLightStart must be within the range of defined levels"),
 );
 export type ExportConfigV1 = v.InferOutput<typeof exportConfigV1Schema>;
 
