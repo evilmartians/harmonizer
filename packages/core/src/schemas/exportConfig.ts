@@ -28,7 +28,12 @@ import {
  */
 export const CURRENT_CONFIG_VERSION = 1;
 
-export const exportConfigSchema = v.pipe(
+export const versionedExportConfigSchema = v.looseObject({
+  version: v.pipe(v.number(), v.minValue(1)),
+});
+export type ExportConfigVersioned = v.InferOutput<typeof versionedExportConfigSchema>;
+
+export const exportConfigV1Schema = v.pipe(
   v.object({
     version: v.optional(v.pipe(v.number(), v.minValue(1)), CURRENT_CONFIG_VERSION),
     levels: v.array(
@@ -57,13 +62,17 @@ export const exportConfigSchema = v.pipe(
     );
   }, "Contrast levels are out of selected contrast model bounds"),
 );
-export type ExportConfig = v.InferOutput<typeof exportConfigSchema>;
+export type ExportConfigV1 = v.InferOutput<typeof exportConfigV1Schema>;
+
+// Aliases for the latest export config version
+export const exportConfigSchema = exportConfigV1Schema;
+export type ExportConfig = ExportConfigV1;
 
 export function parseExportConfig(configString: string | Record<string, unknown>): ExportConfig {
   try {
     const parsed =
       typeof configString === "string" ? (JSON.parse(configString) as unknown) : configString;
-    const result = safeParse(exportConfigSchema, parsed);
+    const result = safeParse(exportConfigV1Schema, parsed);
 
     if (!result.success) {
       throw new ValidationError(formatValidationError(result.issues));
