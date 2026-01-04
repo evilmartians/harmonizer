@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 
-import { defaultConfig } from "@core/defaultConfig";
 import { deflate } from "@core/utils/compression/deflate";
 import { encodeUrlSafeBase64 } from "@core/utils/compression/encodeUrlSafeBase64";
 
@@ -21,21 +20,20 @@ describe("decodeHashConfig", () => {
       const hash = encodeUrlSafeBase64(compressed);
       const result = await decodeHashConfig(hash);
 
-      expect(result.version).toBe(1);
-      expect(result.levels).toHaveLength(fullConfigV1.levels.length);
-      expect(result.hues).toHaveLength(fullConfigV1.hues.length);
-      expect(result.settings.contrastModel).toBe(fullConfigV1.settings.contrastModel);
+      expect(result?.version).toBe(1);
+      expect(result?.levels).toHaveLength(fullConfigV1.levels.length);
+      expect(result?.hues).toHaveLength(fullConfigV1.hues.length);
+      expect(result?.settings.contrastModel).toBe(fullConfigV1.settings.contrastModel);
     });
 
     it("should decode a minimal v1 config", async () => {
       const compressed = await deflate(JSON.stringify(minimalConfigV1));
       const hash = encodeUrlSafeBase64(compressed);
-
       const result = await decodeHashConfig(hash);
 
-      expect(result.version).toBe(1);
-      expect(result.levels).toHaveLength(minimalConfigV1.levels.length);
-      expect(result.hues).toHaveLength(minimalConfigV1.hues.length);
+      expect(result?.version).toBe(1);
+      expect(result?.levels).toHaveLength(minimalConfigV1.levels.length);
+      expect(result?.hues).toHaveLength(minimalConfigV1.hues.length);
     });
 
     it("should handle hash with # prefix", async () => {
@@ -43,8 +41,8 @@ describe("decodeHashConfig", () => {
       const hash = `#${encodeUrlSafeBase64(compressed)}`;
       const result = await decodeHashConfig(hash);
 
-      expect(result.version).toBe(1);
-      expect(result.levels).toHaveLength(fullConfigV1.levels.length);
+      expect(result?.version).toBe(1);
+      expect(result?.levels).toHaveLength(fullConfigV1.levels.length);
     });
   });
 
@@ -52,44 +50,44 @@ describe("decodeHashConfig", () => {
     it("should decode legacy APCA config hash", async () => {
       const result = await decodeHashConfig(legacyHashApca.hash);
 
-      expect(result.version).toBe(1);
-      expect(result.settings.contrastModel).toBe("apca");
-      expect(result.levels.length).toEqual(2);
-      expect(result.hues.length).toEqual(2);
+      expect(result?.version).toBe(1);
+      expect(result?.settings.contrastModel).toBe("apca");
+      expect(result?.levels.length).toEqual(2);
+      expect(result?.hues.length).toEqual(2);
     });
 
     it("should decode legacy WCAG config hash", async () => {
       const result = await decodeHashConfig(legacyHashWcag.hash);
 
-      expect(result.version).toBe(1);
-      expect(result.settings.contrastModel).toBe("wcag");
-      expect(result.levels.length).toEqual(1);
-      expect(result.hues.length).toEqual(1);
+      expect(result?.version).toBe(1);
+      expect(result?.settings.contrastModel).toBe("wcag");
+      expect(result?.levels.length).toEqual(1);
+      expect(result?.hues.length).toEqual(1);
     });
 
     it("should decode legacy full config hash", async () => {
       const result = await decodeHashConfig(legacyHashFull.hash);
 
-      expect(result.version).toBe(1);
-      expect(result.levels.length).equal(9);
-      expect(result.hues.length).equal(5);
+      expect(result?.version).toBe(1);
+      expect(result?.levels.length).equal(9);
+      expect(result?.hues.length).equal(5);
     });
 
     it("should handle legacy hash with # prefix", async () => {
       const result = await decodeHashConfig(`#${legacyHashApca.hash}`);
 
-      expect(result.version).toBe(1);
-      expect(result.settings.contrastModel).toBe("apca");
+      expect(result?.version).toBe(1);
+      expect(result?.settings.contrastModel).toBe("apca");
     });
   });
 
   describe("fallback behavior", () => {
     it.each([legacyHashInvalid.hash, "", "#", "not-valid-base64-!@#$%"])(
-      "should return default config for invalid hash: '%s'",
+      "should return null for invalid hash: '%s'",
       async (hash) => {
         const result = await decodeHashConfig(hash);
 
-        expect(result).toEqual(defaultConfig);
+        expect(result).toBeNull();
       },
     );
   });
@@ -102,10 +100,10 @@ describe("decodeHashConfig", () => {
 
       const result = await decodeHashConfig(encoded);
 
-      expect(result.version).toBe(original.version);
-      expect(result.levels).toHaveLength(original.levels.length);
-      expect(result.hues).toHaveLength(original.hues.length);
-      expect(result.settings.contrastModel).toBe(original.settings.contrastModel);
+      expect(result?.version).toBe(original.version);
+      expect(result?.levels).toHaveLength(original.levels.length);
+      expect(result?.hues).toHaveLength(original.hues.length);
+      expect(result?.settings.contrastModel).toBe(original.settings.contrastModel);
     });
   });
 });

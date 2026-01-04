@@ -1,6 +1,5 @@
 import * as v from "valibot";
 
-import { getDefaultConfigCopy } from "@core/defaultConfig";
 import type { ExportConfig } from "@core/types";
 import { decodeUrlSafeBase64 } from "@core/utils/compression/decodeUrlSafeBase64";
 import { inflate } from "@core/utils/compression/inflate";
@@ -19,7 +18,7 @@ import { migrateFromLegacyCompact } from "./migrateFromLegacyCompact";
  * @param hash - URL hash (with or without # prefix)
  * @returns Fully migrated ExportConfig at latest version
  */
-export async function decodeHashConfig(hash: string): Promise<ExportConfig> {
+export async function decodeHashConfig(hash: string): Promise<ExportConfig | null> {
   const hashData = hash.replaceAll(/^#/g, "");
 
   // Try new compression format first (deflate-raw + url-safe base64)
@@ -46,8 +45,5 @@ export async function decodeHashConfig(hash: string): Promise<ExportConfig> {
     console.error("Failed to decode hash config", error);
   }
 
-  // Fallback to default config, validated with versioned schema
-  const defaultConfig = getDefaultConfigCopy();
-  const parsed = v.parse(versionedExportConfigSchema, defaultConfig);
-  return await migrate(parsed);
+  return null;
 }

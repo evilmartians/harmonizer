@@ -17,27 +17,27 @@ function loadConfigFixture(filePath: string): Record<string, unknown> {
 }
 
 describe(parseExportConfig, () => {
-  test("parses JSON string input", () => {
+  test("parses JSON string input", async () => {
     const config = loadConfigFixture("configs/v1/minimal.json");
     const jsonString = JSON.stringify(config);
-    const result = parseExportConfig(jsonString);
+    const result = await parseExportConfig(jsonString);
 
     expect(result).toBeDefined();
     expect(result.levels).toHaveLength(1);
     expect(result.hues).toHaveLength(1);
   });
 
-  test("parses object input directly", () => {
+  test("parses object input directly", async () => {
     const config = loadConfigFixture("configs/v1/minimal.json");
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result).toBeDefined();
     expect(result.levels).toHaveLength(1);
   });
 
-  test("parses config without version field", () => {
+  test("parses config without version field", async () => {
     const config = loadConfigFixture("configs/v1/no-version.json");
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result).toBeDefined();
     expect(result.levels).toHaveLength(3);
@@ -45,7 +45,7 @@ describe(parseExportConfig, () => {
     expect(result.version).toBe(1); // Defaults to 1
   });
 
-  test("parses config with version: 1", () => {
+  test("parses config with version: 1", async () => {
     const config = {
       version: 1,
       levels: [{ name: "500", contrast: 51, chroma: 0 }],
@@ -57,36 +57,16 @@ describe(parseExportConfig, () => {
         colorSpace: "p3",
         bgColorLight: "#fff",
         bgColorDark: "#000",
-        bgLightStart: 5,
+        bgLightStart: 1,
       },
     };
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result.version).toBe(1);
   });
 
-  test("parses config with future version (accepts unknown versions)", () => {
-    const config = {
-      version: 999,
-      levels: [{ name: "500", contrast: 51, chroma: 0 }],
-      hues: [{ name: "blue", angle: 250 }],
-      settings: {
-        contrastModel: "apca",
-        directionMode: "fgToBg",
-        chromaMode: "even",
-        colorSpace: "p3",
-        bgColorLight: "#fff",
-        bgColorDark: "#000",
-        bgLightStart: 5,
-      },
-    };
-    const result = parseExportConfig(config);
-
-    expect(result.version).toBe(999);
-  });
-
-  test("throws for invalid versions", () => {
-    const invalidVersions = [0, -1, "1", null];
+  test("throws for invalid versions", async () => {
+    const invalidVersions = [0, -1, "1", 10_000, null];
 
     for (const version of invalidVersions) {
       const config = {
@@ -100,31 +80,31 @@ describe(parseExportConfig, () => {
           colorSpace: "p3",
           bgColorLight: "#fff",
           bgColorDark: "#000",
-          bgLightStart: 5,
+          bgLightStart: 1,
         },
       };
 
-      expect(() => parseExportConfig(config)).toThrow(ValidationError);
+      await expect(parseExportConfig(config)).rejects.toThrow(ValidationError);
     }
   });
 
-  test("throws ValidationError for invalid JSON string", () => {
+  test("throws ValidationError for invalid JSON string", async () => {
     const invalidJson = "{ invalid json }";
 
-    expect(() => parseExportConfig(invalidJson)).toThrow(ValidationError);
-    expect(() => parseExportConfig(invalidJson)).toThrow("cannot parse JSON");
+    await expect(parseExportConfig(invalidJson)).rejects.toThrow(ValidationError);
+    await expect(parseExportConfig(invalidJson)).rejects.toThrow("cannot parse JSON");
   });
 
-  test("throws ValidationError for missing required fields", () => {
+  test("throws ValidationError for missing required fields", async () => {
     const invalidConfig = {
       levels: [{ name: "500", contrast: 51, chroma: 0 }],
       // Missing hues and settings
     };
 
-    expect(() => parseExportConfig(invalidConfig)).toThrow(ValidationError);
+    await expect(parseExportConfig(invalidConfig)).rejects.toThrow(ValidationError);
   });
 
-  test("throws ValidationError for out-of-bounds contrast", () => {
+  test("throws ValidationError for out-of-bounds contrast", async () => {
     const invalidConfig = {
       levels: [{ name: "500", contrast: 999, chroma: 0 }],
       hues: [{ name: "blue", angle: 250 }],
@@ -139,10 +119,10 @@ describe(parseExportConfig, () => {
       },
     };
 
-    expect(() => parseExportConfig(invalidConfig)).toThrow(ValidationError);
+    await expect(parseExportConfig(invalidConfig)).rejects.toThrow(ValidationError);
   });
 
-  test("throws for cross-field validation errors (contrast bounds)", () => {
+  test("throws for cross-field validation errors (contrast bounds)", async () => {
     const invalidConfig = {
       levels: [{ name: "500", contrast: 200, chroma: 0 }],
       hues: [{ name: "blue", angle: 250 }],
@@ -157,10 +137,10 @@ describe(parseExportConfig, () => {
       },
     };
 
-    expect(() => parseExportConfig(invalidConfig)).toThrow(ValidationError);
+    await expect(parseExportConfig(invalidConfig)).rejects.toThrow(ValidationError);
   });
 
-  test("parses config with chromaCap null", () => {
+  test("parses config with chromaCap null", async () => {
     const config = {
       levels: [{ name: "500", contrast: 51, chroma: 0, chromaCap: null }],
       hues: [{ name: "blue", angle: 250 }],
@@ -171,15 +151,15 @@ describe(parseExportConfig, () => {
         colorSpace: "p3",
         bgColorLight: "#fff",
         bgColorDark: "#000",
-        bgLightStart: 5,
+        bgLightStart: 1,
       },
     };
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result.levels[0]?.chromaCap).toBeNull();
   });
 
-  test("parses config with chromaCap number", () => {
+  test("parses config with chromaCap number", async () => {
     const config = {
       levels: [{ name: "500", contrast: 51, chroma: 0, chromaCap: 0.3 }],
       hues: [{ name: "blue", angle: 250 }],
@@ -190,19 +170,23 @@ describe(parseExportConfig, () => {
         colorSpace: "p3",
         bgColorLight: "#fff",
         bgColorDark: "#000",
-        bgLightStart: 5,
+        bgLightStart: 1,
       },
     };
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result.levels[0]?.chromaCap).toBe(0.3);
   });
 
-  test("parses config with all fields", () => {
+  test("parses config with all fields", async () => {
     const config = {
       levels: [
         { name: "100", contrast: 100, chroma: 0 },
+        { name: "200", contrast: 90, chroma: 0 },
+        { name: "300", contrast: 77, chroma: 0 },
+        { name: "400", contrast: 65, chroma: 0 },
         { name: "500", contrast: 51, chroma: 0 },
+        { name: "600", contrast: 65, chroma: 0 },
       ],
       hues: [
         { name: "red", angle: 0 },
@@ -218,9 +202,9 @@ describe(parseExportConfig, () => {
         bgLightStart: 5,
       },
     };
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
-    expect(result.levels).toHaveLength(2);
+    expect(result.levels).toHaveLength(6);
     expect(result.hues).toHaveLength(2);
     expect(result.settings).toMatchObject({
       contrastModel: "apca",
@@ -554,8 +538,8 @@ describe("roundtrip", () => {
     }
   });
 
-  test("works with minimal fixture", () => {
-    const config = parseExportConfig(loadConfigFixture("configs/v1/minimal.json"));
+  test("works with minimal fixture", async () => {
+    const config = await parseExportConfig(loadConfigFixture("configs/v1/minimal.json"));
     const compact = toCompactExportConfig(config);
     const restored = toExportConfig(compact);
 
@@ -563,8 +547,8 @@ describe("roundtrip", () => {
     expect(restored.hues).toHaveLength(config.hues.length);
   });
 
-  test("works with full fixture", () => {
-    const config = parseExportConfig(loadConfigFixture("configs/v1/no-version.json"));
+  test("works with full fixture", async () => {
+    const config = await parseExportConfig(loadConfigFixture("configs/v1/no-version.json"));
     const compact = toCompactExportConfig(config);
     const restored = toExportConfig(compact);
 
@@ -572,8 +556,8 @@ describe("roundtrip", () => {
     expect(restored.hues).toHaveLength(2);
   });
 
-  test("works with chromaCap fixture", () => {
-    const config = parseExportConfig(loadConfigFixture("configs/v1/with-chromacap.json"));
+  test("works with chromaCap fixture", async () => {
+    const config = await parseExportConfig(loadConfigFixture("configs/v1/with-chromacap.json"));
     const compact = toCompactExportConfig(config);
     const restored = toExportConfig(compact);
 
@@ -584,25 +568,25 @@ describe("roundtrip", () => {
 });
 
 describe("fixtures", () => {
-  test("minimal.json parses correctly", () => {
+  test("minimal.json parses correctly", async () => {
     const config = loadConfigFixture("configs/v1/minimal.json");
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result.levels).toHaveLength(1);
     expect(result.hues).toHaveLength(1);
   });
 
-  test("no-version.json parses correctly", () => {
+  test("no-version.json parses correctly", async () => {
     const config = loadConfigFixture("configs/v1/no-version.json");
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result.levels).toHaveLength(3);
     expect(result.hues).toHaveLength(2);
   });
 
-  test("with-chromacap.json parses and preserves chromaCap", () => {
+  test("with-chromacap.json parses and preserves chromaCap", async () => {
     const config = loadConfigFixture("configs/v1/with-chromacap.json");
-    const result = parseExportConfig(config);
+    const result = await parseExportConfig(config);
 
     expect(result.levels[0]?.chromaCap).toBe(0.3);
     // Valibot optional() keeps explicit null as null (only omitted fields become undefined)
@@ -610,17 +594,15 @@ describe("fixtures", () => {
     expect(result.levels[2]?.chromaCap).toBeUndefined();
   });
 
-  test("future-version.json is not rejected (no version validation yet)", () => {
+  test("future-version.json is not rejected (no version validation yet)", async () => {
     const config = loadConfigFixture("configs/invalid/future-version.json");
-    // Currently there's no version validation, so this should parse fine
-    const result = parseExportConfig(config);
 
-    expect(result).toBeDefined();
+    await expect(parseExportConfig(config)).rejects.toThrow(ValidationError);
   });
 
-  test("malformed.json throws ValidationError", () => {
+  test("malformed.json throws ValidationError", async () => {
     const config = loadConfigFixture("configs/invalid/malformed.json");
 
-    expect(() => parseExportConfig(config)).toThrow(ValidationError);
+    await expect(parseExportConfig(config)).rejects.toThrow(ValidationError);
   });
 });

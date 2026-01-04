@@ -6,7 +6,7 @@ import type { ExportConfig } from "@core/types";
 import { MigrationBuilder } from "./migrationBuilder";
 
 const configMigrations = MigrationBuilder.create<ExportConfigVersioned>()
-  .addMigration(1, (input) => ({ ...input, version: 1 }))
+  .addMigration(1, (input) => input) // v1 is the initial version, no changes
   .build((result): ExportConfig => v.parse(exportConfigSchema, result));
 
 /**

@@ -4,18 +4,18 @@ import { pluginChannel } from "@ui/pluginChannel";
 
 import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindowHandle";
 
-pluginChannel.on("ready", ({ storedConfig, inP3 }) => {
+pluginChannel.on("ready", async ({ storedConfig, inP3 }) => {
   const hasPalette = !!storedConfig;
-  const appConfig = (() => {
+  const appConfig = await (async () => {
     try {
       if (hasPalette) {
-        return parseExportConfig(storedConfig);
+        return await parseExportConfig(storedConfig);
       }
     } catch {
       // Ignore error and use default config
     }
 
-    return getDefaultConfigCopy();
+    return await parseExportConfig(getDefaultConfigCopy());
   })();
 
   appConfig.settings.colorSpace = ColorSpace(inP3 ? "p3" : "srgb");

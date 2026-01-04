@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-import { formatValidationError, safeParse } from "@core/schemas";
+import { migrate } from "@core/schemas/migrations/migrate";
 import { ValidationError } from "@core/utils/errors/ValidationError";
 
 import { LevelChroma } from "./brand";
@@ -29,13 +29,13 @@ import {
 export const CURRENT_CONFIG_VERSION = 1;
 
 export const versionedExportConfigSchema = v.looseObject({
-  version: v.pipe(v.number(), v.minValue(1)),
+  version: v.optional(v.pipe(v.number(), v.minValue(1)), 1),
 });
 export type ExportConfigVersioned = v.InferOutput<typeof versionedExportConfigSchema>;
 
 export const exportConfigV1Schema = v.pipe(
   v.object({
-    version: v.optional(v.pipe(v.number(), v.minValue(1)), CURRENT_CONFIG_VERSION),
+    version: versionedExportConfigSchema.entries.version,
     levels: v.array(
       v.object({
         name: levelNameSchema,
@@ -71,19 +71,27 @@ export type ExportConfigV1 = v.InferOutput<typeof exportConfigV1Schema>;
 export const exportConfigSchema = exportConfigV1Schema;
 export type ExportConfig = ExportConfigV1;
 
-export function parseExportConfig(configString: string | Record<string, unknown>): ExportConfig {
+export async function parseExportConfig(
+  configString: string | Record<string, unknown>,
+): Promise<ExportConfig> {
+  let parsed: unknown;
+
   try {
-    const parsed =
+    parsed =
       typeof configString === "string" ? (JSON.parse(configString) as unknown) : configString;
-    const result = safeParse(exportConfigV1Schema, parsed);
-
-    if (!result.success) {
-      throw new ValidationError(formatValidationError(result.issues));
-    }
-
-    return result.output;
   } catch {
     throw new ValidationError("Invalid config — cannot parse JSON");
+  }
+
+  try {
+    const versionedConfig = v.parse(versionedExportConfigSchema, parsed);
+
+    return await migrate(versionedConfig);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      throw error;
+    }
+    throw new ValidationError(error instanceof Error ? error.message : "Failed to migrate config");
   }
 }
 
