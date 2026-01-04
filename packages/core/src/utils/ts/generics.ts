@@ -13,12 +13,12 @@ export type PartialRequired<
     } & Omit<Base, RequiredKeys>
   : never;
 
-export type NoDeepReadonly<T> =
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends Record<string, any>
-    ? { -readonly [K in keyof T]: NoDeepReadonly<T[K]> }
-    : T extends readonly (infer U)[]
-      ? U[]
-      : T extends Readonly<infer U>
-        ? U
-        : T;
+type Primitive = string | number | boolean | bigint | symbol | undefined | null;
+
+export type NoDeepReadonly<T> = T extends Primitive
+  ? T
+  : T extends readonly (infer U)[]
+    ? NoDeepReadonly<U>[]
+    : T extends object
+      ? { -readonly [K in keyof T]: NoDeepReadonly<T[K]> }
+      : T;
