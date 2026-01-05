@@ -2,8 +2,11 @@ import { batch, signal } from "@spred/core";
 import { debounce } from "es-toolkit";
 
 import { defaultConfig } from "@core/defaultConfig";
-import { CURRENT_CONFIG_VERSION, parseExportConfig } from "@core/schemas/exportConfig";
-import { decodeHashConfig } from "@core/schemas/migrations/decodeHashConfig";
+import {
+  CURRENT_CONFIG_VERSION,
+  parseExportConfig,
+  decodeHashConfig,
+} from "@core/schemas/exportConfig";
 import type { ExportConfig } from "@core/types";
 import { deflate } from "@core/utils/compression/deflate";
 import { encodeUrlSafeBase64 } from "@core/utils/compression/encodeUrlSafeBase64";

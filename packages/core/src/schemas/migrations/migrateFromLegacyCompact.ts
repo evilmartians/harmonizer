@@ -1,19 +1,54 @@
 import * as v from "valibot";
 
-import {
-  type CompactExportConfig,
-  type ExportConfigV1,
-  parseCompactExportConfig,
-} from "@core/schemas/exportConfig";
+import type { ExportConfigV1 } from "@core/schemas/exportConfig";
 
 import { LevelChroma } from "../brand";
 import {
+  colorStringSchema,
   getLevelContrastModel,
   hueAngleSchema,
   hueNameSchema,
   levelChromaCapSchema,
   levelNameSchema,
 } from "../color";
+import {
+  contrastModelSchema,
+  directionModeSchema,
+  chromaModeSchema,
+  bgRightStartSchema,
+  colorSpaceSchema,
+} from "../settings";
+
+const compactExportConfigSchema = v.pipe(
+  v.tuple([
+    v.pipe(
+      v.array(v.union([v.string(), v.number(), v.null()])),
+      v.description("Level name, contrast and chroma cap as a plain array"),
+    ),
+    v.pipe(
+      v.array(v.union([v.string(), v.number()])),
+      v.description("Hue name and angle as a plain array"),
+    ),
+    v.pipe(
+      v.tuple([
+        contrastModelSchema,
+        directionModeSchema,
+        chromaModeSchema,
+        colorStringSchema,
+        colorStringSchema,
+        bgRightStartSchema,
+        colorSpaceSchema,
+      ]),
+      v.description("Settings as a plain array"),
+    ),
+  ]),
+);
+
+type CompactExportConfig = v.InferOutput<typeof compactExportConfigSchema>;
+
+export function parseCompactExportConfig(value: unknown): CompactExportConfig {
+  return v.parse(compactExportConfigSchema, value);
+}
 
 function toExportConfigV1(compactConfig: CompactExportConfig): ExportConfigV1 {
   const contrastModel = compactConfig[2][0];
