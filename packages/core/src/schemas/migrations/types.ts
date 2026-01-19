@@ -4,7 +4,7 @@ export type MigrationFn<In, Out> = (input: In) => Out | Promise<Out>;
 
 export type MigrationDefinition = {
   version: number;
-  migrate: MigrationFn<unknown, unknown>;
+  migrate: MigrationFn<unknown, ExportConfigVersioned>;
 };
 
 export type MigrationChain<Out> = {

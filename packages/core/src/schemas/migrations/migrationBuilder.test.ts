@@ -16,8 +16,8 @@ type ConfigV2 = {
 };
 
 type ConfigV3 = {
-  version: number;
-  title: string; // renamed from name
+  version: 3;
+  title: string;
   description: string;
   tags: string[];
 };
@@ -79,8 +79,8 @@ describe("MigrationBuilder", () => {
     describe("migrate", () => {
       it("should parse and return config if already at latest version", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(1, (input): ConfigV1 => ({ ...input, version: 1 }))
-          .build((result): ConfigV1 => ({ ...result, name: result.name.toUpperCase() }));
+          .addMigration(1, (input): ConfigV1 => ({ ...input }))
+          .build((result) => ({ ...result, name: result.name.toUpperCase() }));
 
         const config: ConfigV1 = { version: 1, name: "test" };
         const result = await chain.migrate(config);
@@ -90,15 +90,11 @@ describe("MigrationBuilder", () => {
 
       it("should apply single migration and parser", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(
-            1,
-            (input): ConfigV2 => ({
-              version: 1,
-              name: input.name || "default",
-              description: "",
-            }),
-          )
-          .build((result): ConfigV2 => ({ ...result, description: "parsed" }));
+          .addMigration(1, (input) => ({
+            name: input.name || "default",
+            description: "",
+          }))
+          .build((result) => ({ ...result, description: "parsed" }));
 
         const result = await chain.migrate({ version: 0 } as ConfigV1);
 
@@ -111,31 +107,19 @@ describe("MigrationBuilder", () => {
 
       it("should apply multiple migrations in sequence", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(
-            1,
-            (input): ConfigV1 => ({
-              version: 1,
-              name: input.name || "default",
-            }),
-          )
-          .addMigration(
-            2,
-            (input): ConfigV2 => ({
-              version: 2,
-              name: input.name,
-              description: "added in v2",
-            }),
-          )
-          .addMigration(
-            3,
-            (input): ConfigV3 => ({
-              version: 3,
-              title: input.name,
-              description: input.description,
-              tags: [],
-            }),
-          )
-          .build((result): ConfigV3 => result);
+          .addMigration(1, (input) => ({
+            name: input.name || "default",
+          }))
+          .addMigration(2, (input) => ({
+            name: input.name,
+            description: "added in v2",
+          }))
+          .addMigration(3, (input) => ({
+            title: input.name,
+            description: input.description,
+            tags: [],
+          }))
+          .build((result) => result);
 
         const result = await chain.migrate({ version: 0 } as ConfigV1);
 
@@ -151,19 +135,19 @@ describe("MigrationBuilder", () => {
         const migrationCalls: number[] = [];
 
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(1, (input): ConfigV1 => {
+          .addMigration(1, (input) => {
             migrationCalls.push(1);
-            return { version: 1, name: input.name || "default" };
+            return { name: input.name || "default" };
           })
-          .addMigration(2, (input): ConfigV2 => {
+          .addMigration(2, (input) => {
             migrationCalls.push(2);
-            return { version: 2, name: input.name, description: "v2" };
+            return { name: input.name, description: "v2" };
           })
-          .addMigration(3, (input): ConfigV3 => {
+          .addMigration(3, (input) => {
             migrationCalls.push(3);
-            return { version: 3, title: input.name, description: input.description, tags: [] };
+            return { title: input.name, description: input.description, tags: [] };
           })
-          .build((result): ConfigV3 => result);
+          .build((result) => result);
 
         await chain.migrate({ version: 2, name: "test", description: "existing" } as ConfigV2);
 
@@ -172,15 +156,14 @@ describe("MigrationBuilder", () => {
 
       it("should support async migrations", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(1, async (input): Promise<ConfigV2> => {
+          .addMigration(1, async (input) => {
             await new Promise((resolve) => setTimeout(resolve, 10));
             return {
-              version: 1,
               name: input.name || "async",
               description: "async migration",
             };
           })
-          .build((result): ConfigV2 => result);
+          .build((result) => result);
 
         const result = await chain.migrate({ version: 0 } as ConfigV1);
 
@@ -193,16 +176,16 @@ describe("MigrationBuilder", () => {
 
       it("should throw if config version is higher than latest migration", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(1, (input): ConfigV1 => ({ ...input, version: 1 }))
-          .build((result): ConfigV1 => result);
+          .addMigration(1, (input) => ({ ...input }))
+          .build((result) => result);
 
         await expect(chain.migrate({ version: 5 } as ConfigV1)).rejects.toThrow(MigrationError);
       });
 
       it("should throw if config version is negative", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(1, (input): ConfigV1 => ({ ...input, version: 1 }))
-          .build((result): ConfigV1 => result);
+          .addMigration(1, (input) => ({ ...input }))
+          .build((result) => result);
 
         await expect(chain.migrate({ version: -1 } as ConfigV1)).rejects.toThrow(
           /Unsupported config version -1/,
@@ -211,8 +194,8 @@ describe("MigrationBuilder", () => {
 
       it("should support async parser", async () => {
         const chain = MigrationBuilder.create<ConfigV1>()
-          .addMigration(1, (input): ConfigV1 => ({ ...input, version: 1 }))
-          .build(async (result): Promise<ConfigV1> => {
+          .addMigration(1, (input) => ({ ...input }))
+          .build(async (result) => {
             await new Promise((resolve) => setTimeout(resolve, 5));
             return { ...result, name: "async-parsed" };
           });
@@ -227,41 +210,27 @@ describe("MigrationBuilder", () => {
   describe("type inference", () => {
     it("should correctly infer output type through chain and parser", async () => {
       const chain = MigrationBuilder.create<ConfigV1>()
-        .addMigration(
-          1,
-          (input): ConfigV1 => ({
-            version: 1,
-            name: input.name || "default",
-          }),
-        )
-        .addMigration(
-          2,
-          (input): ConfigV2 => ({
-            version: 2,
-            name: input.name,
-            description: "",
-          }),
-        )
-        .addMigration(
-          3,
-          (input): ConfigV3 => ({
-            version: 3,
-            title: input.name,
-            description: input.description,
-            tags: [],
-          }),
-        )
-        .build((result): ConfigV3 => result);
+        .addMigration(1, (input) => ({
+          name: input.name || "default",
+        }))
+        .addMigration(2, (input) => ({
+          name: input.name,
+          description: "",
+        }))
+        .addMigration(3, (input) => ({
+          title: input.name,
+          description: input.description,
+          tags: [],
+        }))
+        .build((result) => result);
 
       const result = await chain.migrate({ version: 0 } as ConfigV1);
+      // Type-level test: result must satisfy ConfigV3. This is a compile-time check - if types are wrong, this won't compile
+      const typedResult: ConfigV3 = result satisfies ConfigV3;
 
-      // TypeScript should know result is ConfigV3
-      // This is a compile-time check - if types are wrong, this won't compile
-      const title: string = result.title;
-      const tags: string[] = result.tags;
-
-      expect(title).toBe("default");
-      expect(tags).toEqual([]);
+      expect(typedResult.title).toBe("default");
+      expect(typedResult.tags).toEqual([]);
+      expect(typedResult.version).toBe(3);
     });
   });
 });

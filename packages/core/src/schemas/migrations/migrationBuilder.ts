@@ -44,10 +44,10 @@ export class MigrationBuilder<In extends ExportConfigVersioned, Out> {
    * @returns New builder with updated output type
    * @throws MigrationError if version is invalid or not sequential
    */
-  addMigration<NewOut>(
-    version: number,
+  addMigration<V extends number, NewOut>(
+    version: V,
     migrate: MigrationFn<Out, NewOut>,
-  ): MigrationBuilder<In, NewOut> {
+  ): MigrationBuilder<In, Omit<NewOut, "version"> & { version: V }> {
     if (!Number.isInteger(version) || version < 1) {
       throw new MigrationError(`Version must be a positive integer, got: ${version}`);
     }
@@ -61,10 +61,13 @@ export class MigrationBuilder<In extends ExportConfigVersioned, Out> {
 
     const newMigrations: MigrationDefinition[] = [
       ...this.migrations,
-      { version, migrate: migrate as MigrationFn<unknown, unknown> },
+      { version, migrate: migrate as MigrationFn<unknown, ExportConfigVersioned> },
     ];
 
-    return new MigrationBuilder<In, NewOut>(newMigrations, version);
+    return new MigrationBuilder<In, Omit<NewOut, "version"> & { version: V }>(
+      newMigrations,
+      version,
+    );
   }
 
   /**
@@ -104,10 +107,10 @@ export class MigrationBuilder<In extends ExportConfigVersioned, Out> {
         }
 
         // For version 0 (unversioned), we start at index 0 to run all migrations
-        let result: unknown = config;
+        let result: ExportConfigVersioned = config;
         const migrationsToApply = migrations.slice(configVersion);
         for (const migration of migrationsToApply) {
-          result = await migration.migrate(result);
+          result = { ...(await migration.migrate(result)), version: migration.version };
         }
 
         return parse(result);
