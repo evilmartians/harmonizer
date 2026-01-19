@@ -60,6 +60,7 @@ export const bgColorRightStore = validationStore(
 );
 
 export const $bgRightStart = signal(BgRightStart(defaultConfig.settings.bgLightStart));
+export const $showContrastLabels = signal(false);
 export const $isSingleBgLeft = signal((get) =>
   isSingleBgLeft(get($bgRightStart), get($levelsCount)),
 );

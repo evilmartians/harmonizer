@@ -42,7 +42,6 @@ describe(parseExportConfig, () => {
     expect(result).toBeDefined();
     expect(result.levels).toHaveLength(3);
     expect(result.hues).toHaveLength(2);
-    expect(result.version).toBe(1); // Defaults to 1
   });
 
   test("parses config with version: 1", async () => {
@@ -62,7 +61,7 @@ describe(parseExportConfig, () => {
     };
     const result = await parseExportConfig(config);
 
-    expect(result.version).toBe(1);
+    expect(result.settings.contrastModel).toBe("apca");
   });
 
   test("throws for invalid versions", async () => {
@@ -226,7 +225,6 @@ describe(decodeHashConfig, () => {
       const hash = encodeUrlSafeBase64(compressed);
       const result = await decodeHashConfig(hash);
 
-      expect(result?.version).toBe(1);
       expect(result?.levels).toHaveLength(9);
       expect(result?.hues).toHaveLength(5);
       expect(result?.settings.contrastModel).toBe("apca");
@@ -238,7 +236,6 @@ describe(decodeHashConfig, () => {
       const hash = encodeUrlSafeBase64(compressed);
       const result = await decodeHashConfig(hash);
 
-      expect(result?.version).toBe(1);
       expect(result?.levels).toHaveLength(1);
       expect(result?.hues).toHaveLength(1);
     });
@@ -249,7 +246,6 @@ describe(decodeHashConfig, () => {
       const hash = `#${encodeUrlSafeBase64(compressed)}`;
       const result = await decodeHashConfig(hash);
 
-      expect(result?.version).toBe(1);
       expect(result?.levels).toHaveLength(9);
     });
   });
@@ -259,7 +255,6 @@ describe(decodeHashConfig, () => {
       const legacyHashApca = loadHashFixture("legacy/hashes/apca.json");
       const result = await decodeHashConfig(legacyHashApca);
 
-      expect(result?.version).toBe(1);
       expect(result?.settings.contrastModel).toBe("apca");
       expect(result?.levels.length).toEqual(2);
       expect(result?.hues.length).toEqual(2);
@@ -269,7 +264,6 @@ describe(decodeHashConfig, () => {
       const legacyHashWcag = loadHashFixture("legacy/hashes/wcag.json");
       const result = await decodeHashConfig(legacyHashWcag);
 
-      expect(result?.version).toBe(1);
       expect(result?.settings.contrastModel).toBe("wcag");
       expect(result?.levels.length).toEqual(1);
       expect(result?.hues.length).toEqual(1);
@@ -279,7 +273,6 @@ describe(decodeHashConfig, () => {
       const legacyHashFull = loadHashFixture("legacy/hashes/full.json");
       const result = await decodeHashConfig(legacyHashFull);
 
-      expect(result?.version).toBe(1);
       expect(result?.levels.length).equal(9);
       expect(result?.hues.length).equal(5);
     });
@@ -288,7 +281,6 @@ describe(decodeHashConfig, () => {
       const legacyHashApca = loadHashFixture("legacy/hashes/apca.json");
       const result = await decodeHashConfig(`#${legacyHashApca}`);
 
-      expect(result?.version).toBe(1);
       expect(result?.settings.contrastModel).toBe("apca");
     });
   });
@@ -314,7 +306,6 @@ describe(decodeHashConfig, () => {
 
       const result = await decodeHashConfig(encoded);
 
-      expect(result?.version).toBe(original.version);
       expect(result?.levels).toHaveLength(9);
       expect(result?.hues).toHaveLength(5);
       expect(result?.settings.contrastModel).toBe("apca");
@@ -359,5 +350,61 @@ describe("fixtures", () => {
     const config = loadConfigFixture("configs/invalid/malformed.json");
 
     await expect(parseExportConfig(config)).rejects.toThrow(ValidationError);
+  });
+});
+
+describe("v2 config", () => {
+  test("parses v2 minimal config (migrates from v1)", async () => {
+    const config = loadConfigFixture("configs/v2/minimal.json");
+    const result = await parseExportConfig(config);
+
+    expect(result.version).toBe(2);
+    expect(result.levels).toHaveLength(1);
+    expect(result.hues).toHaveLength(1);
+    expect(result.settings.showContrastLabels).toBe(true);
+  });
+
+  test("parses v2 full config with showContrastLabels: true", async () => {
+    const config = loadConfigFixture("configs/v2/full.json");
+    const result = await parseExportConfig(config);
+
+    expect(result.version).toBe(2);
+    expect(result.levels).toHaveLength(9);
+    expect(result.hues).toHaveLength(5);
+    expect(result.settings.showContrastLabels).toBe(true);
+  });
+
+  test("migrates v1 config to v2 with showContrastLabels: false", async () => {
+    const v1Config = loadConfigFixture("configs/v1/full.json");
+    const result = await parseExportConfig(v1Config);
+
+    expect(result.version).toBe(2);
+    expect(result.settings.showContrastLabels).toBe(false);
+  });
+});
+
+describe("decodeHashConfig v2", () => {
+  test("should decode a full v2 config", async () => {
+    const fullConfigV2 = loadConfigFixture("configs/v2/full.json");
+    const compressed = await deflate(JSON.stringify(fullConfigV2));
+    const hash = encodeUrlSafeBase64(compressed);
+    const result = await decodeHashConfig(hash);
+
+    expect(result?.version).toBe(2);
+    expect(result?.levels).toHaveLength(9);
+    expect(result?.hues).toHaveLength(5);
+    expect(result?.settings.showContrastLabels).toBe(true);
+  });
+
+  test("should decode a minimal v2 config", async () => {
+    const minimalConfigV2 = loadConfigFixture("configs/v2/minimal.json");
+    const compressed = await deflate(JSON.stringify(minimalConfigV2));
+    const hash = encodeUrlSafeBase64(compressed);
+    const result = await decodeHashConfig(hash);
+
+    expect(result?.version).toBe(2);
+    expect(result?.levels).toHaveLength(1);
+    expect(result?.hues).toHaveLength(1);
+    expect(result?.settings.showContrastLabels).toBe(true);
   });
 });

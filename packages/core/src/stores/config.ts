@@ -31,6 +31,7 @@ import {
 import {
   $bgRightStart,
   $isColorSpaceLocked,
+  $showContrastLabels,
   bgColorLeftStore,
   bgColorRightStore,
   chromaModeStore,
@@ -66,6 +67,7 @@ export const $exportConfig = signal<ExportConfig>((get) => {
       bgColorDark: get(bgColorLeftStore.$lastValidValue),
       bgLightStart: get($bgRightStart),
       colorSpace: get(colorSpaceStore.$lastValidValue),
+      showContrastLabels: get($showContrastLabels),
     },
   };
 });
@@ -163,6 +165,7 @@ export function updateConfig(config: ExportConfig) {
     bgColorRightStore.$raw.set(config.settings.bgColorLight);
     bgColorLeftStore.$raw.set(config.settings.bgColorDark);
     $bgRightStart.set(config.settings.bgLightStart);
+    $showContrastLabels.set(config.settings.showContrastLabels);
     if (!isDifferentFromLockedColorSpace) {
       colorSpaceStore.$raw.set(config.settings.colorSpace);
     }
