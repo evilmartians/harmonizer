@@ -1,20 +1,12 @@
 import * as v from "valibot";
 
-import {
-  exportConfigSchema,
-  exportConfigV1Schema,
-  type ExportConfigVersioned,
-} from "@core/schemas/exportConfig";
+import { exportConfigSchema, type ExportConfigVersioned } from "@core/schemas/exportConfig";
 import type { ExportConfig } from "@core/types";
 
 import { MigrationBuilder } from "./migrationBuilder";
 
 const configMigrations = MigrationBuilder.create<ExportConfigVersioned>()
-  .addMigration(1, (input) => v.parse(exportConfigV1Schema, input))
-  .addMigration(2, (input) => ({
-    ...input,
-    settings: { ...input.settings, showContrastLabels: false },
-  }))
+  .addMigration(1, (input) => input) // v1 is the initial version, no changes
   .build((result): ExportConfig => v.parse(exportConfigSchema, result));
 
 /**
