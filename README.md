@@ -68,6 +68,8 @@ The following PNPM commands are available for working with the repository:
 - `pnpm lint`: Runs the linter.
 - `pnpm format`: Runs formatters
 - `pnpm typecheck`: Runs typechecking
+- `pnpm test`: Run all tests
+- `pnpm test:watch`: Run tests in watch mode
 
 ### Store
 

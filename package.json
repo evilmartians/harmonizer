@@ -9,7 +9,6 @@
     "figma": "pnpm --filter @harmonizer/figma-plugin",
     "test": "pnpm --recursive test",
     "test:watch": "pnpm --recursive test:watch",
-    "test:core": "pnpm core test",
     "lint": "pnpm --parallel -w /^lint:*/",
     "lint:eslint": "eslint . --cache --cache-location=./node_modules/.tmp/eslint/.cache",
     "lint:prettier": "prettier --check .",

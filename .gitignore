@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# artifacts
+packages/**/coverage
+
 # Editor directories and files
 .idea
 .DS_Store
