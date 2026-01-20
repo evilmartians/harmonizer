@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "levels": [{ "name": "500", "contrast": 51, "chroma": 0 }],
+  "hues": [{ "name": "blue", "angle": 250 }],
+  "settings": {
+    "contrastModel": "apca",
+    "directionMode": "fgToBg",
+    "chromaMode": "even",
+    "colorSpace": "p3",
+    "bgColorLight": "#fff",
+    "bgColorDark": "#000",
+    "bgLightStart": 1
+  }
+}

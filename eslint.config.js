@@ -38,4 +38,11 @@ export default hideoo(
       ],
     },
   },
+  {
+    files: ["**/*.d.ts"],
+    rules: {
+      "@typescript-eslint/method-signature-style": "off",
+      "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    },
+  },
 );

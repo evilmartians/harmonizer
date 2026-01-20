@@ -1,9 +1,10 @@
 import { createContext, use } from "react";
 
+import type { ExportConfig } from "./schemas/exportConfig";
 import { invariant } from "./utils/assertions/invariant";
 
 export type AppDependencies = {
-  config: string | Record<string, unknown>;
+  config: ExportConfig;
   lockColorSpace: boolean;
 };
 

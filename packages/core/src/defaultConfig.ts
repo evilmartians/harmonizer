@@ -1,8 +1,10 @@
+import { CURRENT_CONFIG_VERSION } from "@core/schemas/exportConfig";
 import { HueAngle } from "@core/types";
 import { getClosestColorName } from "@core/utils/colors/getClosestColorName";
 import type { NoDeepReadonly } from "@core/utils/ts/generics";
 
 export const defaultConfig = {
+  version: CURRENT_CONFIG_VERSION,
   levels: [
     { name: "100", contrast: 100, chroma: 0 },
     { name: "200", contrast: 90, chroma: 0 },

@@ -7,7 +7,6 @@ import { FloatingActions } from "./components/FloatingActions/FloatingActions";
 import { Grid, type GridBanner } from "./components/Grid/Grid";
 import { MainContainer } from "./components/MainContainer/MainContainer";
 import { DependenciesContext, type AppDependencies } from "./DependenciesContext";
-import { parseExportConfig } from "./schemas/exportConfig";
 import { calculateColorsSynchronously } from "./stores/colors";
 import { updateConfig } from "./stores/config";
 import { $isColorSpaceLocked } from "./stores/settings";
@@ -31,10 +30,8 @@ export function createApp(
 
   const { config, lockColorSpace } = dependencies;
 
-  const parsedConfig = parseExportConfig(config);
-
   batch(() => {
-    updateConfig(parsedConfig);
+    updateConfig(config);
     $isColorSpaceLocked.set(lockColorSpace);
   });
 

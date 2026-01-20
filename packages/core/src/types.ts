@@ -13,7 +13,7 @@ import type {
 } from "@core/schemas/brand";
 
 import type { ExportConfig } from "./schemas/exportConfig";
-export type { ExportConfig } from "./schemas/exportConfig";
+export type { ExportConfig, ExportConfigVersioned } from "./schemas/exportConfig";
 
 export {
   BgRightStart,

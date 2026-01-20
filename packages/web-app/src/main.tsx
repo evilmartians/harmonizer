@@ -7,20 +7,26 @@ import { WebAppActions } from "src/components/WebAppActions/WebAppActions";
 
 import "./plausible";
 
-createApp(
-  document.querySelector("#root"),
-  {
-    config: syncConfigWithLocationHash(),
-    lockColorSpace: false,
-  },
-  {
-    precalculateColors: true,
-    customUI: {
-      gridBanner: {
-        $isClosed: $isBannerClosed,
-        component: <FigmaPluginBanner />,
-      },
-      actions: <WebAppActions />,
+async function main() {
+  const config = await syncConfigWithLocationHash();
+
+  createApp(
+    document.querySelector("#root"),
+    {
+      config,
+      lockColorSpace: false,
     },
-  },
-);
+    {
+      precalculateColors: true,
+      customUI: {
+        gridBanner: {
+          $isClosed: $isBannerClosed,
+          component: <FigmaPluginBanner />,
+        },
+        actions: <WebAppActions />,
+      },
+    },
+  );
+}
+
+void main();

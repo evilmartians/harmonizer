@@ -9,6 +9,10 @@
     "./media.css": "./src/media.css"
   },
   "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "typecheck": "pnpm tsc --build"
   },
   "dependencies": {
@@ -16,6 +20,7 @@
     "@spred/react": "^0.4.2",
     "apcach": "^0.6.4",
     "clsx": "^2.1.1",
+    "core-js": "^3.47.0",
     "culori": "^4.0.2",
     "es-toolkit": "^1.42.0",
     "fast-equals": "^5.3.3",
@@ -31,6 +36,9 @@
     "@types/node": "^22.19.1",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "vite": "^7.2.6"
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
+    "vite": "^7.2.6",
+    "vitest": "^4.0.16"
   }
 }

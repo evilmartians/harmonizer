@@ -1,9 +1,11 @@
 import * as v from "valibot";
 
-import { formatValidationError, safeParse } from "@core/schemas";
+import { migrate } from "@core/schemas/migrations/migrate";
+import { decodeUrlSafeBase64 } from "@core/utils/compression/decodeUrlSafeBase64";
+import { inflate } from "@core/utils/compression/inflate";
 import { ValidationError } from "@core/utils/errors/ValidationError";
+import { urlSafeAtob } from "@core/utils/url/urlSafeAtob";
 
-import { LevelChroma } from "./brand";
 import {
   baseContrastSchema,
   colorStringSchema,
@@ -14,6 +16,7 @@ import {
   levelChromaSchema,
   levelNameSchema,
 } from "./color";
+import { migrateFromLegacyCompact } from "./migrations/migrateFromLegacyCompact";
 import {
   bgRightStartSchema,
   chromaModeSchema,
@@ -22,8 +25,20 @@ import {
   directionModeSchema,
 } from "./settings";
 
-export const exportConfigSchema = v.pipe(
+/**
+ * Current version of the export config format
+ * Increment this when making breaking changes to the config schema
+ */
+export const CURRENT_CONFIG_VERSION = 1;
+
+export const versionedExportConfigSchema = v.looseObject({
+  version: v.optional(v.pipe(v.number(), v.minValue(1)), 1),
+});
+export type ExportConfigVersioned = v.InferOutput<typeof versionedExportConfigSchema>;
+
+export const exportConfigV1Schema = v.pipe(
   v.object({
+    version: versionedExportConfigSchema.entries.version,
     levels: v.array(
       v.object({
         name: levelNameSchema,
@@ -49,107 +64,80 @@ export const exportConfigSchema = v.pipe(
         v.safeParse(getLevelContrastModel(settings.contrastModel), contrast).success,
     );
   }, "Contrast levels are out of selected contrast model bounds"),
+  v.check(({ levels, settings }) => {
+    return settings.bgLightStart >= 0 && settings.bgLightStart <= levels.length;
+  }, "bgLightStart must be within the range of defined levels"),
 );
-export type ExportConfig = v.InferOutput<typeof exportConfigSchema>;
+export type ExportConfigV1 = v.InferOutput<typeof exportConfigV1Schema>;
 
-export function parseExportConfig(configString: string | Record<string, unknown>): ExportConfig {
+// Aliases for the latest export config version
+export const exportConfigSchema = exportConfigV1Schema;
+export type ExportConfig = ExportConfigV1;
+
+/**
+ * Parses and migrates an ExportConfig from a JSON string or object
+ *
+ * @param configString - JSON string or object representing the export config
+ * @returns Fully migrated ExportConfig at the latest version
+ */
+export async function parseExportConfig(
+  configString: string | Record<string, unknown>,
+): Promise<ExportConfig> {
+  let parsed: unknown;
+
   try {
-    const parsed =
+    parsed =
       typeof configString === "string" ? (JSON.parse(configString) as unknown) : configString;
-    const result = safeParse(exportConfigSchema, parsed);
-
-    if (!result.success) {
-      throw new ValidationError(formatValidationError(result.issues));
-    }
-
-    return result.output;
   } catch {
     throw new ValidationError("Invalid config — cannot parse JSON");
   }
+
+  try {
+    const versionedConfig = v.parse(versionedExportConfigSchema, parsed);
+
+    return await migrate(versionedConfig);
+  } catch (error) {
+    if (error instanceof ValidationError) {
+      throw error;
+    }
+    throw new ValidationError(error instanceof Error ? error.message : "Failed to migrate config");
+  }
 }
 
-export const compactExportConfigSchema = v.pipe(
-  v.tuple([
-    v.pipe(
-      v.array(v.union([v.string(), v.number(), v.null()])),
-      v.description("Level name, contrast and chroma cap as a plain array"),
-    ),
-    v.pipe(
-      v.array(v.union([v.string(), v.number()])),
-      v.description("Hue name and angle as a plain array"),
-    ),
-    v.pipe(
-      v.tuple([
-        contrastModelSchema,
-        directionModeSchema,
-        chromaModeSchema,
-        colorStringSchema,
-        colorStringSchema,
-        bgRightStartSchema,
-        colorSpaceSchema,
-      ]),
-      v.description("Settings as a plain array"),
-    ),
-  ]),
-);
+/**
+ * Attempts multiple decompression strategies:
+ * 1. New format: inflate (deflate-raw) + decodeUrlSafeBase64 → JSON → migrate
+ * 2. Legacy format: urlSafeAtob (base64) → JSON → migrate from legacy compact → migrate
+ *
+ * @param hash - URL hash (with or without # prefix)
+ * @returns Fully migrated ExportConfig at latest version
+ */
+export async function decodeHashConfig(hash: string): Promise<ExportConfig | null> {
+  const hashData = hash.replaceAll(/^#/g, "");
 
-export type CompactExportConfig = v.InferOutput<typeof compactExportConfigSchema>;
+  // Try new compression format first (deflate-raw + url-safe base64)
+  try {
+    const bytes = decodeUrlSafeBase64(hashData);
+    const decompressed = await inflate(bytes);
+    const parsed = v.parse(versionedExportConfigSchema, JSON.parse(decompressed));
 
-export function parseCompactExportConfig(value: unknown): CompactExportConfig {
-  return v.parse(compactExportConfigSchema, value);
-}
-
-export function toCompactExportConfig(config: ExportConfig): CompactExportConfig {
-  return [
-    config.levels.flatMap<string | number | null>((level) => [
-      level.name,
-      level.contrast,
-      level.chromaCap ?? null,
-    ]),
-    config.hues.flatMap((hue) => [hue.name, hue.angle]),
-    [
-      config.settings.contrastModel,
-      config.settings.directionMode,
-      config.settings.chromaMode,
-      config.settings.bgColorLight,
-      config.settings.bgColorDark,
-      config.settings.bgLightStart,
-      config.settings.colorSpace,
-    ],
-  ];
-}
-
-export function toExportConfig(compactConfig: CompactExportConfig): ExportConfig {
-  const contrastModel = compactConfig[2][0];
-  const levels: ExportConfig["levels"] = [];
-  const hues: ExportConfig["hues"] = [];
-
-  for (let i = 0; i < compactConfig[0].length; i += 3) {
-    const name = v.parse(levelNameSchema, compactConfig[0][i]);
-    const contrast = v.parse(getLevelContrastModel(contrastModel), compactConfig[0][i + 1]);
-    const chromaCap = v.parse(levelChromaCapSchema, compactConfig[0][i + 2]);
-
-    levels.push({ name, contrast, chroma: LevelChroma(0), chromaCap });
+    return await migrate(parsed);
+  } catch {
+    // Not new format, continue to legacy
   }
 
-  for (let i = 0; i < compactConfig[1].length; i += 2) {
-    const hueName = v.parse(hueNameSchema, compactConfig[1][i]);
-    const angle = v.parse(hueAngleSchema, compactConfig[1][i + 1]);
+  // Try legacy base64 format (url-safe base64 only, no compression)
+  try {
+    const decoded = urlSafeAtob(hashData);
+    const parsed = JSON.parse(decoded) as unknown;
 
-    hues.push({ name: hueName, angle });
+    if (Array.isArray(parsed) && parsed.length === 3) {
+      const migrated = migrateFromLegacyCompact(parsed);
+      return await migrate(migrated);
+    }
+  } catch (error) {
+    console.error("Failed to decode hash config", error);
   }
 
-  return {
-    levels,
-    hues,
-    settings: {
-      contrastModel,
-      directionMode: compactConfig[2][1],
-      chromaMode: compactConfig[2][2],
-      bgColorLight: compactConfig[2][3],
-      bgColorDark: compactConfig[2][4],
-      bgLightStart: compactConfig[2][5],
-      colorSpace: compactConfig[2][6],
-    },
-  };
+  return null;
 }

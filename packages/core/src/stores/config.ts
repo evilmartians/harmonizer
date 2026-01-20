@@ -1,19 +1,19 @@
 import { batch, signal } from "@spred/core";
+import { debounce } from "es-toolkit";
 
 import { defaultConfig } from "@core/defaultConfig";
 import {
-  parseCompactExportConfig,
+  CURRENT_CONFIG_VERSION,
   parseExportConfig,
-  toCompactExportConfig,
-  toExportConfig,
+  decodeHashConfig,
 } from "@core/schemas/exportConfig";
-import type { ExportConfig, ExportConfigWithColors } from "@core/types";
+import type { ExportConfig } from "@core/types";
+import { deflate } from "@core/utils/compression/deflate";
+import { encodeUrlSafeBase64 } from "@core/utils/compression/encodeUrlSafeBase64";
 import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
 import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
 import { getTailwindConfig } from "@core/utils/config/getTailwindConfig";
 import { downloadTextFile } from "@core/utils/file/downloadTextFile";
-import { urlSafeAtob } from "@core/utils/url/urlSafeAtob";
-import { urlSafeBtoa } from "@core/utils/url/urlSafeBtoa";
 
 import {
   $areHuesValid,
@@ -42,6 +42,7 @@ import { getHueStore, getLevelStore } from "./utils";
 
 export const $exportConfig = signal<ExportConfig>((get) => {
   return {
+    version: CURRENT_CONFIG_VERSION,
     levels: get($levelIds).map((levelId) => {
       const level = getLevel(levelId);
 
@@ -68,31 +69,59 @@ export const $exportConfig = signal<ExportConfig>((get) => {
     },
   };
 });
-export const $compactExportConfigHash = signal((get) => {
-  const compactExportConfig = toCompactExportConfig(get($exportConfig));
 
-  return `#${urlSafeBtoa(JSON.stringify(compactExportConfig))}`;
-});
+export const $exportConfigHash = signal<string>("#");
+
+const COMPRESSION_DEBOUNCE_MS = 300;
+let exportConfigHashAbortController: AbortController | null = null;
+
+$exportConfig.subscribe(
+  debounce(async (config) => {
+    if (exportConfigHashAbortController) {
+      exportConfigHashAbortController.abort();
+    }
+
+    exportConfigHashAbortController = new AbortController();
+
+    try {
+      const compressed = await deflate(
+        JSON.stringify(config),
+        exportConfigHashAbortController.signal,
+      );
+      const encoded = encodeUrlSafeBase64(compressed);
+
+      $exportConfigHash.set(`#${encoded}`);
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return;
+      }
+
+      console.error("Compression failed:", error);
+    }
+  }, COMPRESSION_DEBOUNCE_MS),
+);
+
 export const $isExportConfigValid = signal((get) => get($areLevelsValid) && get($areHuesValid));
 
 export function getConfig(): ExportConfig {
   return $exportConfig.value;
 }
 
-function parseConfigFromHash(hash: string) {
-  try {
-    const hashData = hash.replaceAll(/^#/g, "");
-    const parsedHash = urlSafeAtob(hashData);
-    const compactConfig = parseCompactExportConfig(JSON.parse(parsedHash));
+export function getExportConfigWithColors() {
+  return { ...getConfig(), colors: getIndexedColors() };
+}
 
-    return toExportConfig(compactConfig);
-  } catch {
+async function parseConfigFromHash(hash: string): Promise<ExportConfig | null> {
+  try {
+    return await decodeHashConfig(hash);
+  } catch (error) {
+    console.error("Failed to parse config from hash:", error);
     return null;
   }
 }
 
-export function parseConfigFromHashAndUpdate(hash: string) {
-  const config = parseConfigFromHash(hash);
+export async function parseConfigFromHashAndUpdate(hash: string): Promise<boolean> {
+  const config = await parseConfigFromHash(hash);
 
   if (config) {
     updateConfig(config);
@@ -102,26 +131,22 @@ export function parseConfigFromHashAndUpdate(hash: string) {
   return false;
 }
 
-export function syncConfigWithLocationHash() {
-  $compactExportConfigHash.subscribe((newHash) => {
+export async function syncConfigWithLocationHash(): Promise<ExportConfig> {
+  $exportConfigHash.subscribe((newHash) => {
     if (newHash !== globalThis.location.hash) {
       globalThis.history.replaceState(null, "", newHash);
     }
   }, false);
   globalThis.addEventListener(
     "hashchange",
-    () => parseConfigFromHashAndUpdate(globalThis.location.hash),
+    async () => {
+      await parseConfigFromHashAndUpdate(globalThis.location.hash);
+    },
     { passive: true },
   );
 
-  return parseConfigFromHash(globalThis.location.hash) ?? defaultConfig;
-}
-
-export function getExportConfigWithColors(): ExportConfigWithColors {
-  return {
-    ...getConfig(),
-    colors: getIndexedColors(),
-  };
+  const parsedInitialConfig = await parseConfigFromHash(globalThis.location.hash);
+  return parsedInitialConfig ?? (await parseExportConfig(defaultConfig));
 }
 
 export function updateConfig(config: ExportConfig) {
@@ -162,7 +187,8 @@ export async function uploadConfig(file?: File) {
   if (!file) return;
 
   const text = await file.text();
-  updateConfig(parseExportConfig(text));
+  const config = await parseExportConfig(text);
+  updateConfig(config);
 }
 
 export const ExportTargets = {
@@ -170,15 +196,13 @@ export const ExportTargets = {
     name: "Tailwind v3",
     filename: "tailwind.config.js",
     mimetype: "application/javascript",
-    getFileData: () =>
-      getTailwindConfig(getExportConfigWithColors(), $compactExportConfigHash.value),
+    getFileData: () => getTailwindConfig(getExportConfigWithColors(), $exportConfigHash.value),
   },
   "css-variables": {
     name: "CSS variables",
     filename: "harmonized-palette.css",
     mimetype: "application/javascript",
-    getFileData: () =>
-      getCssVariablesConfig(getExportConfigWithColors(), $compactExportConfigHash.value),
+    getFileData: () => getCssVariablesConfig(getExportConfigWithColors(), $exportConfigHash.value),
   },
   json: {
     name: "JSON Config",
