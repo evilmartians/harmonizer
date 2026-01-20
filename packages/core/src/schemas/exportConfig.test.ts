@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { loadFixture } from "@core/test-utils";
 import { deflate } from "@core/utils/compression/deflate";
@@ -6,6 +6,7 @@ import { encodeUrlSafeBase64 } from "@core/utils/compression/encodeUrlSafeBase64
 import { ValidationError } from "@core/utils/errors/ValidationError";
 
 import { decodeHashConfig, parseExportConfig } from "./exportConfig";
+import * as migrateModule from "./migrations/migrate";
 
 function loadConfigFixture(filePath: string): Record<string, unknown> {
   return loadFixture(filePath) as Record<string, unknown>;
@@ -215,6 +216,25 @@ describe(parseExportConfig, () => {
       bgColorDark: "#000",
       bgLightStart: 5,
     });
+  });
+
+  test("re-throws ValidationError from migrate without wrapping", async () => {
+    const validationError = new ValidationError("Migration validation failed");
+    vi.spyOn(migrateModule, "migrate").mockRejectedValueOnce(validationError);
+
+    const config = loadConfigFixture("configs/v1/minimal.json");
+
+    await expect(parseExportConfig(config)).rejects.toThrow(validationError);
+  });
+
+  test("wraps non-Error thrown values in ValidationError with fallback message", async () => {
+    vi.spyOn(migrateModule, "migrate").mockRejectedValueOnce("string error");
+
+    const config = loadConfigFixture("configs/v1/minimal.json");
+    const error: unknown = await parseExportConfig(config).catch((error_: unknown) => error_);
+
+    expect(error).toBeInstanceOf(ValidationError);
+    expect((error as ValidationError).message).toContain("Failed to migrate config");
   });
 });
 
