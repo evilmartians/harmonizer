@@ -1,5 +1,3 @@
-import { memo } from "react";
-
 import { useSubscribe } from "@spred/react";
 import clsx from "clsx";
 
@@ -36,7 +34,8 @@ const CHROMA_OPTIONS = [
 ];
 const HINT_LOCKED_COLOR_SPACE = "To change color profile, adjust it in the Figma file settings";
 
-export const GridLeftTopCell = memo(function GridLeftTopCell() {
+export function GridLeftTopCell() {
+  useSubscribe(contrastModelStore.$raw);
   const bgMode = useSubscribe($bgColorModeLeft);
   const contrastModel = useSubscribe(contrastModelStore.$lastValidValue);
   const directionMode = useSubscribe(directionModeStore.$lastValidValue);
@@ -89,4 +88,4 @@ export const GridLeftTopCell = memo(function GridLeftTopCell() {
       </div>
     </GridCell>
   );
-});
+}
