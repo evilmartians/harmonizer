@@ -1,6 +1,5 @@
 {
   "plugins": ["typescript", "react", "unicorn"],
-  "jsPlugins": ["@figma/eslint-plugin-figma-plugins"],
   "rules": {
     "typescript/consistent-type-definitions": ["error", "type"],
     "import-x/order": [
