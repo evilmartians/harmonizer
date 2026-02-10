@@ -1,4 +1,8 @@
 {
-  "recommendations": ["oxc.oxc-vscode", "stylelint.vscode-stylelint"],
+  "recommendations": [
+    "oxc.oxc-vscode",
+    "stylelint.vscode-stylelint",
+    "mizdra.css-modules-kit-vscode"
+  ],
   "unwantedRecommendations": []
 }
