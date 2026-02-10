@@ -52,7 +52,10 @@ function replaceDecimalDelimiter(value: string): string {
 function createChangeEvent(input: HTMLInputElement) {
   const nativeEvent = new Event("change", { bubbles: true });
   Object.defineProperty(nativeEvent, "target", { value: input });
-  Object.defineProperty(nativeEvent, "currentTarget", { writable: false, value: input });
+  Object.defineProperty(nativeEvent, "currentTarget", {
+    writable: false,
+    value: input,
+  });
 
   return nativeEvent as unknown as ChangeEvent<HTMLInputElement>;
 }
@@ -117,14 +120,19 @@ export function withNumericIncrementControls<P extends InputProps>(
     const { onChange, onBlur } = props;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const labelRef = useRef<HTMLLabelElement>(null);
-    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
-    const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), []);
+    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), [props.ref]);
+    const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), [props.labelRef]);
 
     const updateValue = useCallback(
       (
         input: HTMLInputElement,
         options:
-          | { multiplier: number; direction: -1 | 1; min?: number; max?: number }
+          | {
+              multiplier: number;
+              direction: -1 | 1;
+              min?: number;
+              max?: number;
+            }
           | { value: number },
       ) => {
         const newValue = calculateNewInputValue(
@@ -200,7 +208,7 @@ export function withNumericIncrementControls<P extends InputProps>(
       label.addEventListener("wheel", handleWheel);
 
       return () => label.removeEventListener("wheel", handleWheel);
-    }, [step, updateValue]);
+    }, [step, updateValue, props.min, props.max]);
 
     const handleOnChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
@@ -214,7 +222,7 @@ export function withNumericIncrementControls<P extends InputProps>(
 
         onChange?.(e);
       },
-      [onChange],
+      [onChange, props.inputMode],
     );
 
     const handleBlur = useCallback(
@@ -231,7 +239,7 @@ export function withNumericIncrementControls<P extends InputProps>(
 
         onBlur?.(e);
       },
-      [onBlur, onChange],
+      [onBlur, onChange, precision],
     );
 
     return (

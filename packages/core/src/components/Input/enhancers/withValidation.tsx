@@ -11,7 +11,7 @@ type ValidationProps = {
 export function withValidation<P extends InputProps>(WrappedComponent: ComponentType<P>) {
   const ValidationInput = ({ error, ...restProps }: P & ValidationProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const refCallback = useMemo(() => mergeRefs(inputRef, restProps.ref), []);
+    const refCallback = useMemo(() => mergeRefs(inputRef, restProps.ref), [restProps.ref]);
 
     useEffect(() => {
       if (inputRef.current) {

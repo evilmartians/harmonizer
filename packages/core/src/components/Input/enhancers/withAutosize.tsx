@@ -12,7 +12,7 @@ export function withAutosize<P extends InputProps>(WrappedComponent: ComponentTy
   const AutosizeInput = (props: P) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { value, placeholder } = props;
-    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), []);
+    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), [props.ref]);
 
     useLayoutEffect(() => {
       if (!inputRef.current) return;

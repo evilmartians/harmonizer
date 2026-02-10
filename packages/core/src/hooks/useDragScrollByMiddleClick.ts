@@ -9,5 +9,5 @@ export function useDragScrollByMiddleClick(ref: RefObject<HTMLElement | null>) {
     }
 
     return handleDragScrollByMiddleClick(ref.current);
-  }, []);
+  }, [ref]);
 }

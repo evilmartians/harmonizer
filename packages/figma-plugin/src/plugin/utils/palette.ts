@@ -232,7 +232,7 @@ export async function drawPalette(
   const huesGroup = figma.group(hueHeaderGroups, frame);
   huesGroup.name = "Hues";
 
-  const { colors, ...exportConfig } = config;
+  const { colors: _, ...exportConfig } = config;
   frame.setPluginData(PALETTE_CONFIG_KEY, JSON.stringify(exportConfig));
 
   existingFrame?.remove();

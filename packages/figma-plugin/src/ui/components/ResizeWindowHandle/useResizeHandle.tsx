@@ -21,7 +21,7 @@ export const useResizeHandle = (onResize: (size: WindowSize) => void) => {
       element.addEventListener("pointermove", handleResize, { passive: true });
       element.setPointerCapture(e.pointerId);
     },
-    [onResize],
+    [handleResize],
   );
 
   const handlePointerUp = useCallback(
@@ -33,7 +33,7 @@ export const useResizeHandle = (onResize: (size: WindowSize) => void) => {
       element.removeEventListener("pointermove", handleResize);
       element.releasePointerCapture(e.pointerId);
     },
-    [onResize],
+    [handleResize],
   );
 
   return { onPointerDown: handlePointerDown, onPointerUp: handlePointerUp };

@@ -51,21 +51,14 @@ export function PasteWebAppUrl({ value, onPaste, ...restProps }: ActionPasteUrlP
         onPaste?.(pastedData);
       }
     },
-    [isPasting],
+    [isPasting, api, onPaste],
   );
   const handleChange = useCallback((e: ChangeEvent) => e.preventDefault(), []);
 
   return (
     <ListItem
       as={isPasting ? "div" : "button"}
-      {...mergeProps(
-        {
-          onClick: goIntoPasteMode,
-          className: styles.item,
-        },
-        restItemProps,
-        restProps,
-      )}
+      {...mergeProps({ onClick: goIntoPasteMode }, restItemProps, restProps)}
       highlighted={isPasting}
     >
       {isPasting && (
