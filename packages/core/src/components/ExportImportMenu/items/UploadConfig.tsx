@@ -12,7 +12,7 @@ export async function handleFileUpload(e: ChangeEvent<HTMLInputElement>) {
   try {
     await uploadConfig(e.target.files?.[0]);
   } catch (error) {
-    // eslint-disable-next-line no-alert
+    // oxlint-disable-next-line no-alert
     alert(
       error instanceof ValidationError
         ? "Couldn't parse file. It should be Harmonizer config"

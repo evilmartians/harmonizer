@@ -17,7 +17,7 @@ export function withAutosize<P extends InputProps>(WrappedComponent: ComponentTy
     useLayoutEffect(() => {
       if (!inputRef.current) return;
 
-      // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+      // oxlint-disable-next-line typescript/prefer-nullish-coalescing
       inputRef.current.style.width = `${String(value || placeholder || " ").length}ch`;
     }, [value, placeholder]);
 

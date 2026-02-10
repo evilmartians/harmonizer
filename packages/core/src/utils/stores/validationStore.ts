@@ -19,7 +19,7 @@ export function isValidationStore(store: unknown): store is ValidationStore {
 }
 
 export function validationStore<Input, Output>(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  // oxlint-disable-next-line typescript/no-unsafe-function-type
   initialValue: Exclude<Input, Function>,
   validationSchema:
     | BaseSchema<Input, Output, BaseIssue<unknown>>
@@ -28,7 +28,7 @@ export function validationStore<Input, Output>(
   const $raw = signal(initialValue);
   const $validationSchema = toSignal(validationSchema);
   const initialValueValue = v.safeParse($validationSchema.value, initialValue);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  // oxlint-disable-next-line typescript/no-unsafe-function-type
   const $lastValidValue = signal(initialValueValue.success as Exclude<Output, Function>);
   const $validationError = signal<string | null>(null);
 
@@ -39,7 +39,7 @@ export function validationStore<Input, Output>(
     });
 
     if (validationResult.success) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      // oxlint-disable-next-line typescript/no-unsafe-function-type
       $lastValidValue.set(validationResult.output as Exclude<Output, Function>);
     }
 

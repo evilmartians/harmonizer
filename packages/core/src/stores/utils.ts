@@ -102,7 +102,7 @@ export function createIndexedArrayStore<Item extends ItemWithId<AnyId>>(
 }
 
 export function getColorSignal<T>(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  // oxlint-disable-next-line typescript/no-unsafe-function-type
   initial: Exclude<T, Function>,
   options?: Omit<SignalOptions<T>, "equal">,
 ): WritableSignal<T> {

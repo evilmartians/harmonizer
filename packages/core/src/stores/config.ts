@@ -174,7 +174,7 @@ export function updateConfig(config: ExportConfig) {
     );
 
     if (isDifferentFromLockedColorSpace) {
-      // eslint-disable-next-line no-alert
+      // oxlint-disable-next-line no-alert
       alert(
         "The color space in the config is different from the document color space. Colors will be generated in the document color space.",
       );
