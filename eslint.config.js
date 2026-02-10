@@ -45,4 +45,11 @@ export default hideoo(
       "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
     },
   },
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+    rules: {
+      "unicorn/consistent-function-scoping": "off",
+      "@typescript-eslint/no-non-null-assertion": "off",
+    },
+  },
 );

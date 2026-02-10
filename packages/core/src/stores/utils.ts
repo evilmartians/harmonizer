@@ -114,11 +114,11 @@ export function getColorIdentifier(levelId: LevelId, hueId: HueId): ColorIdentif
 }
 
 export function matchesLevelColorKey(colorKey: ColorIdentifier, levelId: LevelId): boolean {
-  return colorKey.startsWith(levelId);
+  return colorKey.startsWith(`${levelId}-`);
 }
 
 export function matchesHueColorKey(colorKey: ColorIdentifier, hueId: HueId): boolean {
-  return colorKey.endsWith(hueId);
+  return colorKey.endsWith(`-${hueId}`);
 }
 
 export const getLevelInsertionDataProducer = getInsertionDataProducer<
