@@ -10,11 +10,11 @@
     "test": "pnpm --recursive test",
     "test:watch": "pnpm --recursive test:watch",
     "lint": "pnpm --parallel -w /^lint:*/",
-    "lint:eslint": "eslint . --cache --cache-location=./node_modules/.tmp/eslint/.cache",
+    "lint:eslint": "oxlint .",
     "lint:prettier": "prettier --check . --experimental-cli",
     "lint:styles": "pnpm stylelint **/*.{css,module.css}",
     "format": "pnpm --parallel -w /^format:*/",
-    "format:eslint": "pnpm lint:eslint --fix ",
+    "format:eslint": "oxlint . --fix",
     "format:prettier": "prettier . --write --experimental-cli",
     "format:styles": "pnpm lint:styles --fix && prettier --write '**/*.{css,module.css}' --experimental-cli",
     "typecheck": "pnpm --recursive --parallel typecheck",
@@ -24,12 +24,9 @@
     "node": ">=22.x"
   },
   "devDependencies": {
-    "@eslint/compat": "^2.0.0",
     "@figma/eslint-plugin-figma-plugins": "^0.16.1",
-    "@hideoo/eslint-config": "^4.1.1",
-    "eslint": "^9.39.1",
-    "globals": "^16.5.0",
     "nano-staged": "^0.9.0",
+    "oxlint": "^1.0.0",
     "prettier": "^3.7.4",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "simple-git-hooks": "^2.13.1",
@@ -39,8 +36,7 @@
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-standard": "^39.0.1",
     "stylelint-order": "^7.0.0",
-    "typescript": "^5.9.3",
-    "typescript-eslint": "^8.48.1"
+    "typescript": "^5.9.3"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged",
@@ -48,7 +44,7 @@
   },
   "nano-staged": {
     "*.{js,cjs,mjs,jsx,ts,mts,tsx}": [
-      "eslint --fix",
+      "oxlint --fix",
       "prettier --write --experimental-cli"
     ],
     "*.html": [
@@ -63,9 +59,6 @@
     "overrides": {
       "brace-expansion@^1": "^1.1.12",
       "brace-expansion@^2": "^2.0.2"
-    },
-    "patchedDependencies": {
-      "@hideoo/eslint-config@4.1.1": "patches/@hideoo__eslint-config@4.1.1.patch"
     }
   },
   "dependencies": {

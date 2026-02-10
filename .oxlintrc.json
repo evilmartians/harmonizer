@@ -1,0 +1,42 @@
+{
+  "plugins": ["typescript", "react", "unicorn"],
+  "jsPlugins": ["@figma/eslint-plugin-figma-plugins"],
+  "rules": {
+    "typescript/consistent-type-definitions": ["error", "type"],
+    "import-x/order": [
+      "warn",
+      {
+        "newlines-between": "always",
+        "alphabetize": { "order": "asc", "caseInsensitive": true },
+        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
+        "pathGroups": [
+          { "pattern": "react", "group": "builtin", "position": "before" },
+          { "pattern": "@core/**", "group": "internal", "position": "after" }
+        ],
+        "pathGroupsExcludedImportTypes": []
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.d.ts"],
+      "rules": {
+        "typescript/method-signature-style": "off",
+        "typescript/consistent-type-definitions": ["error", "interface"]
+      }
+    },
+    {
+      "files": ["**/*.test.*", "**/*.spec.*"],
+      "rules": {
+        "unicorn/consistent-function-scoping": "off",
+        "typescript/no-non-null-assertion": "off"
+      }
+    },
+    {
+      "files": ["packages/figma-plugin/**"],
+      "rules": {
+        "unicorn/prefer-dom-node-append": "off"
+      }
+    }
+  ]
+}
