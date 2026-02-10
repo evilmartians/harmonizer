@@ -1,8 +1,8 @@
 {
   "name": "@harmonizer/figma-plugin",
-  "description": "Harmonizer Figma Plugin",
   "version": "0.0.1",
   "private": true,
+  "description": "Harmonizer Figma Plugin",
   "type": "module",
   "scripts": {
     "dev": "pnpm --parallel --filter=. /^dev:/",
