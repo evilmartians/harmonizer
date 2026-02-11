@@ -6,7 +6,7 @@ type PersistedSignal<T> = WritableSignal<T> & {
 
 export function persistedSignal<T>(
   key: string,
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+  // oxlint-disable-next-line typescript/no-unsafe-function-type
   initial: Exclude<T, Function>,
   storage: Storage = globalThis.localStorage,
 ): PersistedSignal<T> {
@@ -17,7 +17,7 @@ export function persistedSignal<T>(
       return initial;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    // oxlint-disable-next-line typescript/no-unsafe-function-type
     return JSON.parse(storageValue) as Exclude<T, Function>;
   }
 
@@ -45,7 +45,7 @@ export function persistedSignal<T>(
     }
 
     const newValue =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      // oxlint-disable-next-line typescript/no-unsafe-function-type
       JSON.parse(event.newValue) as Exclude<T, Function>;
     $signal.set(newValue);
   }

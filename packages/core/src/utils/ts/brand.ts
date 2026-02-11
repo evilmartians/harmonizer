@@ -9,11 +9,11 @@ export function createBrand<BaseType, BrandId extends string>(
 }
 
 export type Brand<CreatorType> = CreatorType extends (
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // oxlint-disable-next-line typescript/no-explicit-any
   value: any,
 ) => Branded<infer U, infer BrandId extends string>
   ? Branded<U, BrandId>
   : never;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export type Unbranded<T> = T extends Branded<infer U, any> ? U : never;

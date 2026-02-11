@@ -15,4 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/prepare-runner
-      - run: pnpm lint:eslint && pnpm lint:prettier
+      - run: pnpm lint:oxlint && pnpm lint:oxfmt

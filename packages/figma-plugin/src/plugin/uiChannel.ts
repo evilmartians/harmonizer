@@ -1,4 +1,4 @@
-/* eslint-disable unicorn/prefer-add-event-listener */
+/* oxlint-disable unicorn/prefer-add-event-listener */
 import type { PluginMessages, UIMessages } from "@shared/types";
 import {
   createTypedChannel,

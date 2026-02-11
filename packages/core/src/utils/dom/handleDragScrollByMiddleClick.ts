@@ -58,7 +58,7 @@ export function handleDragScrollByMiddleClick(container: HTMLElement) {
     }
   }
 
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+  // oxlint-disable-next-line unicorn/consistent-function-scoping
   function handleAuxClick(e: MouseEvent) {
     if (e.button === 1) {
       e.preventDefault();

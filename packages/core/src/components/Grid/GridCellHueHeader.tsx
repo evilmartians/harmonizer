@@ -25,7 +25,7 @@ import { DATA_ATTR_CELL_HUE_ID } from "./constants";
 import { GridCell } from "./GridCell";
 import styles from "./GridCellHueHeader.module.css";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+// oxlint-disable-next-line typescript/no-empty-object-type
 type HueComponentProps<P extends AnyProps = {}> = { hueId: HueId } & P;
 
 const LABEL_NAME = "Hue name";

@@ -6,7 +6,7 @@ export const SIGNAL_KEY_PREFIX = "$";
 
 export type SignalKey<Key extends string> = `${typeof SIGNAL_KEY_PREFIX}${Key}`;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 export type AnyStore = Record<string, any>;
 
 export type StoreReactivePaths<T extends AnyStore> = {

@@ -40,7 +40,7 @@ import { DATA_ATTR_CELL_LEVEL_ID } from "./constants";
 import { GridCell } from "./GridCell";
 import styles from "./GridCellLevelHeader.module.css";
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+// oxlint-disable-next-line typescript/no-empty-object-type
 type LevelComponentProps<P extends AnyProps = {}> = { levelId: LevelId } & P;
 
 const LABEL_NAME = "Level name";

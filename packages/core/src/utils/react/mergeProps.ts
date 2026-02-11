@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* oxlint-disable typescript/no-unsafe-argument */
+/* oxlint-disable typescript/no-unsafe-assignment */
 
 import clsx from "clsx";
 
@@ -32,7 +32,7 @@ type IsUnionOfAtLeast2<T, Full = T> =
   [T] extends [never]
     ? false
     : // Otherwise proceed with the old distribution logic
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // oxlint-disable-next-line typescript/no-explicit-any
       T extends any
       ? [Exclude<Full, T>] extends [never]
         ? false

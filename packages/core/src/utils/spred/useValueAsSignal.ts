@@ -9,7 +9,7 @@ import { signal } from "@spred/core";
  * @param value
  * @returns
  */
-// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+// oxlint-disable-next-line typescript/no-unsafe-function-type
 export function useValueAsSignal<T>(value: Exclude<T, Function>) {
   const isFirstRender = useRef(true);
   const ref = useRef(signal(value));
