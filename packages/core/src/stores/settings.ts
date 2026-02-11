@@ -99,8 +99,9 @@ export const $bgColorSingleBgColorType = signal((get) => {
 });
 
 export function updateContrastModel(model: ContrastModel) {
+  contrastModelStore.$raw.set(model);
+
   batch(() => {
-    contrastModelStore.$raw.set(model);
     for (const level of levels.values()) {
       level.contrast.$raw.set(
         LevelContrast(
