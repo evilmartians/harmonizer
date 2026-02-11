@@ -48,9 +48,6 @@
       "oxlint --fix",
       "oxfmt"
     ],
-    "*.html": [
-      "oxfmt"
-    ],
     "*.{css,module.css}": [
       "stylelint --fix",
       "oxfmt"
