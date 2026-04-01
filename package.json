@@ -62,7 +62,8 @@
   "pnpm": {
     "overrides": {
       "brace-expansion@^1": "^1.1.12",
-      "brace-expansion@^2": "^2.0.2"
+      "brace-expansion@^2": "^2.0.2",
+      "minimatch@^3": "^3.1.5"
     },
     "supportedArchitectures": {
       "os": [
