@@ -7,9 +7,8 @@
     "jsx": "react-jsx",
 
     /* Paths */
-    "baseUrl": ".",
     "paths": {
-      "@core/*": ["src/*"]
+      "@core/*": ["./src/*"]
     }
   },
   "include": ["src", "vitest.config.ts"],

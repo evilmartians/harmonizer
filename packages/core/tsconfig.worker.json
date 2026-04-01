@@ -6,9 +6,8 @@
     "lib": ["ES2023", "WebWorker"],
 
     /* Paths */
-    "baseUrl": ".",
     "paths": {
-      "@core/*": ["src/*"]
+      "@core/*": ["./src/*"]
     }
   },
   "include": ["src/worker/worker.ts", "src/globals.d.ts"]
