@@ -22,7 +22,7 @@
     "clsx": "^2.1.1",
     "core-js": "^3.49.0",
     "culori": "^4.0.2",
-    "es-toolkit": "^1.42.0",
+    "es-toolkit": "^1.45.1",
     "fast-equals": "^5.3.3",
     "nanoid": "^5.1.7",
     "react": "^19.2.4",
