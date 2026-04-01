@@ -37,7 +37,8 @@
     "stylelint-config-html": "^1.1.0",
     "stylelint-config-standard": "^39.0.1",
     "stylelint-order": "^7.0.0",
-    "typescript": "^6.0.2"
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged",
