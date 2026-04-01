@@ -25,8 +25,8 @@
     "es-toolkit": "^1.42.0",
     "fast-equals": "^5.3.3",
     "nanoid": "^5.1.6",
-    "react": "^19.2.1",
-    "react-dom": "^19.2.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "tailwindcss": "^4.1.17",
     "typed-channel": "^0.9.5",
     "valibot": "^1.2.0"
@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/culori": "^4.0.1",
     "@types/node": "^22.19.1",
-    "@types/react": "^19.2.7",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
