@@ -18,6 +18,7 @@
     "format:oxfmt": "oxfmt . --ignore-path=.oxfmtignore",
     "format:styles": "pnpm lint:styles --fix && oxfmt '**/*.{css,module.css}' --ignore-path=.oxfmtignore",
     "typecheck": "pnpm --recursive --parallel typecheck",
+    "security:audit": "pnpm dlx audit-ci@^7",
     "postinstall": "pnpm exec simple-git-hooks"
   },
   "dependencies": {
