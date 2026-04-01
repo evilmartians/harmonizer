@@ -175,8 +175,8 @@ importers:
         specifier: ^7.2.6
         version: 7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0)
       vite-css-modules:
-        specifier: ^1.12.0
-        version: 1.12.0(lightningcss@1.32.0)(postcss@8.5.8)(rollup@4.53.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0))
+        specifier: ^1.15.0
+        version: 1.15.0(lightningcss@1.32.0)(postcss@8.5.8)(rollup@4.53.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0))
       vite-plugin-generate-file:
         specifier: ^0.3.1
         version: 0.3.1
@@ -230,8 +230,8 @@ importers:
         specifier: ^7.2.6
         version: 7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0)
       vite-css-modules:
-        specifier: ^1.12.0
-        version: 1.12.0(lightningcss@1.32.0)(postcss@8.5.8)(rollup@4.53.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0))
+        specifier: ^1.15.0
+        version: 1.15.0(lightningcss@1.32.0)(postcss@8.5.8)(rollup@4.53.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0))
       vite-tsconfig-paths:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.9.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0))
@@ -1206,6 +1206,9 @@ packages:
     resolution: {integrity: sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA==}
     engines: {node: '>=10'}
 
+  cleye@2.3.0:
+    resolution: {integrity: sha512-hnROLVsAA8JQo8W65/khA90gPvZ0ymuZqWwQcBpHrrmpIDD2CLvB7HdqAeA0Odxf7RpJLS5Zor0ujlPOXx4IBQ==}
+
   clsx@2.1.1:
     resolution: {integrity: sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==}
     engines: {node: '>=6'}
@@ -1249,6 +1252,9 @@ packages:
   cross-spawn@7.0.6:
     resolution: {integrity: sha512-uV2QOWP2nWzsy2aMp8aRibhi9dlzF5Hgh5SHaB9OiTGEyDTiJJyx0uy51QXdyWbtAHNua4XJzUKca3OzKUd3vA==}
     engines: {node: '>= 8'}
+
+  css-class-positions@1.0.0:
+    resolution: {integrity: sha512-EyOWsNQ9he35D7iTc89TFt8BFZVAsoJ6s42O3YHS70KuwOPltOkcslrzwaAGvh+++tXj2t6t4yIwQQq82KTuTA==}
 
   css-functions-list@3.2.3:
     resolution: {integrity: sha512-IQOkD3hbR5KrN93MtcYuad6YPuTSUhntLHDuLEbFWE+ff2/XSZNdZG+LcbbIW5AXKg/WFIfYItIzVoHngHXZzA==}
@@ -1422,6 +1428,9 @@ packages:
   gensync@1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==}
     engines: {node: '>=6.9.0'}
+
+  get-tsconfig@4.13.7:
+    resolution: {integrity: sha512-7tN6rFgBlMgpBML5j8typ92BKFi2sFQvIdpAqLA2beia5avZDrMs0FLZiM5etShWq5irVyGcGMEA1jcDaK7A/Q==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -1902,6 +1911,9 @@ packages:
     resolution: {integrity: sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==}
     engines: {node: '>=8'}
 
+  resolve-pkg-maps@1.0.0:
+    resolution: {integrity: sha512-seS2Tj26TBVOC2NIc2rOe2y2ZO7efxITtLZcGSOnHHNOQ7CkiUBfw0Iw2ck6xkIhPwLhKNLS8BO+hEpngQlqzw==}
+
   reusify@1.1.0:
     resolution: {integrity: sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==}
     engines: {iojs: '>=1.0.0', node: '>=0.10.0'}
@@ -2044,6 +2056,9 @@ packages:
     resolution: {integrity: sha512-1MOpMXuhGzGL5TTCZFItxCc0AARf1EZFQkGqMm7ERKj8+Hgr5oLvJOVFcC+lRmR8hCe2S3jC4T5D7Vg/d7/fhA==}
     engines: {node: '>=6'}
 
+  terminal-columns@2.0.0:
+    resolution: {integrity: sha512-6IByuUjyNZJXUtwDNm+OIe62zgwwaRbH+WMNTcx05O2G5V9WhvluAAHJY8OvUdwmzMPpqAD/7EUpGdI6ae1aiQ==}
+
   tinybench@2.9.0:
     resolution: {integrity: sha512-0+DUvqWMValLmha6lr4kD8iAMK1HzV0/aKnCtWb9v9641TnP/MFb7Pc2bxoxQjTXAErryXVgUOfv2YqNllqGeg==}
 
@@ -2081,6 +2096,9 @@ packages:
       typescript:
         optional: true
 
+  type-flag@4.1.0:
+    resolution: {integrity: sha512-I/K5a1jUhdFgzM3L7413akxQRzUYq4sCbef6bMAe6SrIvIdFxGZFJys5M1SiY0d0VrAjZjY4LQzppuTaLHMvSQ==}
+
   typed-channel@0.9.5:
     resolution: {integrity: sha512-taCiroVT//iljqH0ijhcyEMhG/1IgLt+FE/LKPku+oOmx1xtkAjZ8upc8KoZKezYe/sL7sMsuAC6EHnnaXt1DA==}
 
@@ -2109,12 +2127,13 @@ packages:
       typescript:
         optional: true
 
-  vite-css-modules@1.12.0:
-    resolution: {integrity: sha512-1QeZAuk58qaYwPspLpG7QdOHrvcqQqTQ8sNyPhEIXM5hFwG/R4pdr4UsvReDtTkEbBHV1cdx88EMxyo6UivceA==}
+  vite-css-modules@1.15.0:
+    resolution: {integrity: sha512-dTuWAJTs5jrTWHPVsGU5G9ajaQcJBSjig3pjlwWs6ipc0mCHSznTqsUSHqNSmdmV6dhw/u7iUdeaAKjeciss+Q==}
+    hasBin: true
     peerDependencies:
       lightningcss: ^1.23.0
-      postcss: ^8.4.33
-      vite: ^5.0.12 || ^6.0.0 || ^7.0.0
+      postcss: ^8.4.49
+      vite: ^5.0.12 || ^6.0.0 || ^7.0.0 || ^8.0.0
     peerDependenciesMeta:
       lightningcss:
         optional: true
@@ -3053,6 +3072,11 @@ snapshots:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
 
+  cleye@2.3.0:
+    dependencies:
+      terminal-columns: 2.0.0
+      type-flag: 4.1.0
+
   clsx@2.1.1: {}
 
   color-convert@2.0.1:
@@ -3090,6 +3114,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  css-class-positions@1.0.0: {}
 
   css-functions-list@3.2.3: {}
 
@@ -3256,6 +3282,10 @@ snapshots:
       loader-utils: 3.3.1
 
   gensync@1.0.0-beta.2: {}
+
+  get-tsconfig@4.13.7:
+    dependencies:
+      resolve-pkg-maps: 1.0.0
 
   glob-parent@5.1.2:
     dependencies:
@@ -3661,6 +3691,8 @@ snapshots:
 
   resolve-from@5.0.0: {}
 
+  resolve-pkg-maps@1.0.0: {}
+
   reusify@1.1.0: {}
 
   rollup@4.53.3:
@@ -3855,6 +3887,8 @@ snapshots:
 
   tapable@2.3.2: {}
 
+  terminal-columns@2.0.0: {}
+
   tinybench@2.9.0: {}
 
   tinyexec@1.0.2: {}
@@ -3878,6 +3912,8 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
+  type-flag@4.1.0: {}
+
   typed-channel@0.9.5: {}
 
   typescript@5.9.3: {}
@@ -3896,11 +3932,15 @@ snapshots:
     optionalDependencies:
       typescript: 5.9.3
 
-  vite-css-modules@1.12.0(lightningcss@1.32.0)(postcss@8.5.8)(rollup@4.53.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0)):
+  vite-css-modules@1.15.0(lightningcss@1.32.0)(postcss@8.5.8)(rollup@4.53.3)(vite@7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
+      '@jridgewell/sourcemap-codec': 1.5.5
       '@rollup/pluginutils': 5.3.0(rollup@4.53.3)
+      cleye: 2.3.0
+      css-class-positions: 1.0.0
       generic-names: 4.0.0
+      get-tsconfig: 4.13.7
       icss-utils: 5.1.0(postcss@8.5.8)
       magic-string: 0.30.21
       postcss: 8.5.8
@@ -3908,6 +3948,8 @@ snapshots:
       postcss-modules-local-by-default: 4.2.0(postcss@8.5.8)
       postcss-modules-scope: 3.2.1(postcss@8.5.8)
       postcss-modules-values: 4.0.0(postcss@8.5.8)
+      postcss-selector-parser: 7.1.1
+      tinyglobby: 0.2.15
       vite: 7.2.6(@types/node@22.19.1)(jiti@2.6.1)(lightningcss@1.32.0)
     optionalDependencies:
       lightningcss: 1.32.0
