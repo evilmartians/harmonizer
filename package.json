@@ -18,26 +18,28 @@
     "format:oxfmt": "oxfmt . --ignore-path=.oxfmtignore",
     "format:styles": "pnpm lint:styles --fix && oxfmt '**/*.{css,module.css}' --ignore-path=.oxfmtignore",
     "typecheck": "pnpm --recursive --parallel typecheck",
+    "security:audit": "pnpm dlx audit-ci@^7",
     "postinstall": "pnpm exec simple-git-hooks"
   },
   "dependencies": {
-    "@zag-js/menu": "^1.30.0",
-    "@zag-js/react": "^1.30.0",
-    "@zag-js/select": "^1.30.0"
+    "@zag-js/menu": "^1.38.2",
+    "@zag-js/react": "^1.38.2",
+    "@zag-js/select": "^1.38.2"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
     "nano-staged": "^0.9.0",
     "oxfmt": "^0.31.0",
-    "oxlint": "^1.0.0",
+    "oxlint": "^1.57.0",
     "simple-git-hooks": "^2.13.1",
-    "stylelint": "^16.26.1",
-    "stylelint-config-clean-order": "^8.0.0",
-    "stylelint-config-css-modules": "^4.4.0",
+    "stylelint": "^17.6.0",
+    "stylelint-config-clean-order": "^8.0.1",
+    "stylelint-config-css-modules": "^4.6.0",
     "stylelint-config-html": "^1.1.0",
-    "stylelint-config-standard": "^39.0.1",
-    "stylelint-order": "^7.0.0",
-    "typescript": "^5.9.3"
+    "stylelint-config-standard": "^40.0.0",
+    "stylelint-order": "^8.1.1",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3"
   },
   "simple-git-hooks": {
     "pre-commit": "./node_modules/.bin/nano-staged",
@@ -56,11 +58,15 @@
   "engines": {
     "node": ">=22.x"
   },
-  "packageManager": "pnpm@10.24.0+sha512.01ff8ae71b4419903b65c60fb2dc9d34cf8bb6e06d03bde112ef38f7a34d6904c424ba66bea5cdcf12890230bf39f9580473140ed9c946fef328b6e5238a345a",
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319",
   "pnpm": {
     "overrides": {
-      "brace-expansion@^1": "^1.1.12",
-      "brace-expansion@^2": "^2.0.2"
+      "brace-expansion@^1": "^1.1.13",
+      "brace-expansion@^2": "^2.0.3",
+      "minimatch@^3": "^3.1.5",
+      "minimatch@^5": "^5.1.9",
+      "ajv@^8": "^8.18.0",
+      "picomatch@^2": "^2.3.2"
     },
     "supportedArchitectures": {
       "os": [

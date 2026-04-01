@@ -129,6 +129,11 @@ export async function decodeHashConfig(hash: string): Promise<ExportConfig | nul
   // Try legacy base64 format (url-safe base64 only, no compression)
   try {
     const decoded = urlSafeAtob(hashData);
+
+    if (!decoded) {
+      return null;
+    }
+
     const parsed = JSON.parse(decoded) as unknown;
 
     if (Array.isArray(parsed) && parsed.length === 3) {

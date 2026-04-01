@@ -1,9 +1,10 @@
-import Plausible from "plausible-tracker";
+import { init, track } from "@plausible-analytics/tracker";
+import type { PlausibleEventOptions } from "@plausible-analytics/tracker";
 
 import { WEB_APP_DOMAIN } from "@core/constants";
 
-const { trackPageview, trackEvent } = Plausible({ domain: WEB_APP_DOMAIN });
+init({ domain: WEB_APP_DOMAIN });
 
-trackPageview();
-
-export { trackEvent };
+export function trackEvent(eventName: string, options: PlausibleEventOptions = {}) {
+  track(eventName, options);
+}
