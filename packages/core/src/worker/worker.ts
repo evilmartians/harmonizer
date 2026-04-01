@@ -1,6 +1,6 @@
 import { createPostMessageTransport, createTypedChannel } from "typed-channel";
 
-import { calculateColors } from "@core/utils/colors/calculateColors";
+import { calculateColors } from "../utils/colors/calculateColors";
 
 import type { ClientMessages, WorkerMessages } from "./types";
 
