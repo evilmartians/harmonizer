@@ -32,5 +32,6 @@ export default defineConfig({
   worker: {},
   build: {
     target: browserslistToEsbuild(browserslistConfig),
+    chunkSizeWarningLimit: 600,
   },
 });
