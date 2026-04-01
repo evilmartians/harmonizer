@@ -8,6 +8,7 @@ overrides:
   brace-expansion@^1: ^1.1.12
   brace-expansion@^2: ^2.0.2
   minimatch@^3: ^3.1.5
+  minimatch@^5: ^5.1.9
 
 importers:
 
@@ -1687,8 +1688,8 @@ packages:
   minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
 
-  minimatch@5.1.6:
-    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
+  minimatch@5.1.9:
+    resolution: {integrity: sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw==}
     engines: {node: '>=10'}
 
   mrmime@2.0.1:
@@ -3110,7 +3111,7 @@ snapshots:
 
   filelist@1.0.4:
     dependencies:
-      minimatch: 5.1.6
+      minimatch: 5.1.9
 
   fill-range@7.1.1:
     dependencies:
@@ -3361,7 +3362,7 @@ snapshots:
     dependencies:
       brace-expansion: 1.1.12
 
-  minimatch@5.1.6:
+  minimatch@5.1.9:
     dependencies:
       brace-expansion: 2.0.2
 
