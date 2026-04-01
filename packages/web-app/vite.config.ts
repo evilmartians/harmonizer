@@ -5,12 +5,14 @@ import browserslistToEsbuild from "browserslist-to-esbuild";
 import { Features, browserslistToTargets } from "lightningcss";
 import { defineConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const browserslistConfig = browserslist(undefined, { config: "./.browserslistrc" });
 
 export default defineConfig({
-  plugins: [tsconfigPaths(), react(), tailwindcss(), patchCssModules()],
+  plugins: [react(), tailwindcss(), patchCssModules()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   css: {
     transformer: "lightningcss",
     lightningcss: {
@@ -27,9 +29,7 @@ export default defineConfig({
       },
     },
   },
-  worker: {
-    plugins: () => [tsconfigPaths()],
-  },
+  worker: {},
   build: {
     target: browserslistToEsbuild(browserslistConfig),
   },

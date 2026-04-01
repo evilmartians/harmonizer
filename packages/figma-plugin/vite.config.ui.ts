@@ -8,12 +8,14 @@ import { Features, browserslistToTargets } from "lightningcss";
 import { defineConfig } from "vite";
 import { patchCssModules } from "vite-css-modules";
 import { viteSingleFile } from "vite-plugin-singlefile";
-import tsconfigPaths from "vite-tsconfig-paths";
 
 const browserslistConfig = browserslist(undefined, { config: "./.browserslistrc" });
 
 export default defineConfig(({ mode }) => ({
-  plugins: [tsconfigPaths(), react(), tailwindcss(), patchCssModules(), viteSingleFile()],
+  plugins: [react(), tailwindcss(), patchCssModules(), viteSingleFile()],
+  resolve: {
+    tsconfigPaths: true,
+  },
   root: "./src/ui",
   css: {
     transformer: "lightningcss",
@@ -42,7 +44,5 @@ export default defineConfig(({ mode }) => ({
       input: path.resolve(__dirname, "src/ui/index.html"),
     },
   },
-  worker: {
-    plugins: () => [tsconfigPaths()],
-  },
+  worker: {},
 }));
