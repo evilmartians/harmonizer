@@ -2,6 +2,7 @@ import { useSubscribe } from "@spred/react";
 import { pluginChannel } from "@ui/pluginChannel";
 
 import { Button } from "@core/components/Button/Button";
+import { GitHubLink } from "@core/components/GitHubLink/GitHubLink";
 import { ExportImportMenu } from "@core/components/ExportImportMenu/ExportImportMenu";
 import { ExportConfigsList } from "@core/components/ExportImportMenu/items/ExportConfigsList";
 import { OpenInWebApp } from "@core/components/ExportImportMenu/items/OpenInWebApp";
@@ -43,6 +44,7 @@ export function FigmaPluginActions({ hasPalette }: FigmaPluginActionsProps) {
           <ExportConfigsList />
         </MenuItemGroup>
       </ExportImportMenu>
+      <GitHubLink />
     </>
   );
 }

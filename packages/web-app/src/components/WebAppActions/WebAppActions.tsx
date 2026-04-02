@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { trackEvent } from "@web-app/plausible";
 
 import { Button } from "@core/components/Button/Button";
+import { GitHubLink } from "@core/components/GitHubLink/GitHubLink";
 import { ExportImportMenu } from "@core/components/ExportImportMenu/ExportImportMenu";
 import { ExportConfigsList } from "@core/components/ExportImportMenu/items/ExportConfigsList";
 import { PasteWebAppUrl } from "@core/components/ExportImportMenu/items/PasteWebAppUrl";
@@ -50,6 +51,7 @@ export function WebAppActions() {
           />
         </MenuItemGroup>
       </ExportImportMenu>
+      <GitHubLink />
     </>
   );
 }
