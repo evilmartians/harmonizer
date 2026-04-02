@@ -120,9 +120,11 @@ const AngleInput = memo(function AngleInput({ hueId }: HueComponentProps) {
       kind="ghost"
       label={LABEL_HUE}
       placeholder={PLACEHOLDER_HUE}
-      inputMode="numeric"
+      inputMode="decimal"
       min={HUE_MIN_ANGLE}
       max={HUE_MAX_ANGLE}
+      precision={1}
+      trimTrailingZeros
       loopControls
       value={angle}
       title={HINT_DEGREE}

@@ -34,11 +34,21 @@ type WithNumericIncrementControlsProps = {
    * Whether to loop the value when reaching the min/max bounds.
    */
   loopControls?: boolean;
+  /**
+   * When true, trailing zeros after the decimal point are removed.
+   * E.g., with precision=1: 180 → "180" instead of "180.0", but 180.5 → "180.5".
+   */
+  trimTrailingZeros?: boolean;
 };
 
-function formatWithPrecision(value: string | number, precision: number): string {
+function formatWithPrecision(
+  value: string | number,
+  precision: number,
+  trimTrailingZeros: boolean,
+): string {
   const number = Number(value);
-  return (Number.isNaN(number) ? 0 : number).toFixed(precision);
+  const formatted = (Number.isNaN(number) ? 0 : number).toFixed(precision);
+  return trimTrailingZeros ? formatted.replace(/\.?0+$/, "") : formatted;
 }
 
 function isNumericInputMode(inputMode: string) {
@@ -115,6 +125,7 @@ export function withNumericIncrementControls<P extends InputProps>(
     baseValue,
     precision = -Math.log10(step),
     loopControls,
+    trimTrailingZeros = false,
     ...props
   }: WithNumericIncrementControlsProps & P) => {
     const { onChange, onBlur } = props;
@@ -150,10 +161,10 @@ export function withNumericIncrementControls<P extends InputProps>(
           return;
         }
 
-        input.value = formatWithPrecision(newValue, precision);
+        input.value = formatWithPrecision(newValue, precision, trimTrailingZeros);
         onChange?.(createChangeEvent(input));
       },
-      [onChange, precision, loopControls, baseValue, step],
+      [onChange, precision, loopControls, baseValue, step, trimTrailingZeros],
     );
 
     useEffect(() => {
@@ -231,7 +242,7 @@ export function withNumericIncrementControls<P extends InputProps>(
 
         if (!input?.value) return;
 
-        const formattedValue = formatWithPrecision(input.value, precision);
+        const formattedValue = formatWithPrecision(input.value, precision, trimTrailingZeros);
         if (input.value !== formattedValue) {
           input.value = formattedValue;
           onChange?.(createChangeEvent(input));
@@ -239,7 +250,7 @@ export function withNumericIncrementControls<P extends InputProps>(
 
         onBlur?.(e);
       },
-      [onBlur, onChange, precision],
+      [onBlur, onChange, precision, trimTrailingZeros],
     );
 
     return (
