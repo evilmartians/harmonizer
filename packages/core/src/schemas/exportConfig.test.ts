@@ -220,7 +220,9 @@ describe(parseExportConfig, () => {
 
   test("re-throws ValidationError from migrate without wrapping", async () => {
     const validationError = new ValidationError("Migration validation failed");
-    vi.spyOn(migrateModule, "migrate").mockRejectedValueOnce(validationError);
+    vi.spyOn(migrateModule, "migrate").mockImplementationOnce(() => {
+      throw validationError;
+    });
 
     const config = loadConfigFixture("configs/v1/minimal.json");
 
@@ -228,7 +230,10 @@ describe(parseExportConfig, () => {
   });
 
   test("wraps non-Error thrown values in ValidationError with fallback message", async () => {
-    vi.spyOn(migrateModule, "migrate").mockRejectedValueOnce("string error");
+    vi.spyOn(migrateModule, "migrate").mockImplementationOnce(() => {
+      // eslint-disable-next-line @typescript-eslint/only-throw-error -- verifying non-Error handling
+      throw "string error";
+    });
 
     const config = loadConfigFixture("configs/v1/minimal.json");
     const error: unknown = await parseExportConfig(config).catch((error_: unknown) => error_);
@@ -369,7 +374,7 @@ describe("fixtures", () => {
     expect(result.levels[2]?.chromaCap).toBeUndefined();
   });
 
-  test("future-version.json is not rejected (no version validation yet)", async () => {
+  test("future-version.json is rejected (version ahead of latest)", async () => {
     const config = loadConfigFixture("configs/invalid/future-version.json");
 
     await expect(parseExportConfig(config)).rejects.toThrow(ValidationError);
