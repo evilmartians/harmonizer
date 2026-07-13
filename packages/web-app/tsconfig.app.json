@@ -10,10 +10,9 @@
     // FIXME: This is temporary until we prepare types for apcach
     "types": ["../core/src/globals.d.ts"],
 
-    "baseUrl": ".",
     "paths": {
       "@core/*": ["../core/src/*"],
-      "@web-app/*": ["src/*"]
+      "@web-app/*": ["./src/*"]
     }
   },
   "include": ["src"]
