@@ -1,5 +1,5 @@
 /* oxlint-disable unicorn/prefer-add-event-listener */
-import type { PluginMessages, UIMessages } from "src/shared/types";
+import type { PluginMessages, UIMessages } from "@shared/types";
 import {
   type AnyMessageOf,
   type AnyMessages,

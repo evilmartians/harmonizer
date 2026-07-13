@@ -9,11 +9,10 @@
     // FIXME: This is temporary until we prepare types for apcach
     "types": ["../core/src/globals.d.ts"],
 
-    "baseUrl": ".",
     "paths": {
       "@core/*": ["../core/src/*"],
-      "@ui/*": ["src/ui/*"],
-      "@shared/*": ["src/shared/*"]
+      "@ui/*": ["./src/ui/*"],
+      "@shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src/ui", "src/shared"]

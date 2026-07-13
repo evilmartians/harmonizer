@@ -2,8 +2,8 @@ import { createApp, syncConfigWithLocationHash } from "@harmonizer/core";
 import {
   $isBannerClosed,
   FigmaPluginBanner,
-} from "src/components/FigmaPluginBanner/FigmaPluginBanner";
-import { WebAppActions } from "src/components/WebAppActions/WebAppActions";
+} from "@web-app/components/FigmaPluginBanner/FigmaPluginBanner";
+import { WebAppActions } from "@web-app/components/WebAppActions/WebAppActions";
 
 import "./plausible";
 
