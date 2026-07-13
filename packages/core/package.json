@@ -22,6 +22,7 @@
     "clsx": "^2.1.1",
     "core-js": "^3.49.0",
     "culori": "^4.0.2",
+    "datavolve": "0.9.1",
     "es-toolkit": "^1.45.1",
     "fast-equals": "^6.0.0",
     "nanoid": "^5.1.7",

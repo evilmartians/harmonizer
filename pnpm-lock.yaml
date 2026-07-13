@@ -86,6 +86,9 @@ importers:
       culori:
         specifier: ^4.0.2
         version: 4.0.2
+      datavolve:
+        specifier: 0.9.1
+        version: 0.9.1
       es-toolkit:
         specifier: ^1.45.1
         version: 1.45.1
@@ -1283,6 +1286,9 @@ packages:
   culori@4.0.2:
     resolution: {integrity: sha512-1+BhOB8ahCn4O0cep0Sh2l9KCOfOdY+BXJnKMHFFzDEouSr/el18QwXEMRlOj9UY5nCeA8UN3a/82rUWRBeyBw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+
+  datavolve@0.9.1:
+    resolution: {integrity: sha512-pm6enymz+b310jIx8iPAAVG5HcO+iSLsMkc5/1AYLqBOKSf8HXM0N6X4/TRxP8D8Hpc3WutxyIi5T5IYrZ4Wrw==}
 
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
@@ -3019,6 +3025,8 @@ snapshots:
   culori@3.3.0: {}
 
   culori@4.0.2: {}
+
+  datavolve@0.9.1: {}
 
   debug@4.4.3:
     dependencies:

@@ -16,7 +16,6 @@ import {
   levelChromaSchema,
   levelNameSchema,
 } from "./color";
-import { migrateFromLegacyCompact } from "./migrations/migrateFromLegacyCompact";
 import {
   bgRightStartSchema,
   chromaModeSchema,
@@ -95,7 +94,7 @@ export async function parseExportConfig(
   try {
     const versionedConfig = v.parse(versionedExportConfigSchema, parsed);
 
-    return await migrate(versionedConfig);
+    return migrate(versionedConfig, versionedConfig.version);
   } catch (error) {
     if (error instanceof ValidationError) {
       throw error;
@@ -107,7 +106,7 @@ export async function parseExportConfig(
 /**
  * Attempts multiple decompression strategies:
  * 1. New format: inflate (deflate-raw) + decodeUrlSafeBase64 → JSON → migrate
- * 2. Legacy format: urlSafeAtob (base64) → JSON → migrate from legacy compact → migrate
+ * 2. Legacy format: urlSafeAtob (base64) → JSON → migrate from legacy compact (v0)
  *
  * @param hash - URL hash (with or without # prefix)
  * @returns Fully migrated ExportConfig at latest version
@@ -121,7 +120,7 @@ export async function decodeHashConfig(hash: string): Promise<ExportConfig | nul
     const decompressed = await inflate(bytes);
     const parsed = v.parse(versionedExportConfigSchema, JSON.parse(decompressed));
 
-    return await migrate(parsed);
+    return migrate(parsed, parsed.version);
   } catch {
     // Not new format, continue to legacy
   }
@@ -137,8 +136,7 @@ export async function decodeHashConfig(hash: string): Promise<ExportConfig | nul
     const parsed = JSON.parse(decoded) as unknown;
 
     if (Array.isArray(parsed) && parsed.length === 3) {
-      const migrated = migrateFromLegacyCompact(parsed);
-      return await migrate(migrated);
+      return migrate(parsed, 0);
     }
   } catch (error) {
     console.error("Failed to decode hash config", error);
