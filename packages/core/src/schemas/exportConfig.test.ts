@@ -218,6 +218,28 @@ describe(parseExportConfig, () => {
     });
   });
 
+  test.each([
+    ["legacy/compact/apca.json", "apca", 2, 2],
+    ["legacy/compact/wcag.json", "wcag", 1, 1],
+  ])(
+    "parses legacy compact config %s (as file upload)",
+    async (fixturePath, contrastModel, levelsCount, huesCount) => {
+      const compact = loadFixture(fixturePath);
+      const result = await parseExportConfig(JSON.stringify(compact));
+
+      expect(result.version).toBe(1);
+      expect(result.levels).toHaveLength(levelsCount);
+      expect(result.hues).toHaveLength(huesCount);
+      expect(result.settings.contrastModel).toBe(contrastModel);
+    },
+  );
+
+  test("throws ValidationError for invalid legacy compact config", async () => {
+    const compact = loadFixture("legacy/compact/invalid.json");
+
+    await expect(parseExportConfig(JSON.stringify(compact))).rejects.toThrow(ValidationError);
+  });
+
   test("re-throws ValidationError from migrate without wrapping", async () => {
     const validationError = new ValidationError("Migration validation failed");
     vi.spyOn(migrateModule, "migrate").mockImplementationOnce(() => {

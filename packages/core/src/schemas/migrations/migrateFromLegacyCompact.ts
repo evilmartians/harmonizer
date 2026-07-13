@@ -50,6 +50,13 @@ export function parseCompactExportConfig(value: unknown): CompactExportConfig {
   return v.parse(compactExportConfigSchema, value);
 }
 
+/**
+ * Cheap shape check for the legacy compact format (pre-versioned 3-tuple)
+ */
+export function isLegacyCompactConfig(value: unknown): value is unknown[] {
+  return Array.isArray(value) && value.length === 3;
+}
+
 function toExportConfigV1(compactConfig: CompactExportConfig): ExportConfigV1 {
   const contrastModel = compactConfig[2][0];
   const levels: ExportConfigV1["levels"] = [];
