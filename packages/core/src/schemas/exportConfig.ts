@@ -1,6 +1,7 @@
 import * as v from "valibot";
 
 import { migrate } from "@core/schemas/migrations/migrate";
+import { isLegacyCompactConfig } from "@core/schemas/migrations/migrateFromLegacyCompact";
 import { decodeUrlSafeBase64 } from "@core/utils/compression/decodeUrlSafeBase64";
 import { inflate } from "@core/utils/compression/inflate";
 import { ValidationError } from "@core/utils/errors/ValidationError";
@@ -74,7 +75,22 @@ export const exportConfigSchema = exportConfigV1Schema;
 export type ExportConfig = ExportConfigV1;
 
 /**
+ * Detects the format of parsed config data (legacy compact 3-tuple vs versioned object)
+ * and migrates it to the latest version
+ */
+function migrateParsedConfig(parsed: unknown): ExportConfig {
+  if (isLegacyCompactConfig(parsed)) {
+    return migrate(parsed, 0);
+  }
+
+  const versionedConfig = v.parse(versionedExportConfigSchema, parsed);
+
+  return migrate(versionedConfig, versionedConfig.version);
+}
+
+/**
  * Parses and migrates an ExportConfig from a JSON string or object
+ * Accepts both versioned configs and the legacy compact 3-tuple format
  *
  * @param configString - JSON string or object representing the export config
  * @returns Fully migrated ExportConfig at the latest version
@@ -92,9 +108,7 @@ export async function parseExportConfig(
   }
 
   try {
-    const versionedConfig = v.parse(versionedExportConfigSchema, parsed);
-
-    return migrate(versionedConfig, versionedConfig.version);
+    return migrateParsedConfig(parsed);
   } catch (error) {
     if (error instanceof ValidationError) {
       throw error;
@@ -118,9 +132,8 @@ export async function decodeHashConfig(hash: string): Promise<ExportConfig | nul
   try {
     const bytes = decodeUrlSafeBase64(hashData);
     const decompressed = await inflate(bytes);
-    const parsed = v.parse(versionedExportConfigSchema, JSON.parse(decompressed));
 
-    return migrate(parsed, parsed.version);
+    return migrateParsedConfig(JSON.parse(decompressed));
   } catch {
     // Not new format, continue to legacy
   }
@@ -133,11 +146,7 @@ export async function decodeHashConfig(hash: string): Promise<ExportConfig | nul
       return null;
     }
 
-    const parsed = JSON.parse(decoded) as unknown;
-
-    if (Array.isArray(parsed) && parsed.length === 3) {
-      return migrate(parsed, 0);
-    }
+    return migrateParsedConfig(JSON.parse(decoded));
   } catch (error) {
     console.error("Failed to decode hash config", error);
   }
