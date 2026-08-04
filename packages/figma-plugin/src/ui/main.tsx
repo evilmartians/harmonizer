@@ -1,4 +1,5 @@
 import { createApp, getDefaultConfigCopy, ColorSpace, parseExportConfig } from "@harmonizer/core";
+
 import { FigmaPluginActions } from "@ui/components/FigmaPluginActions/FigmaPluginActions";
 import { pluginChannel } from "@ui/pluginChannel";
 

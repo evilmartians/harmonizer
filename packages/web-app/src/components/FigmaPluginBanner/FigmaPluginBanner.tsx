@@ -1,11 +1,10 @@
-import { trackEvent } from "@web-app/plausible";
-
 import { BgMode } from "@core/components/BgMode/BgMode";
 import { Button } from "@core/components/Button/Button";
 import { MCross } from "@core/components/Icon/MCross";
 import { Link } from "@core/components/Link/Link";
 import { HARMONIZER_FIGMA_PLUGIN_URL } from "@core/constants";
 import { persistedSignal } from "@core/utils/spred/persistedSignal";
+import { trackEvent } from "@web-app/plausible";
 
 import styles from "./FigmaPluginBanner.module.css";
 import logoImage from "./logo.svg";

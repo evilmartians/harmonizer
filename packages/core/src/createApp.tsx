@@ -1,7 +1,7 @@
 import { StrictMode, type ReactNode } from "react";
+import { createRoot } from "react-dom/client";
 
 import { batch } from "@spred/core";
-import { createRoot } from "react-dom/client";
 
 import { FloatingActions } from "./components/FloatingActions/FloatingActions";
 import { Grid, type GridBanner } from "./components/Grid/Grid";

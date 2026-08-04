@@ -2,5 +2,18 @@
   "singleQuote": false,
   "trailingComma": "all",
   "printWidth": 100,
-  "experimentalTailwindcss": {}
+  "experimentalTailwindcss": {},
+  "experimentalSortImports": {
+    "groups": ["react", "builtin", "external", "internal", "parent", "sibling", "index", "unknown"],
+    "customGroups": [
+      {
+        "groupName": "react",
+        "elementNamePattern": ["react", "react-dom", "react/*", "react-dom/*"]
+      }
+    ],
+    "internalPattern": ["@core/", "@plugin/", "@shared/", "@ui/", "@web-app/"],
+    "newlinesBetween": true,
+    "ignoreCase": true,
+    "order": "asc"
+  }
 }
