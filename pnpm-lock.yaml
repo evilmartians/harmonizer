@@ -161,8 +161,8 @@ importers:
         version: 0.10.1
     devDependencies:
       '@figma/plugin-typings':
-        specifier: ^1.124.0
-        version: 1.124.0
+        specifier: ^1.132.0
+        version: 1.132.0
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.1)(@types/node@22.19.1)(jiti@2.7.0))
@@ -339,8 +339,8 @@ packages:
   '@epic-web/invariant@1.0.0':
     resolution: {integrity: sha512-lrTPqgvfFQtR/eY/qkIzp98OGdNJu0m5ji3q/nJI8v3SXkRKEnWiOxMmbvcSoAIzv/cGiuvRy57k4suKQSAdwA==}
 
-  '@figma/plugin-typings@1.124.0':
-    resolution: {integrity: sha512-dZ7w5TKz8WGAncwev6G5UdX5UrMImnPw7QlSAh3vqOY1trdFL1PUKDtEpWRqB65hfMdfa8X0NuaGM0Z+2ak7QQ==}
+  '@figma/plugin-typings@1.132.0':
+    resolution: {integrity: sha512-yzFtPhAc/o1iQ/vjwFKFNBob1giUJC1E539XGvqBCXgChp3SYbivcIm1fXeEqIPIEmUWseBIr2NnX45acKUKXQ==}
 
   '@floating-ui/core@1.8.0':
     resolution: {integrity: sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==}
@@ -2350,7 +2350,7 @@ snapshots:
 
   '@epic-web/invariant@1.0.0': {}
 
-  '@figma/plugin-typings@1.124.0': {}
+  '@figma/plugin-typings@1.132.0': {}
 
   '@floating-ui/core@1.8.0':
     dependencies:
