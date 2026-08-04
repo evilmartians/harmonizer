@@ -31,7 +31,7 @@
     "browserslist": "^4.28.7",
     "browserslist-to-esbuild": "^2.1.1",
     "lightningcss": "^1.32.0",
-    "rollup": "^4.60.0",
+    "rollup": "^4.62.4",
     "vite": "^8.2.0",
     "vite-css-modules": "^1.15.0",
     "vite-plugin-generate-file": "^0.3.1",
