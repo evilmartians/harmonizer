@@ -1,19 +1,19 @@
 import { useSubscribe } from "@spred/react";
-import { pluginChannel } from "@ui/pluginChannel";
 
 import { Button } from "@core/components/Button/Button";
-import { GitHubLink } from "@core/components/GitHubLink/GitHubLink";
 import { ExportImportMenu } from "@core/components/ExportImportMenu/ExportImportMenu";
 import { ExportConfigsList } from "@core/components/ExportImportMenu/items/ExportConfigsList";
 import { OpenInWebApp } from "@core/components/ExportImportMenu/items/OpenInWebApp";
 import { PasteWebAppUrl } from "@core/components/ExportImportMenu/items/PasteWebAppUrl";
 import { UploadConfig } from "@core/components/ExportImportMenu/items/UploadConfig";
+import { GitHubLink } from "@core/components/GitHubLink/GitHubLink";
 import { MFourSquares } from "@core/components/Icon/MFourSquares";
 import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
 import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
 import { Tooltip } from "@core/components/Tooltip/Tooltip";
 import { $isExportConfigValid, getExportConfigWithColors } from "@core/stores/config";
 import { mergeProps } from "@core/utils/react/mergeProps";
+import { pluginChannel } from "@ui/pluginChannel";
 
 function upsertPalette() {
   pluginChannel.emit("palette:generate", getExportConfigWithColors());

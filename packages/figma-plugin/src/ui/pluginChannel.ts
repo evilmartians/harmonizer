@@ -1,11 +1,13 @@
 /* oxlint-disable unicorn/prefer-add-event-listener */
-import type { PluginMessages, UIMessages } from "@shared/types";
+
 import {
   type AnyMessageOf,
   type AnyMessages,
   createTypedChannel,
   type TypedChannelTransport,
 } from "typed-channel";
+
+import type { PluginMessages, UIMessages } from "@shared/types";
 
 function createFigmaUiTransport<
   InboundMessages extends AnyMessages,

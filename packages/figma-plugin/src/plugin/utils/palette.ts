@@ -1,7 +1,3 @@
-import { LABELS, PALETTE, PALETTE_CONFIG_KEY, PALETTE_NAME } from "@plugin/constants";
-import type { PaletteVariablesCollection } from "@plugin/types";
-import { getReferencedSolidPaint, getVariableColorName, isDocumentInP3 } from "@plugin/utils/color";
-
 import {
   getBgValueLeft,
   getBgValueRight,
@@ -11,6 +7,9 @@ import {
 import { HueIndex, LevelIndex } from "@core/types";
 import type { ExportConfigWithColors } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
+import { LABELS, PALETTE, PALETTE_CONFIG_KEY, PALETTE_NAME } from "@plugin/constants";
+import type { PaletteVariablesCollection } from "@plugin/types";
+import { getReferencedSolidPaint, getVariableColorName, isDocumentInP3 } from "@plugin/utils/color";
 
 function getViewportCenter() {
   const viewportBounds = figma.viewport.bounds;

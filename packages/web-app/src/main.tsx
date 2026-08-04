@@ -1,4 +1,5 @@
 import { createApp, syncConfigWithLocationHash } from "@harmonizer/core";
+
 import {
   $isBannerClosed,
   FigmaPluginBanner,

@@ -1,14 +1,13 @@
 import { useCallback, useState } from "react";
 
 import { useSubscribe } from "@spred/react";
-import { trackEvent } from "@web-app/plausible";
 
 import { Button } from "@core/components/Button/Button";
-import { GitHubLink } from "@core/components/GitHubLink/GitHubLink";
 import { ExportImportMenu } from "@core/components/ExportImportMenu/ExportImportMenu";
 import { ExportConfigsList } from "@core/components/ExportImportMenu/items/ExportConfigsList";
 import { PasteWebAppUrl } from "@core/components/ExportImportMenu/items/PasteWebAppUrl";
 import { UploadConfig } from "@core/components/ExportImportMenu/items/UploadConfig";
+import { GitHubLink } from "@core/components/GitHubLink/GitHubLink";
 import { MCheck } from "@core/components/Icon/MCheck";
 import { MLink } from "@core/components/Icon/MLink";
 import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
@@ -16,6 +15,7 @@ import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
 import { Tooltip } from "@core/components/Tooltip/Tooltip";
 import { $isExportConfigValid } from "@core/stores/config";
 import { mergeProps } from "@core/utils/react/mergeProps";
+import { trackEvent } from "@web-app/plausible";
 
 const TIMEOUT = 2000;
 export function CopyPermantentUrlButton() {
