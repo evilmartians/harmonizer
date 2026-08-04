@@ -48,6 +48,8 @@
   }
 
   :where(.item[data-disabled]) & {
+    /* Dimmed primary, so a blocked item never reads as a group label */
+    opacity: 0.35;
     background-color: transparent;
   }
 }
