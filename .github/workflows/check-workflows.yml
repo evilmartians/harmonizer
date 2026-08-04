@@ -1,4 +1,4 @@
-name: Lint code
+name: Lint CI workflows
 on:
   push:
     branches:
@@ -8,15 +8,15 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
+  zizmor:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    env:
-      CI_RUN: true
+      actions: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
-      - uses: ./.github/actions/prepare-runner
-      - run: pnpm lint:styles
+      - uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
+        with:
+          advanced-security: false
