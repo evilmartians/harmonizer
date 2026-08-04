@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 
+import { useSubscribe } from "@spred/react";
 import { trackEvent } from "@web-app/plausible";
 
 import { Button } from "@core/components/Button/Button";
@@ -12,9 +13,13 @@ import { MCheck } from "@core/components/Icon/MCheck";
 import { MLink } from "@core/components/Icon/MLink";
 import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
 import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
+import { Tooltip } from "@core/components/Tooltip/Tooltip";
+import { $isExportConfigValid } from "@core/stores/config";
+import { mergeProps } from "@core/utils/react/mergeProps";
 
 const TIMEOUT = 2000;
 export function CopyPermantentUrlButton() {
+  const isValid = useSubscribe($isExportConfigValid);
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
@@ -25,12 +30,19 @@ export function CopyPermantentUrlButton() {
   }, []);
 
   return (
-    <Button
-      kind="floating"
-      size="m"
-      icon={isCopied ? <MCheck /> : <MLink />}
-      aria-label="Copy URL"
-      onClick={handleCopy}
+    <Tooltip
+      content="Fix invalid values to copy the link"
+      disabled={isValid}
+      renderTrigger={(triggerProps) => (
+        <Button
+          {...mergeProps(triggerProps, { onClick: isValid ? handleCopy : undefined })}
+          kind="floating"
+          size="m"
+          icon={isCopied ? <MCheck /> : <MLink />}
+          aria-label="Copy URL"
+          aria-disabled={!isValid}
+        />
+      )}
     />
   );
 }

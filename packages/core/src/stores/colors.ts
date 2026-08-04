@@ -77,7 +77,8 @@ export const $areLevelsValid = signal((get) => {
     return (
       !get(level.name.$validationError) &&
       !get(level.contrast.$validationError) &&
-      !get(level.chroma.$validationError)
+      !get(level.chroma.$validationError) &&
+      !get(level.chromaCap.$validationError)
     );
   });
 

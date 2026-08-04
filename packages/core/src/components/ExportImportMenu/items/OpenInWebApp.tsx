@@ -1,15 +1,30 @@
 import { useSubscribe } from "@spred/react";
 
 import { MenuItemLink } from "@core/components/Menu/MenuItemLink";
-import { $exportConfigHash } from "@core/stores/config";
+import { Tooltip } from "@core/components/Tooltip/Tooltip";
+import { $exportConfigHash, $isExportConfigValid } from "@core/stores/config";
 import { getShareUrl } from "@core/utils/url/getShareUrl";
 
 export function OpenInWebApp() {
   const configHash = useSubscribe($exportConfigHash);
+  const isValid = useSubscribe($isExportConfigValid);
 
   return (
-    <MenuItemLink value="open-in-web" href={getShareUrl(configHash)} target="_blank">
-      Open in web app
-    </MenuItemLink>
+    <Tooltip
+      content="Fix invalid values to open the palette in the web app"
+      disabled={isValid}
+      placement="left"
+      renderTrigger={(triggerProps) => (
+        <MenuItemLink
+          {...triggerProps}
+          value="open-in-web"
+          href={getShareUrl(configHash)}
+          target="_blank"
+          disabled={!isValid}
+        >
+          Open in web app
+        </MenuItemLink>
+      )}
+    />
   );
 }
