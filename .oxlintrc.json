@@ -1,20 +1,7 @@
 {
   "plugins": ["typescript", "react", "unicorn"],
   "rules": {
-    "typescript/consistent-type-definitions": ["error", "type"],
-    "import-x/order": [
-      "warn",
-      {
-        "newlines-between": "always",
-        "alphabetize": { "order": "asc", "caseInsensitive": true },
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index"],
-        "pathGroups": [
-          { "pattern": "react", "group": "builtin", "position": "before" },
-          { "pattern": "@core/**", "group": "internal", "position": "after" }
-        ],
-        "pathGroupsExcludedImportTypes": []
-      }
-    ]
+    "typescript/consistent-type-definitions": ["error", "type"]
   },
   "overrides": [
     {
