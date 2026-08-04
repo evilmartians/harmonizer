@@ -111,8 +111,8 @@ importers:
         specifier: ^4.3.3
         version: 4.3.3
       typed-channel:
-        specifier: ^0.9.5
-        version: 0.9.5
+        specifier: ^0.10.1
+        version: 0.10.1
       valibot:
         specifier: ^1.4.2
         version: 1.4.2(typescript@6.0.2)
@@ -157,8 +157,8 @@ importers:
         specifier: ^19.2.8
         version: 19.2.8(react@19.2.8)
       typed-channel:
-        specifier: ^0.9.5
-        version: 0.9.5
+        specifier: ^0.10.1
+        version: 0.10.1
     devDependencies:
       '@figma/plugin-typings':
         specifier: ^1.124.0
@@ -2106,8 +2106,8 @@ packages:
   type-flag@4.1.0:
     resolution: {integrity: sha512-I/K5a1jUhdFgzM3L7413akxQRzUYq4sCbef6bMAe6SrIvIdFxGZFJys5M1SiY0d0VrAjZjY4LQzppuTaLHMvSQ==}
 
-  typed-channel@0.9.5:
-    resolution: {integrity: sha512-taCiroVT//iljqH0ijhcyEMhG/1IgLt+FE/LKPku+oOmx1xtkAjZ8upc8KoZKezYe/sL7sMsuAC6EHnnaXt1DA==}
+  typed-channel@0.10.1:
+    resolution: {integrity: sha512-8HoF3trBDc6uZfz4SA8PwTZ7CIyY25b4Kylfo8iOS+mzIXPis08Ku0ToUzB4aJu2qYvOeN52eXEgZnQnN4Q8wA==}
 
   typescript@6.0.2:
     resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
@@ -3876,7 +3876,7 @@ snapshots:
 
   type-flag@4.1.0: {}
 
-  typed-channel@0.9.5: {}
+  typed-channel@0.10.1: {}
 
   typescript@6.0.2: {}
 
