@@ -18,15 +18,15 @@
   "dependencies": {
     "@harmonizer/core": "workspace:^",
     "@spred/react": "^0.4.2",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
     "typed-channel": "^0.9.5"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.124.0",
     "@tailwindcss/vite": "^4.2.2",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.1",
     "browserslist": "^4.28.1",
     "browserslist-to-esbuild": "^2.1.1",
