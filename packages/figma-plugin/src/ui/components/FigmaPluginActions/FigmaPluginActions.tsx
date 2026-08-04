@@ -20,20 +20,32 @@ import {
 } from "@core/stores/utils/bg";
 import { mergeProps } from "@core/utils/react/mergeProps";
 import { pluginChannel } from "@ui/pluginChannel";
+import { toFigmaColors, toFigmaRgb } from "@ui/utils/figmaColor";
 
-// Backgrounds are resolved here rather than in the sandbox: the sandbox is frozen at publish
-// time, so leaving it to recompute them lets the preview and the drawn frame drift apart.
+// Backgrounds are resolved and every color is converted here rather than in the sandbox: the
+// sandbox is frozen at publish time, so leaving either to it lets the preview and the drawn frame
+// drift apart.
 function upsertPalette() {
-  const config = getExportConfigWithColors();
-  const { bgColorDark, bgColorLight, bgLightStart } = config.settings;
+  const { colors, ...config } = getExportConfigWithColors();
+  const { bgColorDark, bgColorLight, bgLightStart, colorSpace } = config.settings;
+  // The sandbox reported the document's color space in the handshake, and it is locked for the
+  // session, so this is the same space the user sees in the preview.
+  const inP3 = colorSpace === "p3";
 
   pluginChannel.emit("palette:generate", {
     config,
-    bgColorLeft: getBgValueLeft(isSingleBgRight(bgLightStart), bgColorDark, bgColorLight),
-    bgColorRight: getBgValueRight(
-      isSingleBgLeft(bgLightStart, config.levels.length),
-      bgColorDark,
-      bgColorLight,
+    colors: toFigmaColors(colors, inP3),
+    bgColorLeft: toFigmaRgb(
+      getBgValueLeft(isSingleBgRight(bgLightStart), bgColorDark, bgColorLight),
+      inP3,
+    ),
+    bgColorRight: toFigmaRgb(
+      getBgValueRight(
+        isSingleBgLeft(bgLightStart, config.levels.length),
+        bgColorDark,
+        bgColorLight,
+      ),
+      inP3,
     ),
   });
 }

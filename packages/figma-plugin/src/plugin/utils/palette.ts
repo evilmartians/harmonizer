@@ -1,9 +1,9 @@
 import { HueIndex, LevelIndex } from "@core/types";
-import type { ExportConfigWithColors } from "@core/types";
+import type { ExportConfig } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { LABELS, PALETTE, PALETTE_CONFIG_KEY, PALETTE_NAME } from "@plugin/constants";
 import type { PaletteVariablesCollection } from "@plugin/types";
-import { getReferencedSolidPaint, getVariableColorName, isDocumentInP3 } from "@plugin/utils/color";
+import { getReferencedSolidPaint, getVariableColorName } from "@plugin/utils/color";
 import type { PaletteGenerateData } from "@shared/types";
 
 function getViewportCenter() {
@@ -29,7 +29,7 @@ export function getStoredConfig() {
   return frame.getPluginData(PALETTE_CONFIG_KEY) || null;
 }
 
-function createPaletteFrame(config: ExportConfigWithColors, position: { x: number; y: number }) {
+function createPaletteFrame(config: ExportConfig, position: { x: number; y: number }) {
   const frame = figma.createFrame();
   const width =
     PALETTE.CELL_WIDTH * config.levels.length + PALETTE.HUE_HEADER_WIDTH + PALETTE.PADDING * 2;
@@ -44,11 +44,7 @@ function createPaletteFrame(config: ExportConfigWithColors, position: { x: numbe
   return frame;
 }
 
-function createLevelHeader(
-  frame: FrameNode,
-  config: ExportConfigWithColors,
-  levelIndex: LevelIndex,
-) {
+function createLevelHeader(frame: FrameNode, config: ExportConfig, levelIndex: LevelIndex) {
   const level = config.levels[levelIndex];
 
   invariant(level, "Level not found");
@@ -94,7 +90,7 @@ function createLevelHeader(
   return levelHeaderGroup;
 }
 
-function createHueHeader(frame: FrameNode, config: ExportConfigWithColors, hueIndex: HueIndex) {
+function createHueHeader(frame: FrameNode, config: ExportConfig, hueIndex: HueIndex) {
   const hue = config.hues[hueIndex];
 
   invariant(hue, "Hue not found");
@@ -120,7 +116,7 @@ function createHueHeader(frame: FrameNode, config: ExportConfigWithColors, hueIn
 
 function createColorCell(
   groups: { left: GroupNode; right: GroupNode },
-  config: ExportConfigWithColors,
+  config: ExportConfig,
   levelIndex: LevelIndex,
   hueIndex: HueIndex,
   paint: SolidPaint,
@@ -141,14 +137,8 @@ function createColorCell(
   (isBgLeft ? groups.left : groups.right).appendChild(node);
 }
 
-type BgColors = {
-  left: PaletteGenerateData["bgColorLeft"];
-  right: PaletteGenerateData["bgColorRight"];
-};
-
 export async function drawPalette(
-  config: ExportConfigWithColors,
-  bgColors: BgColors,
+  { config, colors, bgColorLeft, bgColorRight }: PaletteGenerateData,
   variablesCollection: PaletteVariablesCollection,
 ) {
   await figma.loadFontAsync(PALETTE.LABEL_FONT_SANS);
@@ -164,13 +154,13 @@ export async function drawPalette(
   const BgWidthRight = frame.width - BgWidthLeft;
   const bgLeft = figma.createRectangle();
   bgLeft.resize(BgWidthLeft, frame.height);
-  bgLeft.fills = [getReferencedSolidPaint(bgColors.left, undefined, isDocumentInP3())];
+  bgLeft.fills = [getReferencedSolidPaint(bgColorLeft, undefined)];
   frame.appendChild(bgLeft);
 
   const bgRight = figma.createRectangle();
   bgRight.resize(BgWidthRight, frame.height);
   bgRight.x = BgWidthLeft;
-  bgRight.fills = [getReferencedSolidPaint(bgColors.right, undefined, isDocumentInP3())];
+  bgRight.fills = [getReferencedSolidPaint(bgColorRight, undefined)];
   frame.appendChild(bgRight);
 
   const groupLeft = figma.group([bgLeft], frame);
@@ -189,7 +179,7 @@ export async function drawPalette(
 
     for (const [hueKey, hue] of config.hues.entries()) {
       const hueIndex = HueIndex(hueKey);
-      const color = config.colors[`${levelIndex}-${hueIndex}`];
+      const color = colors[`${levelIndex}-${hueIndex}`];
 
       invariant(color, `Color not found for level ${levelIndex} and hue ${hueIndex}`);
 
@@ -205,7 +195,6 @@ export async function drawPalette(
         getReferencedSolidPaint(
           color,
           variablesCollection.variables[getVariableColorName(level.name, hue.name)],
-          isDocumentInP3(),
         ),
       );
     }
@@ -216,8 +205,7 @@ export async function drawPalette(
   const huesGroup = figma.group(hueHeaderGroups, frame);
   huesGroup.name = "Hues";
 
-  const { colors: _, ...exportConfig } = config;
-  frame.setPluginData(PALETTE_CONFIG_KEY, JSON.stringify(exportConfig));
+  frame.setPluginData(PALETTE_CONFIG_KEY, JSON.stringify(config));
 
   existingFrame?.remove();
   figma.currentPage.appendChild(frame);
