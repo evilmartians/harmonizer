@@ -13,14 +13,15 @@ export type MenuProps = {
     triggerProps: HTMLAttributes<HTMLButtonElement>,
     indicatorProps: Record<`data-${string}`, string>,
   ) => ReactNode;
+  placement?: menu.PositioningOptions["placement"];
   children: ReactElement | ReactElement[];
 };
 
-export function Menu({ renderTrigger, children }: MenuProps) {
+export function Menu({ renderTrigger, children, placement }: MenuProps) {
   const service = useMachine(menu.machine, {
     id: useId(),
     loopFocus: true,
-    positioning: { offset: { mainAxis: 2, crossAxis: 0 } },
+    positioning: { offset: { mainAxis: 2, crossAxis: 0 }, placement },
   });
   const api = menu.connect(service, normalizeProps);
 

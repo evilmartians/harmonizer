@@ -11,6 +11,7 @@ export type ExportImportMenuProps = {
 export function ExportImportMenu({ children }: ExportImportMenuProps) {
   return (
     <Menu
+      placement="top"
       renderTrigger={(triggerProps, indicatorProps) => (
         <Button
           size="m"
