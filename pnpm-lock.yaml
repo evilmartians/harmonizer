@@ -182,8 +182,8 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1(browserslist@4.28.7)
       lightningcss:
-        specifier: ^1.32.0
-        version: 1.32.0
+        specifier: ^1.33.0
+        version: 1.33.0
       rollup:
         specifier: ^4.62.4
         version: 4.62.4
@@ -192,7 +192,7 @@ importers:
         version: 8.2.0(@types/node@22.19.1)(jiti@2.7.0)
       vite-css-modules:
         specifier: ^1.15.0
-        version: 1.15.0(lightningcss@1.32.0)(postcss@8.5.25)(rollup@4.62.4)(vite@8.2.0(@types/node@22.19.1)(jiti@2.7.0))
+        version: 1.15.0(lightningcss@1.33.0)(postcss@8.5.25)(rollup@4.62.4)(vite@8.2.0(@types/node@22.19.1)(jiti@2.7.0))
       vite-plugin-generate-file:
         specifier: ^0.3.1
         version: 0.3.1
@@ -237,14 +237,14 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1(browserslist@4.28.7)
       lightningcss:
-        specifier: ^1.32.0
-        version: 1.32.0
+        specifier: ^1.33.0
+        version: 1.33.0
       vite:
         specifier: ^8.2.0
         version: 8.2.0(@types/node@22.19.1)(jiti@2.7.0)
       vite-css-modules:
         specifier: ^1.15.0
-        version: 1.15.0(lightningcss@1.32.0)(postcss@8.5.25)(rollup@4.62.4)(vite@8.2.0(@types/node@22.19.1)(jiti@2.7.0))
+        version: 1.15.0(lightningcss@1.33.0)(postcss@8.5.25)(rollup@4.62.4)(vite@8.2.0(@types/node@22.19.1)(jiti@2.7.0))
 
 packages:
 
@@ -4021,7 +4021,7 @@ snapshots:
     optionalDependencies:
       typescript: 6.0.2
 
-  vite-css-modules@1.15.0(lightningcss@1.32.0)(postcss@8.5.25)(rollup@4.62.4)(vite@8.2.0(@types/node@22.19.1)(jiti@2.7.0)):
+  vite-css-modules@1.15.0(lightningcss@1.33.0)(postcss@8.5.25)(rollup@4.62.4)(vite@8.2.0(@types/node@22.19.1)(jiti@2.7.0)):
     dependencies:
       '@jridgewell/remapping': 2.3.5
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -4041,7 +4041,7 @@ snapshots:
       tinyglobby: 0.2.15
       vite: 8.2.0(@types/node@22.19.1)(jiti@2.7.0)
     optionalDependencies:
-      lightningcss: 1.32.0
+      lightningcss: 1.33.0
     transitivePeerDependencies:
       - rollup
 
