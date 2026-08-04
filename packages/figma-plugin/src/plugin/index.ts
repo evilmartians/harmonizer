@@ -51,10 +51,10 @@ function main() {
     });
   });
 
-  uiChannel.on("palette:generate", async ({ config, bgColorLeft, bgColorRight }) => {
-    const variablesCollection = await upsertPaletteVariablesCollection(config);
+  uiChannel.on("palette:generate", async (data) => {
+    const variablesCollection = await upsertPaletteVariablesCollection(data);
 
-    await drawPalette(config, { left: bgColorLeft, right: bgColorRight }, variablesCollection);
+    await drawPalette(data, variablesCollection);
     figma.closePlugin();
   });
 

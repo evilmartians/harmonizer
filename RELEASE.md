@@ -12,17 +12,19 @@ Most changes are UI changes and need no publish at all.
 
 ## Which release do I need?
 
-You need a **Figma publish** if your change touches any of these:
+Two different things live behind the publish, and they fail in different ways. Work out
+which one your change touches before you decide.
 
-| Path                                              | Why it is frozen                         |
+### 1. Code bundled into the sandbox
+
+This is the code that actually ships inside the published plugin.
+
+| Path                                              | What it is                               |
 | ------------------------------------------------- | ---------------------------------------- |
 | `packages/figma-plugin/src/plugin/**`             | The sandbox itself, including `shell.ts` |
 | `packages/figma-plugin/figma.manifest.ts`         | Manifest and `allowedDomains`            |
-| `packages/core/src/types.ts`                      | Imported by the sandbox                  |
-| `packages/core/src/utils/colors/toP3.ts`          | Imported by the sandbox                  |
-| `packages/core/src/utils/colors/toRgb.ts`         | Imported by the sandbox                  |
-| `packages/core/src/utils/number/clamp.ts`         | Imported by the sandbox                  |
-| `packages/core/src/utils/assertions/invariant.ts` | Imported by the sandbox                  |
+| `packages/core/src/schemas/brand.ts`              | `HueIndex` / `LevelIndex` constructors   |
+| `packages/core/src/utils/assertions/invariant.ts` | `invariant`                              |
 
 To check what the sandbox pulls in today:
 
@@ -30,16 +32,31 @@ To check what the sandbox pulls in today:
 grep -rn 'from "@core' packages/figma-plugin/src/plugin/
 ```
 
-That shows direct imports only. Those files bring their own imports along, npm packages
-included (`toP3` and `toRgb` pull in `culori`), and all of it is bundled into the frozen
-plugin.
+Ignore the `import type` lines there, they ship nothing. What is left is the bundled set,
+and those files bring their own imports along, npm packages included.
+
+**How this fails: it goes stale, quietly.** Users keep running the old sandbox until you
+publish. Nothing breaks, your change just does not arrive. So a publish here is about
+shipping, not about safety, and you can batch several changes into one publish.
+
+### 2. The wire format
+
+This is the shape of the data the UI sends the sandbox, not code that ships.
+
+| Path                                        | What it defines                    |
+| ------------------------------------------- | ---------------------------------- |
+| `packages/figma-plugin/src/shared/types.ts` | The messages and their payloads    |
+| `packages/core/src/schemas/exportConfig.ts` | `ExportConfig`, sent on every draw |
+| `packages/core/src/schemas/settings.ts`     | `ExportConfig["settings"]`         |
+| `packages/core/src/types.ts`                | `IndexedColors` key format         |
+
+**How this fails: it breaks users, silently.** A merge deploys the new UI to everyone at
+once, while the matching sandbox only arrives after you publish. In between, a fresh UI is
+talking to the old sandbox. `src/shared/wireContract.ts` is the compile-time guard on this,
+and it is why the type check runs in CI. See "Wire-breaking changes" for the safe order.
 
 Everything else (the whole `src/ui` tree, the rest of `packages/core`, the web app) ships
-with a normal deploy.
-
-Skipping a publish is safe on its own: the old sandbox keeps working, it just does not get
-your change. The one thing that actually breaks users is a UI that expects a sandbox they
-do not have yet. See "Wire-breaking changes".
+with a normal deploy and needs no publish at all.
 
 ## The order rule
 

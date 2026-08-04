@@ -1,19 +1,24 @@
-import type { ExportConfigWithColors } from "@core/types";
+import type { ExportConfig, IndexedColors } from "@core/types";
 
 export type WindowSize = { width: number; height: number };
 
-type BgColor = ExportConfigWithColors["settings"]["bgColorLight"];
+/**
+ * Channels in 0..1, the shape Figma's plugin API takes for colors. Declared here rather than
+ * reusing the API's own `RGB` because the UI build does not load the Figma typings.
+ */
+export type FigmaRgb = { r: number; g: number; b: number };
 
+/**
+ * Every color arrives ready to draw. The sandbox is frozen at publish time, so resolving colors
+ * there would freeze the conversion too: a color fix would need a republish, and the preview and
+ * the drawn frame could silently disagree while types on the wire stayed identical. Converting in
+ * the UI keeps that logic on the side we can redeploy.
+ */
 export type PaletteGenerateData = {
-  config: ExportConfigWithColors;
-  /**
-   * Resolved in the UI rather than recomputed in the sandbox. The sandbox is frozen at publish
-   * time, so if both sides derived these from the bg utils they could silently disagree: the
-   * preview would show one background split and the drawn frame another, with identical types
-   * on the wire and nothing to catch it.
-   */
-  bgColorLeft: BgColor;
-  bgColorRight: BgColor;
+  config: ExportConfig;
+  colors: Record<keyof IndexedColors, FigmaRgb>;
+  bgColorLeft: FigmaRgb;
+  bgColorRight: FigmaRgb;
 };
 
 export type PluginMessages = {

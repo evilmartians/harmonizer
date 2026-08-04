@@ -1,6 +1,12 @@
-import type { ExportConfigWithColors } from "@core/types";
+import type { ExportConfig } from "@core/types";
 
-import type { PaletteGenerateData, PluginMessages, UIMessages, WindowSize } from "./types";
+import type {
+  FigmaRgb,
+  PaletteGenerateData,
+  PluginMessages,
+  UIMessages,
+  WindowSize,
+} from "./types";
 
 /**
  * Compile-time guard on the data crossing between the UI and the sandbox.
@@ -31,12 +37,12 @@ type Extends<Actual, Expected> = [Actual] extends [Expected] ? true : false;
 type Assert<T extends true> = T;
 
 export type WireConfigKeys = Assert<
-  Exact<keyof ExportConfigWithColors, "version" | "levels" | "hues" | "settings" | "colors">
+  Exact<keyof ExportConfig, "version" | "levels" | "hues" | "settings">
 >;
 
 export type WireSettingsKeys = Assert<
   Exact<
-    keyof ExportConfigWithColors["settings"],
+    keyof ExportConfig["settings"],
     | "contrastModel"
     | "directionMode"
     | "chromaMode"
@@ -48,20 +54,18 @@ export type WireSettingsKeys = Assert<
 >;
 
 export type WireLevelKeys = Assert<
-  Exact<
-    keyof ExportConfigWithColors["levels"][number],
-    "name" | "contrast" | "chroma" | "chromaCap"
-  >
+  Exact<keyof ExportConfig["levels"][number], "name" | "contrast" | "chroma" | "chromaCap">
 >;
 
-export type WireHueKeys = Assert<
-  Exact<keyof ExportConfigWithColors["hues"][number], "name" | "angle">
->;
+export type WireHueKeys = Assert<Exact<keyof ExportConfig["hues"][number], "name" | "angle">>;
 
 // `${levelIndex}-${hueIndex}`, read directly by the sandbox when drawing each cell.
 export type WireColorKeys = Assert<
-  Extends<keyof ExportConfigWithColors["colors"], `${number}-${number}`>
+  Extends<keyof PaletteGenerateData["colors"], `${number}-${number}`>
 >;
+
+// Applied to Figma nodes as-is, so the sandbox cannot adapt a change here.
+export type WireFigmaRgbKeys = Assert<Exact<keyof FigmaRgb, "r" | "g" | "b">>;
 
 export type WirePluginMessages = Assert<Exact<keyof PluginMessages, "ready">>;
 
@@ -74,7 +78,7 @@ export type WireUIMessages = Assert<
 >;
 
 export type WirePaletteGeneratePayload = Assert<
-  Exact<keyof PaletteGenerateData, "config" | "bgColorLeft" | "bgColorRight">
+  Exact<keyof PaletteGenerateData, "config" | "colors" | "bgColorLeft" | "bgColorRight">
 >;
 
 export type WireWindowSizePayload = Assert<Exact<keyof WindowSize, "width" | "height">>;

@@ -1,14 +1,13 @@
 import { HueIndex, LevelIndex } from "@core/types";
-import type { ExportConfigWithColors } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { PALETTE_NAME } from "@plugin/constants";
 import type {
   PaletteVariables,
   PaletteVariablesCollection,
-  SupportedColor,
   VariableColorName,
 } from "@plugin/types";
-import { getVariableColorName, isDocumentInP3, toFigmaRGB } from "@plugin/utils/color";
+import { getVariableColorName } from "@plugin/utils/color";
+import type { FigmaRgb, PaletteGenerateData } from "@shared/types";
 
 export function canCreateVariableModes() {
   const collection = figma.variables.createVariableCollection("__test-plan-modes__");
@@ -48,19 +47,20 @@ function updateVariable(
   variables: PaletteVariables,
   modeId: string,
   variableName: VariableColorName,
-  color: SupportedColor,
+  color: FigmaRgb,
 ) {
   const variable =
     variables[variableName] ?? figma.variables.createVariable(variableName, collection, "COLOR");
 
-  variable.setValueForMode(modeId, toFigmaRGB(color, isDocumentInP3()));
+  variable.setValueForMode(modeId, color);
 
   return variable;
 }
 
-export async function upsertPaletteVariablesCollection(
-  config: ExportConfigWithColors,
-): Promise<PaletteVariablesCollection> {
+export async function upsertPaletteVariablesCollection({
+  config,
+  colors,
+}: PaletteGenerateData): Promise<PaletteVariablesCollection> {
   const collection =
     (await getPalette(PALETTE_NAME)) ?? figma.variables.createVariableCollection(PALETTE_NAME);
   const variables = await getExistingVariables(collection);
@@ -71,7 +71,7 @@ export async function upsertPaletteVariablesCollection(
   for (const [hueKey, hue] of config.hues.entries()) {
     for (const [levelKey, level] of config.levels.entries()) {
       const variableName = getVariableColorName(level.name, hue.name);
-      const color = config.colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
+      const color = colors[`${LevelIndex(levelKey)}-${HueIndex(hueKey)}`];
 
       invariant(color, `Color not found for level ${levelKey} and hue ${hueKey}`);
       variables[variableName] = updateVariable(collection, variables, modeId, variableName, color);
