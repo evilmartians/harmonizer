@@ -11,7 +11,9 @@ import { UploadConfig } from "@core/components/ExportImportMenu/items/UploadConf
 import { MFourSquares } from "@core/components/Icon/MFourSquares";
 import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
 import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
+import { Tooltip } from "@core/components/Tooltip/Tooltip";
 import { $isExportConfigValid, getExportConfigWithColors } from "@core/stores/config";
+import { mergeProps } from "@core/utils/react/mergeProps";
 
 function upsertPalette() {
   pluginChannel.emit("palette:generate", getExportConfigWithColors());
@@ -24,15 +26,21 @@ export function FigmaPluginActions({ hasPalette }: FigmaPluginActionsProps) {
 
   return (
     <>
-      <Button
-        kind="floating"
-        size="m"
-        onClick={upsertPalette}
-        iconStart={<MFourSquares />}
-        disabled={!isValid}
-      >
-        {hasPalette ? "Update palette" : "Create palette"}
-      </Button>
+      <Tooltip
+        content={`Fix invalid values to ${hasPalette ? "update" : "create"} the palette`}
+        disabled={isValid}
+        renderTrigger={(triggerProps) => (
+          <Button
+            {...mergeProps(triggerProps, { onClick: isValid ? upsertPalette : undefined })}
+            kind="floating"
+            size="m"
+            iconStart={<MFourSquares />}
+            aria-disabled={!isValid}
+          >
+            {hasPalette ? "Update palette" : "Create palette"}
+          </Button>
+        )}
+      />
       <ExportImportMenu>
         <MenuItemGroup id="menu-group-upload" label="Import">
           <PasteWebAppUrl value="paste-url" />

@@ -59,6 +59,17 @@ export const bgColorRightStore = validationStore(
   colorStringSchema,
 );
 
+export const $areSettingsValid = signal((get) =>
+  [
+    contrastModelStore,
+    directionModeStore,
+    chromaModeStore,
+    colorSpaceStore,
+    bgColorLeftStore,
+    bgColorRightStore,
+  ].every((store) => !get(store.$validationError)),
+);
+
 export const $bgRightStart = signal(BgRightStart(defaultConfig.settings.bgLightStart));
 export const $isSingleBgLeft = signal((get) =>
   isSingleBgLeft(get($bgRightStart), get($levelsCount)),

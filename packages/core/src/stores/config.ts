@@ -29,6 +29,7 @@ import {
   requestColorsRecalculation,
 } from "./colors";
 import {
+  $areSettingsValid,
   $bgRightStart,
   $isColorSpaceLocked,
   bgColorLeftStore,
@@ -70,13 +71,26 @@ export const $exportConfig = signal<ExportConfig>((get) => {
   };
 });
 
+export const $isExportConfigValid = signal(
+  (get) => get($areLevelsValid) && get($areHuesValid) && get($areSettingsValid),
+);
+
 export const $exportConfigHash = signal<string>("#");
+
+const $exportConfigSnapshot = signal((get) => ({
+  config: get($exportConfig),
+  isValid: get($isExportConfigValid),
+}));
 
 const COMPRESSION_DEBOUNCE_MS = 300;
 let exportConfigHashAbortController: AbortController | null = null;
 
-$exportConfig.subscribe(
-  debounce(async (config) => {
+$exportConfigSnapshot.subscribe(
+  debounce(async ({ config, isValid }) => {
+    if (!isValid) {
+      return;
+    }
+
     if (exportConfigHashAbortController) {
       exportConfigHashAbortController.abort();
     }
@@ -100,8 +114,6 @@ $exportConfig.subscribe(
     }
   }, COMPRESSION_DEBOUNCE_MS),
 );
-
-export const $isExportConfigValid = signal((get) => get($areLevelsValid) && get($areHuesValid));
 
 export function getConfig(): ExportConfig {
   return $exportConfig.value;
@@ -221,6 +233,10 @@ export const ExportTargets = {
 export type ExportTarget = keyof typeof ExportTargets;
 
 export function downloadConfigTarget(type: ExportTarget) {
+  if (!$isExportConfigValid.value) {
+    return;
+  }
+
   const targetConfig = ExportTargets[type];
 
   downloadTextFile({
