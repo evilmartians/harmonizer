@@ -1,7 +1,1 @@
-**/node_modules
-**/.tmp
 **/dist
-
-pnpm-lock.yaml
-packages/**/coverage
-**/*.html

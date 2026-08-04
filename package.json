@@ -12,11 +12,11 @@
     "lint": "cross-env FORCE_COLOR=1 pnpm --parallel -w /^lint:*/",
     "lint:oxlint": "oxlint .",
     "lint:oxfmt": "oxfmt . --check --ignore-path=.oxfmtignore",
-    "lint:styles": "pnpm stylelint **/*.{css,module.css}",
+    "lint:styles": "pnpm stylelint \"**/*.{css,html}\"",
     "format": "cross-env FORCE_COLOR=1 pnpm --parallel -w /^format:*/",
     "format:oxlint": "oxlint . --fix",
     "format:oxfmt": "oxfmt . --ignore-path=.oxfmtignore",
-    "format:styles": "pnpm lint:styles --fix && oxfmt '**/*.{css,module.css}' --ignore-path=.oxfmtignore",
+    "format:styles": "pnpm lint:styles --fix && oxfmt '**/*.{css,html}' --ignore-path=.oxfmtignore",
     "typecheck": "pnpm --recursive --parallel typecheck",
     "security:audit": "pnpm dlx audit-ci@^7",
     "postinstall": "pnpm exec simple-git-hooks"
@@ -52,7 +52,7 @@
       "oxlint --fix",
       "oxfmt"
     ],
-    "*.{css,module.css}": [
+    "*.{css,html}": [
       "stylelint --fix",
       "oxfmt"
     ]
