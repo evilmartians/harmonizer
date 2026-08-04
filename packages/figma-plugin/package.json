@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.124.0",
-    "@tailwindcss/vite": "^4.2.2",
+    "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
