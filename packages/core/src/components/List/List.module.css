@@ -22,6 +22,10 @@
   padding: 0 calc(var(--spacing) * 2);
 
   outline: none;
+
+  &[data-disabled] {
+    cursor: not-allowed;
+  }
 }
 
 .groupLabel {
@@ -41,6 +45,10 @@
   :where(.item[data-highlighted]) &,
   :where(.item:hover) & {
     background-color: var(--color-universal-elevation-hover);
+  }
+
+  :where(.item[data-disabled]) & {
+    background-color: transparent;
   }
 }
 
