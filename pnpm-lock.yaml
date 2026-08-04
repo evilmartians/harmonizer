@@ -25,6 +25,9 @@ importers:
       '@zag-js/select':
         specifier: ^1.38.2
         version: 1.38.2
+      '@zag-js/tooltip':
+        specifier: ^1.38.2
+        version: 1.38.2
     devDependencies:
       cross-env:
         specifier: ^10.1.0
@@ -1121,6 +1124,9 @@ packages:
 
   '@zag-js/store@1.38.2':
     resolution: {integrity: sha512-TlJM6M2dW5W9jr6US4/R/VobLmlFrSv48ls18XffmXp+uuwZ7Aisciq0Djtwx7Y7e5KhlUWtk4ncE5PtjP4AzQ==}
+
+  '@zag-js/tooltip@1.38.2':
+    resolution: {integrity: sha512-pFVWc6KjLujIvyOz2CzFQu4e9NVC61yE0oQpjRIQwzZAICxxiPE3QeOtb0Aw3Jhd0n2Y7qxuLyFI6gcAxI9Sxg==}
 
   '@zag-js/types@1.38.2':
     resolution: {integrity: sha512-fvUf3J4QOFAliuo5wHTO/awO0GKFAn5AHNOXbGH5IuoxIwa0oK5tSXVwdF8JE7ISOkQh4oB2fq3g4QjxmAXDyA==}
@@ -2871,6 +2877,16 @@ snapshots:
   '@zag-js/store@1.38.2':
     dependencies:
       proxy-compare: 3.0.1
+
+  '@zag-js/tooltip@1.38.2':
+    dependencies:
+      '@zag-js/anatomy': 1.38.2
+      '@zag-js/core': 1.38.2
+      '@zag-js/dom-query': 1.38.2
+      '@zag-js/focus-visible': 1.38.2
+      '@zag-js/popper': 1.38.2
+      '@zag-js/types': 1.38.2
+      '@zag-js/utils': 1.38.2
 
   '@zag-js/types@1.38.2':
     dependencies:

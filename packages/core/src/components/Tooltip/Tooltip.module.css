@@ -1,0 +1,11 @@
+.content {
+  max-inline-size: calc(var(--spacing) * 50);
+  padding: var(--spacing) calc(var(--spacing) * 1.5);
+  border: 1px solid var(--color-border-dark);
+  border-radius: var(--radius-sm);
+
+  color: var(--color-primary-dark);
+
+  /* Sits above the menu, which uses the plain elevation color */
+  background-color: var(--color-universal-elevation-hover);
+}
