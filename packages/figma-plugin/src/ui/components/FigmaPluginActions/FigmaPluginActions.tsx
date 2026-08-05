@@ -20,6 +20,7 @@ import {
 } from "@core/stores/utils/bg";
 import { mergeProps } from "@core/utils/react/mergeProps";
 import { pluginChannel } from "@ui/pluginChannel";
+import { MIN_SUPPORTED_SANDBOX_VERSION } from "@ui/sandboxSupport";
 import { toFigmaColors, toFigmaRgb } from "@ui/utils/figmaColor";
 
 // Backgrounds are resolved and every color is converted here rather than in the sandbox: the
@@ -33,6 +34,7 @@ function upsertPalette() {
   const inP3 = colorSpace === "p3";
 
   pluginChannel.emit("palette:generate", {
+    minSandboxVersion: MIN_SUPPORTED_SANDBOX_VERSION,
     config,
     colors: toFigmaColors(colors, inP3),
     bgColorLeft: toFigmaRgb(

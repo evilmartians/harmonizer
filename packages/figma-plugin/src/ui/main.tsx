@@ -2,30 +2,11 @@ import { createApp, getDefaultConfigCopy, ColorSpace, parseExportConfig } from "
 
 import { FigmaPluginActions } from "@ui/components/FigmaPluginActions/FigmaPluginActions";
 import { pluginChannel } from "@ui/pluginChannel";
+import { MIN_SUPPORTED_SANDBOX_VERSION } from "@ui/sandboxSupport";
 
 import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindowHandle";
 
-/**
- * Oldest sandbox this UI can still talk to. The UI redeploys on every push while the sandbox
- * only changes when the plugin is republished, so the two drift apart. Raise this when a wire
- * change stops being backwards compatible, and adapt older payloads here rather than in the
- * sandbox, which cannot be patched after publish.
- */
-const MIN_SUPPORTED_SANDBOX_VERSION = 1;
-
-pluginChannel.on("ready", async ({ sandboxVersion, storedConfig, inP3 }) => {
-  const root = document.querySelector<HTMLElement>("#root");
-
-  if (!root) {
-    return;
-  }
-
-  if (sandboxVersion < MIN_SUPPORTED_SANDBOX_VERSION) {
-    root.textContent =
-      "Harmonizer needs a newer version of the plugin. Close and reopen it to update.";
-    return;
-  }
-
+async function mountApp(root: HTMLElement, storedConfig: string | null, inP3: boolean) {
   const hasPalette = !!storedConfig;
   const appConfig = await (async () => {
     try {
@@ -56,6 +37,31 @@ pluginChannel.on("ready", async ({ sandboxVersion, storedConfig, inP3 }) => {
       },
     },
   );
+}
+
+pluginChannel.on("ready", async ({ sandboxVersion, storedConfig, inP3 }) => {
+  const root = document.querySelector<HTMLElement>("#root");
+
+  if (!root) {
+    return;
+  }
+
+  try {
+    if (sandboxVersion < MIN_SUPPORTED_SANDBOX_VERSION) {
+      root.textContent =
+        "Harmonizer needs a newer version of the plugin. Close and reopen it to update.";
+    } else {
+      await mountApp(root, storedConfig, inP3);
+    }
+  } catch (error) {
+    console.error(error);
+    root.textContent = "Harmonizer couldn't start. Close and reopen the plugin.";
+  }
+
+  // Every branch above leaves something on screen. The sandbox watches until this arrives and
+  // takes the window over with its own error if it never does, so a failure handled here has to
+  // report itself exactly as a successful mount does.
+  pluginChannel.emit("ui:mounted");
 });
 
 // Announced only after the handler above is registered. The sandbox replies on demand instead
