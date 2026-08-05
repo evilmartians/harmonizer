@@ -6,7 +6,10 @@ import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { MIN_SUPPORTED_SANDBOX_VERSION } from "@ui/sandboxSupport";
 
-type CreateAppOptions = { customUI?: { afterGridContent?: ReactNode } };
+type CreateAppOptions = {
+  customUI?: { afterGridContent?: ReactNode };
+  onRenderError?: (error: unknown) => void;
+};
 
 const { createApp } = vi.hoisted(() => ({
   createApp: vi.fn<(root: HTMLElement, dependencies: unknown, options: CreateAppOptions) => void>(),
@@ -70,8 +73,10 @@ describe("plugin UI", () => {
   beforeEach(() => {
     sent = [];
     document.body.innerHTML = '<div id="root"></div>';
-    createApp.mockImplementation((root, _dependencies, { customUI }) => {
-      createRoot(root).render(customUI?.afterGridContent);
+    createApp.mockImplementation((root, _dependencies, { customUI, onRenderError }) => {
+      createRoot(root, onRenderError && { onUncaughtError: onRenderError }).render(
+        customUI?.afterGridContent,
+      );
     });
     vi.spyOn(window, "postMessage").mockImplementation((message) => {
       sent.push((message as { pluginMessage: SentMessage }).pluginMessage);
@@ -131,13 +136,10 @@ describe("plugin UI", () => {
     expect(sentTypes()).not.toContain("ui:mounted");
   });
 
-  test("leaves the sandbox watching when the first render throws", async () => {
+  test("explains a render that threw without waiting for the sandbox to notice", async () => {
     vi.spyOn(console, "error").mockImplementation(() => {});
-    createApp.mockImplementation((root) => {
-      // The real root has no handler, so React rethrows to the frame and the test runner counts
-      // that as its own failure. Swallowing it keeps the deliberate throw from ending the run;
-      // what is under test is the silence that follows it either way.
-      createRoot(root, { onUncaughtError: () => {} }).render(
+    createApp.mockImplementation((root, _dependencies, { onRenderError }) => {
+      createRoot(root, onRenderError && { onUncaughtError: onRenderError }).render(
         createElement(function Boom(): ReactNode {
           throw new Error("render failed");
         }),
@@ -146,9 +148,9 @@ describe("plugin UI", () => {
 
     await loadUi();
     receiveReady();
-    await settle();
 
-    expect(sentTypes()).not.toContain("ui:mounted");
+    await vi.waitFor(() => expect(sentTypes()).toContain("ui:mounted"));
+    expect(rootText()).toContain("Harmonizer couldn't start");
   });
 
   test("stays quiet with no mount point, leaving the sandbox watching", async () => {

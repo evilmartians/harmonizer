@@ -19,12 +19,13 @@ type AppOptions = {
     afterGridContent?: ReactNode;
   };
   precalculateColors?: boolean;
+  onRenderError?: (error: unknown) => void;
 };
 
 export function createApp(
   element: HTMLElement | null,
   dependencies: AppDependencies,
-  { customUI, precalculateColors }: AppOptions,
+  { customUI, precalculateColors, onRenderError }: AppOptions,
 ) {
   invariant(element, "Mount element not found");
 
@@ -39,7 +40,7 @@ export function createApp(
     calculateColorsSynchronously();
   }
 
-  createRoot(element).render(
+  createRoot(element, onRenderError && { onUncaughtError: onRenderError }).render(
     <StrictMode>
       <DependenciesContext.Provider value={dependencies}>
         <MainContainer>

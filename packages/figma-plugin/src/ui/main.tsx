@@ -21,6 +21,10 @@ function ReportPainted() {
   return null;
 }
 
+const STARTUP_FAILED_MESSAGE = "Harmonizer couldn't start. Close and reopen the plugin.";
+const UPDATE_REQUIRED_MESSAGE =
+  "Harmonizer needs a newer version of the plugin. Close and reopen it to update.";
+
 function showMessage(root: HTMLElement, text: string) {
   root.textContent = text;
   pluginChannel.emit("ui:mounted");
@@ -58,6 +62,13 @@ async function mountApp(root: HTMLElement, storedConfig: string | null, inP3: bo
           </>
         ),
       },
+      // A render failure throws where no `try` around this call can reach it, and React leaves
+      // the element empty. Without this the window would sit blank until the sandbox gave up on
+      // it 30 seconds later.
+      onRenderError: (error) => {
+        console.error(error);
+        showMessage(root, STARTUP_FAILED_MESSAGE);
+      },
     },
   );
 }
@@ -70,10 +81,7 @@ pluginChannel.on("ready", async ({ sandboxVersion, storedConfig, inP3 }) => {
   }
 
   if (sandboxVersion < MIN_SUPPORTED_SANDBOX_VERSION) {
-    showMessage(
-      root,
-      "Harmonizer needs a newer version of the plugin. Close and reopen it to update.",
-    );
+    showMessage(root, UPDATE_REQUIRED_MESSAGE);
     return;
   }
 
@@ -83,7 +91,7 @@ pluginChannel.on("ready", async ({ sandboxVersion, storedConfig, inP3 }) => {
     await mountApp(root, storedConfig, inP3);
   } catch (error) {
     console.error(error);
-    showMessage(root, "Harmonizer couldn't start. Close and reopen the plugin.");
+    showMessage(root, STARTUP_FAILED_MESSAGE);
   }
 });
 
