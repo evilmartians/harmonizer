@@ -16,7 +16,15 @@ jobs:
         with:
           persist-credentials: false
       - uses: ./.github/actions/prepare-runner
+      # This deploy is what ships plugin changes to users, so the gates that used to happen at
+      # publish time have to happen here. Typecheck carries the UI/sandbox wire contract guard
+      # (src/shared/wireContract.ts) and must run before anything is deployed.
+      - run: pnpm typecheck
       - run: pnpm web build
+      # Order is load-bearing: the web build empties packages/web-app/dist and would wipe the
+      # plugin UI if these two were swapped.
+      - run: pnpm figma build:ui
+      - run: pnpm smoke:plugin-ui
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: web-app-dist

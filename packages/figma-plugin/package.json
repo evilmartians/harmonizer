@@ -6,10 +6,10 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm --parallel --filter=. /^dev:/",
-    "dev:ui": "pnpm vite build --watch --mode=development -c vite.config.ui.ts",
+    "dev:ui": "pnpm vite -c vite.config.ui.remote.ts",
     "dev:plugin": "pnpm vite build --watch --mode=development -c vite.config.plugin.ts",
     "build": "pnpm --parallel --filter=. /^build:/",
-    "build:ui": "pnpm vite build -c vite.config.ui.ts",
+    "build:ui": "pnpm vite build -c vite.config.ui.remote.ts",
     "build:plugin": "pnpm vite build -c vite.config.plugin.ts",
     "typecheck": "pnpm --parallel --filter=. /^typecheck:/",
     "typecheck:ui": "pnpm tsc --build tsconfig.ui.json",
@@ -34,7 +34,6 @@
     "rollup": "^4.62.4",
     "vite": "^8.2.0",
     "vite-css-modules": "^1.16.0",
-    "vite-plugin-generate-file": "^0.3.1",
-    "vite-plugin-singlefile": "^2.3.3"
+    "vite-plugin-generate-file": "^0.3.1"
   }
 }
