@@ -11,6 +11,8 @@
     "build": "pnpm --parallel --filter=. /^build:/",
     "build:ui": "pnpm vite build -c vite.config.ui.remote.ts",
     "build:plugin": "pnpm vite build -c vite.config.plugin.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "pnpm --parallel --filter=. /^typecheck:/",
     "typecheck:ui": "pnpm tsc --build tsconfig.ui.json",
     "typecheck:plugin": "pnpm tsc --build tsconfig.plugin.json"
@@ -20,7 +22,8 @@
     "@spred/react": "^0.4.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
-    "typed-channel": "^0.10.1"
+    "typed-channel": "^0.10.1",
+    "valibot": "^1.4.2"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.132.0",
@@ -30,10 +33,12 @@
     "@vitejs/plugin-react": "^6.0.5",
     "browserslist": "^4.28.7",
     "browserslist-to-esbuild": "^2.1.1",
+    "jsdom": "^30.0.1",
     "lightningcss": "^1.33.0",
     "rollup": "^4.62.4",
     "vite": "^8.2.0",
     "vite-css-modules": "^1.16.0",
-    "vite-plugin-generate-file": "^0.3.1"
+    "vite-plugin-generate-file": "^0.3.1",
+    "vitest": "^4.1.10"
   }
 }

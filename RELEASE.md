@@ -19,17 +19,18 @@ which one your change touches before you decide.
 
 This is the code that actually ships inside the published plugin.
 
-| Path                                              | What it is                               |
-| ------------------------------------------------- | ---------------------------------------- |
-| `packages/figma-plugin/src/plugin/**`             | The sandbox itself, including `shell.ts` |
-| `packages/figma-plugin/figma.manifest.ts`         | Manifest and `allowedDomains`            |
-| `packages/core/src/schemas/brand.ts`              | `HueIndex` / `LevelIndex` constructors   |
-| `packages/core/src/utils/assertions/invariant.ts` | `invariant`                              |
+| Path                                               | What it is                                     |
+| -------------------------------------------------- | ---------------------------------------------- |
+| `packages/figma-plugin/src/plugin/**`              | The sandbox itself, including `shell.ts`       |
+| `packages/figma-plugin/src/shared/wireContract.ts` | The schema the sandbox checks payloads against |
+| `packages/figma-plugin/figma.manifest.ts`          | Manifest and `allowedDomains`                  |
+| `packages/core/src/schemas/brand.ts`               | `HueIndex` / `LevelIndex` constructors         |
+| `packages/core/src/utils/assertions/invariant.ts`  | `invariant`                                    |
 
 To check what the sandbox pulls in today:
 
 ```sh
-grep -rn 'from "@core' packages/figma-plugin/src/plugin/
+grep -rn 'from "@core\|from "@shared' packages/figma-plugin/src/plugin/
 ```
 
 Ignore the `import type` lines there, they ship nothing. What is left is the bundled set,
@@ -50,10 +51,12 @@ This is the shape of the data the UI sends the sandbox, not code that ships.
 | `packages/core/src/schemas/settings.ts`     | `ExportConfig["settings"]`         |
 | `packages/core/src/types.ts`                | `IndexedColors` key format         |
 
-**How this fails: it breaks users, silently.** A merge deploys the new UI to everyone at
-once, while the matching sandbox only arrives after you publish. In between, a fresh UI is
-talking to the old sandbox. `src/shared/wireContract.ts` is the compile-time guard on this,
-and it is why the type check runs in CI. See "Wire-breaking changes" for the safe order.
+**How this fails: it breaks users.** A merge deploys the new UI to everyone at once, while
+the matching sandbox only arrives after you publish. In between, a fresh UI is talking to
+the old sandbox. `src/shared/wireContract.ts` guards this twice: key sets and field types
+are pinned at compile time, which is why the type check runs in CI, and the schema there
+also runs in the sandbox against every `palette:generate` payload before anything is drawn.
+See "Wire-breaking changes" for the safe order.
 
 Everything else (the whole `src/ui` tree, the rest of `packages/core`, the web app) ships
 with a normal deploy and needs no publish at all.
@@ -125,13 +128,14 @@ curl -sI https://harmonizer-web--pr71-figma-automatic-rele-6599csx2.web.app/plug
 ### 1. Prepare
 
 If the wire between the UI and the sandbox changed, `src/shared/wireContract.ts` stops
-compiling. Read the comment at the top of that file before you change it. It is the only
-thing that catches a UI/sandbox mismatch, which otherwise fails silently in a user's Figma.
+compiling. Read the comment at the top of that file before you change it. Nothing else
+catches a UI/sandbox mismatch on the branch, and the sandbox that meets it in a user's
+Figma can only refuse to draw.
 
 Bump `SANDBOX_VERSION` in `packages/figma-plugin/src/plugin/version.ts` by one. Do this
 once per publish, not per commit.
 
-Do **not** raise `MIN_SUPPORTED_SANDBOX_VERSION` in `src/ui/main.tsx` yet. See
+Do **not** raise `MIN_SUPPORTED_SANDBOX_VERSION` in `src/ui/sandboxSupport.ts` yet. See
 "Wire-breaking changes" below.
 
 ### 2. Check it in Figma locally
@@ -199,7 +203,17 @@ deploys the UI to everyone at once while the new sandbox only arrives after you 
    user is running a fresh UI against the old sandbox, so this compatibility is what keeps
    them working.
 2. **Merge 2:** once the publish is live, raise `MIN_SUPPORTED_SANDBOX_VERSION` in
-   `src/ui/main.tsx` and delete the old path from the UI.
+   `src/ui/sandboxSupport.ts` and delete the old path from the UI.
+
+`MIN_SUPPORTED_SANDBOX_VERSION` is the only number to raise, and it is checked on both
+sides. The UI compares it against the version the handshake reports and stops there. Every
+`palette:generate` payload also carries it as `minSandboxVersion`, and the sandbox compares
+it against its own `SANDBOX_VERSION` before drawing. The second check is the one that
+counts: it runs on the side that cannot be redeployed.
+
+Raise it only for a payload an older sandbox cannot survive. Added fields do not count: the
+schema ignores what it does not know, and the sandbox forwards the payload it received
+rather than the parsed copy, so a new field still reaches the plugin data it is stored in.
 
 Wait a while between the two. Figma updates plugins on its own, but only when the user
 next opens one.
@@ -216,11 +230,23 @@ Always put the compatibility code in the UI. It is the only side you can still f
   all. Hosting is down, or the deploy wiped `/plugin/`. Check the build order in the deploy
   workflow: the web build empties `packages/web-app/dist` and must run before the plugin
   UI build.
-- **"Harmonizer couldn't start":** the UI was reachable but never completed the handshake
-  within 30 seconds. The page loaded and then failed, or something else was served in its
-  place. Open the plugin's console and work from there. Note that a catch-all hosting
-  rewrite answers _any_ wrong path with 200 and the web app, so "reachable" does not mean
-  "correct": confirm `/plugin/index.html` returns the plugin page, not the web app.
+- **"Harmonizer couldn't start." on a plain screen with no button:** the UI was reachable
+  but never reported that it had drawn anything within 30 seconds. The page loaded and then
+  failed, or something else was served in its place. Open the plugin's console and work
+  from there. Note that a catch-all hosting rewrite answers _any_ wrong path with 200 and
+  the web app, so "reachable" does not mean "correct": confirm `/plugin/index.html` returns
+  the plugin page, not the web app.
+- **"Harmonizer couldn't start. Close and reopen the plugin." inside the loaded UI:** the
+  page itself mounted and then failed while starting the app. The console has the error.
+  This one is the UI's own screen, so a fix ships with a deploy.
+- **"Harmonizer could not read the palette data, so nothing was changed":** the sandbox
+  rejected the payload the UI sent it, and drew nothing rather than half a palette. The
+  wire drifted: a deployed UI is sending a shape the published sandbox does not accept.
+  Revert the UI change or adapt the payload in the UI, and deploy.
+- **"This palette needs a newer Harmonizer":** the same drift, but declared. The payload
+  asked for a sandbox above the published one, which means Merge 2 landed before the
+  matching publish was live. The handshake should have caught this first, so seeing it means
+  `MIN_SUPPORTED_SANDBOX_VERSION` went up while the UI's own check was bypassed or wrong.
 - **The plugin window is blank and stays blank:** it should become one of the two screens
   above. If it does not, the sandbox itself failed before it could show anything. Check the
   frame-ancestors header on `/plugin/index.html`.

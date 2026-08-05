@@ -4,5 +4,10 @@
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo"
   },
-  "include": ["vite.config.plugin.ts", "vite.config.ui.ts", "figma.manifest.ts"]
+  "include": [
+    "vite.config.plugin.ts",
+    "vite.config.ui.remote.ts",
+    "vitest.config.ts",
+    "figma.manifest.ts"
+  ]
 }

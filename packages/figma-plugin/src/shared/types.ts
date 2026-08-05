@@ -15,6 +15,8 @@ export type FigmaRgb = { r: number; g: number; b: number };
  * the UI keeps that logic on the side we can redeploy.
  */
 export type PaletteGenerateData = {
+  /** Oldest sandbox that can draw this payload, so a sandbox below it refuses rather than tries. */
+  minSandboxVersion: number;
   config: ExportConfig;
   colors: Record<keyof IndexedColors, FigmaRgb>;
   bgColorLeft: FigmaRgb;
@@ -32,6 +34,7 @@ export type PluginMessages = {
 
 export type UIMessages = {
   "ui:ready": never;
+  "ui:mounted": never;
   "window:resize": WindowSize;
   "palette:generate": PaletteGenerateData;
 };

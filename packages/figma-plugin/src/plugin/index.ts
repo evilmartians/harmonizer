@@ -4,6 +4,7 @@ import { isDocumentInP3 } from "@plugin/utils/color";
 import { drawPalette, getStoredConfig } from "@plugin/utils/palette";
 import { upsertPaletteVariablesCollection } from "@plugin/utils/variables";
 import { SANDBOX_BUILD, SANDBOX_VERSION } from "@plugin/version";
+import { checkPaletteGenerateData } from "@shared/wireContract";
 
 import {
   DEFAULT_HEIGHT,
@@ -38,11 +39,10 @@ function main() {
     });
   }, STARTUP_TIMEOUT_MS);
 
-  // The UI is fetched over the network, so it announces itself once mounted. Pushing state on
-  // `run` instead would race the load and normally lose, leaving an empty window.
+  // Sent once the bundle has parsed and can receive, which is only the point where state can be
+  // pushed at all. Pushing on `run` instead would race the network load and normally lose,
+  // leaving an empty window.
   uiChannel.on("ui:ready", () => {
-    clearTimeout(startupTimer);
-
     uiChannel.emit("ready", {
       sandboxVersion: SANDBOX_VERSION,
       sandboxBuild: SANDBOX_BUILD,
@@ -51,10 +51,31 @@ function main() {
     });
   });
 
-  uiChannel.on("palette:generate", async (data) => {
-    const variablesCollection = await upsertPaletteVariablesCollection(data);
+  // The handshake only proves the bundle loaded; everything that can still fail -- parsing the
+  // stored config, mounting React -- happens after it. Watching until the UI reports something
+  // on screen is what keeps a failure there from ending as a blank window.
+  uiChannel.on("ui:mounted", () => clearTimeout(startupTimer));
 
-    await drawPalette(data, variablesCollection);
+  // The UI is deployed apart from this sandbox, so its payload is untrusted input however well
+  // it type checks in one tree. Drawing starts only once the whole payload is known good:
+  // variables and nodes are written in sequence, and a failure partway leaves the document
+  // holding half a palette.
+  uiChannel.on("palette:generate", async (payload) => {
+    const check = checkPaletteGenerateData(payload, SANDBOX_VERSION);
+
+    if (check.status !== "supported") {
+      figma.notify(
+        check.status === "unsupported-sandbox"
+          ? "This palette needs a newer Harmonizer. Update the plugin, then try again."
+          : "Harmonizer could not read the palette data, so nothing was changed.",
+        { error: true },
+      );
+      return;
+    }
+
+    const variablesCollection = await upsertPaletteVariablesCollection(check.data);
+
+    await drawPalette(check.data, variablesCollection);
     figma.closePlugin();
   });
 
