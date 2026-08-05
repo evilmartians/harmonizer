@@ -26,7 +26,9 @@ function createFigmaUiTransport<
   }
 
   function emit(message: AnyMessageOf<OutboundMessages>) {
-    parent.postMessage({ pluginMessage: message }, "*");
+    // Figma drops a message with no pluginId when the UI is served from another origin, which is
+    // always the case here. Without it the handshake never completes and the window stays blank.
+    parent.postMessage({ pluginMessage: message, pluginId: __PLUGIN_ID__ }, "*");
   }
 
   return { on, emit };

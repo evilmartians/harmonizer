@@ -7,6 +7,7 @@
     "core": "pnpm --filter @harmonizer/core",
     "web": "pnpm --filter @harmonizer/web-app",
     "figma": "pnpm --filter @harmonizer/figma-plugin",
+    "figma:preview": "node scripts/plugin-preview.mjs",
     "test": "pnpm --recursive test",
     "test:watch": "pnpm --recursive test:watch",
     "lint": "cross-env FORCE_COLOR=1 pnpm --parallel -w /^lint:*/",
@@ -18,6 +19,7 @@
     "format:oxfmt": "oxfmt . --ignore-path=.oxfmtignore",
     "format:styles": "pnpm lint:styles --fix && oxfmt '**/*.{css,html}' --ignore-path=.oxfmtignore",
     "typecheck": "pnpm --recursive --parallel typecheck",
+    "smoke:plugin-ui": "node scripts/smoke-plugin-ui.mjs",
     "security:audit": "pnpm dlx audit-ci@^7",
     "postinstall": "pnpm exec simple-git-hooks"
   },
@@ -32,6 +34,7 @@
     "nano-staged": "^1.0.2",
     "oxfmt": "^0.62.0",
     "oxlint": "^1.76.0",
+    "playwright-core": "^1.61.1",
     "postcss-html": "^2.0.0",
     "simple-git-hooks": "^2.13.1",
     "stylelint": "^17.14.1",

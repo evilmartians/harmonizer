@@ -12,11 +12,30 @@ import { MenuItemGroup } from "@core/components/Menu/MenuItemGroup";
 import { MenuItemSeparator } from "@core/components/Menu/MenuItemSeparator";
 import { Tooltip } from "@core/components/Tooltip/Tooltip";
 import { $isExportConfigValid, getExportConfigWithColors } from "@core/stores/config";
+import {
+  getBgValueLeft,
+  getBgValueRight,
+  isSingleBgLeft,
+  isSingleBgRight,
+} from "@core/stores/utils/bg";
 import { mergeProps } from "@core/utils/react/mergeProps";
 import { pluginChannel } from "@ui/pluginChannel";
 
+// Backgrounds are resolved here rather than in the sandbox: the sandbox is frozen at publish
+// time, so leaving it to recompute them lets the preview and the drawn frame drift apart.
 function upsertPalette() {
-  pluginChannel.emit("palette:generate", getExportConfigWithColors());
+  const config = getExportConfigWithColors();
+  const { bgColorDark, bgColorLight, bgLightStart } = config.settings;
+
+  pluginChannel.emit("palette:generate", {
+    config,
+    bgColorLeft: getBgValueLeft(isSingleBgRight(bgLightStart), bgColorDark, bgColorLight),
+    bgColorRight: getBgValueRight(
+      isSingleBgLeft(bgLightStart, config.levels.length),
+      bgColorDark,
+      bgColorLight,
+    ),
+  });
 }
 
 export type FigmaPluginActionsProps = { hasPalette: boolean };

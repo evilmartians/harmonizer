@@ -1,15 +1,10 @@
-import {
-  getBgValueLeft,
-  getBgValueRight,
-  isSingleBgLeft,
-  isSingleBgRight,
-} from "@core/stores/utils/bg";
 import { HueIndex, LevelIndex } from "@core/types";
 import type { ExportConfigWithColors } from "@core/types";
 import { invariant } from "@core/utils/assertions/invariant";
 import { LABELS, PALETTE, PALETTE_CONFIG_KEY, PALETTE_NAME } from "@plugin/constants";
 import type { PaletteVariablesCollection } from "@plugin/types";
 import { getReferencedSolidPaint, getVariableColorName, isDocumentInP3 } from "@plugin/utils/color";
+import type { PaletteGenerateData } from "@shared/types";
 
 function getViewportCenter() {
   const viewportBounds = figma.viewport.bounds;
@@ -146,24 +141,14 @@ function createColorCell(
   (isBgLeft ? groups.left : groups.right).appendChild(node);
 }
 
-function getBgColorLeft(config: ExportConfigWithColors) {
-  return getBgValueLeft(
-    isSingleBgRight(config.settings.bgLightStart),
-    config.settings.bgColorDark,
-    config.settings.bgColorLight,
-  );
-}
-
-function getBgColorRight(config: ExportConfigWithColors) {
-  return getBgValueRight(
-    isSingleBgLeft(config.settings.bgLightStart, config.levels.length),
-    config.settings.bgColorDark,
-    config.settings.bgColorLight,
-  );
-}
+type BgColors = {
+  left: PaletteGenerateData["bgColorLeft"];
+  right: PaletteGenerateData["bgColorRight"];
+};
 
 export async function drawPalette(
   config: ExportConfigWithColors,
+  bgColors: BgColors,
   variablesCollection: PaletteVariablesCollection,
 ) {
   await figma.loadFontAsync(PALETTE.LABEL_FONT_SANS);
@@ -179,13 +164,13 @@ export async function drawPalette(
   const BgWidthRight = frame.width - BgWidthLeft;
   const bgLeft = figma.createRectangle();
   bgLeft.resize(BgWidthLeft, frame.height);
-  bgLeft.fills = [getReferencedSolidPaint(getBgColorLeft(config), undefined, isDocumentInP3())];
+  bgLeft.fills = [getReferencedSolidPaint(bgColors.left, undefined, isDocumentInP3())];
   frame.appendChild(bgLeft);
 
   const bgRight = figma.createRectangle();
   bgRight.resize(BgWidthRight, frame.height);
   bgRight.x = BgWidthLeft;
-  bgRight.fills = [getReferencedSolidPaint(getBgColorRight(config), undefined, isDocumentInP3())];
+  bgRight.fills = [getReferencedSolidPaint(bgColors.right, undefined, isDocumentInP3())];
   frame.appendChild(bgRight);
 
   const groupLeft = figma.group([bgLeft], frame);
