@@ -1,3 +1,5 @@
+import { useLayoutEffect } from "react";
+
 import { createApp, getDefaultConfigCopy, ColorSpace, parseExportConfig } from "@harmonizer/core";
 
 import { FigmaPluginActions } from "@ui/components/FigmaPluginActions/FigmaPluginActions";
@@ -5,6 +7,24 @@ import { pluginChannel } from "@ui/pluginChannel";
 import { MIN_SUPPORTED_SANDBOX_VERSION } from "@ui/sandboxSupport";
 
 import { ResizeWindowHandle } from "./components/ResizeWindowHandle/ResizeWindowHandle";
+
+/**
+ * Renders nothing. It exists to run from inside the tree, because `createRoot().render()`
+ * returns before React commits: reporting from the caller would report a window that can still
+ * end up empty, and a render that throws would clear the watchdog on its way to a blank screen.
+ */
+function ReportPainted() {
+  useLayoutEffect(() => {
+    pluginChannel.emit("ui:mounted");
+  }, []);
+
+  return null;
+}
+
+function showMessage(root: HTMLElement, text: string) {
+  root.textContent = text;
+  pluginChannel.emit("ui:mounted");
+}
 
 async function mountApp(root: HTMLElement, storedConfig: string | null, inP3: boolean) {
   const hasPalette = !!storedConfig;
@@ -32,7 +52,10 @@ async function mountApp(root: HTMLElement, storedConfig: string | null, inP3: bo
       customUI: {
         actions: <FigmaPluginActions hasPalette={hasPalette} />,
         afterGridContent: (
-          <ResizeWindowHandle onResize={(size) => pluginChannel.emit("window:resize", size)} />
+          <>
+            <ResizeWindowHandle onResize={(size) => pluginChannel.emit("window:resize", size)} />
+            <ReportPainted />
+          </>
         ),
       },
     },
@@ -46,22 +69,22 @@ pluginChannel.on("ready", async ({ sandboxVersion, storedConfig, inP3 }) => {
     return;
   }
 
-  try {
-    if (sandboxVersion < MIN_SUPPORTED_SANDBOX_VERSION) {
-      root.textContent =
-        "Harmonizer needs a newer version of the plugin. Close and reopen it to update.";
-    } else {
-      await mountApp(root, storedConfig, inP3);
-    }
-  } catch (error) {
-    console.error(error);
-    root.textContent = "Harmonizer couldn't start. Close and reopen the plugin.";
+  if (sandboxVersion < MIN_SUPPORTED_SANDBOX_VERSION) {
+    showMessage(
+      root,
+      "Harmonizer needs a newer version of the plugin. Close and reopen it to update.",
+    );
+    return;
   }
 
-  // Every branch above leaves something on screen. The sandbox watches until this arrives and
-  // takes the window over with its own error if it never does, so a failure handled here has to
-  // report itself exactly as a successful mount does.
-  pluginChannel.emit("ui:mounted");
+  // A message screen is as much a painted window as the app is, so it reports itself the same
+  // way. Only what leaves the window empty stays silent, and the sandbox replaces that.
+  try {
+    await mountApp(root, storedConfig, inP3);
+  } catch (error) {
+    console.error(error);
+    showMessage(root, "Harmonizer couldn't start. Close and reopen the plugin.");
+  }
 });
 
 // Announced only after the handler above is registered. The sandbox replies on demand instead

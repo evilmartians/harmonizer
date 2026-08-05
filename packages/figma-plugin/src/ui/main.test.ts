@@ -1,12 +1,21 @@
 // @vitest-environment jsdom
+import { createElement, type ReactNode } from "react";
+import { createRoot } from "react-dom/client";
+
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 import { MIN_SUPPORTED_SANDBOX_VERSION } from "@ui/sandboxSupport";
 
-const { createApp } = vi.hoisted(() => ({ createApp: vi.fn() }));
+type CreateAppOptions = { customUI?: { afterGridContent?: ReactNode } };
 
-// The app itself is another package, and mounting it here would test React rather than the
-// handshake. Everything else in core stays real, config parsing included.
+const { createApp } = vi.hoisted(() => ({
+  createApp: vi.fn<(root: HTMLElement, dependencies: unknown, options: CreateAppOptions) => void>(),
+}));
+
+// The app itself is another package, and mounting the whole of it here would test core rather
+// than the handshake. What the stand-in keeps is the part under test: a real React root, so
+// the mounted signal has to survive the same commit the real one does. Everything else in core
+// stays real, config parsing included.
 vi.mock("@harmonizer/core", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@harmonizer/core")>()),
   createApp,
@@ -53,10 +62,17 @@ function rootText() {
   return document.querySelector("#root")?.textContent ?? "";
 }
 
+function settle() {
+  return new Promise((resolve) => setTimeout(resolve, 0));
+}
+
 describe("plugin UI", () => {
   beforeEach(() => {
     sent = [];
     document.body.innerHTML = '<div id="root"></div>';
+    createApp.mockImplementation((root, _dependencies, { customUI }) => {
+      createRoot(root).render(customUI?.afterGridContent);
+    });
     vi.spyOn(window, "postMessage").mockImplementation((message) => {
       sent.push((message as { pluginMessage: SentMessage }).pluginMessage);
     });
@@ -103,12 +119,44 @@ describe("plugin UI", () => {
     expect(rootText()).toContain("Harmonizer couldn't start");
   });
 
+  test("leaves the sandbox watching when the app never reaches the screen", async () => {
+    // `createRoot().render()` returns before React commits, so a mount that got that far and
+    // no further is exactly the blank window the watchdog is there to replace.
+    createApp.mockImplementation(() => {});
+
+    await loadUi();
+    receiveReady();
+    await settle();
+
+    expect(sentTypes()).not.toContain("ui:mounted");
+  });
+
+  test("leaves the sandbox watching when the first render throws", async () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    createApp.mockImplementation((root) => {
+      // The real root has no handler, so React rethrows to the frame and the test runner counts
+      // that as its own failure. Swallowing it keeps the deliberate throw from ending the run;
+      // what is under test is the silence that follows it either way.
+      createRoot(root, { onUncaughtError: () => {} }).render(
+        createElement(function Boom(): ReactNode {
+          throw new Error("render failed");
+        }),
+      );
+    });
+
+    await loadUi();
+    receiveReady();
+    await settle();
+
+    expect(sentTypes()).not.toContain("ui:mounted");
+  });
+
   test("stays quiet with no mount point, leaving the sandbox watching", async () => {
     document.body.innerHTML = "";
 
     await loadUi();
     receiveReady();
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await settle();
 
     expect(sentTypes()).not.toContain("ui:mounted");
   });
