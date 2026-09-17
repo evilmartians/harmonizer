@@ -13,6 +13,7 @@ import { encodeUrlSafeBase64 } from "@core/utils/compression/encodeUrlSafeBase64
 import { getCssVariablesConfig } from "@core/utils/config/getCssVariablesConfig";
 import { getJsonVariablesConfig } from "@core/utils/config/getJsonVariablesConfig";
 import { getTailwindConfig } from "@core/utils/config/getTailwindConfig";
+import { getTailwindTheme } from "@core/utils/config/getTailwindTheme";
 import { downloadTextFile } from "@core/utils/file/downloadTextFile";
 
 import {
@@ -209,6 +210,12 @@ export const ExportTargets = {
     filename: "tailwind.config.js",
     mimetype: "application/javascript",
     getFileData: () => getTailwindConfig(getExportConfigWithColors(), $exportConfigHash.value),
+  },
+  "tailwind-v4": {
+    name: "Tailwind v4",
+    filename: "harmonized-palette.css",
+    mimetype: "text/css",
+    getFileData: () => getTailwindTheme(getExportConfigWithColors(), $exportConfigHash.value),
   },
   "css-variables": {
     name: "CSS variables",
