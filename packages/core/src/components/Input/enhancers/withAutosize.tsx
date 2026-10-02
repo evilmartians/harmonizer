@@ -9,10 +9,10 @@ import type { InputProps } from "../Input";
 import styles from "./enhancers.module.css";
 
 export function withAutosize<P extends InputProps>(WrappedComponent: ComponentType<P>) {
-  const AutosizeInput = (props: P) => {
+  const AutosizeInput = ({ ref, className, ...props }: P) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
     const { value, placeholder } = props;
-    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), [props.ref]);
+    const refCallback = useMemo(() => mergeRefs(inputRef, ref), [ref]);
 
     useLayoutEffect(() => {
       if (!inputRef.current) return;
@@ -23,9 +23,9 @@ export function withAutosize<P extends InputProps>(WrappedComponent: ComponentTy
 
     return (
       <WrappedComponent
-        {...props}
+        {...(props as P)}
         ref={refCallback}
-        className={clsx(props.className, styles.autosize)}
+        className={clsx(className, styles.autosize)}
       />
     );
   };

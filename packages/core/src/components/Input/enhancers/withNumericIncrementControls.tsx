@@ -11,6 +11,7 @@ import {
 import clsx from "clsx";
 
 import { isNumber } from "@core/utils/number/isNumber";
+import { assignRefSafe } from "@core/utils/react/assignRefSafe";
 import { mergeRefs } from "@core/utils/react/mergeRefs";
 
 import type { InputProps } from "../Input";
@@ -126,13 +127,21 @@ export function withNumericIncrementControls<P extends InputProps>(
     precision = -Math.log10(step),
     loopControls,
     trimTrailingZeros = false,
+    ref: externalRef,
+    labelRef: externalLabelRef,
     ...props
   }: WithNumericIncrementControlsProps & P) => {
     const { onChange, onBlur } = props;
     const inputRef = useRef<HTMLInputElement | null>(null);
     const labelRef = useRef<HTMLLabelElement>(null);
-    const refCallback = useMemo(() => mergeRefs(inputRef, props.ref), [props.ref]);
-    const labelRefCallback = useMemo(() => mergeRefs(labelRef, props.labelRef), [props.labelRef]);
+    const refCallback = useMemo(() => mergeRefs(inputRef, externalRef), [externalRef]);
+    const labelRefCallback = useCallback(
+      (label: HTMLLabelElement | null) => {
+        labelRef.current = label;
+        assignRefSafe(externalLabelRef, label);
+      },
+      [externalLabelRef],
+    );
 
     const updateValue = useCallback(
       (

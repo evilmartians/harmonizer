@@ -40,6 +40,7 @@ export function Tooltip({ content, disabled, placement = "top", renderTrigger }:
 
   return (
     <>
+      {/* oxlint-disable-next-line react/refs -- setTriggerRef only reaches the trigger's ref prop, so nothing reads the ref during render */}
       {renderTrigger({ ...api.getTriggerProps(), ref: setTriggerRef })}
       {api.open && (
         <Portal>

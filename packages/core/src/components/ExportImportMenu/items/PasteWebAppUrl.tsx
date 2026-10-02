@@ -1,6 +1,7 @@
 import {
   type ChangeEvent,
   useCallback,
+  useEffect,
   useRef,
   useState,
   type ClipboardEvent,
@@ -30,8 +31,14 @@ export function PasteWebAppUrl({ value, onPaste, ...restProps }: ActionPasteUrlP
   const goIntoPasteMode = useCallback((e: MouseEvent) => {
     e.preventDefault();
     setIsPasting(true);
-    requestAnimationFrame(() => inputRef.current?.focus());
   }, []);
+
+  useEffect(() => {
+    if (!isPasting) return;
+
+    const frame = requestAnimationFrame(() => inputRef.current?.focus());
+    return () => cancelAnimationFrame(frame);
+  }, [isPasting]);
   const { onClick: _, ...restItemProps } = api.getItemProps({ value });
   const handlePaste = useCallback(
     (e: ClipboardEvent) => {
