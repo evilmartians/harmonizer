@@ -32,7 +32,7 @@
   "devDependencies": {
     "cross-env": "^10.1.0",
     "nano-staged": "^1.0.2",
-    "oxfmt": "^0.62.0",
+    "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
     "playwright-core": "^1.61.1",
     "postcss-html": "^2.0.0",
