@@ -30,7 +30,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^6.0.5",
+    "@vitejs/plugin-react": "^6.1.1",
     "browserslist": "^4.28.7",
     "browserslist-to-esbuild": "^2.1.1",
     "jsdom": "^30.0.1",
