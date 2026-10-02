@@ -22,7 +22,7 @@
     "@spred/react": "^0.4.2",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "typed-channel": "^0.10.1",
+    "typed-channel": "^0.11.0",
     "valibot": "^1.5.0"
   },
   "devDependencies": {
