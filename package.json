@@ -24,10 +24,10 @@
     "postinstall": "pnpm exec simple-git-hooks"
   },
   "dependencies": {
-    "@zag-js/menu": "^1.43.0",
-    "@zag-js/react": "^1.43.0",
-    "@zag-js/select": "^1.43.0",
-    "@zag-js/tooltip": "^1.43.0"
+    "@zag-js/menu": "^1.44.0",
+    "@zag-js/react": "^1.44.0",
+    "@zag-js/select": "^1.44.0",
+    "@zag-js/tooltip": "^1.44.0"
   },
   "devDependencies": {
     "cross-env": "^10.1.0",
