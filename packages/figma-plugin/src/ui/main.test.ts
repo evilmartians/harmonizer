@@ -43,11 +43,7 @@ async function loadUi() {
   await import("./main");
 }
 
-/**
- * Delivered to the handler the transport installed, the way Figma's frame delivers one. Going
- * through a real event instead would test jsdom: it keeps `globalThis` and `window` apart, so
- * the assignment the transport makes is not the one an event would reach.
- */
+/** Delivered to the handler the transport installed, the way Figma's frame delivers one. */
 function receiveReady(sandboxVersion = MIN_SUPPORTED_SANDBOX_VERSION) {
   const message = {
     data: {
