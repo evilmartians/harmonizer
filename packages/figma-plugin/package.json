@@ -33,7 +33,7 @@
     "@vitejs/plugin-react": "^6.1.1",
     "browserslist": "^4.29.2",
     "browserslist-to-esbuild": "^2.1.1",
-    "jsdom": "^30.0.1",
+    "jsdom": "^30.1.1",
     "lightningcss": "^1.33.0",
     "rollup": "^4.63.5",
     "vite": "^8.3.1",
