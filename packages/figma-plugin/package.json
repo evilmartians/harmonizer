@@ -23,7 +23,7 @@
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "typed-channel": "^0.10.1",
-    "valibot": "^1.4.2"
+    "valibot": "^1.5.0"
   },
   "devDependencies": {
     "@figma/plugin-typings": "^1.132.0",
