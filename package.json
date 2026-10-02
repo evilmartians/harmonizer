@@ -37,7 +37,7 @@
     "playwright-core": "^1.61.1",
     "postcss-html": "^2.0.0",
     "simple-git-hooks": "^2.13.1",
-    "stylelint": "^17.14.1",
+    "stylelint": "^17.15.0",
     "stylelint-config-clean-order": "^10.0.0",
     "stylelint-config-css-modules": "^4.6.0",
     "stylelint-config-html": "^2.0.0",
