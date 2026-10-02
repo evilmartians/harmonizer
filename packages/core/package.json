@@ -20,7 +20,7 @@
     "@spred/react": "^0.4.2",
     "apcach": "^0.6.4",
     "clsx": "^2.1.1",
-    "core-js": "^3.49.0",
+    "core-js": "^3.50.0",
     "culori": "^4.0.2",
     "datavolve": "0.9.1",
     "es-toolkit": "^1.52.0",
