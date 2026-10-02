@@ -23,7 +23,7 @@
     "core-js": "^3.49.0",
     "culori": "^4.0.2",
     "datavolve": "0.9.1",
-    "es-toolkit": "^1.50.0",
+    "es-toolkit": "^1.52.0",
     "fast-equals": "^6.0.4",
     "nanoid": "^6.0.1",
     "react": "^19.3.0",
