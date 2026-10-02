@@ -34,7 +34,7 @@
     "nano-staged": "^1.0.2",
     "oxfmt": "^0.71.0",
     "oxlint": "^1.86.0",
-    "playwright-core": "^1.61.1",
+    "playwright-core": "^1.63.0",
     "postcss-html": "^2.0.0",
     "simple-git-hooks": "^2.14.0",
     "stylelint": "^17.15.0",
